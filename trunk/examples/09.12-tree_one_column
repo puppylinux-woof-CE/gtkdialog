@@ -1,0 +1,25 @@
+#! /usr/local/bin/gtkdialog -e
+
+function list() {
+	ls -lha | grep ^d | awk '{print "stock_folder|" $9}'
+	ls -lha | grep ^- | awk '{print "file-executable|" $9}'
+}
+
+export MAIN_DIALOG='
+<vbox>
+  <frame Icon name examples>
+    <tree rules_hint="true" exported_column="0">
+      <height>200</height><width>400</width>
+      <label>Files</label>
+      <input icon_column="0">list</input>
+      <variable>TREE</variable>
+    </tree>
+  </frame>
+  <hbox>
+    <button cancel></button>
+    <button ok></button>
+  </hbox>
+</vbox>
+'
+
+
