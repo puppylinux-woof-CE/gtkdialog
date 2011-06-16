@@ -1,0 +1,45 @@
+# Process this file with autoconf to produce a configure script.
+AC_INIT(gtkdialog, 0.7.21, pipas@linux.pte.hu)
+AM_INIT_AUTOMAKE(gtkdialog, 0.7.21)
+AM_CONFIG_HEADER([config.h])
+AM_MAINTAINER_MODE
+
+# Checks for programs.
+AC_ISC_POSIX
+AM_PROG_CC_STDC
+AC_HEADER_STDC
+AM_PROG_LEX
+AC_PROG_YACC
+AC_SUBST(YACC)
+
+# Checks for libraries.
+pkg_modules="gtk+-2.0 >= 2.0.0"
+PKG_CHECK_MODULES(GTK, [$pkg_modules])
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+pkg_modules="gthread-2.0"
+PKG_CHECK_MODULES(GTHREAD, [$pkg_modules])
+AC_SUBST(GTHREAD_CFLAGS)
+AC_SUBST(GTHREAD_LIBS)
+
+glade_lib="libglade-2.0"
+PKG_CHECK_MODULES([GLADE_LIB], \
+		  [$glade_lib], \
+		  AC_SUBST(HAVE_GLADE_LIB, 1),\
+		  AC_SUBST(HAVE_GLADE_LIB, 0))
+AC_SUBST(GLADE_LIB_CFLAGS)
+AC_SUBST(GLADE_LIB_LIBS)
+
+
+# Checks for header files.
+AC_CHECK_HEADERS([locale.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+AC_CHECK_FUNCS([setlocale])
+
+#AC_CONFIG_FILES([])
+AC_OUTPUT(Makefile gtkdialog.spec src/Makefile doc/Makefile examples/Makefile)
+

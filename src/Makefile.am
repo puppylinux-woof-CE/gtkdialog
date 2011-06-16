@@ -1,0 +1,35 @@
+#
+# We do this becouse this way we can use multiple parsers in a single binary
+# program.
+#
+AM_LFLAGS=-P$$(basename $@ lexer.c) -olex.yy.c
+AM_YFLAGS=-d -p $$(basename $@ parser.c)
+BUILT_SOURCES = \
+		gtkdialog_parser.h 
+
+bin_PROGRAMS = gtkdialog 
+gtkdialog_SOURCES = \
+		    gtkdialog.h \
+		    main.c main.h \
+		    macros.h \
+		    printing.h printing.c \
+		    variables.h variables.c \
+		    gtkdialog_parser.y gtkdialog_lexer.l \
+		    stack.h stack.c \
+		    automaton.c automaton.h \
+		    attributes.c attributes.h \
+		    stringman.c stringman.h \
+		    widgets.c widgets.h \
+		    actions.c actions.h \
+		    tag_attributes.h tag_attributes.c \
+		    glade_support.c glade_support.h
+
+AM_CFLAGS = $(GTK_CFLAGS) \
+	    $(GTHREAD_CFLAGS) \
+	    $(GLADE_LIB_CFLAGS) -DHAVE_GLADE_LIB=$(HAVE_GLADE_LIB)
+
+LIBS = $(GTK_LIBS) \
+       $(GTHREAD_LIBS) \
+       $(GLADE_LIB_LIBS) \
+       @LIBS@
+
