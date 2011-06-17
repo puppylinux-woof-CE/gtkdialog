@@ -376,7 +376,9 @@ int action_shellcommand(GtkWidget * widget, char *string)
 		return (0);
 	}
 
-	command = g_strdup_printf("source %s; %s", 
+	/* Debian 01_bashism patch: use dot rather than source.
+	command = g_strdup_printf("source %s; %s", */
+	command = g_strdup_printf(". %s; %s",
 			option_include_file, string);
 	system(command);
 	g_free(command);

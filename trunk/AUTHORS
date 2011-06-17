@@ -1,6 +1,12 @@
 Program: Pere László <pipas@linux.pte.hu>
 Documentation: Kiss Gábor: <gabor@gamma.ttk.pte.hu>
 
+Continued by Thunor <thunorsif@hotmail.com> 20110616
+
 Patches from:
+Moose On The Loose <kensmith1313666@gmail.com>: PRG_STDIN, 20110404
+Patriot: closewindow, 20091027
+Fabio Tranchitella <kobold@debian.org>: Debian 03_stdin, 20080512
+Luca Falavigna <dktrkranz@ubuntu.com>: Debian 01_bashism, 20071220
 Szabo Viktor <wyck@freemail.hu>
 Csaszar-Csutoras Peter <spy@c2.hu>

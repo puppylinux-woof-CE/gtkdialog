@@ -727,7 +727,9 @@ widget_opencommand(
 	PIP_DEBUG("Opening command: '%s'", command);
 
 	if (option_include_file != NULL) {
-		the_line = g_strdup_printf("source %s; %s", 
+		/* Debian 01_bashism patch: use dot rather than source.
+		the_line = g_strdup_printf("source %s; %s", */
+		the_line = g_strdup_printf(". %s; %s",
 				option_include_file, command);
 		infile = popen(the_line, "r");
 		g_free(the_line);
