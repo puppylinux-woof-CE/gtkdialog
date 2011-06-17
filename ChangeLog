@@ -4,6 +4,7 @@
 - Applied the Patriot closewindow patch.
 - Changed signal to gtkdialog_signal in glade_support.c.
 - Changed the 90.00 examples to use /usr/local/bin.
+- Applied the Debian 01_bashism dot rather than source patch.
 
 * Mon Apr 9 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.20
 - default policy changed ror crolled windows.
@@ -197,7 +198,3 @@ the default is: MAIN_WINDOW
 - There is a new action for saving a widget's content into file.  See gtk_edit for example.
 - The sizes of widgets are corrected. Some widgets can grow---list, table, edit, frame, etc.---but some can't---buttons, entries, etc.
 - The entry widgets can take actions which called when a key pressed after the entry is updated.
-
-
-
-

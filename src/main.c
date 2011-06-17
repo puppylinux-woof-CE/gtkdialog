@@ -305,7 +305,7 @@ get_program_from_file(char *name)
 static gint
 get_program_from_stdin(void)
 {
-	/* Moose / Debian 03_stdin: changed from PRG_MEMORY */
+	/* Moose / Debian 03_stdin patch: changed from PRG_MEMORY */
 	source = PRG_STDIN;
 	PIP_DEBUG("Start.");
 }
@@ -449,7 +449,9 @@ main(int argc, char *argv[])
 	if (option_event_file != NULL) {
 		gchar *command;
 		command = g_strdup_printf(
-				"source %s; "
+				/* Debian 01_bashism patch: use dot rather than source.
+				"source %s; " */
+				". %s; "
 				"gtkdialog %s%s%s%s%s%s -i %s",
 				option_event_file,
 				option_debug ? "-d " : "",
