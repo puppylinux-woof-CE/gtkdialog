@@ -37,10 +37,10 @@
  *                                                                       *
  *                                                                       *
  *************************************************************************/
-typedef struct signal {
+typedef struct _gtkdialog_signal {
 	gchar     *name;
 	GCallback callback;
-} signal;
+} gtkdialog_signal;
 
 /*
 ** Signal handler callbascks.
@@ -206,7 +206,7 @@ on_any_widget_almost_any_gdk_event(
 static gboolean
 find_and_connect_handler(
 		GtkWidget *widget,
-		signal *signals,
+		gtkdialog_signal *signals,
 		const gchar *signal_name,
 		const gchar *handler_name)
 {
@@ -288,7 +288,7 @@ gtk_entry_signal_handler_connector(
 		gpointer user_data)
 {
 	gint n;
-	signal entry_signals[] = {
+	gtkdialog_signal entry_signals[] = {
 		{ "activate",           (GCallback)on_any_entry_almost_any },
 		{ "backspace",          (GCallback)on_any_entry_almost_any },
 		{ "copy-clipboard",     (GCallback)on_any_entry_almost_any },
@@ -319,7 +319,7 @@ gtk_widget_signal_handler_connector(
 		gpointer user_data)
 {
 	variable *var;
-	signal widget_signals[] = {
+	gtkdialog_signal widget_signals[] = {
 		{ "accel-closures-changed",    (GCallback)on_any_widget_almost_any },
 		{ "composited-changed",        (GCallback)on_any_widget_almost_any },
 		{ "grab-focus",                (GCallback)on_any_widget_almost_any },

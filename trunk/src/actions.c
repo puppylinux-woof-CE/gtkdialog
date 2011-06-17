@@ -40,9 +40,31 @@ action_closewindow(GtkWidget *widget, char *string)
 #ifdef DEBUG
 	g_message("%s(%p, '%s')", __func__, widget, string);
 #endif
-	parent_widget = gtk_widget_get_toplevel(widget);
+
+/**
+ * Patriot Oct 2009: zigbert has been dreaming for this to be fixed.
+ * Issue: closewindow command closes THE window its called from.
+ * Fixed: Workaround applied to point to the correct window.
+ **/
+
+	variable *windowvar;
+	windowvar = variables_get_by_name(string);
+#ifdef DEBUG
+		fprintf(stderr, "%s(): Widget name: %s.\n", __func__, windowvar->Name);
+		fprintf(stderr, "%s(): Widget type: %d.\n", __func__, windowvar->Type);
+		fflush(stderr);
+#endif
+	if (windowvar != NULL && windowvar->Widget != NULL) {
+		parent_widget = gtk_widget_get_toplevel(windowvar->Widget);
+	}
+	else {
+		return (0);
+	}
+
+//	parent_widget = gtk_widget_get_toplevel(widget);  // incorrect pointer
 	variables_drop_by_parent(NULL, parent_widget);
 	gtk_widget_destroy(parent_widget);
+
 	/*
 	 * Now, if this was the last window, we can exit.
 	 */
@@ -62,6 +84,7 @@ action_closewindow(GtkWidget *widget, char *string)
 */
 int action_launchwindow(GtkWidget * widget, char *string)
 {
+	GtkWidget *parent_widget;
 	variable *existing;
 #ifdef DEBUG
 	fprintf(stderr, "%s(): Window: %s.\n", __func__, string);
@@ -73,7 +96,13 @@ int action_launchwindow(GtkWidget * widget, char *string)
 	 */
 	existing = variables_get_by_name(string);
 	if (existing != NULL && existing->Widget != NULL) {
-		gtk_window_present(GTK_WINDOW(existing->Widget));
+	/**
+	* Patriot Oct 2009: Fixing the issue above also 
+	* require a minor adjustment to this section.
+ 	**/
+		parent_widget = gtk_widget_get_toplevel(existing->Widget);
+		gtk_window_present(GTK_WINDOW(parent_widget));
+//		gtk_window_present(GTK_WINDOW(existing->Widget)); // incorrect pointer
 		return (0);
 	}
 
