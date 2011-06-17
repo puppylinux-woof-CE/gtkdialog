@@ -715,6 +715,100 @@ widget_combo_refresh(variable * var)
 		gtk_widget_set_sensitive(var->Widget, FALSE);
 }
 
+void widget_button_refresh(variable *var)
+{
+	char *act;
+	GList *children;
+	GtkWidget *child;
+	GdkPixbuf *pixbuf;
+	int width = -1, height = -1;
+
+	if (var == NULL || var->Attributes == NULL) return;
+
+	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	while (act != NULL) {
+		/* input file stock = "File:", input file = "File:/path/to/file" */
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			children = gtk_container_get_children(GTK_CONTAINER(var->Widget));
+			child = GTK_WIDGET(children->data);
+			while (child) {
+				if (GTK_IS_IMAGE(child)) {
+					if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+						width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
+					if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
+						height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
+
+					if (width == -1 && height == -1) {
+						/* Handle unscaled images */
+						gtk_image_set_from_file(GTK_IMAGE(child), find_pixmap(act + 5));
+					} else {
+						/* Handle scaled images */
+						pixbuf = gdk_pixbuf_new_from_file_at_size(
+							find_pixmap(act + 5), width, height, NULL);
+						if (pixbuf) {
+							gtk_image_set_from_pixbuf(GTK_IMAGE(child), pixbuf);
+							/* pixbuf is no longer required and should be unreferenced */
+							g_object_unref(pixbuf);
+						} else {
+							/* pixbuf is null (file not found) so by using this
+							 * function gtk will substitute a broken image icon */
+							gtk_image_set_from_file(GTK_IMAGE(child), "");
+						}
+					}
+					break;
+				} else if (GTK_IS_HBOX(child)) {
+					g_list_free(children);
+					children = gtk_container_get_children(GTK_CONTAINER(child));
+					child = GTK_WIDGET(children->data);
+				} else {
+					child = GTK_WIDGET(children->next);
+				}
+			}
+			g_list_free(children);
+		}
+		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+	}
+}
+
+void widget_pixmap_refresh(variable *var)
+{
+	int width = -1, height = -1;
+	GdkPixbuf *pixbuf;
+	char *act;
+
+	if (var == NULL || var->Attributes == NULL) return;
+
+	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	while (act != NULL) {
+		/* input file stock = "File:", input file = "File:/path/to/file" */
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+				width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
+			if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
+				height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
+
+			if (width == -1 && height == -1) {
+				/* Handle unscaled images */
+				gtk_image_set_from_file(GTK_IMAGE(var->Widget), find_pixmap(act + 5));
+			} else {
+				/* Handle scaled images */
+				pixbuf = gdk_pixbuf_new_from_file_at_size(
+					find_pixmap(act + 5), width, height, NULL);
+				if (pixbuf) {
+					gtk_image_set_from_pixbuf(GTK_IMAGE(var->Widget), pixbuf);
+					/* pixbuf is no longer required and should be unreferenced */
+					g_object_unref(pixbuf);
+				} else {
+					/* pixbuf is null (file not found) so by using this
+					 * function gtk will substitute a broken image icon */
+					gtk_image_set_from_file(GTK_IMAGE(var->Widget), "");
+				}
+			}
+		}
+		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+	}
+}
+
 extern gchar *option_include_file;
 
 FILE *

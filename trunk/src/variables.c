@@ -310,6 +310,12 @@ variables_refresh(const char *name)
 		case WIDGET_TREE:
 			widget_tree_refresh(var);
 			break;
+		case WIDGET_PIXMAP:
+			widget_pixmap_refresh(var);
+			break;
+		case WIDGET_BUTTON:
+			widget_button_refresh(var);
+			break; 
 #ifdef DEBUG
 		default:
 			if (!option_no_warning)
