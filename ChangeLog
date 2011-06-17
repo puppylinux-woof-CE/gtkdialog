@@ -1,3 +1,139 @@
+* Fri Jun 17 2011 Thunor <thunorsif@hotmail.com>
+- Added  config.guess and config.sub.
+- Applied the Moose / Debian 03_stdin PRG_STDIN patch.
+- Applied the Patriot closewindow patch.
+- Changed signal to gtkdialog_signal in glade_support.c.
+- Changed the 90.00 examples to use /usr/local/bin.
+
+* Mon Apr 9 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.20
+- default policy changed ror crolled windows.
+- The segfault handling the --geometry option is fixed.
+- Better handling of the command line options.
+
+* Sun Feb 25 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.19
+- The "exported_column" attribute for trees is fixed. Column 0 means the first
+  text column (after the icon column if any). Check file 09.12-tree_one_column
+  for example.
+
+* Sun Feb 18 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.18
+- Better icon handling in tree views. See the following example programs:
+  o 09.01-tree_items
+  o 09.02-tree_default_pixmaps
+  o 09.03-tree_icon_columns
+
+* Tue Jan 11 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.14
+- Compile error fixed by Jean-Philippe Guillemin.
+
+* Wed Jan 10 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.13
+- Handling of input for the tree widgets (see example 09.00-tree).
+
+* Tue Jan 02 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.12
+- The mouse button is exported for the button-press-event and
+  button-release-event handlers. See 09.02-tree_actions for example.
+
+* Wed Nov 29 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.11
+- The widget properties are set only when the widget is realized. This
+  modification has been made because some properties can be set only if there
+  is a parent window. (See 16.02.widget_properties_default for example)
+
+* Mon Nov 27 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.10
+- GtkWidget signal actions for the following signal names:
+  "button-press-event"
+  "button-release-event"
+  "configure-event"
+  "enter-notify-event"
+  "leave-notify-event"
+  "focus-in-event"
+  "focus-out-event"
+  "key-press-event"
+  "key-release-event"
+  "hide"
+  "show"
+  "map-event"
+  "unmap-event"
+  See example file 16.01.widget_signals.
+
+* Mon Nov 15 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.9
+- Bugfix: Window delete-event handler exits only if that was the last window.
+- Bugfix: Closewindow action exits if that was the last window.
+- Menu items with named icons. See 14.01-menubar_icons for example.
+
+* Tue Nov 7 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.8
+- Some code clean up with the progress bars and parent windows.
+
+* Mon Nov 6 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.7
+- Bugfix: RPM spec file is fixed by Steven Howe.
+- Bugfix: <table> actions fixed by Jean-Philippe Guillemin.
+
+* Sat Nov 4 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.6
+- Bugfix: Glade example files was missing from the source package.
+- Progress bar now accept text from the input to render new label.
+
+* Tue Oct 31 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.5
+- Bugfix: "closewindow: xxx not found" error is fixed.
+- Bugfix: "launch" action is fixed.
+- Most of the compile time warnings are eliminated.
+- Actions have two forms now. The simple form is an XML attribute like this:
+  <action type="exit">VALUE</action>
+  the secondary form is a command prefix:
+  <action>Exit:VALUE</action>
+  This form can be used when creating the GUI with Glade, where the callback
+  function name is used by the GtkDialog as a command to execute. 
+  The older
+  <action clear>VARIABLE</action> 
+  form is no longer recognized.
+- Bugfix: Label from file buffer overrun fixed.
+- Bugfix: Frame without label caused a segfault. Now fixed.
+- Bugfix: Compiling problem when no Glade library found is fixed.
+- Bugfix: Closewindow action for progress_bars fixed 
+  (see the 05.01-progress_bar_closewindow example program)
+
+* Thu Oct 26 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.4
+- A better glade support. See glade files in the examples directory. 
+- Launch/Closewindow bug is fixed by Jean-Philippe Guillemin.
+
+* Wed Oct 25 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.3
+- <input></input> for labels. See '00.02-text_input' for example.
+- Syntax error with one character unescaped strings fixed.
+- Attributes can be used to set window icon names. See '15.01.window_attributes'
+  for example.
+- New widget: <progressbar></progressbar>, see 05.00-progress_bar for example.
+
+* Mon Jun 12 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.2
+- The gtklauncher binary is removed. Use '-e' option of gtkdialog instead.
+
+* Sun Jun 11 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.1
+- A new option (-e) for handling event driven programs.
+- Support for some widget properties (see examples *_attributes).
+- Support for some signals (see examples *_signals).
+- Proper handling of option --no-warning.
+- New option to center the dialogs on the screen (thanks to Gene Hilton).
+- Setting the window title is changed. Use expressions like this:
+  <window>
+     <hbox>...</hbox>
+     <label>Window Title</label>
+  </window>
+  Sorry about the postfix notation.
+- Another version is to use the general attribute setting:
+  <window title="Window Title">
+    <hbox>...</hbox>
+  </window>
+- Much better support for the <tree> widget. See examples for more info.
+- <editor> handles <default> text.
+- The type="fileselect" action creates a file_chooser if compiled with GTK+
+  2.4.0 or newer version.
+- File select dialog title can be set by the target widget (see example file
+  "16-fileselect")
+- The behaviour of the file selection dialog can be described by the
+  target widget (see example file "16-fileselect").
+- New example scheme. It is systematic, trying to substitute the missing
+  documentation.
+- The <editor> text exported and printed now.
+- Better handling of strings and quotes.
+
+* Thu Mar 9 2006 Laszlo Pere <pipas@linux.pte.hu> 0.6.0
+- Same as the 0.58.6 which seems to be fairly stable.
+
 * Wed Jul 27 2005 Laszlo Pere <pipas@linux.pte.hu> 0.59.6
 - Crash on ia64 bug fixed thanks to David Mosberger and Fabio Tranchitella.
   
@@ -5,7 +141,6 @@
 - It is possible now to insert multiple columns into the tables using 
 - shell commands (e.g. echo "one|two").
 - Actions for table widgets are working perfectly now.
-
 
 * Sat Jan 1 2005 Laszlo Pere <pipas@linux.pte.hu> 0.59.4
 - Compile problem on RH9 (GTK 2.2.1) fixed 
@@ -63,132 +198,6 @@ the default is: MAIN_WINDOW
 - The sizes of widgets are corrected. Some widgets can grow---list, table, edit, frame, etc.---but some can't---buttons, entries, etc.
 - The entry widgets can take actions which called when a key pressed after the entry is updated.
 
-* Thu Mar 9 2006 Laszlo Pere <pipas@linux.pte.hu> 0.6.0
-- Same as the 0.58.6 which seems to be fairly stable.
 
-Sun Jun 11 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.1
-- A new option (-e) for handling event driven programs.
-- Support for some widget properties (see examples *_attributes).
-- Support for some signals (see examples *_signals).
-- Proper handling of option --no-warning.
-- New option to center the dialogs on the screen (thanks to Gene Hilton).
-- Setting the window title is changed. Use expressions like this:
-  <window>
-     <hbox>...</hbox>
-     <label>Window Title</label>
-  </window>
-  Sorry about the postfix notation.
-- Another version is to use the general attribute setting:
-  <window title="Window Title">
-    <hbox>...</hbox>
-  </window>
-- Much better support for the <tree> widget. See examples for more info.
-- <editor> handles <default> text.
-- The type="fileselect" action creates a file_chooser if compiled with GTK+
-  2.4.0 or newer version.
-- File select dialog title can be set by the target widget (see example file
-  "16-fileselect")
-- The behaviour of the file selection dialog can be described by the
-  target widget (see example file "16-fileselect").
-- New example scheme. It is systematic, trying to substitute the missing
-  documentation.
-- The <editor> text exported and printed now.
-- Better handling of strings and quotes.
 
-Mon Jun 12 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.2
-- The gtklauncher binary is removed. Use '-e' option of gtkdialog instead.
-
-Wed Oct 25 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.3
-- <input></input> for labels. See '00.02-text_input' for example.
-- Syntax error with one character unescaped strings fixed.
-- Attributes can be used to set window icon names. See '15.01.window_attributes'
-  for example.
-- New widget: <progressbar></progressbar>, see 05.00-progress_bar for example.
-
-Thu Oct 26 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.4
-- A better glade support. See glade files in the examples directory. 
-- Launch/Closewindow bug is fixed by Jean-Philippe Guillemin.
-
-Tue Oct 31 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.5
-- Bugfix: "closewindow: xxx not found" error is fixed.
-- Bugfix: "launch" action is fixed.
-- Most of the compile time warnings are eliminated.
-- Actions have two forms now. The simple form is an XML attribute like this:
-  <action type="exit">VALUE</action>
-  the secondary form is a command prefix:
-  <action>Exit:VALUE</action>
-  This form can be used when creating the GUI with Glade, where the callback
-  function name is used by the GtkDialog as a command to execute. 
-  The older
-  <action clear>VARIABLE</action> 
-  form is no longer recognized.
-- Bugfix: Label from file buffer overrun fixed.
-- Bugfix: Frame without label caused a segfault. Now fixed.
-- Bugfix: Compiling problem when no Glade library found is fixed.
-- Bugfix: Closewindow action for progress_bars fixed 
-  (see the 05.01-progress_bar_closewindow example program)
-
-Sat Nov 4 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.6
-- Bugfix: Glade example files was missing from the source package.
-- Progress bar now accept text from the input to render new label.
-
-Mon Nov 6 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.7
-- Bugfix: RPM spec file is fixed by Steven Howe.
-- Bugfix: <table> actions fixed by Jean-Philippe Guillemin.
-
-Tue Nov 7 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.8
-- Some code clean up with the progress bars and parent windows.
-
-Mon Nov 15 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.9
-- Bugfix: Window delete-event handler exits only if that was the last window.
-- Bugfix: Closewindow action exits if that was the last window.
-- Menu items with named icons. See 14.01-menubar_icons for example.
-
-Mon Nov 27 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.10
-- GtkWidget signal actions for the following signal names:
-  "button-press-event"
-  "button-release-event"
-  "configure-event"
-  "enter-notify-event"
-  "leave-notify-event"
-  "focus-in-event"
-  "focus-out-event"
-  "key-press-event"
-  "key-release-event"
-  "hide"
-  "show"
-  "map-event"
-  "unmap-event"
-  See example file 16.01.widget_signals.
-
-Wed Nov 29 2006 Laszlo Pere <pipas@linux.pte.hu> 0.7.11
-- The widget properties are set only when the widget is realized. This
-  modification has been made because some properties can be set only if there
-  is a parent window. (See 16.02.widget_properties_default for example)
-
-Tue Jan 02 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.12
-- The mouse button is exported for the button-press-event and
-  button-release-event handlers. See 09.02-tree_actions for example.
-
-Wed Jan 10 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.13
-- Handling of input for the tree widgets (see example 09.00-tree).
-
-Tue Jan 11 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.14
-- Compile error fixed by Jean-Philippe Guillemin.
-
-Sun Feb 18 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.18
-- Better icon handling in tree views. See the following example programs:
-  o 09.01-tree_items
-  o 09.02-tree_default_pixmaps
-  o 09.03-tree_icon_columns
-
-Sun Feb 25 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.19
-- The "exported_column" attribute for trees is fixed. Column 0 means the first
-  text column (after the icon column if any). Check file 09.12-tree_one_column
-  for example.
-
-Mon Apr 9 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.20
-- default policy changed ror crolled windows.
-- The segfault handling the --geometry option is fixed.
-- Better handling of the command line options.
 

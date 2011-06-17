@@ -1,4 +1,4 @@
-#! /usr/bin/gtkdialog -e
+#! /usr/local/bin/gtkdialog -e
 
 function print_this() {
   echo "print: $1"

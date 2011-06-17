@@ -1,4 +1,4 @@
-#! /usr/bin/gtkdialog -f 
+#! /usr/local/bin/gtkdialog -f 
 
 <vbox>
   <button>

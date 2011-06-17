@@ -305,7 +305,8 @@ get_program_from_file(char *name)
 static gint
 get_program_from_stdin(void)
 {
-	source = PRG_MEMORY;
+	/* Moose / Debian 03_stdin: changed from PRG_MEMORY */
+	source = PRG_STDIN;
 	PIP_DEBUG("Start.");
 }
 
