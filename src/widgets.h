@@ -21,7 +21,7 @@ typedef enum {
 	ColumnIconName,
 	ColumnStockId,
 	FirstDataColumn
-};
+} treecolumns;
 
 char *widget_get_text_value( GtkWidget *widget, int type );
 int widget_label_refresh( variable *var );

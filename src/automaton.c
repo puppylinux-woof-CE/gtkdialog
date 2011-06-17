@@ -1561,7 +1561,7 @@ create_tree_view(
 	 */
 	column = gtk_tree_view_column_new();
 	gtk_tree_view_column_set_title(column, columns->line[0]);
-	gtk_tree_view_append_column(tree_view, column);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
 	gtk_tree_view_column_set_sort_column_id(column, FirstDataColumn);
 	
 	renderer = gtk_cell_renderer_pixbuf_new();
@@ -1583,7 +1583,7 @@ create_tree_view(
 	for (n = 1; n < columns->n_lines; ++n){
 		column = gtk_tree_view_column_new();
 		gtk_tree_view_column_set_title(column, columns->line[n]);	
-		gtk_tree_view_append_column(tree_view, column);
+		gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
 		gtk_tree_view_column_set_sort_column_id(column, 
 				n + FirstDataColumn);
 		
@@ -1618,7 +1618,8 @@ create_tree(AttributeSet  *Attr,
 	 */
 	store = create_store_from_label(Attr);
 	tree = create_tree_view(Attr, store);
-//**NEW------------------------------------------------------------------------
+//**NEW-----------------------------------------------------------------
+/*
 	if (attr) {
 		int count;
 		for (count = 0; count < attr->n; ++count) {
@@ -1636,17 +1637,18 @@ create_tree(AttributeSet  *Attr,
 					
 			}
 
-/*			gchar *tmp;
-			tmp = g_object_get_data(G_OBJECT(tree), "selection_mode");
-			printf("%s: selection_mode=\"%s\"\n", __func__, tmp);//temp temp
-			tmp = g_object_get_data(G_OBJECT(tree), "exported_column");
-			printf("%s: exported_column=\"%s\"\n", __func__, tmp);//temp temp
-			printf("%s: GTK_SELECTION_SINGLE=\"%i\" GTK_SELECTION_MULTIPLE=\"%i\"\n", __func__, 
-				GTK_SELECTION_SINGLE, GTK_SELECTION_MULTIPLE);//temp temp
-*/
+			//gchar *tmp;
+			//tmp = g_object_get_data(G_OBJECT(tree), "selection_mode");
+			//printf("%s: selection_mode=\"%s\"\n", __func__, tmp);//temp temp
+			//tmp = g_object_get_data(G_OBJECT(tree), "exported_column");
+			//printf("%s: exported_column=\"%s\"\n", __func__, tmp);//temp temp
+			//printf("%s: GTK_SELECTION_SINGLE=\"%i\" GTK_SELECTION_MULTIPLE=\"%i\"\n", __func__, 
+			//	GTK_SELECTION_SINGLE, GTK_SELECTION_MULTIPLE);//temp temp
+
 		}
 	}
-//**NEW------------------------------------------------------------------------
+*/
+//**NEW-----------------------------------------------------------------
 	return tree;
 }
 

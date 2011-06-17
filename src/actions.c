@@ -369,10 +369,12 @@ int action_disable(GtkWidget * widget, char *string)
 int action_shellcommand(GtkWidget * widget, char *string)
 {
 	char *command;
+	int result;
+
 	variables_export_all();
 
 	if (option_include_file == NULL) {
-		system(string);
+		result = system(string);
 		return (0);
 	}
 
@@ -380,7 +382,7 @@ int action_shellcommand(GtkWidget * widget, char *string)
 	command = g_strdup_printf("source %s; %s", */
 	command = g_strdup_printf(". %s; %s",
 			option_include_file, string);
-	system(command);
+	result = system(command);
 	g_free(command);
 	return;
 }

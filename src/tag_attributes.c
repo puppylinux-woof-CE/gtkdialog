@@ -99,47 +99,47 @@ try_set_property(GtkWidget *widget,
 			break;
 		case G_TYPE_INVALID:
 			if (!option_no_warning)
-				g_warning("%(): Unhandled G_TYPE_INVALID", __func__);
+				g_warning("%s(): Unhandled G_TYPE_INVALID", __func__);
 			break;
 		case G_TYPE_NONE:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_NONE", __func__);
+			g_warning("%s(): Unhandled G_TYPE_NONE", __func__);
 			break;
 		case G_TYPE_INTERFACE:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_INTERFACE", __func__);
+			g_warning("%s(): Unhandled G_TYPE_INTERFACE", __func__);
 			break;
 		case G_TYPE_CHAR:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_CHAR", __func__);
+			g_warning("%s(): Unhandled G_TYPE_CHAR", __func__);
 			break;
 		case G_TYPE_UCHAR:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_UCHAR", __func__);
+			g_warning("%s(): Unhandled G_TYPE_UCHAR", __func__);
 			break;
 		case G_TYPE_LONG:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_LONG", __func__);
+			g_warning("%s(): Unhandled G_TYPE_LONG", __func__);
 			break;
 		case G_TYPE_ULONG:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_ULONG", __func__);
+			g_warning("%s(): Unhandled G_TYPE_ULONG", __func__);
 			break;
 		case G_TYPE_INT64:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_INT64", __func__);
+			g_warning("%s(): Unhandled G_TYPE_INT64", __func__);
 			break;
 		case G_TYPE_UINT64:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_UINT64", __func__);
+			g_warning("%s(): Unhandled G_TYPE_UINT64", __func__);
 			break;
 		case G_TYPE_ENUM:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_ENUM", __func__);
+			g_warning("%s(): Unhandled G_TYPE_ENUM", __func__);
 			break;
 		case G_TYPE_FLAGS:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_FLAGS", __func__);
+			g_warning("%s(): Unhandled G_TYPE_FLAGS", __func__);
 			break;
 			
 		case G_TYPE_STRING:
@@ -150,19 +150,19 @@ try_set_property(GtkWidget *widget,
 
 		case G_TYPE_POINTER:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_POINTER", __func__);
+			g_warning("%s(): Unhandled G_TYPE_POINTER", __func__);
 			break;
 		case G_TYPE_BOXED:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_BOXED", __func__);
+			g_warning("%s(): Unhandled G_TYPE_BOXED", __func__);
 			break;
 		case G_TYPE_PARAM:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_PARAM", __func__);
+			g_warning("%s(): Unhandled G_TYPE_PARAM", __func__);
 			break;
 		case G_TYPE_OBJECT:
 			if (!option_no_warning)
-			g_warning("%(): Unhandled G_TYPE_OBJECT", __func__);
+			g_warning("%s(): Unhandled G_TYPE_OBJECT", __func__);
 			break;
 		default:
 			/*
