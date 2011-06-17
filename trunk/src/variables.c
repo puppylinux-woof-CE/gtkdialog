@@ -390,7 +390,7 @@ _tree_insert(variable * new,
 {
 	int compare;
 	if (new == NULL) {
-		fprintf(stderr, "%s(): Inserting a NULL element.\n");
+		fprintf(stderr, "%s(): Inserting a NULL element.\n", __func__);
 		exit(EXIT_FAILURE);
 	}
 
@@ -547,6 +547,7 @@ _variables_initialize(variable *actual)
 {
 	char *socket_id;
 	char command[128];
+	int result;
 
 #ifdef DEBUG
 	fprintf(stderr, "%s: Start.\n", __func__);
@@ -570,7 +571,7 @@ _variables_initialize(variable *actual)
 		if (socket_id != NULL) {
 			sprintf(command, "gvim --socketid %s &",
 				socket_id);
-			system(command);
+			result = system(command);
 		} else {
 			yywarning("Socket ID is NULL\n");
 		}
@@ -755,9 +756,9 @@ print_variables(variable * actual)
 				if (itemlist->data == NULL)
 					goto next_item;
 				if (n == 0)
-					printf("'%s'", gtk_object_get_user_data (itemlist->data));
+					printf("'%s'", (char*)gtk_object_get_user_data (itemlist->data));
 				else
-					printf(" '%s'", gtk_object_get_user_data (itemlist->data));
+					printf(" '%s'", (char*)gtk_object_get_user_data (itemlist->data));
 next_item:
 				itemlist = itemlist->next;
 				++n;

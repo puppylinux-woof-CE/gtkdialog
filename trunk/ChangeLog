@@ -7,6 +7,15 @@
 - Applied the Debian 01_bashism dot rather than source patch.
 - Added my pixmap/button-widget image refresh and scaling code.
 - Removed unnecessary code from find_pixmap (locate etc.).
+- Applied the Debian 02_documentation_paths /usr/local/bin/ patch.
+- Added missing conversion type characters from tag_attributes.c:102.
+- Added missing declaration in widgets.h:24.
+- Added missing __func__ in variables.c:393.
+- Added missing (char*) casts in variables.c:758 and 760.
+- Added missing GTK_TREE_VIEW casts in automaton.c:1564 and 1586.
+- Added missing (GDestroyNotify) cast in widgets.c:1259.
+- Added missing (gchar*) cast in main.c:408.
+- Fixed several 'ignoring return value' warnings.
 
 * Mon Apr 9 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.20
 - default policy changed ror crolled windows.

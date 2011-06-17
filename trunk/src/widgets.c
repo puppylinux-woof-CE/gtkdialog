@@ -207,7 +207,7 @@ fill_label_by_file(GtkWidget * widget, char *filename)
 {
 	struct stat st;
 	char *filebuffer;
-	int infile;
+	int infile, result;
 
 	if (stat(filename, &st) != 0) {
 		if (!option_no_warning)
@@ -225,7 +225,7 @@ fill_label_by_file(GtkWidget * widget, char *filename)
 		return;
 	}
 
-	read(infile, filebuffer, st.st_size);
+	result = read(infile, filebuffer, st.st_size);
 	filebuffer[st.st_size] = '\0';
 	close(infile);
 
@@ -236,7 +236,7 @@ fill_label_by_file(GtkWidget * widget, char *filename)
 static
 void save_edit_to_file(GtkWidget * widget, char *filename)
 {
-	int outfile;
+	int outfile, result;
 	GtkTextBuffer *buffer;
 	GtkTextIter start, end;
 	gchar *text;
@@ -262,7 +262,7 @@ void save_edit_to_file(GtkWidget * widget, char *filename)
 	gtk_text_buffer_get_start_iter(buffer, &start);
 	gtk_text_buffer_get_end_iter(buffer, &end);
 	text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
-	write(outfile, text, strlen(text));
+	result = write(outfile, text, strlen(text));
 	close(outfile);
 }
 
@@ -272,7 +272,7 @@ void fill_edit_by_file(GtkWidget * widget, char *filename)
 {
 	struct stat st;
 	char *filebuffer;
-	int infile;
+	int infile, result;
 	GtkTextBuffer *buffer;
 	char *message;	
 
@@ -299,7 +299,7 @@ void fill_edit_by_file(GtkWidget * widget, char *filename)
 		return;
 	}
 
-	read(infile, filebuffer, st.st_size);
+	result = read(infile, filebuffer, st.st_size);
 	close(infile);
 
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
@@ -1256,7 +1256,7 @@ on_any_progress_bar_realized(GtkWidget *widget,
 	g_object_set_data_full(G_OBJECT(widget),
 			"descriptor",
 			descr, 
-			descriptor_destroy_notify);
+			(GDestroyNotify)descriptor_destroy_notify);
 	/*
 	 * Now we can fire up the reader thread.
 	 */

@@ -275,7 +275,7 @@ get_program_from_variable(gchar *name)
 static gint 
 get_program_from_file(char *name)
 {
-	int tmp;
+	int tmp, result;
 	
 	PIP_DEBUG("Start.");
 	
@@ -289,7 +289,7 @@ get_program_from_file(char *name)
 	 * required because the #! is not included in the language.
 	 */
 	program_src = NULL;
-	getline(&program_src, &tmp, sourcefile);
+	result = getline(&program_src, &tmp, sourcefile);
 	if (program_src[0] != '#') {
 		fclose(sourcefile);
 		sourcefile = fopen(name, "r");
@@ -405,7 +405,7 @@ set_program_source(gchar *name)
 	/*
 	 ** We read the window description from the environment variable.
 	 */
-	program_src = g_getenv(name);
+	program_src = (gchar*)g_getenv(name);
 	/*
 	 ** If we could not find the window we give a message to the user and
 	 ** exit.
