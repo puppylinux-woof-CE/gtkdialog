@@ -31,6 +31,8 @@ void widget_list_refresh( variable *var );
 void widget_tree_refresh( variable *var );
 void widget_table_refresh( variable *var );
 void widget_combo_refresh( variable *var );
+void widget_pixmap_refresh(variable *var);
+void widget_button_refresh(variable *var);
 FILE *widget_opencommand( const char *command );
 
 void fill_text_by_file( GtkTextBuffer *buffer, char *filename );

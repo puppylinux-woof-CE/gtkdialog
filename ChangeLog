@@ -5,6 +5,8 @@
 - Changed signal to gtkdialog_signal in glade_support.c.
 - Changed the 90.00 examples to use /usr/local/bin.
 - Applied the Debian 01_bashism dot rather than source patch.
+- Added my pixmap/button-widget image refresh and scaling code.
+- Removed unnecessary code from find_pixmap (locate etc.).
 
 * Mon Apr 9 2007 Laszlo Pere <pipas@linux.pte.hu> 0.7.20
 - default policy changed ror crolled windows.

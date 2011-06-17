@@ -1618,6 +1618,35 @@ create_tree(AttributeSet  *Attr,
 	 */
 	store = create_store_from_label(Attr);
 	tree = create_tree_view(Attr, store);
+//**NEW------------------------------------------------------------------------
+	if (attr) {
+		int count;
+		for (count = 0; count < attr->n; ++count) {
+
+			//GtkTreeSelection *selection;
+			//selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
+			//gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+			//gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
+
+			if (strcasecmp((attr->pairs + count)->name, "selection_mode") == 0 ||
+				strcasecmp((attr->pairs + count)->name, "selection-mode") == 0) {
+
+				printf("%s: attr->pairs->name=%s\n", __func__, (attr->pairs + count)->name);//temp temp
+				printf("%s: attr->pairs->value=%s\n", __func__, (attr->pairs + count)->value);//temp temp
+					
+			}
+
+/*			gchar *tmp;
+			tmp = g_object_get_data(G_OBJECT(tree), "selection_mode");
+			printf("%s: selection_mode=\"%s\"\n", __func__, tmp);//temp temp
+			tmp = g_object_get_data(G_OBJECT(tree), "exported_column");
+			printf("%s: exported_column=\"%s\"\n", __func__, tmp);//temp temp
+			printf("%s: GTK_SELECTION_SINGLE=\"%i\" GTK_SELECTION_MULTIPLE=\"%i\"\n", __func__, 
+				GTK_SELECTION_SINGLE, GTK_SELECTION_MULTIPLE);//temp temp
+*/
+		}
+	}
+//**NEW------------------------------------------------------------------------
 	return tree;
 }
 
@@ -1909,11 +1938,13 @@ create_button(AttributeSet *Attr,
 	GtkWidget *Icon = NULL;
 	GtkWidget *Label = NULL;
 	GtkWidget *Box = NULL;
+	GdkPixbuf *pixbuf = NULL;
 	char *icon_stock_name = NULL;
 	char *icon_file_name = NULL;
 	char *str;
 	char *act;
 	int type;
+	int width = -1, height = -1;
 	
 	PIP_DEBUG("");
 	
@@ -1954,7 +1985,28 @@ create_button(AttributeSet *Attr,
                                    &error);
 				Icon = gtk_image_new_from_pixbuf(pixbuf);	
 			}else{
-				Icon = gtk_image_new_from_file(find_pixmap(icon_file_name));
+				if (attributeset_is_avail(Attr, ATTR_WIDTH))
+					width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
+				if (attributeset_is_avail(Attr, ATTR_HEIGHT))
+					height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+
+				if (width == -1 && height == -1) {
+					/* Handle unscaled images */
+					Icon = gtk_image_new_from_file(find_pixmap(icon_file_name));
+				} else {
+					/* Handle scaled images */
+					pixbuf = gdk_pixbuf_new_from_file_at_size(
+						find_pixmap(icon_file_name), width, height, NULL);
+					if (pixbuf) {
+						Icon = gtk_image_new_from_pixbuf(pixbuf);
+						/* pixbuf is no longer required and should be unreferenced */
+						g_object_unref(pixbuf);
+					} else {
+						/* pixbuf is null (file not found) so by using this
+						* function gtk will substitute a broken image icon */
+						Icon = gtk_image_new_from_file("");
+					}
+				}
 			}
 #endif
 		}
@@ -2016,9 +2068,11 @@ create_edit(AttributeSet *Attr,
 static GtkWidget *
 create_pixmap(AttributeSet * Attr)
 {
+	GdkPixbuf *pixbuf;
 	GtkWidget *Pixmap;
 	char *icon_file_name;
 	char *icon_stock_name;
+	int width = -1, height = -1;
 	
 	icon_file_name = attributeset_get_first(Attr, ATTR_INPUT) + 5;
 	icon_stock_name = attributeset_get_this_tagattr(Attr, 
@@ -2028,8 +2082,30 @@ create_pixmap(AttributeSet * Attr)
 	if (icon_stock_name != NULL)
 		Pixmap = gtk_image_new_from_stock(icon_stock_name,
 					GTK_ICON_SIZE_DND);
-	else
-		Pixmap = gtk_image_new_from_file(find_pixmap(icon_file_name));
+	else {
+		if (attributeset_is_avail(Attr, ATTR_WIDTH))
+			width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
+		if (attributeset_is_avail(Attr, ATTR_HEIGHT))
+			height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+
+		if (width == -1 && height == -1) {
+			/* Handle unscaled images */
+			Pixmap = gtk_image_new_from_file(find_pixmap(icon_file_name));
+		} else {
+			/* Handle scaled images */
+			pixbuf = gdk_pixbuf_new_from_file_at_size(
+				find_pixmap(icon_file_name), width, height, NULL);
+			if (pixbuf) {
+				Pixmap = gtk_image_new_from_pixbuf(pixbuf);
+				/* pixbuf is no longer required and should be unreferenced */
+				g_object_unref(pixbuf);
+			} else {
+				/* pixbuf is null (file not found) so by using this
+				 * function gtk will substitute a broken image icon */
+				Pixmap = gtk_image_new_from_file("");
+			}
+		}
+	}
 
 	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
 		gtk_widget_set_sensitive(Pixmap, FALSE);
