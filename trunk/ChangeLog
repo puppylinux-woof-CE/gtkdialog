@@ -1,5 +1,6 @@
 * Sat Jun 18 2011 Thunor <thunorsif@hotmail.com>
 - Changed ECOMM to ENDCOMM as it conflicts with errno.h.
+- Removed the old files created by Automake.
 
 * Fri Jun 17 2011 Thunor <thunorsif@hotmail.com>
 - Added config.guess and config.sub.
