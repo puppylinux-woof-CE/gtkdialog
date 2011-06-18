@@ -143,7 +143,7 @@ gchar *Token;
 
 "</command>" { 
 	Token="</if>"; 
-	return ECOMM;
+	return ENDCOMM;
 }
 
 "</if>" { 

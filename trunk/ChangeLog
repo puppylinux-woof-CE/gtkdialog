@@ -1,5 +1,8 @@
+* Sat Jun 18 2011 Thunor <thunorsif@hotmail.com>
+- Changed ECOMM to ENDCOMM as it conflicts with errno.h.
+
 * Fri Jun 17 2011 Thunor <thunorsif@hotmail.com>
-- Added  config.guess and config.sub.
+- Added config.guess and config.sub.
 - Applied the Moose / Debian 03_stdin PRG_STDIN patch.
 - Applied the Patriot closewindow patch.
 - Changed signal to gtkdialog_signal in glade_support.c.

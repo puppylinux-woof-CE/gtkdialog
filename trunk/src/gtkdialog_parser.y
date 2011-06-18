@@ -106,7 +106,7 @@ start_up(void)
 
 %token         ACTION EACTION PART_ACTION 
 
-%token         COMM ECOMM
+%token         COMM ENDCOMM
 %token         IF ENDIF 
 %type  <ival>  then endif
 %token         WHILE EWHILE
@@ -501,7 +501,7 @@ tagattr
   ;
 
 imperative
-  : COMM assignment '>' ECOMM 
+  : COMM assignment '>' ENDCOMM 
   | SHOW_WIDGETS { 
 		token_store(SHOW);     
 	}
