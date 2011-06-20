@@ -1604,6 +1604,8 @@ create_tree(AttributeSet  *Attr,
 {
 	GtkWidget          *tree;
 	GtkTreeStore       *store;
+	GtkTreeSelection   *selection;
+	int                 count;
 
 	PIP_DEBUG("Attr: %p, attr: %p", Attr, attr);
 
@@ -1618,37 +1620,43 @@ create_tree(AttributeSet  *Attr,
 	 */
 	store = create_store_from_label(Attr);
 	tree = create_tree_view(Attr, store);
-//**NEW-----------------------------------------------------------------
-/*
+
+	/* Thunor: Now we deal with setting the selection mode. The default
+	 * is GTK_SELECTION_SINGLE so we'll leave that alone and only set a
+	 * different mode if the user requests it. At this point we have to
+	 * iterate through the tag attributes to find "selection_mode" as
+	 * custom attributes aren't appended as data until after the widget
+	 * has been realized (callback on_any_widget_realized() calls
+	 * widget_set_tag_attributes() which calls try_set_property()).
+	 * Search the project for exported_column and you'll see how easy it
+	 * is to access custom attributes once things are up and running */
 	if (attr) {
-		int count;
-		for (count = 0; count < attr->n; ++count) {
-
-			//GtkTreeSelection *selection;
-			//selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
-			//gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
-			//gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
-
-			if (strcasecmp((attr->pairs + count)->name, "selection_mode") == 0 ||
-				strcasecmp((attr->pairs + count)->name, "selection-mode") == 0) {
-
-				printf("%s: attr->pairs->name=%s\n", __func__, (attr->pairs + count)->name);//temp temp
-				printf("%s: attr->pairs->value=%s\n", __func__, (attr->pairs + count)->value);//temp temp
-					
+#ifdef DEBUG
+		fprintf(stderr, "%s: attr->n=%i\n", __func__, attr->n);
+#endif
+		for (count = 0; count < attr->n; count++) {
+#ifdef DEBUG
+			fprintf(stderr, "%s: attr->pairs->name=%s\n", __func__,
+				(attr->pairs + count)->name);
+			fprintf(stderr, "%s: attr->pairs->value=%s\n", __func__,
+				(attr->pairs + count)->value);
+#endif
+			if (strcasecmp((attr->pairs + count)->name, "selection_mode") == 0) {
+				/* Get a pointer to the selection object and set the requested mode */
+				selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+				if (strcasecmp((attr->pairs + count)->value, "none") == 0) {
+					gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
+				} else if (strcasecmp((attr->pairs + count)->value, "single") == 0) {
+					gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
+				} else if (strcasecmp((attr->pairs + count)->value, "browse") == 0) {
+					gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
+				} else if (strcasecmp((attr->pairs + count)->value, "multiple") == 0) {
+					gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+				}
 			}
-
-			//gchar *tmp;
-			//tmp = g_object_get_data(G_OBJECT(tree), "selection_mode");
-			//printf("%s: selection_mode=\"%s\"\n", __func__, tmp);//temp temp
-			//tmp = g_object_get_data(G_OBJECT(tree), "exported_column");
-			//printf("%s: exported_column=\"%s\"\n", __func__, tmp);//temp temp
-			//printf("%s: GTK_SELECTION_SINGLE=\"%i\" GTK_SELECTION_MULTIPLE=\"%i\"\n", __func__, 
-			//	GTK_SELECTION_SINGLE, GTK_SELECTION_MULTIPLE);//temp temp
-
 		}
 	}
-*/
-//**NEW-----------------------------------------------------------------
+
 	return tree;
 }
 
