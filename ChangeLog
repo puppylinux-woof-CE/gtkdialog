@@ -1,3 +1,7 @@
+* Mon Jun 20 2011 Thunor <thunorsif@hotmail.com>
+- Function widget_get_text_value has been updated to accommodate the
+  extended range of tree widget selection modes.
+
 * Sat Jun 18 2011 Thunor <thunorsif@hotmail.com>
 - Changed ECOMM to ENDCOMM as it conflicts with errno.h.
 - Removed the old files created by Automake.

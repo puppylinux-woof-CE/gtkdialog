@@ -960,6 +960,7 @@ remove_selected_variable(const char *name)
 	toclear = _tree_find(name, NULL);
 	if (toclear == NULL)
 		return -1;
+
 	/*
 	 * Removing the selected item or text range from the widget.
 	 */
@@ -988,8 +989,30 @@ remove_selected_variable(const char *name)
 			
 		case WIDGET_TREE:
 			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(toclear->Widget));
-			gtk_tree_selection_get_selected(selection, &model, &iter);		
-			gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
+/**NEW----------------------------------------------------------------*/
+	gint              selectionmode;
+
+			selectionmode = gtk_tree_selection_get_mode(selection);
+			if (selectionmode == GTK_SELECTION_NONE) {
+				/* Nothing to do */
+			} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
+//#ifdef DEBUG
+				fprintf(stderr, "%s: GTK_SELECTION_MULTIPLE name=%s TODO.\n", __func__, name);
+//#endif
+			} else {
+				/* Thunor: Below is the original code that handles the
+				 * default GTK_SELECTION_SINGLE mode and it's quite happy
+				 * dealing with GTK_SELECTION_BROWSE too.
+				 * 
+				 * It didn't check that something is actually selected
+				 * but since gtk_tree_selection_get_selected returns
+				 * true if something is then making a simple modification
+				 * seemed to be the sensible thing to do. Now there's no
+				 * Gtk-CRITICAL message appearing in the terminal */
+				if (gtk_tree_selection_get_selected(selection, &model, &iter))
+/**NEW----------------------------------------------------------------*/
+					gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
+			}
 			break;
 			
 		default:

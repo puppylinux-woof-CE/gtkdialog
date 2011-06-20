@@ -109,6 +109,10 @@ widget_get_text_value(
 	gchar            *string;
 	gint              n;
 	gchar            *tmp;
+	gint              selectionmode, initialrow, column;
+	GList            *selectedrows, *row;
+	GtkTreePath      *path;
+	gchar            *line;
 
 #ifdef DEBUG
 	g_message("%s(): type: %08x\n", __func__, type);
@@ -176,24 +180,99 @@ widget_get_text_value(
 			 * Searching the selected row.
 			 */
 			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
-			gtk_tree_selection_get_selected(selection, &model, &iter);
-			if (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)){
-				/*
-				 * Let's find the first column storing text type data.
-				 */
+			selectionmode = gtk_tree_selection_get_mode(selection);
+#ifdef DEBUG
+			fprintf(stderr, "%s: widget=%p selectionmode=%i\n", __func__,
+				widget, selectionmode);
+			fprintf(stderr, "%s: widget=%p selected row count=%i\n", __func__,
+				widget, gtk_tree_selection_count_selected_rows(selection));
+#endif
+			if (selectionmode == GTK_SELECTION_NONE) {
+				return g_strdup("");	/* Nothing is selected */
+			} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
+				/* Thunor: New code to return data from multiple selected rows.
+				 * I need to document how it works (for my benefit at least)
+				 * and what the user should expect to get from it:
+				 * If gtk_tree_selection_count_selected_rows returns 0
+				 * then we simply return a new empty string, otherwise
+				 * gtk_tree_selection_get_selected_rows gives us a GList of
+				 * GtkTreePaths (with a documented empty definition!). Then
+				 * gtk_tree_model_get_iter will convert the mysterious
+				 * GtkTreePath to a usable GtkTreeIter and then
+				 * gtk_tree_model_get reads the data from the column.
+				 * The cast GTK_TREE_PATH threw up an undefined reference
+				 * warning so I used (GtkTreePath*) instead */
+
+				/* Which column should we print? */
 				tmp = g_object_get_data(G_OBJECT(widget), "exported_column");
-				if (tmp != 0)
-					n = atoi(tmp) + FirstDataColumn;
-				else
-					n = FirstDataColumn;
-				/*
-				 * Returning the text from the selected row.
-				 */
-				gtk_tree_model_get(model, &iter, n, &string, -1);
-				return string;
-			}else{
-				return g_strdup("");
-			}	
+				if (tmp) {
+					column = atoi(tmp) + FirstDataColumn;
+				} else {
+					column = FirstDataColumn;
+				}
+
+				line = g_strdup("");
+				if (gtk_tree_selection_count_selected_rows(selection)) {
+					selectedrows = gtk_tree_selection_get_selected_rows(selection, &model);
+					initialrow = TRUE;
+					row = selectedrows;
+					while (row) {
+						path = (GtkTreePath*)(row->data);
+						gtk_tree_model_get_iter(model, &iter, path);
+						gtk_tree_model_get(model, &iter, column, &string, -1);
+						if (initialrow) {
+							//tmp = g_strconcat(line, "'", string, "'", NULL);
+							tmp = g_strconcat(line, string, NULL);
+							initialrow = FALSE;
+						} else {
+							//tmp = g_strconcat(line, " '", string, "'", NULL);
+							tmp = g_strconcat(line, "\n", string, NULL);
+						}
+						g_free(line);
+						line = tmp;
+						g_free(string);
+						row = row->next;
+					}
+					/* The GtkTreePaths and the GList should be freed now */
+					g_list_foreach(selectedrows, (GFunc)gtk_tree_path_free, NULL);
+					g_list_free(selectedrows);
+				}
+#ifdef DEBUG
+				fprintf(stderr, "%s: line=%s\n", __func__, line);
+#endif
+				return line;
+			} else {
+				/* Thunor: Below is the original code that handles the
+				 * default GTK_SELECTION_SINGLE mode and it's quite happy
+				 * dealing with GTK_SELECTION_BROWSE too.
+				 * 
+				 * Regarding gtk_tree_store_iter_is_valid, GTK+ 2 docs state
+				 * "WARNING: This function is slow. Only use it for debugging
+				 * and/or testing purposes.". In fact there's no need to use
+				 * it as gtk_tree_selection_get_selected returns true if there
+				 * is a selected node. The docs also state "iter may be NULL if
+				 * you just want to test if selection has any selected nodes".
+				 * Anyway, I'll just note it for now as it's only dealing with
+				 * either none or one row and I don't want to break anything ;) */
+				 gtk_tree_selection_get_selected(selection, &model, &iter);
+				 if (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)){
+					/*
+					 * Let's find the first column storing text type data.
+					 */
+					tmp = g_object_get_data(G_OBJECT(widget), "exported_column");
+					if (tmp != 0)
+						n = atoi(tmp) + FirstDataColumn;
+					else
+						n = FirstDataColumn;
+					/*
+					 * Returning the text from the selected row.
+					 */
+					gtk_tree_model_get(model, &iter, n, &string, -1);
+					return string;
+				}else{
+					return g_strdup("");
+				}	
+			}
 			break;
 			
 		default:
