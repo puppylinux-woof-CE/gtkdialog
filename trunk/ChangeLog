@@ -1,3 +1,7 @@
+* Tue Jun 21 2011 Thunor <thunorsif@hotmail.com>
+- Function remove_selected_variable has been updated to accommodate the
+  extended range of tree widget selection modes.
+
 * Mon Jun 20 2011 Thunor <thunorsif@hotmail.com>
 - Function widget_get_text_value has been updated to accommodate the
   extended range of tree widget selection modes.
