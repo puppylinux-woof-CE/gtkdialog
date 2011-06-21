@@ -948,6 +948,9 @@ remove_selected_variable(const char *name)
 	GtkTreeIter       iter;
 	GList            *empty = NULL;
 	variable         *toclear;
+	gint              selectionmode;
+	GList            *selectedrows, *row;
+	GList            *rowreferences = NULL;
 
 	g_assert(name != NULL);
 
@@ -989,16 +992,42 @@ remove_selected_variable(const char *name)
 			
 		case WIDGET_TREE:
 			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(toclear->Widget));
-/**NEW----------------------------------------------------------------*/
-	gint              selectionmode;
-
 			selectionmode = gtk_tree_selection_get_mode(selection);
 			if (selectionmode == GTK_SELECTION_NONE) {
 				/* Nothing to do */
 			} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
-//#ifdef DEBUG
-				fprintf(stderr, "%s: GTK_SELECTION_MULTIPLE name=%s TODO.\n", __func__, name);
-//#endif
+				/* Thunor: New code to delete multiple selected rows.
+				 * http://scentric.net/tutorial/sec-treemodel-rowref.html
+				 * is a good place to learn about paths and row references.
+				 * This is based on the code I added to widget_get_text_value.
+				 * We get the list of selected rows as normal but we can't
+				 * iterate through it and delete them one by one because the
+				 * paths to the rows change, but we can convert those paths
+				 * to GtkTreeRowReferences which we'll store in another list.
+				 * GtkTreeRowReferences watch for row changes and maintain
+				 * themselves so we can delete them one by one without
+				 * worrying about the others becoming out-of-date. */
+				if (gtk_tree_selection_count_selected_rows(selection)) {
+					selectedrows = gtk_tree_selection_get_selected_rows(selection, &model);
+					row = selectedrows;
+					while (row) {
+						rowreferences = g_list_append(rowreferences,
+							gtk_tree_row_reference_new(model, (GtkTreePath*)(row->data)));
+						row = row->next;
+					}
+					/* The GtkTreePaths and the GList should be freed now */
+					g_list_foreach(selectedrows, (GFunc)gtk_tree_path_free, NULL);
+					g_list_free(selectedrows);
+					row = rowreferences;
+					while (row) {
+						if (gtk_tree_model_get_iter(model, &iter,
+							gtk_tree_row_reference_get_path((GtkTreeRowReference*)row->data)))
+							gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
+						row = row->next;
+					}
+					/* The GList should be freed now */
+					g_list_free(rowreferences);
+				}
 			} else {
 				/* Thunor: Below is the original code that handles the
 				 * default GTK_SELECTION_SINGLE mode and it's quite happy
@@ -1010,7 +1039,6 @@ remove_selected_variable(const char *name)
 				 * seemed to be the sensible thing to do. Now there's no
 				 * Gtk-CRITICAL message appearing in the terminal */
 				if (gtk_tree_selection_get_selected(selection, &model, &iter))
-/**NEW----------------------------------------------------------------*/
 					gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
 			}
 			break;
