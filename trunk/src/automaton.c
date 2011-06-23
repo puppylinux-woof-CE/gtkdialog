@@ -1605,7 +1605,7 @@ create_tree(AttributeSet  *Attr,
 	GtkWidget          *tree;
 	GtkTreeStore       *store;
 	GtkTreeSelection   *selection;
-	int                 count;
+	gchar              *value;	
 
 	PIP_DEBUG("Attr: %p, attr: %p", Attr, attr);
 
@@ -1623,36 +1623,21 @@ create_tree(AttributeSet  *Attr,
 
 	/* Thunor: Now we deal with setting the selection mode. The default
 	 * is GTK_SELECTION_SINGLE so we'll leave that alone and only set a
-	 * different mode if the user requests it. At this point we have to
-	 * iterate through the tag attributes to find "selection_mode" as
-	 * custom attributes aren't appended as data until after the widget
-	 * has been realized (callback on_any_widget_realized() calls
-	 * widget_set_tag_attributes() which calls try_set_property()).
-	 * Search the project for exported_column and you'll see how easy it
-	 * is to access custom attributes once things are up and running */
+	 * different mode if the user requests it */
 	if (attr) {
-#ifdef DEBUG
-		fprintf(stderr, "%s: attr->n=%i\n", __func__, attr->n);
-#endif
-		for (count = 0; count < attr->n; count++) {
-#ifdef DEBUG
-			fprintf(stderr, "%s: attr->pairs->name=%s\n", __func__,
-				(attr->pairs + count)->name);
-			fprintf(stderr, "%s: attr->pairs->value=%s\n", __func__,
-				(attr->pairs + count)->value);
-#endif
-			if (strcasecmp((attr->pairs + count)->name, "selection_mode") == 0) {
-				/* Get a pointer to the selection object and set the requested mode */
-				selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-				if (strcasecmp((attr->pairs + count)->value, "none") == 0) {
-					gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
-				} else if (strcasecmp((attr->pairs + count)->value, "single") == 0) {
-					gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
-				} else if (strcasecmp((attr->pairs + count)->value, "browse") == 0) {
-					gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
-				} else if (strcasecmp((attr->pairs + count)->value, "multiple") == 0) {
-					gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
-				}
+		if (!(value = get_tag_attribute(attr, "selection_mode")))
+			value = get_tag_attribute(attr, "selection-mode");
+		if (value) {
+			/* Get a pointer to the selection object and set the requested mode */
+			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+			if (strcasecmp(value, "none") == 0) {
+				gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
+			} else if (strcasecmp(value, "single") == 0) {
+				gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
+			} else if (strcasecmp(value, "browse") == 0) {
+				gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
+			} else if (strcasecmp(value, "multiple") == 0) {
+				gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
 			}
 		}
 	}
