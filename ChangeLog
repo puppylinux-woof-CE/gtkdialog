@@ -1,3 +1,9 @@
+* Thu Jun 23 2011 Thunor <thunorsif@hotmail.com>
+- Simplified the search for the "selection_mode" custom attribute in
+  create_tree as I found a function that finds them and returns their
+  values. Also, since there exists a GTK "selection-mode" property for
+  other unrelated widgets I don't now distinguish between a "_" and "-".
+
 * Tue Jun 21 2011 Thunor <thunorsif@hotmail.com>
 - Function remove_selected_variable has been updated to accommodate the
   extended range of tree widget selection modes.
