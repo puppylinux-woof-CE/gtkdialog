@@ -1,3 +1,9 @@
+* Fri Jun 24 2011 Thunor <thunorsif@hotmail.com>
+- Added hbox and vbox widget scrolling capability via the "scrollable"
+  custom attribute. If scrollable="true/yes/1" then the box is placed
+  inside a GtkScrolledWindow by the existing put_in_the_scrolled_window
+  function.
+
 * Thu Jun 23 2011 Thunor <thunorsif@hotmail.com>
 - Simplified the search for the "selection_mode" custom attribute in
   create_tree as I found a function that finds them and returns their

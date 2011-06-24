@@ -1193,6 +1193,10 @@ put_in_the_scrolled_window(GtkWidget *widget,
 		gtk_scrolled_window_add_with_viewport(
 				GTK_SCROLLED_WINDOW(scrolledwindow), 
 				widget);
+	else if (GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget)) {
+		gtk_scrolled_window_add_with_viewport(
+			GTK_SCROLLED_WINDOW(scrolledwindow), widget);
+	}
 	else
 		gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
 	return scrolledwindow;
@@ -2122,6 +2126,7 @@ instruction_execute_push(
 	int 		  n;
 	static GtkWidget *LastRadioButton = NULL;
 	//char 		 *attribute_value;
+	gchar		 *value;
 
 	PIP_DEBUG("token: %d", Token);
 	
@@ -2550,7 +2555,17 @@ instruction_execute_push(
 							   FALSE, FALSE,
 							   0);
 
-			push_widget(Widget, Widget_Type);
+			/* Thunor: If the custom attribute "scrollable" is true
+			 * then place the vbox inside a GtkScrolledWindow */
+			if (tag_attributes &&
+				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
+				((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+					tag_attributes);
+				push_widget(scrolled_window, WIDGET_SCROLLEDW);
+			} else
+				push_widget(Widget, Widget_Type);
 			/*
 			 ** The box widgets are holding the radiobuttons to groups, so
 			 ** one radiobutton can turn off the others. 
@@ -2586,7 +2601,17 @@ instruction_execute_push(
 							 0);
 				}
 
-			push_widget(Widget, Widget_Type);
+			/* Thunor: If the custom attribute "scrollable" is true
+			 * then place the hbox inside a GtkScrolledWindow */
+			if (tag_attributes &&
+				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
+				((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+					tag_attributes);
+				push_widget(scrolled_window, WIDGET_SCROLLEDW);
+			} else
+				push_widget(Widget, Widget_Type);
 			/*
 			 ** The box widgets holds the radiobuttons to groups, so
 			 ** one radiobutton can turn off the others. 
