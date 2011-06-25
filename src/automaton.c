@@ -1646,14 +1646,20 @@ create_tree(AttributeSet  *Attr,
 		if (value) {
 			/* Get a pointer to the selection object and set the requested mode */
 			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-			if (strcasecmp(value, "none") == 0) {
-				gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
-			} else if (strcasecmp(value, "single") == 0) {
-				gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
-			} else if (strcasecmp(value, "browse") == 0) {
-				gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
-			} else if (strcasecmp(value, "multiple") == 0) {
+			if (strcasecmp(value, "multiple") == 0 ||
+				atoi(value) == GTK_SELECTION_MULTIPLE) {
 				gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+			} else if (strcasecmp(value, "browse") == 0 ||
+				atoi(value) == GTK_SELECTION_BROWSE) {
+				gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
+			} else if (strcasecmp(value, "single") == 0 ||
+				atoi(value) == GTK_SELECTION_SINGLE) {
+				gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
+			} else if (strcasecmp(value, "none") == 0 ||
+				atoi(value) == GTK_SELECTION_NONE) {
+				/* Note that atoi will return 0 for any non-integer string in
+				 * value, therefore GTK_SELECTION_NONE should be checked last */
+				gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
 			}
 		}
 	}
