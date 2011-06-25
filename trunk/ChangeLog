@@ -1,7 +1,10 @@
 * Sat Jun 25 2011 Thunor <thunorsif@hotmail.com>
 - Added width and height tag attribute support for the scrollable hbox
   and vbox to control the viewport dimensions.
-
+- "selection_mode" will now accept 3, 2, 1, or 0 as well as multiple,
+  browse, single and none. This makes it consistent with the existing
+  selection-mode GtkCList (<table>) property.
+  
 * Fri Jun 24 2011 Thunor <thunorsif@hotmail.com>
 - Added hbox and vbox widget scrolling capability via the "scrollable"
   custom attribute. If scrollable="true/yes/1" then the box is placed
