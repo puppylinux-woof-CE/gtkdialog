@@ -427,7 +427,18 @@ gchar *Token;
 \<separator\>    			{ Token="<separator>"; return(SEPARATOR);  		}
 \<\/separator\>				{ Token="</separator>"; return(ESEPARATOR);		}
 
+	/* Thunor: Newly supported widgets */
+\<hseparator\>    			{ Token="<hseparator>"; return(HSEPARATOR); }
+\<\/hseparator\>			{ Token="</hseparator>"; return(EHSEPARATOR); }
+\<hseparator[ ]+  			{ Token="<hseparator>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_HSEPARATOR); }
 
+\<vseparator\>    			{ Token="<vseparator>"; return(VSEPARATOR); }
+\<\/vseparator\>			{ Token="</vseparator>"; return(EVSEPARATOR); }
+\<vseparator[ ]+  			{ Token="<vseparator>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_VSEPARATOR); }
 
 
 

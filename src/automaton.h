@@ -60,6 +60,8 @@ typedef struct actioncommand {
 #define WIDGET_CHOOSER        0x00A10000
 #define WIDGET_MENUSEP        0x00A20000
 #define WIDGET_PROGRESS       0x00A30000
+#define WIDGET_HSEPARATOR     0x00A40000
+#define WIDGET_VSEPARATOR     0x00A50000
 
 /*
  * Imperative stuff.

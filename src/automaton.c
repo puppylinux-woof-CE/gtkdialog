@@ -2682,6 +2682,18 @@ instruction_execute_push(
 		}
 		break;
 
+	case WIDGET_HSEPARATOR:
+		/* Thunor: My first new widget :) */
+		Widget = gtk_hseparator_new();
+		push_widget(Widget, Widget_Type);
+		break;
+
+	case WIDGET_VSEPARATOR:
+		/* Thunor: I'm on a roll now... */
+		Widget = gtk_vseparator_new();
+		push_widget(Widget, Widget_Type);
+		break;
+
 	default:
 		if (!option_no_warning)
 		g_warning("%s(): Unknown widget type.", __func__);

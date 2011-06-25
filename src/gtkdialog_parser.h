@@ -146,7 +146,13 @@
      END_OF_FILE = 362,
      NUMBER = 363,
      STRING = 364,
-     UMINUS = 365
+     UMINUS = 365,
+     HSEPARATOR = 366,
+     PART_HSEPARATOR = 367,
+     EHSEPARATOR = 368,
+     VSEPARATOR = 369,
+     PART_VSEPARATOR = 370,
+     EVSEPARATOR = 371
    };
 #endif
 /* Tokens.  */
@@ -258,6 +264,12 @@
 #define NUMBER 363
 #define STRING 364
 #define UMINUS 365
+#define HSEPARATOR 366
+#define PART_HSEPARATOR 367
+#define EHSEPARATOR 368
+#define VSEPARATOR 369
+#define PART_VSEPARATOR 370
+#define EVSEPARATOR 371
 
 
 
@@ -278,7 +290,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 282 "gtkdialog_parser.h"
+#line 294 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

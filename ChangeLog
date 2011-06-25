@@ -4,6 +4,8 @@
 - "selection_mode" will now accept 3, 2, 1, or 0 as well as multiple,
   browse, single and none. This makes it consistent with the existing
   selection-mode GtkCList (<table>) property.
+- New widget: <hseparator tagattr></hseparator>.
+- New widget: <vseparator tagattr></vseparator>.
   
 * Fri Jun 24 2011 Thunor <thunorsif@hotmail.com>
 - Added hbox and vbox widget scrolling capability via the "scrollable"
