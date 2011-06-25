@@ -1161,6 +1161,11 @@ put_in_the_scrolled_window(GtkWidget *widget,
 		tag_attr     *attr)
 {
 	GtkWidget *scrolledwindow;
+	#define SW_DEFAULT_WIDTH 200
+	#define SW_DEFAULT_HEIGHT 100
+	int        width = SW_DEFAULT_WIDTH;
+	int        height = SW_DEFAULT_HEIGHT;
+	gchar     *value;
 
 	g_assert(widget != NULL);
 	/*
@@ -1185,18 +1190,25 @@ put_in_the_scrolled_window(GtkWidget *widget,
 		gtk_widget_set_usize(scrolledwindow, 
 				atoi(attributeset_get_first(Attr, ATTR_WIDTH)),
 				-1);
-
+	else if (GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget)) {
+		/* Thunor: hbox and vbox are containers and don't accept the
+		 * width/height directives, but we can access them if they are
+		 * set as tag attributes */
+		if (attr) {
+			if (value = get_tag_attribute(attr, "width"))
+				width = atoi(value);
+			if (value = get_tag_attribute(attr, "height"))
+				height = atoi(value);
+		}
+		gtk_widget_set_usize(scrolledwindow, width, height);
+	}
 	else 
-		gtk_widget_set_usize(scrolledwindow, 200, 100);
-		
-	if (GTK_IS_LIST(widget))
+		gtk_widget_set_usize(scrolledwindow, SW_DEFAULT_WIDTH, SW_DEFAULT_HEIGHT);
+
+	if (GTK_IS_LIST(widget) || GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget))
 		gtk_scrolled_window_add_with_viewport(
 				GTK_SCROLLED_WINDOW(scrolledwindow), 
 				widget);
-	else if (GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget)) {
-		gtk_scrolled_window_add_with_viewport(
-			GTK_SCROLLED_WINDOW(scrolledwindow), widget);
-	}
 	else
 		gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
 	return scrolledwindow;

@@ -1,3 +1,7 @@
+* Sat Jun 25 2011 Thunor <thunorsif@hotmail.com>
+- Added width and height tag attribute support for the scrollable hbox
+  and vbox to control the viewport dimensions.
+
 * Fri Jun 24 2011 Thunor <thunorsif@hotmail.com>
 - Added hbox and vbox widget scrolling capability via the "scrollable"
   custom attribute. If scrollable="true/yes/1" then the box is placed
