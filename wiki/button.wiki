@@ -14,9 +14,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<input file stock="gtk-image"></input>
 	<input file>filename</input>
 	<visible>state</visible>
-	<action>command</action>
-	<action signal="event">command</action>
-	<action type="function">command</action>
+	<action>procedure</action>
+	<action signal="event">procedure</action>
+	<action type="function">procedure</action>
 </button>
 }}}
 == Tag Attributes ==
@@ -42,3 +42,4 @@ Some of these may have a tag attribute equivalent.
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
+----
