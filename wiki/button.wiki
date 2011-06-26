@@ -16,7 +16,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<visible>state</visible>
 	<action>procedure</action>
 	<action signal="event">procedure</action>
-	<action type="function">procedure</action>
+	<action type="function">property</action>
 </button>
 }}}
 == Tag Attributes ==
@@ -37,8 +37,8 @@ Some of these may have a tag attribute equivalent.
 || action || Execute command on click || Shell command || || ||
 || action || Perform function on click || function:target_varname || || ||
 || action signal="event" || Execute command on event || Shell command || || ||
-|| action signal="event" || Perform function on event || function:target_varname || || ||
-|| action type="function" || Perform function on click || target_varname || || ||
+|| action signal="event" || Perform function on event || function:property || || ||
+|| action type="function" || Perform function on click || property || || ||
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
