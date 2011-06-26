@@ -6,12 +6,17 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] widget containi
 == Definition ==
 {{{
 <button tag_attr="value" tag_attr="value" ...>
+	<label>string</label>
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
+	<input file icon="image"></input>
 	<input file stock="gtk-image"></input>
 	<input file>filename</input>
 	<visible>state</visible>
+	<action>command</action>
+	<action signal="">command</action>
+	<action type="">command</action>
 </button>
 }}}
 == Tag Attributes ==
@@ -21,12 +26,17 @@ None.
 == Directives ==
 Some of these may have a tag attribute equivalent.
 || *Name* || *Description* || *Value* || *Mandatory* || *Version* ||
+|| label || Button text || || || ||
 || variable || Shell variable name || || || ||
 || height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
 || width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
-|| input file stock="gtk-image" || Stock GTK image name || gtk-about, gtk-add, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || (0) || ||
-|| input file || Image filename || || (0) || ||
+|| input file icon="image" || GTK theme image name || || || ||
+|| input file stock="gtk-image" || Stock GTK image name || gtk-about, gtk-add, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || || ||
+|| input file || Image filename || || || ||
 || visible || Sensitive state || enabled or disabled || || ||
+|| action || || || || ||
+|| action type="" || || || || ||
+|| action signal="" || || || || ||
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
