@@ -1,7 +1,7 @@
 #summary button widget reference
 
 = button widget =
-A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] widget containing either a GtkLabel, a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHbox]
+A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a GtkLabel, a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHbox]
 ----
 == Definition ==
 {{{
@@ -15,8 +15,8 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] widget containi
 	<input file>filename</input>
 	<visible>state</visible>
 	<action>command</action>
-	<action signal="">command</action>
-	<action type="">command</action>
+	<action signal="event">command</action>
+	<action type="function">command</action>
 </button>
 }}}
 == Tag Attributes ==
@@ -25,7 +25,7 @@ These are [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-h
 None.
 == Directives ==
 Some of these may have a tag attribute equivalent.
-|| *Name* || *Description* || *Value* || *Mandatory* || *Version* ||
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
 || label || Button text || || || ||
 || variable || Shell variable name || || || ||
 || height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
@@ -34,9 +34,11 @@ Some of these may have a tag attribute equivalent.
 || input file stock="gtk-image" || Stock GTK image name || gtk-about, gtk-add, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || || ||
 || input file || Image filename || || || ||
 || visible || Sensitive state || enabled or disabled || || ||
-|| action || || || || ||
-|| action type="" || || || || ||
-|| action signal="" || || || || ||
+|| action || Execute command on click || Shell command || || ||
+|| action || Perform function on click || function:target_varname || || ||
+|| action signal="event" || Execute command on event || Shell command || || ||
+|| action signal="event" || Perform function on event || function:target_varname || || ||
+|| action type="function" || Perform function on click || target_varname || || ||
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
