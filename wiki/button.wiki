@@ -35,7 +35,7 @@ Some of these may have a tag attribute equivalent.
 || input file || Image filename || || || ||
 || visible || Sensitive state || enabled or disabled || || ||
 || action || Execute command on click || Shell command || || ||
-|| action || Perform function on click || function:target_varname || || ||
+|| action || Perform function on click || function:property || || ||
 || action signal="event" || Execute command on event || Shell command || || ||
 || action signal="event" || Perform function on event || function:property || || ||
 || action type="function" || Perform function on click || property || || ||
