@@ -15,8 +15,8 @@
 }}}
 ----
 == Tag Attributes ==
+These are [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hierarchy GtkImage] widget or ancestor class read/write properties and I recommend tracing through the object hierarchy to locate the tag attributes available for this wdget.
 ----
-Todo...
 == Directives ==
 || *Name* || *Description* || *Value* || *Mandatory* || *Introduced* ||
 || variable || Shell variable name || || || ||
