@@ -15,12 +15,12 @@ A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] widget
 </pixmap>
 }}}
 == Tag Attributes ==
-These are [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hierarchy GtkImage] widget or ancestor class properties and I recommend tracing through the object hierarchy to locate the tag attributes available for this widget.
+See the [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hierarchy GtkImage] widget and ancestor class properties.
 === Custom Attributes ===
 None.
 == Directives ==
 Some of these may have a tag attribute equivalent.
-|| *Name* || *Description* || *Value* || *Mandatory* || *Version* ||
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
 || variable || Shell variable name || || || ||
 || height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
 || width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
@@ -30,3 +30,4 @@ Some of these may have a tag attribute equivalent.
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_DND and do not scale.
+----
