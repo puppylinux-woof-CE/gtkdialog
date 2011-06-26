@@ -1,8 +1,8 @@
 #summary Documentation
 
 = Documentation =
-
+----
 == Widget Definitions ==
-  * {{{<pixmap>}}}
-  * {{{<hseparator>}}}
-  * {{{<vseparator>}}}
+  * [pixmap]
+  * [hseparator]
+  * [vseparator]
