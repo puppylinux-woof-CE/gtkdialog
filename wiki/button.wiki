@@ -16,7 +16,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<visible>state</visible>
 	<action>procedure</action>
 	<action signal="event">procedure</action>
-	<action type="function">property</action>
+	<action type="function">parameter</action>
 </button>
 }}}
 == Tag Attributes ==
@@ -35,10 +35,10 @@ Some of these may have a tag attribute equivalent.
 || input file || Image filename || || || ||
 || visible || Sensitive state || enabled or disabled || || ||
 || action || Execute command on click || Shell command || || ||
-|| action || Perform function on click || function:property || || ||
+|| action || Perform function on click || function:parameter || || ||
 || action signal="event" || Execute command on event || Shell command || || ||
-|| action signal="event" || Perform function on event || function:property || || ||
-|| action type="function" || Perform function on click || property || || ||
+|| action signal="event" || Perform function on event || function:parameter || || ||
+|| action type="function" || Perform function on click || parameter || || ||
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
