@@ -1,7 +1,7 @@
 #summary button widget reference
 
 = button widget =
-A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a GtkLabel, a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHbox]
+A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHbox]
 ----
 == Definition ==
 {{{
@@ -20,7 +20,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 </button>
 }}}
 == Tag Attributes ==
-These are [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hierarchy GtkButton] widget or ancestor class properties and I recommend tracing through the object hierarchy to locate the tag attributes available for this widget.
+See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hierarchy GtkButton] widget or ancestor class properties.
 === Custom Attributes ===
 None.
 == Directives ==
