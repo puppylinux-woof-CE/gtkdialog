@@ -1,0 +1,27 @@
+#summary pixmap widget definition
+
+= pixmap widget =
+----
+== Definition ==
+{{{
+<pixmap tag_attr="value" tag_attr="value" ...>
+	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
+	<input file stock="gtk-imagename"></input>
+	<input file>filename</input>
+	<visible>state</visible>
+</pixmap>
+}}}
+----
+== Tag Attributes ==
+----
+Todo...
+== Directives ==
+|| *Name* || *Description* || *Value* || *Mandatory* || *Introduced* ||
+|| variable || Shell variable name || || || ||
+|| height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
+|| width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
+|| input file stock="gtk-imagename" || Stock GTK image name || [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS gtk-about, gtk-add, gtk-apply, gtk-bold...] || (O) || ||
+|| input file || Image filename || || (O) || ||
+|| visible || Sensitive state || enabled or disabled || || ||
