@@ -1,6 +1,7 @@
-#summary pixmap widget definition
+#summary pixmap widget reference
 
 = pixmap widget =
+A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] widget
 ----
 == Definition ==
 {{{
@@ -8,20 +9,24 @@
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
-	<input file stock="gtk-imagename"></input>
+	<input file stock="gtk-image"></input>
 	<input file>filename</input>
 	<visible>state</visible>
 </pixmap>
 }}}
-----
 == Tag Attributes ==
 These are [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hierarchy GtkImage] widget or ancestor class properties and I recommend tracing through the object hierarchy to locate the tag attributes available for this widget.
-----
+=== Custom Attributes ===
+None.
 == Directives ==
-|| *Name* || *Description* || *Value* || *Mandatory* || *Introduced* ||
+Some of these may have a tag attribute equivalent.
+|| *Name* || *Description* || *Value* || *Mandatory* || *Version* ||
 || variable || Shell variable name || || || ||
 || height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
 || width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
-|| input file stock="gtk-imagename" || Stock GTK image name || [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS gtk-about, gtk-add, gtk-apply, gtk-bold...] || (O) || ||
-|| input file || Image filename || || (O) || ||
+|| input file stock="gtk-image" || Stock GTK image name || gtk-about, gtk-add, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || (0) || ||
+|| input file || Image filename || || (0) || ||
 || visible || Sensitive state || enabled or disabled || || ||
+
+== Notes ==
+Stock images are hardcoded to GTK_ICON_SIZE_DND and do not scale.
