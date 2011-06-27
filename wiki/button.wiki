@@ -5,7 +5,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 ----
 == Definition ==
 {{{
-<button tag_attr="value" tag_attr="value" ...>
+<button [yes|no|ok|cancel|help] [[tag_attr="value"] tag_attr="value" ...]>
 	<label>string</label>
 	<variable>varname</variable>
 	<height>value</height>
