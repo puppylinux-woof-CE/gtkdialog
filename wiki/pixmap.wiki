@@ -22,8 +22,8 @@ None.
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
 || variable || Shell variable name || || || ||
-|| height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
-|| width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
+|| height || Scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
+|| width || Scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
 || input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || (0) || ||
 || input file || Image filename || || (0) || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
