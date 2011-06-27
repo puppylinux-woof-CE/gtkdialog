@@ -1,0 +1,29 @@
+#summary vbox widget reference
+
+= vbox widget =
+A [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox] optionally packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+----
+
+== Definition ==
+{{{
+<vbox [tag_attr="value" [tag_attr="value"] ...]>
+	[widget
+	[widget] ...]
+</vbox>
+}}}
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkVBox.html#GtkVBox.object-hierarchy GtkVBox] widget and ancestor class properties.
+
+=== Custom Attributes ===
+|| *Name* || *Description* || *Value* || *Version* ||
+|| scrollable || Add scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| height || Scrolled window dimension || Positive integer || 0.7.21 ||
+|| width || Scrolled window dimension || Positive integer || 0.7.21 ||
+
+== Directives ==
+None.
+
+== Notes ==
+None.
+----
