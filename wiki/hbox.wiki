@@ -13,7 +13,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] optionally packed i
 }}}
 
 == Tag Attributes ==
-See the [http://developer.gnome.org/gtk/2.24/GtkHbox.html#GtkHbox.object-hierarchy GtkHbox] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkHBox.html#GtkHBox.object-hierarchy GtkHBox] widget and ancestor class properties.
 
 === Custom Attributes ===
 || *Name* || *Description* || *Value* || *Version* ||
