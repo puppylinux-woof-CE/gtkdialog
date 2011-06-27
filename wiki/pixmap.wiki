@@ -19,12 +19,12 @@ See the [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hiera
 === Custom Attributes ===
 None.
 == Directives ==
-Some of these may have a tag attribute equivalent.
+Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
 || variable || Shell variable name || || || ||
 || height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
 || width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
-|| input file stock="gtk-image" || Stock GTK image name || gtk-about, gtk-add, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || (0) || ||
+|| input file stock="_gtk-image_" || Stock GTK image name || gtk-about, gtk-add, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || (0) || ||
 || input file || Image filename || || (0) || ||
 || visible || Sensitive state || enabled or disabled || || ||
 
