@@ -1,0 +1,19 @@
+#summary vseparator widget reference
+
+= vseparator widget =
+A [http://developer.gnome.org/gtk/2.24/GtkVSeparator.html GtkVSeparator] widget
+----
+== Definition ==
+{{{
+<vseparator [tag_attr="value" [tag_attr="value"] ...]>
+</vseparator>
+}}}
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkVSeparator.html#GtkVSeparator.object-hierarchy GtkVSeparator] widget and ancestor class properties.
+=== Custom Attributes ===
+None.
+== Directives ==
+None.
+== Notes ==
+None.
+----
