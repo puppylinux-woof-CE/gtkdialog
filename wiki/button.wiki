@@ -24,7 +24,7 @@ See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hie
 === Custom Attributes ===
 None.
 == Directives ==
-Some of these may have a tag attribute equivalent.
+Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
 || label || Button text || || || ||
 || variable || Shell variable name || || || ||
