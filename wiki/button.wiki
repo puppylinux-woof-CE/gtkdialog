@@ -3,6 +3,7 @@
 = button widget =
 A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHbox]
 ----
+
 == Definition ==
 {{{
 <button [yes|no|ok|cancel|help] [tag_attr="value" [tag_attr="value"] ...]>
@@ -19,17 +20,20 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<action type="function">parameter</action>
 </button>
 }}}
+
 == Tag Attributes ==
 See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hierarchy GtkButton] widget and ancestor class properties.
+
 === Custom Attributes ===
 None.
+
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
 || label || Button text || || || ||
 || variable || Shell variable name || || || ||
-|| height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
-|| width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
+|| height || Scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
+|| width || Scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
 || input file icon="_image_" || GTK theme image name || || || ||
 || input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || || ||
 || input file || Image filename || || || ||
