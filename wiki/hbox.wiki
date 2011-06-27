@@ -1,7 +1,7 @@
 #summary hbox widget reference
 
 = hbox widget =
-A [http://developer.gnome.org/gtk/2.24/GtkHbox.html GtkHbox] optionally packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+A [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] optionally packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
 ----
 
 == Definition ==
