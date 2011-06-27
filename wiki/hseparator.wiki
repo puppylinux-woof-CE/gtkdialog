@@ -1,0 +1,19 @@
+#summary hseparator widget reference
+
+= hseparator widget =
+A [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html GtkHSeparator] widget
+----
+== Definition ==
+{{{
+<hseparator [tag_attr="value" [tag_attr="value"] ...]>
+</hseparator>
+}}}
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html#GtkHSeparator.object-hierarchy GtkHSeparator] widget and ancestor class properties.
+=== Custom Attributes ===
+None.
+== Directives ==
+None.
+== Notes ==
+None.
+----
