@@ -5,7 +5,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 ----
 == Definition ==
 {{{
-<button [yes|no|ok|cancel|help] [[tag_attr="value"] tag_attr="value" ...]>
+<button [yes|no|ok|cancel|help] [tag_attr="value" [tag_attr="value"] ...]>
 	<label>string</label>
 	<variable>varname</variable>
 	<height>value</height>
@@ -31,9 +31,9 @@ Some of these may have tag attribute equivalents.
 || height || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
 || width || Scaling dimension || Positive value, -1 to ignore || || 0.7.21 ||
 || input file icon="_image_" || GTK theme image name || || || ||
-|| input file stock="_gtk-image_" || Stock GTK image name || gtk-about, gtk-add, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || || ||
+|| input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (complete list)] || || ||
 || input file || Image filename || || || ||
-|| visible || Sensitive state || enabled or disabled || || ||
+|| visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 || action || Execute command on click || Shell command || || ||
 || action || Perform function on click || _function_:_parameter_ || || ||
 || action signal="_event_" || Execute command on event || Shell command || || ||
