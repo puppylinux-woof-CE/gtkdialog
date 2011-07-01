@@ -34,7 +34,7 @@ Some of these may have tag attribute equivalents.
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 
 == Signals ==
-Todo.
+None.
 
 == Functions ==
 None.
