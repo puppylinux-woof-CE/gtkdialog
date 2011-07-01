@@ -152,7 +152,10 @@
      EHSEPARATOR = 368,
      VSEPARATOR = 369,
      PART_VSEPARATOR = 370,
-     EVSEPARATOR = 371
+     EVSEPARATOR = 371,
+     COMBOBOXTEXT = 372,
+     PART_COMBOBOXTEXT = 373,
+     ECOMBOBOXTEXT = 374
    };
 #endif
 /* Tokens.  */
@@ -270,6 +273,9 @@
 #define VSEPARATOR 369
 #define PART_VSEPARATOR 370
 #define EVSEPARATOR 371
+#define COMBOBOXTEXT 372
+#define PART_COMBOBOXTEXT 373
+#define ECOMBOBOXTEXT 374
 
 
 
@@ -290,7 +296,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 294 "gtkdialog_parser.h"
+#line 300 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

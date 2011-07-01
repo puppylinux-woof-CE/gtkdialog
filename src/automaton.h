@@ -62,6 +62,7 @@ typedef struct actioncommand {
 #define WIDGET_PROGRESS       0x00A30000
 #define WIDGET_HSEPARATOR     0x00A40000
 #define WIDGET_VSEPARATOR     0x00A50000
+#define WIDGET_COMBOBOXTEXT   0x00A60000
 
 /*
  * Imperative stuff.
@@ -137,12 +138,6 @@ gint window_delete_event_handler(
 stackelement _sum( stackelement a, stackelement b);
 void fileselection_made( GtkWidget *w, actioncommand *action );
 
-void fill_text_by_file( GtkTextBuffer *buffer, char *filename );
-void fill_list_by_glist( GtkWidget *list, GList *glist );
-void fill_clist_by_glist( GtkWidget *list, int col, GList *glist );
-void fill_list_by_command( GtkWidget *list, char *command );
-void fill_entry_by_command( GtkWidget *entry, char *command);
-void fill_table_by_command( GtkWidget *list, char *command );
 void button_pressed(GtkWidget *, const gchar *);
 
 int token_store(token command);
@@ -153,5 +148,7 @@ int token_store_with_argument( token command, const char *argument);
 gboolean token_store_with_tag_attributes(token command, GList *attr);
 gint instruction_get_pc(void);
 void instruction_set_jump(gint from, gint where);
+
+void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 
 #endif

@@ -440,6 +440,12 @@ gchar *Token;
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_VSEPARATOR); }
 
+\<comboboxtext\>   			{ Token="<comboboxtext>"; return(COMBOBOXTEXT); }
+\<comboboxtext[ ]+  		{ Token="<comboboxtext>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_COMBOBOXTEXT); }
+\<\/comboboxtext\>  		{ Token="</comboboxtext>"; return(ECOMBOBOXTEXT); }
+
 
 
 

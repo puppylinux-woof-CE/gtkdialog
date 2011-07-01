@@ -52,9 +52,12 @@ on_any_button_clicked(
 		gchar     *full_command)
 {
 	gchar *prefix, *command;
-	g_return_if_fail(command != NULL);
+
+//	g_return_if_fail(command != NULL);	BUG redundant
+	g_return_if_fail(full_command != NULL);
 #ifdef DEBUG
-	g_message("%s(%p, '%s')", __func__, widget, command);
+//	g_message("%s(%p, '%s')", __func__, widget, command);	BUG redundant
+	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
 	execute_action(widget, command, prefix);
@@ -68,9 +71,12 @@ on_any_entry_almost_any(GtkEntry *widget,
 		gchar     *full_command)
 {
 	gchar *prefix, *command;
-	g_return_if_fail(command != NULL);
+
+//	g_return_if_fail(command != NULL);	BUG redundant
+	g_return_if_fail(full_command != NULL);
 #ifdef DEBUG
-	g_message("%s(%p, '%s')", __func__, widget, command);
+//	g_message("%s(%p, '%s')", __func__, widget, command);	BUG redundant
+	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
 	execute_action(widget, command, prefix);
@@ -124,9 +130,12 @@ on_any_widget_almost_any(
 		gchar *full_command)
 {
 	gchar *prefix, *command;
-	g_return_if_fail(command != NULL);
+
+//	g_return_if_fail(command != NULL);	BUG redundant
+	g_return_if_fail(full_command != NULL);
 #ifdef DEBUG
-	g_message("%s(%p, '%s')", __func__, widget, command);
+//	g_message("%s(%p, '%s')", __func__, widget, command);	BUG redundant
+	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
 	execute_action(widget, command, prefix);

@@ -1,3 +1,11 @@
+* Fri Jul 1 2011 Thunor <thunorsif@hotmail.com>
+- New widget: <comboboxtext></comboboxtext>, full action function set.
+
+* Thu Jun 30 2011 Thunor <thunorsif@hotmail.com>
+- Fixed three bugs in glade_support.c that were checking that command
+  wasn't NULL when they should've been checking full_command instead
+  (likely an initial mistake and then copied and pasted).
+  
 * Sat Jun 25 2011 Thunor <thunorsif@hotmail.com>
 - Added width and height tag attribute support for the scrollable hbox
   and vbox to control the viewport dimensions.
