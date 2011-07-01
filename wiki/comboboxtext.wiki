@@ -1,0 +1,54 @@
+#summary comboboxtext widget reference
+
+= comboboxtext widget =
+A [http://developer.gnome.org/gtk/2.24/GtkComboBox.html GtkComboBox]
+----
+
+== Definition ==
+{{{
+<comboboxtext tag_attr="value" ...>
+	<default>string</default>
+	<variable>varname</variable>
+	<input>command</input> ...
+	<input file>filename</input> ...
+	<visible>state</visible>
+	<action>activity</action> ...
+	<action signal="event">activity</action> ...
+	<action type="function">parameter</action> ...
+	<item>string</item> ...
+	<output file>filename</output>
+</button>
+}}}
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.object-hierarchy GtkComboBox] widget and ancestor class properties.
+
+=== Custom Attributes ===
+|| *Name* || *Description* || *Value* || *Version* ||
+|| accept || fileselect function file type || {{{filename}}}, {{{savefilename}}}, {{{directory}}} or {{{newdirectory}}} || ||
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
+|| default || Initial selection || String || || ||
+|| variable || Shell variable name || || || ||
+|| input || Data input source || Shell command || || ||
+|| input file || Data input source || Filename || || ||
+|| visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
+|| action || Execute command on click || Shell command || || ||
+|| action || Perform function on click || _function_:_parameter_ || || ||
+|| action signal="_event_" || Execute command on event || Shell command || || ||
+|| action signal="_event_" || Perform function on event || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on click || _parameter_ || || ||
+|| item || Input data || || || ||
+|| output file || Data output target || Filename || || ||
+
+== Signals ==
+Todo.
+
+== Functions ==
+Todo.
+
+== Notes ==
+This widget was introduced in version 0.7.21.
+----
