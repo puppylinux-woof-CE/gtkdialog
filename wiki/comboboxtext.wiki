@@ -6,24 +6,25 @@ A [http://developer.gnome.org/gtk/2.24/GtkComboBox.html GtkComboBox]
 
 == Definition ==
 {{{
-<comboboxtext tag_attr="value" ...>
+<comboboxtext tag_attr="value"...>
 	<default>string</default>
 	<variable>varname</variable>
-	<input>command</input> ...
-	<input file>filename</input> ...
+	<input>command</input>
+	<input file>filename</input>
 	<visible>state</visible>
-	<action>activity</action> ...
-	<action signal="event">activity</action> ...
-	<action type="function">parameter</action> ...
-	<item>string</item> ...
+	<action>activity</action>...
+	<action signal="event">activity</action>...
+	<action type="function">parameter</action>...
+	<item>string</item>...
 	<output file>filename</output>
 </button>
 }}}
+"..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
 See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.object-hierarchy GtkComboBox] widget and ancestor class properties.
 
-=== Custom Attributes ===
+The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Version* ||
 || accept || fileselect function file type || {{{filename}}}, {{{savefilename}}}, {{{directory}}} or {{{newdirectory}}} || ||
 
