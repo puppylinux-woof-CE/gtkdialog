@@ -15,9 +15,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<input file stock="gtk-image"></input>
 	<input file>filename</input>
 	<visible>state</visible>
-	<action>activity</action>
-	<action signal="event">activity</action>
-	<action type="function">parameter</action>
+	<action>activity</action>...
+	<action signal="event">activity</action>...
+	<action type="function">parameter</action>...
 </button>
 }}}
 "..." denotes acceptance of multiples of the same thing.
