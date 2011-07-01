@@ -6,7 +6,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] widget
 
 == Definition ==
 {{{
-<pixmap tag_attr="value"...]>
+<pixmap tag_attr="value"...>
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
