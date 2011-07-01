@@ -6,7 +6,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 
 == Definition ==
 {{{
-<button [yes|no|ok|cancel|help] [tag_attr="value" [tag_attr="value"] ...]>
+<button yes no ok cancel help tag_attr="value"...>
 	<label>string</label>
 	<variable>varname</variable>
 	<height>value</height>
@@ -20,12 +20,13 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<action type="function">parameter</action>
 </button>
 }}}
+"..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
 See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hierarchy GtkButton] widget and ancestor class properties.
 
-=== Custom Attributes ===
-None.
+The following custom tag attributes are available:
+None
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -36,13 +37,19 @@ Some of these may have tag attribute equivalents.
 || width || Image scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
 || input file icon="_image_" || GTK theme image name || || || ||
 || input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
-|| input file || Image filename || || || ||
+|| input file || Data input source || Image filename || || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 || action || Execute command on click || Shell command || || ||
 || action || Perform function on click || _function_:_parameter_ || || ||
 || action signal="_event_" || Execute command on event || Shell command || || ||
 || action signal="_event_" || Perform function on event || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on click || _parameter_ || || ||
+
+== Signals ==
+Todo.
+
+== Functions ==
+Todo.
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
