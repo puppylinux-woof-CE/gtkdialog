@@ -26,7 +26,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hierarchy GtkButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-None
+None.
 
 == Directives ==
 Some of these may have tag attribute equivalents.
