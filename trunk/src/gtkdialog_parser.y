@@ -126,6 +126,7 @@ start_up(void)
 	/* Thunor: Newly supported widgets */
 %token         HSEPARATOR PART_HSEPARATOR EHSEPARATOR
 %token         VSEPARATOR PART_VSEPARATOR EVSEPARATOR
+%token         COMBOBOXTEXT PART_COMBOBOXTEXT ECOMBOBOXTEXT
 
 %% 
 window
@@ -219,8 +220,9 @@ widget
   | pixmap
   | gvim
   | menubar
-  | hseperator
-  | vseperator
+  | hseparator
+  | vseparator
+  | comboboxtext
   ;
 
 entry
@@ -405,14 +407,31 @@ menuitems
 
 	/* Thunor: Newly supported widgets.
 	 * Don't forget to add them to the widget list above */
-hseperator
-  : HSEPARATOR EHSEPARATOR {token_store(PUSH | WIDGET_HSEPARATOR);}
-  | PART_HSEPARATOR tagattr '>' EHSEPARATOR {token_store_attr(PUSH | WIDGET_HSEPARATOR, $2);}
+hseparator
+  : HSEPARATOR EHSEPARATOR {
+		token_store(PUSH | WIDGET_HSEPARATOR);
+	}
+  | PART_HSEPARATOR tagattr '>' EHSEPARATOR {
+		token_store_attr(PUSH | WIDGET_HSEPARATOR, $2);
+	}
   ;
 
-vseperator
-  : VSEPARATOR EVSEPARATOR {token_store(PUSH | WIDGET_VSEPARATOR);}
-  | PART_VSEPARATOR tagattr '>' EVSEPARATOR {token_store_attr(PUSH | WIDGET_VSEPARATOR, $2);}
+vseparator
+  : VSEPARATOR EVSEPARATOR {
+		token_store(PUSH | WIDGET_VSEPARATOR);
+	}
+  | PART_VSEPARATOR tagattr '>' EVSEPARATOR {
+		token_store_attr(PUSH | WIDGET_VSEPARATOR, $2);
+	}
+  ;
+
+comboboxtext
+  : COMBOBOXTEXT attr ECOMBOBOXTEXT {
+		token_store(PUSH | WIDGET_COMBOBOXTEXT);
+	}
+  | PART_COMBOBOXTEXT tagattr '>' attr ECOMBOBOXTEXT {
+		token_store_attr(PUSH | WIDGET_COMBOBOXTEXT, $2);
+	}
   ;
 
 attr

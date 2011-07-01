@@ -107,6 +107,12 @@ widget_signal_executor(
 				ATTR_ACTION, "type");
 		signal = attributeset_get_this_tagattr(Attr, 
 				ATTR_ACTION, "signal");
+#ifdef DEBUG
+		/* Thunor: This is simply for testing and isn't
+		 * focusing on the changed signal in any way */
+		if (signal && strcasecmp(signal, "changed") == 0)
+			fprintf(stderr, "%s: signal=%s\n", __func__, signal);
+#endif
 		if (signal != NULL && 
 				g_ascii_strcasecmp(signal, signal_name) == 0) {
 			//g_message("'%s' = '%s'", signal, signal_name);
@@ -275,6 +281,11 @@ on_any_widget_show(
 	widget_signal_executor(widget, Attr, "show");
 }
 
+void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr) 
+{
+	widget_signal_executor(widget, Attr, "changed");
+}
+
 static gboolean
 widget_connect_signals(
 		GtkWidget    *widget,
@@ -329,6 +340,7 @@ widget_connect_signals(
 	g_signal_connect(G_OBJECT(widget), "show", 
 			(GCallback) (on_any_widget_show), 
 			(gpointer) Attr);
+
 	return TRUE;
 }
 
@@ -414,7 +426,6 @@ void list_selection(GtkWidget * list, gpointer Attr)
 	}
 	return;
 }
-
 
 int 
 execute_action(GtkWidget *widget, 
@@ -767,6 +778,15 @@ void print_command(instruction command)
 	case WIDGET_MENUSEP:
 	    printf("(new menuseparator())");
 	    break;
+	case WIDGET_HSEPARATOR:
+	    printf("(new hseparator())");
+	    break;
+	case WIDGET_VSEPARATOR:
+	    printf("(new vseparator())");
+	    break;
+	case WIDGET_COMBOBOXTEXT:
+	    printf("(new comboboxtext())");
+	    break;
 	default:
 	    printf("(Unknown Widget: %d)", Widget_Type);
 	}
@@ -990,6 +1010,15 @@ void print_token(token Token)
 		break;
 	case WIDGET_CHOOSER:
 		printf("(CHOOSER)");
+		break;
+	case WIDGET_HSEPARATOR:
+		printf("(HSEPARATOR)");
+	    break;
+	case WIDGET_VSEPARATOR:
+		printf("(VSEPARATOR)");
+	    break;
+	case WIDGET_COMBOBOXTEXT:
+		printf("(COMBOBOXTEXT)");
 		break;
 	default:
 		printf("Unknown Widget (%d)", Widget_Type);
@@ -1947,6 +1976,9 @@ create_table(AttributeSet   *Attr,
 	return widget;
 }
 
+/* Thunor: Since refresh functions are called at start-up, doing anything
+ * other than creating the widget and applying the sensitive property is
+ * redundant, so this should be reviewed when I've finished the combos */
 static GtkWidget *
 create_button(AttributeSet *Attr, 
 		tag_attr   *attr)
@@ -2081,7 +2113,9 @@ create_edit(AttributeSet *Attr,
 	return text_view;
 }
 
-
+/* Thunor: Since refresh functions are called at start-up, doing anything
+ * other than creating the widget and applying the sensitive property is
+ * redundant, so this should be reviewed when I've finished the combos */
 static GtkWidget *
 create_pixmap(AttributeSet * Attr)
 {
@@ -2691,6 +2725,17 @@ instruction_execute_push(
 	case WIDGET_VSEPARATOR:
 		/* Thunor: I'm on a roll now... */
 		Widget = gtk_vseparator_new();
+		push_widget(Widget, Widget_Type);
+		break;
+
+	case WIDGET_COMBOBOXTEXT:
+		/* Thunor: gtk_combo_box_new_text() is deprecated but
+		 * gtk_combo_box_text_new() and associated functions are
+		 * unavailable so I have to use the deprecated functions */
+		Widget = gtk_combo_box_new_text();
+		/* The directives are applied in the refresh function */
+		/* The signals are connected in the refresh function post
+		 * initialisation and pre-realization */
 		push_widget(Widget, Widget_Type);
 		break;
 
