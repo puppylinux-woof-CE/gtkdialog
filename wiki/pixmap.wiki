@@ -3,9 +3,10 @@
 = pixmap widget =
 A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] widget
 ----
+
 == Definition ==
 {{{
-<pixmap [tag_attr="value" [tag_attr="value"] ...]>
+<pixmap tag_attr="value"...]>
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
@@ -14,10 +15,14 @@ A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] widget
 	<visible>state</visible>
 </pixmap>
 }}}
+"..." denotes acceptance of multiples of the same thing.
+
 == Tag Attributes ==
 See the [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hierarchy GtkImage] widget and ancestor class properties.
-=== Custom Attributes ===
+
+The following custom tag attributes are available:
 None.
+
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
@@ -25,8 +30,14 @@ Some of these may have tag attribute equivalents.
 || height || Image scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
 || input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || (0) || ||
-|| input file || Image filename || || (0) || ||
+|| input file || Data input source || Image filename || (0) || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
+
+== Signals ==
+Todo.
+
+== Functions ==
+Todo.
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_DND and do not scale.
