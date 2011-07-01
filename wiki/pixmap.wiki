@@ -37,7 +37,7 @@ Some of these may have tag attribute equivalents.
 Todo.
 
 == Functions ==
-Todo.
+None.
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_DND and do not scale.
