@@ -39,13 +39,13 @@ Some of these may have tag attribute equivalents.
 || input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
 || input file || Data input source || Image filename || || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
-|| action || Execute command on click || Shell command || || ||
-|| action || Perform function on click || _function_:_parameter_ || || ||
+|| action || Execute command on default event || Shell command || || ||
+|| action || Perform function on default event || _function_:_parameter_ || || ||
 || action signal="_event_" || Execute command on event || Shell command || || ||
 || action signal="_event_" || Perform function on event || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on click || _parameter_ || || ||
+|| action type="_function_" || Perform function on default event || _parameter_ || || ||
 
-== Signals ==
+== Events ==
 Todo.
 
 == Functions ==
