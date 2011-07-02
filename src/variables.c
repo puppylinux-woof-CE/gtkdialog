@@ -608,9 +608,9 @@ _variables_export(variable *actual)
 	size_t            length;
 	gint              n;
 	gint              column;
-	gchar  		     *tmp;
-	GtkTreeModel	 *model;
-	GtkTreeIter   	  iter;
+	gchar            *tmp;
+	GtkTreeModel     *model;
+	GtkTreeIter       iter;
 	gchar            *text;
 	gchar            *line;
 	

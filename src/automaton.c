@@ -107,16 +107,20 @@ widget_signal_executor(
 				ATTR_ACTION, "type");
 		signal = attributeset_get_this_tagattr(Attr, 
 				ATTR_ACTION, "signal");
-#ifdef DEBUG
-		/* Thunor: This is simply for testing and isn't
-		 * focusing on the changed signal in any way */
-		if (signal && strcasecmp(signal, "changed") == 0)
-			fprintf(stderr, "%s: signal=%s\n", __func__, signal);
-#endif
 		if (signal != NULL && 
 				g_ascii_strcasecmp(signal, signal_name) == 0) {
 			//g_message("'%s' = '%s'", signal, signal_name);
 			execute_action(widget, command, type);
+		} else if (signal == NULL) {
+			/* Thunor: I've added this to automate managing the default
+			 * signal for the widget type as it's so much easier like this */
+#ifdef DEBUG
+			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
+				__func__, command, type, signal, signal_name);
+#endif
+			if (GTK_IS_COMBO_BOX(widget) && strcasecmp(signal_name, "changed") == 0) {
+				execute_action(widget, command, type);
+			}
 		}
 next_command:   
 		command = attributeset_get_next(Attr, ATTR_ACTION);
@@ -281,7 +285,7 @@ on_any_widget_show(
 	widget_signal_executor(widget, Attr, "show");
 }
 
-void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr) 
+void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
 	widget_signal_executor(widget, Attr, "changed");
 }
