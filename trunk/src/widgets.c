@@ -519,6 +519,8 @@ void save_comboboxtext_to_file(variable *var)
 		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
 	}
 
+#if 0
+	/* Thunor: I don't really like this behaviour so I'm disabling it */
 	if (filename == NULL) {
 		/* The output file filename isn't available but we can use
 		 * the input file filename instead if available (it's the
@@ -532,6 +534,7 @@ void save_comboboxtext_to_file(variable *var)
 			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
 		}
 	}
+#endif
 
 #ifdef DEBUG
 	fprintf(stderr, "%s: filename=%s\n", __func__, filename);
@@ -558,6 +561,8 @@ void save_comboboxtext_to_file(variable *var)
 			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
 				__func__, filename);
 		}
+	} else {
+		yywarning("No output file directive found");
 	}
 }
 
@@ -1013,7 +1018,11 @@ void widget_comboboxtext_refresh(variable *var)
 #endif
 
 	/* We'll manage signals ourselves */
+#if GTK_CHECK_VERSION(2,20,0)
 	if ((gtk_widget_get_realized(var->Widget))) {
+#else
+	if ((GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
 		/* Block the signal handler */
 		handler_id = (gint)g_object_get_data(
 			G_OBJECT(var->Widget), "handler_id");
@@ -1030,7 +1039,11 @@ void widget_comboboxtext_refresh(variable *var)
 	}
 
 	/* Clear the widget if it has been realized */
+#if GTK_CHECK_VERSION(2,20,0)
 	if ((gtk_widget_get_realized(var->Widget))) {
+#else
+	if ((GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
 		model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 		if (gtk_tree_model_get_iter_first(model, &iter)) {
 			/* Count the number of rows in the GtkComboBox */
@@ -1065,7 +1078,11 @@ void widget_comboboxtext_refresh(variable *var)
 	gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), 0);
 
 	/* We'll manage signals ourselves */
+#if GTK_CHECK_VERSION(2,20,0)
 	if ((gtk_widget_get_realized(var->Widget))) {
+#else
+	if ((GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
 		/* Unblock the signal handler */
 		g_signal_handler_unblock(var->Widget, handler_id);
 		/* Record the currently selected text if any */
@@ -1085,7 +1102,11 @@ void widget_comboboxtext_refresh(variable *var)
 
 	/* Initialise these only once i.e. when the widget is unrealized.
 	 * Also, directives should only really be applied once at start-up */
+#if GTK_CHECK_VERSION(2,20,0)
 	if (!(gtk_widget_get_realized(var->Widget))) {
+#else
+	if (!(GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
 		/* Apply the default directive if available */
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
 			string = attributeset_get_first(var->Attributes, ATTR_DEFAULT);
