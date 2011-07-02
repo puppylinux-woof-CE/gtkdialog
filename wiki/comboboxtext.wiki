@@ -56,11 +56,11 @@ Some of these may have tag attribute equivalents.
 || launch || Launch new dialog || New dialog's shell variable name || ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
-|| refresh || Reload widget data || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
 || save || Save widget data || Shell variable name || ||
 || fileselect || Launch file selection dialog || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
-|| removeselected || Remove selected data || Shell variable name || ||
+|| removeselected || Remove selected widget data || Shell variable name || ||
 
 == Notes ==
 This widget was introduced in version 0.7.21.
