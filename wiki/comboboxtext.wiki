@@ -7,7 +7,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkComboBox.html GtkComboBox]
 == Definition ==
 {{{
 <comboboxtext tag_attr="value"...>
-	<default>string</default>
+	<default>data</default>
 	<variable>varname</variable>
 	<input>command</input>
 	<input file>filename</input>
@@ -31,24 +31,36 @@ The following custom tag attributes are available:
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
-|| default || Initial selection || String || || ||
+|| default || Initial selection || Data || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
-|| action || Execute command on click || Shell command || || ||
-|| action || Perform function on click || _function_:_parameter_ || || ||
-|| action signal="_event_" || Execute command on event || Shell command || || ||
-|| action signal="_event_" || Perform function on event || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on click || _parameter_ || || ||
+|| action || Execute command on default event || Shell command || || ||
+|| action || Perform function on default event || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on event || Shell command || || ||
+|| action signal="_type_" || Perform function on event || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default event || _parameter_ || || ||
 || item || Input data || || || ||
 || output file || Data output target || Filename || || ||
 
 == Signals ==
-Todo.
+|| *Type* || *Details* || *Default* || *Version* ||
+|| changed || Emitted when the active item has changed || Yes || ||
 
 == Functions ==
-Todo.
+|| *Type* || *Description* || *Parameter* || *Version* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || Value for the EXIT shell variable  || ||
+|| closewindow || Close launched dialog || Shell variable name of the launched dialog || ||
+|| launch || Launch new dialog || Shell variable name of the new dialog || ||
+|| enable || Sensitise widget || Shell variable name of the target widget || ||
+|| disable || Desensitise widget || Shell variable name of the target widget || ||
+|| refresh || Reload widget data || Shell variable name of the target widget || ||
+|| save || Save widget data || Shell variable name of the target widget || ||
+|| fileselect || Launch file selection dialog || Shell variable name of the target widget || ||
+|| clear || Remove all widget data || Shell variable name of the target widget || ||
+|| removeselected || Remove selected data || Shell variable name of the target widget || ||
 
 == Notes ==
 This widget was introduced in version 0.7.21.
