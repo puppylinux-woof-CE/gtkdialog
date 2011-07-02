@@ -1,7 +1,7 @@
 #summary button widget reference
 
 = button widget =
-A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHbox]
+A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox]
 ----
 
 == Definition ==
@@ -41,14 +41,18 @@ Some of these may have tag attribute equivalents.
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 || action || Execute command on default event || Shell command || || ||
 || action || Perform function on default event || _function_:_parameter_ || || ||
-|| action signal="_event_" || Execute command on event || Shell command || || ||
-|| action signal="_event_" || Perform function on event || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on event || Shell command || || ||
+|| action signal="_type_" || Perform function on event || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default event || _parameter_ || || ||
 
-== Events ==
+== Signals ==
+|| *Type* || *Details* || *Default* || *Version* ||
+
 Todo.
 
 == Functions ==
+|| *Type* || *Description* || *Parameter* || *Version* ||
+
 Todo.
 
 == Notes ==
