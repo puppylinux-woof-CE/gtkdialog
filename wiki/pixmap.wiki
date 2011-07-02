@@ -33,11 +33,12 @@ Some of these may have tag attribute equivalents.
 || input file || Data input source || Image filename || (0) || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 
-== Events ==
+== Signals ==
 None.
 
 == Functions ==
-None.
+|| *Type* || *Description* || *Parameter* || *Version* ||
+|| refresh || Reload input data || Shell variable name || 0.7.21 ||
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_DND and do not scale.
