@@ -6,22 +6,28 @@ A [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] optionally packed i
 
 == Definition ==
 {{{
-<hbox [tag_attr="value" [tag_attr="value"] ...]>
-	[widget
-	[widget] ...]
+<hbox tag_attr="value"...>
+	widget...
 </hbox>
 }}}
+"..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
 See the [http://developer.gnome.org/gtk/2.24/GtkHBox.html#GtkHBox.object-hierarchy GtkHBox] widget and ancestor class properties.
 
-=== Custom Attributes ===
+The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Version* ||
-|| scrollable || Add scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || Positive integer || 0.7.21 ||
 || width || Scrolled window dimension || Positive integer || 0.7.21 ||
 
 == Directives ==
+None.
+
+== Signals ==
+None.
+
+== Functions ==
 None.
 
 == Notes ==
