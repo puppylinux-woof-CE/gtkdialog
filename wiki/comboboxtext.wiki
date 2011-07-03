@@ -59,7 +59,7 @@ The following functions can be performed upon this widget by any widget capable 
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
 
-The following general functions can be performed by any widget capable of emitting signals:
+The following application level functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
 || exit || Exit dialog || A value for the EXIT shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
