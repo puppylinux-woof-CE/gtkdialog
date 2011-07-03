@@ -47,6 +47,8 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.signals GtkComboBox] widget signals.
 
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox-changed changed]".
+
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
@@ -61,7 +63,7 @@ The following functions can be performed upon this widget by any widget capable 
 The following general functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
 || command || Execute command || Shell command || ||
-|| exit || Exit dialog || A value for the EXIT shell variable || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
