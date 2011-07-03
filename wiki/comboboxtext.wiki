@@ -50,7 +50,6 @@ See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.signal
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
-|| command || Execute command || Shell command || ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
@@ -59,8 +58,9 @@ The following functions can be performed upon this widget by any widget capable 
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
 
-The following application level functions can be performed by any widget capable of emitting signals:
+The following general functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
+|| command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the EXIT shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
