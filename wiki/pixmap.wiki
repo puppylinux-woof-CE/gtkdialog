@@ -1,7 +1,7 @@
 #summary pixmap widget reference
 
 = pixmap widget =
-A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] widget
+A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage]
 ----
 
 == Definition ==
