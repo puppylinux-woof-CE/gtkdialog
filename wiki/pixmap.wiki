@@ -37,6 +37,7 @@ Some of these may have tag attribute equivalents.
 None.
 
 == Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
 
