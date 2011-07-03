@@ -13,9 +13,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkComboBox.html GtkComboBox]
 	<input file>filename</input>
 	<visible>state</visible>
 	<action>activity</action>...
-	<action signal="event">activity</action>...
+	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
-	<item>string</item>...
+	<item>data</item>...
 	<output file>filename</output>
 </button>
 }}}
@@ -36,11 +36,11 @@ Some of these may have tag attribute equivalents.
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
-|| action || Execute command on default event || Shell command || || ||
-|| action || Perform function on default event || _function_:_parameter_ || || ||
-|| action signal="_type_" || Execute command on event || Shell command || || ||
-|| action signal="_type_" || Perform function on event || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on default event || _parameter_ || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data || || || ||
 || output file || Data output target || Filename || || ||
 
