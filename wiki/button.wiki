@@ -16,7 +16,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<input file>filename</input>
 	<visible>state</visible>
 	<action>activity</action>...
-	<action signal="event">activity</action>...
+	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
 </button>
 }}}
@@ -39,21 +39,28 @@ Some of these may have tag attribute equivalents.
 || input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
 || input file || Data input source || Image filename || || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
-|| action || Execute command on default event || Shell command || || ||
-|| action || Perform function on default event || _function_:_parameter_ || || ||
-|| action signal="_type_" || Execute command on event || Shell command || || ||
-|| action signal="_type_" || Perform function on event || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on default event || _parameter_ || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
-|| *Type* || *Details* || *Default* || *Version* ||
+See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.signals GtkButton] widget signals.
 
-Todo.
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton-clicked clicked]".
 
 == Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
+|| refresh || Reload input data || Shell variable name || 0.7.21 ||
 
-Todo.
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Version* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
