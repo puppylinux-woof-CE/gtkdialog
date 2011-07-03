@@ -3,17 +3,29 @@
 = hseparator widget =
 A [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html GtkHSeparator] widget
 ----
+
 == Definition ==
 {{{
-<hseparator [tag_attr="value" [tag_attr="value"] ...]>
+<hseparator tag_attr="value"...>
 </hseparator>
 }}}
+"..." denotes acceptance of multiples of the same thing.
+
 == Tag Attributes ==
 See the [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html#GtkHSeparator.object-hierarchy GtkHSeparator] widget and ancestor class properties.
-=== Custom Attributes ===
+
+The following custom tag attributes are available:
 None.
+
 == Directives ==
 None.
-== Notes ==
+
+== Signals ==
 None.
+
+== Functions ==
+None.
+
+== Notes ==
+This widget was introduced in version 0.7.21.
 ----
