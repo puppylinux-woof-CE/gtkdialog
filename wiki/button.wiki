@@ -1,7 +1,7 @@
 #summary button widget reference
 
 = button widget =
-A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox]
+A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkBox.html GtkBox]
 ----
 
 == Definition ==
@@ -26,7 +26,8 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hierarchy GtkButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-None.
+|| *Name* || *Description* || *Value* || *Version* ||
+|| image-position || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
