@@ -125,6 +125,23 @@ on_any_entry_populate_popup(
 }
 
 static void 
+on_any_combobox_changed(
+		GtkComboBox *widget, 
+		gchar     *full_command)
+{
+	gchar *prefix, *command;
+
+	g_return_if_fail(full_command != NULL);
+#ifdef DEBUG
+	g_message("%s(%p, '%s')", __func__, widget, full_command);
+#endif
+	command_get_prefix(full_command, &prefix, &command);
+	execute_action(widget, command, prefix);
+	g_free(command);
+	g_free(prefix);
+}
+
+static void 
 on_any_widget_almost_any(
 		GtkWidget *widget, 
 		gchar *full_command)
@@ -318,6 +335,26 @@ gtk_entry_signal_handler_connector(
 }
 
 static gboolean
+gtk_combobox_signal_handler_connector(
+		const gchar *handler_name, 
+		GObject *object, 
+		const gchar *signal_name, 
+		const gchar *signal_data, 
+		GObject *connect_object, 
+		gboolean after, 
+		gpointer user_data)
+{
+	if (g_ascii_strcasecmp(signal_name, "changed") == 0) {
+		g_signal_connect(object, 
+				signal_name, 
+				G_CALLBACK(on_any_combobox_changed), 
+				g_strdup(handler_name));
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static gboolean
 gtk_widget_signal_handler_connector(
 		const gchar *handler_name, 
 		GObject *object, 
@@ -442,6 +479,16 @@ signal_handler_connector(
 	
 	if (GTK_IS_TOOL_BUTTON(object))
 		if (gtk_button_signal_handler_connector(handler_name,
+					object,
+					signal_name,
+					signal_data,
+					connect_object,
+					after,
+					user_data))
+			return;
+
+	if (GTK_IS_COMBO_BOX(object))
+		if (gtk_combobox_signal_handler_connector(handler_name,
 					object,
 					signal_name,
 					signal_data,

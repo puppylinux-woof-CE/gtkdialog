@@ -906,11 +906,12 @@ widget_combo_refresh(variable * var)
 
 void widget_button_refresh(variable *var)
 {
-	char *act;
-	GList *children;
-	GtkWidget *child;
-	GdkPixbuf *pixbuf;
-	int width = -1, height = -1;
+	char             *act;
+	GList            *btnchildren = NULL;
+	GList            *boxchildren = NULL;
+	GList            *child;
+	GdkPixbuf        *pixbuf;
+	gint              width = -1, height = -1;
 
 	if (var == NULL || var->Attributes == NULL) return;
 
@@ -918,10 +919,10 @@ void widget_button_refresh(variable *var)
 	while (act != NULL) {
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			children = gtk_container_get_children(GTK_CONTAINER(var->Widget));
-			child = GTK_WIDGET(children->data);
+			btnchildren = gtk_container_get_children(GTK_CONTAINER(var->Widget));
+			child = g_list_first(btnchildren);
 			while (child) {
-				if (GTK_IS_IMAGE(child)) {
+				if (GTK_IS_IMAGE(child->data)) {
 					if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 						width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
 					if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
@@ -929,31 +930,37 @@ void widget_button_refresh(variable *var)
 
 					if (width == -1 && height == -1) {
 						/* Handle unscaled images */
-						gtk_image_set_from_file(GTK_IMAGE(child), find_pixmap(act + 5));
+						gtk_image_set_from_file(GTK_IMAGE(child->data), find_pixmap(act + 5));
 					} else {
 						/* Handle scaled images */
 						pixbuf = gdk_pixbuf_new_from_file_at_size(
 							find_pixmap(act + 5), width, height, NULL);
 						if (pixbuf) {
-							gtk_image_set_from_pixbuf(GTK_IMAGE(child), pixbuf);
+							gtk_image_set_from_pixbuf(GTK_IMAGE(child->data), pixbuf);
 							/* pixbuf is no longer required and should be unreferenced */
 							g_object_unref(pixbuf);
 						} else {
 							/* pixbuf is null (file not found) so by using this
 							 * function gtk will substitute a broken image icon */
-							gtk_image_set_from_file(GTK_IMAGE(child), "");
+							gtk_image_set_from_file(GTK_IMAGE(child->data), "");
 						}
 					}
 					break;
-				} else if (GTK_IS_HBOX(child)) {
-					g_list_free(children);
-					children = gtk_container_get_children(GTK_CONTAINER(child));
-					child = GTK_WIDGET(children->data);
+				} else if (GTK_IS_BOX(child->data)) {
+					boxchildren = gtk_container_get_children(GTK_CONTAINER(child->data));
+					child = g_list_first(boxchildren);
 				} else {
-					child = GTK_WIDGET(children->next);
+					child = child->next;
 				}
 			}
-			g_list_free(children);
+			if (boxchildren) {
+				g_list_free(boxchildren);
+				boxchildren = NULL;
+			}
+			if (btnchildren) {
+				g_list_free(btnchildren);
+				btnchildren = NULL;
+			}
 		}
 		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
 	}

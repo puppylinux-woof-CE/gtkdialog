@@ -1,3 +1,9 @@
+* Tue Jul 5 2011 Thunor <thunorsif@hotmail.com>
+- Added image positioning support to buttons with images and labels.
+
+* Mon Jul 4 2011 Thunor <thunorsif@hotmail.com>
+- Connected up the GtkComboBox's "changed" signal in glade_support.c.
+
 * Sat Jul 2 2011 Thunor <thunorsif@hotmail.com>
 - Added a 2.20.0 GTK+ version check for gtk_widget_get_realized and on
   false will use the deprecated GTK_WIDGET_REALIZED macro.
