@@ -1688,8 +1688,8 @@ create_tree(AttributeSet  *Attr,
 			} else if (strcasecmp(value, "single") == 0 ||
 				atoi(value) == GTK_SELECTION_SINGLE) {
 				gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
-			} else if (strcasecmp(value, "none") == 0 ||
-				atoi(value) == GTK_SELECTION_NONE) {
+			} else /* if (strcasecmp(value, "none") == 0 ||
+				atoi(value) == GTK_SELECTION_NONE) */ {
 				/* Note that atoi will return 0 for any non-integer string in
 				 * value, therefore GTK_SELECTION_NONE should be checked last */
 				gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
@@ -1980,9 +1980,12 @@ create_table(AttributeSet   *Attr,
 	return widget;
 }
 
-/* Thunor: Since refresh functions are called at start-up, doing anything
- * other than creating the widget and applying the sensitive property is
- * redundant, so this should be reviewed when I've finished the combos */
+/* Thunor: Refresh functions are called at start-up which will reload the
+ * images from files meaning that they'll get loaded here and reloaded
+ * soon after. What can I do about that other than deliberately attempt
+ * to open a non-existent file so that GTK substitutes a broken image --
+ * I don't know if that will work as I haven't tried it. I'll mark this
+ * temp temp and come back to it */
 static GtkWidget *
 create_button(AttributeSet *Attr, 
 		tag_attr   *attr)
@@ -1994,10 +1997,12 @@ create_button(AttributeSet *Attr,
 	GdkPixbuf *pixbuf = NULL;
 	char *icon_stock_name = NULL;
 	char *icon_file_name = NULL;
-	char *str;
-	char *act;
+//	char *str;	Redundant: not used
+//	char *act;	Redundant: not used
 	int type;
 	int width = -1, height = -1;
+	gchar *value;
+	gint position = -1;
 	
 	PIP_DEBUG("");
 	
@@ -2080,13 +2085,61 @@ create_button(AttributeSet *Attr,
 			gtk_container_add(GTK_CONTAINER(Button), Icon);
 			break;
 		case TYPE_LABPIX:
-			Box = gtk_hbox_new(FALSE, 5);
-			Button = gtk_button_new();
-		    	Label = gtk_label_new(attributeset_get_first
-				  (Attr, ATTR_LABEL));
-			gtk_container_add(GTK_CONTAINER(Button), Box);
-			gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
-			gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
+			/* Thunor: If the GTK property "image-position" is declared
+			 * (in this case being used as a custom attribute since it'll
+			 * have no effect otherwise) then position the image relative
+			 * to the label */
+			if (attr) {
+				if (!(value = get_tag_attribute(attr, "image_position")))
+					value = get_tag_attribute(attr, "image-position");
+				if (value) {
+					if (strcasecmp(value, "bottom") == 0 ||
+						atoi(value) == GTK_POS_BOTTOM) {
+						position = GTK_POS_BOTTOM;
+					} else if (strcasecmp(value, "top") == 0 ||
+						atoi(value) == GTK_POS_TOP) {
+						position = GTK_POS_TOP;
+					} else if (strcasecmp(value, "right") == 0 ||
+						atoi(value) == GTK_POS_RIGHT) {
+						position = GTK_POS_RIGHT;
+					} else /*if (strcasecmp(value, "left") == 0 ||
+						atoi(value) == GTK_POS_LEFT) */ {
+						/* Note that atoi will return 0 for any non-integer string in
+						 * value, therefore GTK_POS_LEFT should be checked last */
+						position = GTK_POS_LEFT;
+					}
+				}
+			}
+			if (position == -1) {
+				/* Thunor: This is the original code */
+				Box = gtk_hbox_new(FALSE, 5);
+				Button = gtk_button_new();
+					Label = gtk_label_new(attributeset_get_first
+					  (Attr, ATTR_LABEL));
+				gtk_container_add(GTK_CONTAINER(Button), Box);
+				gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
+				gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
+			} else {
+				/* Thunor: This code has been added to enable
+				 * positioning of the image relative to the label */
+				if (position == GTK_POS_BOTTOM || position == GTK_POS_TOP) {
+					Box = gtk_vbox_new(FALSE, 5);
+				} else {
+					Box = gtk_hbox_new(FALSE, 5);
+				}
+				Button = gtk_button_new();
+					Label = gtk_label_new(attributeset_get_first
+					  (Attr, ATTR_LABEL));
+				gtk_container_add(GTK_CONTAINER(Button), Box);
+				if (position == GTK_POS_BOTTOM || position == GTK_POS_RIGHT) {
+					gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
+					gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
+				} else {
+					gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
+					gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
+				}
+			}
+			break;
 	}
 
 	PIP_DEBUG("");
@@ -2117,9 +2170,12 @@ create_edit(AttributeSet *Attr,
 	return text_view;
 }
 
-/* Thunor: Since refresh functions are called at start-up, doing anything
- * other than creating the widget and applying the sensitive property is
- * redundant, so this should be reviewed when I've finished the combos */
+/* Thunor: Refresh functions are called at start-up which will reload the
+ * images from files meaning that they'll get loaded here and reloaded
+ * soon after. What can I do about that other than deliberately attempt
+ * to open a non-existent file so that GTK substitutes a broken image --
+ * I don't know if that will work as I haven't tried it. I'll mark this
+ * temp temp and come back to it */
 static GtkWidget *
 create_pixmap(AttributeSet * Attr)
 {
