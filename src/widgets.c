@@ -906,23 +906,106 @@ widget_combo_refresh(variable * var)
 
 void widget_button_refresh(variable *var)
 {
-	char             *act;
+	gchar            *act;
 	GList            *btnchildren = NULL;
 	GList            *boxchildren = NULL;
 	GList            *child;
 	GdkPixbuf        *pixbuf;
 	gint              width = -1, height = -1;
 
-	if (var == NULL || var->Attributes == NULL) return;
+	if (var != NULL && var->Attributes != NULL) {
 
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			btnchildren = gtk_container_get_children(GTK_CONTAINER(var->Widget));
-			child = g_list_first(btnchildren);
-			while (child) {
-				if (GTK_IS_IMAGE(child->data)) {
+#ifdef DEBUG
+		g_message("%s(): entering.", __func__);
+#endif
+
+		/* Thunor: Refresh functions are also called at start-up so this
+		 * has to be taken into account to avoid duplicating code that
+		 * already exists in the creation function. The way to do this
+		 * is to simply check if the widget has been realized yet */
+#if GTK_CHECK_VERSION(2,20,0)
+		if ((gtk_widget_get_realized(var->Widget))) {
+#else
+		if ((GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
+			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+			while (act != NULL) {
+				/* input file stock = "File:", input file = "File:/path/to/file" */
+				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+					btnchildren = gtk_container_get_children(GTK_CONTAINER(var->Widget));
+					child = g_list_first(btnchildren);
+					while (child) {
+						if (GTK_IS_IMAGE(child->data)) {
+							if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+								width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
+							if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
+								height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
+
+							if (width == -1 && height == -1) {
+								/* Handle unscaled images */
+								gtk_image_set_from_file(GTK_IMAGE(child->data), find_pixmap(act + 5));
+							} else {
+								/* Handle scaled images */
+								pixbuf = gdk_pixbuf_new_from_file_at_size(
+									find_pixmap(act + 5), width, height, NULL);
+								if (pixbuf) {
+									gtk_image_set_from_pixbuf(GTK_IMAGE(child->data), pixbuf);
+									/* pixbuf is no longer required and should be unreferenced */
+									g_object_unref(pixbuf);
+								} else {
+									/* pixbuf is null (file not found) so by using this
+									 * function gtk will substitute a broken image icon */
+									gtk_image_set_from_file(GTK_IMAGE(child->data), "");
+								}
+							}
+							break;
+						} else if (GTK_IS_BOX(child->data)) {
+							boxchildren = gtk_container_get_children(GTK_CONTAINER(child->data));
+							child = g_list_first(boxchildren);
+						} else {
+							child = child->next;
+						}
+					}
+					if (boxchildren) {
+						g_list_free(boxchildren);
+						boxchildren = NULL;
+					}
+					if (btnchildren) {
+						g_list_free(btnchildren);
+						btnchildren = NULL;
+					}
+				}
+				act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+			}
+		}
+	}
+}
+
+void widget_pixmap_refresh(variable *var)
+{
+	gchar            *act;
+	GdkPixbuf        *pixbuf;
+	gint              width = -1, height = -1;
+
+	if (var != NULL && var->Attributes != NULL) {
+
+#ifdef DEBUG
+		g_message("%s(): entering.", __func__);
+#endif
+
+		/* Thunor: Refresh functions are also called at start-up so this
+		 * has to be taken into account to avoid duplicating code that
+		 * already exists in the creation function. The way to do this
+		 * is to simply check if the widget has been realized yet */
+#if GTK_CHECK_VERSION(2,20,0)
+		if ((gtk_widget_get_realized(var->Widget))) {
+#else
+		if ((GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
+			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+			while (act != NULL) {
+				/* input file stock = "File:", input file = "File:/path/to/file" */
+				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 					if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 						width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
 					if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
@@ -930,78 +1013,25 @@ void widget_button_refresh(variable *var)
 
 					if (width == -1 && height == -1) {
 						/* Handle unscaled images */
-						gtk_image_set_from_file(GTK_IMAGE(child->data), find_pixmap(act + 5));
+						gtk_image_set_from_file(GTK_IMAGE(var->Widget), find_pixmap(act + 5));
 					} else {
 						/* Handle scaled images */
 						pixbuf = gdk_pixbuf_new_from_file_at_size(
 							find_pixmap(act + 5), width, height, NULL);
 						if (pixbuf) {
-							gtk_image_set_from_pixbuf(GTK_IMAGE(child->data), pixbuf);
+							gtk_image_set_from_pixbuf(GTK_IMAGE(var->Widget), pixbuf);
 							/* pixbuf is no longer required and should be unreferenced */
 							g_object_unref(pixbuf);
 						} else {
 							/* pixbuf is null (file not found) so by using this
 							 * function gtk will substitute a broken image icon */
-							gtk_image_set_from_file(GTK_IMAGE(child->data), "");
+							gtk_image_set_from_file(GTK_IMAGE(var->Widget), "");
 						}
 					}
-					break;
-				} else if (GTK_IS_BOX(child->data)) {
-					boxchildren = gtk_container_get_children(GTK_CONTAINER(child->data));
-					child = g_list_first(boxchildren);
-				} else {
-					child = child->next;
 				}
-			}
-			if (boxchildren) {
-				g_list_free(boxchildren);
-				boxchildren = NULL;
-			}
-			if (btnchildren) {
-				g_list_free(btnchildren);
-				btnchildren = NULL;
+				act = attributeset_get_next(var->Attributes, ATTR_INPUT);
 			}
 		}
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
-	}
-}
-
-void widget_pixmap_refresh(variable *var)
-{
-	int width = -1, height = -1;
-	GdkPixbuf *pixbuf;
-	char *act;
-
-	if (var == NULL || var->Attributes == NULL) return;
-
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-				width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
-			if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-				height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
-
-			if (width == -1 && height == -1) {
-				/* Handle unscaled images */
-				gtk_image_set_from_file(GTK_IMAGE(var->Widget), find_pixmap(act + 5));
-			} else {
-				/* Handle scaled images */
-				pixbuf = gdk_pixbuf_new_from_file_at_size(
-					find_pixmap(act + 5), width, height, NULL);
-				if (pixbuf) {
-					gtk_image_set_from_pixbuf(GTK_IMAGE(var->Widget), pixbuf);
-					/* pixbuf is no longer required and should be unreferenced */
-					g_object_unref(pixbuf);
-				} else {
-					/* pixbuf is null (file not found) so by using this
-					 * function gtk will substitute a broken image icon */
-					gtk_image_set_from_file(GTK_IMAGE(var->Widget), "");
-				}
-			}
-		}
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
 	}
 }
 
@@ -1014,143 +1044,142 @@ void widget_comboboxtext_refresh(variable *var)
 	gint              rowcount;
 	gchar             oldselected[512];
 	gchar             newselected[512];
-	gchar             *string;
-	gchar             *text;
+	gchar            *string;
+	gchar            *text;
 	gint              index;
 
-	if (var == NULL || var->Attributes == NULL) return;
+	if (var != NULL && var->Attributes != NULL) {
 
 #ifdef DEBUG
-	g_message("%s(): entering.", __func__);
+		g_message("%s(): entering.", __func__);
 #endif
 
-	/* We'll manage signals ourselves */
+		/* We'll manage signals ourselves */
 #if GTK_CHECK_VERSION(2,20,0)
-	if ((gtk_widget_get_realized(var->Widget))) {
+		if ((gtk_widget_get_realized(var->Widget))) {
 #else
-	if ((GTK_WIDGET_REALIZED(var->Widget))) {
+		if ((GTK_WIDGET_REALIZED(var->Widget))) {
 #endif
-		/* Block the signal handler */
-		handler_id = (gint)g_object_get_data(
-			G_OBJECT(var->Widget), "handler_id");
-		g_signal_handler_block(var->Widget, handler_id);
-		/* Record the currently selected text if any */
-		if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
-			strcpy(oldselected, string);
-		} else {
-			strcpy(oldselected, "");
+			/* Block the signal handler */
+			handler_id = (gint)g_object_get_data(
+				G_OBJECT(var->Widget), "handler_id");
+			g_signal_handler_block(var->Widget, handler_id);
+			/* Record the currently selected text if any */
+			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
+				strcpy(oldselected, string);
+			} else {
+				strcpy(oldselected, "");
+			}
+#ifdef DEBUG
+			fprintf(stderr, "%s: oldselected=%s\n", __func__, oldselected);
+#endif
 		}
-#ifdef DEBUG
-		fprintf(stderr, "%s: oldselected=%s\n", __func__, oldselected);
-#endif
-	}
 
-	/* Clear the widget if it has been realized */
+		/* Clear the widget if it has been realized */
 #if GTK_CHECK_VERSION(2,20,0)
-	if ((gtk_widget_get_realized(var->Widget))) {
+		if ((gtk_widget_get_realized(var->Widget))) {
 #else
-	if ((GTK_WIDGET_REALIZED(var->Widget))) {
+		if ((GTK_WIDGET_REALIZED(var->Widget))) {
 #endif
-		model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
-		if (gtk_tree_model_get_iter_first(model, &iter)) {
-			/* Count the number of rows in the GtkComboBox */
-			rowcount = 1;
-			while (gtk_tree_model_iter_next(model, &iter)) rowcount++;
-#ifdef DEBUG
-			fprintf(stderr, "%s: rowcount=%i\n", __func__, rowcount);
-#endif
-			/* Delete the rows */
-			while (rowcount--)
-				gtk_combo_box_remove_text(
-					GTK_COMBO_BOX(var->Widget), rowcount);
-		}
-	}
-
-	/* The <input> tag... */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
-	while (act) {
-		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-			fill_comboboxtext_by_file(var->Widget, act + 5);
-		if (input_is_shell_command(act))
-			fill_comboboxtext_by_command(var->Widget, act + 8);
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
-	}
-
-	/* The <item> tags... */
-	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		fill_comboboxtext_by_items(var->Attributes, var->Widget);
-
-	/* Select a default item */
-	gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), 0);
-
-	/* We'll manage signals ourselves */
-#if GTK_CHECK_VERSION(2,20,0)
-	if ((gtk_widget_get_realized(var->Widget))) {
-#else
-	if ((GTK_WIDGET_REALIZED(var->Widget))) {
-#endif
-		/* Unblock the signal handler */
-		g_signal_handler_unblock(var->Widget, handler_id);
-		/* Record the currently selected text if any */
-		if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
-			strcpy(newselected, string);
-		} else {
-			strcpy(newselected, "");
-		}
-#ifdef DEBUG
-		fprintf(stderr, "%s: newselected=%s\n", __func__, newselected);
-#endif
-		/* If the before and after selected items are
-		 * different then emit a changed signal */
-		if (strcmp(oldselected, newselected))
-			g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
-	}
-
-	/* Initialise these only once i.e. when the widget is unrealized.
-	 * Also, directives should only really be applied once at start-up */
-#if GTK_CHECK_VERSION(2,20,0)
-	if (!(gtk_widget_get_realized(var->Widget))) {
-#else
-	if (!(GTK_WIDGET_REALIZED(var->Widget))) {
-#endif
-		/* Apply the default directive if available */
-		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
-			string = attributeset_get_first(var->Attributes, ATTR_DEFAULT);
 			model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 			if (gtk_tree_model_get_iter_first(model, &iter)) {
-				index = 0;
-				do {
-					gtk_tree_model_get(model, &iter, 0, &text, -1);
+				/* Count the number of rows in the GtkComboBox */
+				rowcount = 1;
+				while (gtk_tree_model_iter_next(model, &iter)) rowcount++;
 #ifdef DEBUG
-					fprintf(stderr, "%s: string=%s text=%s\n", __func__, string, text);
+				fprintf(stderr, "%s: rowcount=%i\n", __func__, rowcount);
 #endif
-					if (strcmp(string, text) == 0) {
-						gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), index);
-						g_free(text);
-						break;
-					}
-					g_free(text);
-					index++;
-				} while (gtk_tree_model_iter_next(model, &iter));
+				/* Delete the rows */
+				while (rowcount--)
+					gtk_combo_box_remove_text(
+						GTK_COMBO_BOX(var->Widget), rowcount);
 			}
 		}
 
+		/* The <input> tag... */
+		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+		while (act) {
+			/* input file stock = "File:", input file = "File:/path/to/file" */
+			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
+				fill_comboboxtext_by_file(var->Widget, act + 5);
+			if (input_is_shell_command(act))
+				fill_comboboxtext_by_command(var->Widget, act + 8);
+			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		}
 
-		/* Apply the visible directive if available */
-		if (attributeset_cmp_left
-			(var->Attributes, ATTR_VISIBLE, "disabled"))
-			gtk_widget_set_sensitive(var->Widget, FALSE);
+		/* The <item> tags... */
+		if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
+			fill_comboboxtext_by_items(var->Attributes, var->Widget);
 
-		/* Connect uncommon signals */
-		handler_id = g_signal_connect(G_OBJECT(var->Widget), "changed", 
-			G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
-		/* Store the handler id as a piece of widget data so that
-		 * it can be blocked and unblocked later when necessary */
-		g_object_set_data(G_OBJECT(var->Widget), "handler_id",
-			(gpointer)handler_id);
+		/* Select a default item */
+		gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), 0);
+
+		/* We'll manage signals ourselves */
+#if GTK_CHECK_VERSION(2,20,0)
+		if ((gtk_widget_get_realized(var->Widget))) {
+#else
+		if ((GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
+			/* Unblock the signal handler */
+			g_signal_handler_unblock(var->Widget, handler_id);
+			/* Record the currently selected text if any */
+			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
+				strcpy(newselected, string);
+			} else {
+				strcpy(newselected, "");
+			}
+#ifdef DEBUG
+			fprintf(stderr, "%s: newselected=%s\n", __func__, newselected);
+#endif
+			/* If the before and after selected items are
+			 * different then emit a changed signal */
+			if (strcmp(oldselected, newselected))
+				g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
+		}
+
+		/* Initialise these only once i.e. when the widget is unrealized.
+		 * Also, directives should only really be applied once at start-up */
+#if GTK_CHECK_VERSION(2,20,0)
+		if (!(gtk_widget_get_realized(var->Widget))) {
+#else
+		if (!(GTK_WIDGET_REALIZED(var->Widget))) {
+#endif
+			/* Apply the default directive if available */
+			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
+				string = attributeset_get_first(var->Attributes, ATTR_DEFAULT);
+				model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
+				if (gtk_tree_model_get_iter_first(model, &iter)) {
+					index = 0;
+					do {
+						gtk_tree_model_get(model, &iter, 0, &text, -1);
+#ifdef DEBUG
+						fprintf(stderr, "%s: string=%s text=%s\n", __func__, string, text);
+#endif
+						if (strcmp(string, text) == 0) {
+							gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), index);
+							g_free(text);
+							break;
+						}
+						g_free(text);
+						index++;
+					} while (gtk_tree_model_iter_next(model, &iter));
+				}
+			}
+
+			/* Apply the visible directive if available */
+			if (attributeset_cmp_left
+				(var->Attributes, ATTR_VISIBLE, "disabled"))
+				gtk_widget_set_sensitive(var->Widget, FALSE);
+
+			/* Connect uncommon signals */
+			handler_id = g_signal_connect(G_OBJECT(var->Widget), "changed", 
+				G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
+			/* Store the handler id as a piece of widget data so that
+			 * it can be blocked and unblocked later when necessary */
+			g_object_set_data(G_OBJECT(var->Widget), "handler_id",
+				(gpointer)handler_id);
+		}
 	}
-
 }
 
 extern gchar *option_include_file;

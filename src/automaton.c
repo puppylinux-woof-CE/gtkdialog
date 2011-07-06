@@ -1980,12 +1980,6 @@ create_table(AttributeSet   *Attr,
 	return widget;
 }
 
-/* Thunor: Refresh functions are called at start-up which will reload the
- * images from files meaning that they'll get loaded here and reloaded
- * soon after. What can I do about that other than deliberately attempt
- * to open a non-existent file so that GTK substitutes a broken image --
- * I don't know if that will work as I haven't tried it. I'll mark this
- * temp temp and come back to it */
 static GtkWidget *
 create_button(AttributeSet *Attr, 
 		tag_attr   *attr)
@@ -2170,12 +2164,6 @@ create_edit(AttributeSet *Attr,
 	return text_view;
 }
 
-/* Thunor: Refresh functions are called at start-up which will reload the
- * images from files meaning that they'll get loaded here and reloaded
- * soon after. What can I do about that other than deliberately attempt
- * to open a non-existent file so that GTK substitutes a broken image --
- * I don't know if that will work as I haven't tried it. I'll mark this
- * temp temp and come back to it */
 static GtkWidget *
 create_pixmap(AttributeSet * Attr)
 {

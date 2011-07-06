@@ -1,3 +1,7 @@
+* Wed Jul 6 2011 Thunor <thunorsif@hotmail.com>
+- Modified the button and pixmap widgets' refresh functions so that
+  images are only refreshed when the widgets have been realized.
+
 * Tue Jul 5 2011 Thunor <thunorsif@hotmail.com>
 - Added image positioning support to buttons with images and labels.
 
