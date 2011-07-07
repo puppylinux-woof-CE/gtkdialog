@@ -39,8 +39,6 @@ None.
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Version* ||
-|| enable || Sensitise widget || Shell variable name || ||
-|| disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
 
 == Notes ==
