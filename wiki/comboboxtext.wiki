@@ -17,7 +17,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkComboBox.html GtkComboBox]
 	<action type="function">parameter</action>...
 	<item>data</item>...
 	<output file>filename</output>
-</button>
+</comboboxtext>
 }}}
 "..." denotes acceptance of multiples of the same thing.
 
@@ -47,7 +47,7 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.signals GtkComboBox] widget signals.
 
-The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox-changed changed]".
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox-changed changed]", emitted when the active item is changed.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
