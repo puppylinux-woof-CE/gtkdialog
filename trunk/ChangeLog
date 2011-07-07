@@ -1,5 +1,8 @@
 * Thu Jul 7 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <comboboxentry></comboboxentry>, full action function set.
+- Modified the behaviour of the comboboxentry widget's default directive
+  so that text that isn't matched to any list items becomes the default
+  entry text instead; very useful with has-focus="true".
 
 * Wed Jul 6 2011 Thunor <thunorsif@hotmail.com>
 - Modified the button and pixmap widgets' refresh functions so that
