@@ -1062,6 +1062,7 @@ void widget_comboboxtext_refresh(variable *var)
 	gchar            *string;
 	gchar            *text;
 	gint              index;
+	gint              found;
 
 	if (var != NULL && var->Attributes != NULL) {
 
@@ -1181,6 +1182,7 @@ void widget_comboboxtext_refresh(variable *var)
 				model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 				if (gtk_tree_model_get_iter_first(model, &iter)) {
 					index = 0;
+					found = FALSE;
 					do {
 						gtk_tree_model_get(model, &iter, 0, &text, -1);
 #ifdef DEBUG
@@ -1189,11 +1191,20 @@ void widget_comboboxtext_refresh(variable *var)
 						if (strcmp(string, text) == 0) {
 							gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), index);
 							g_free(text);
+							found = TRUE;
 							break;
 						}
 						g_free(text);
 						index++;
 					} while (gtk_tree_model_iter_next(model, &iter));
+					/* The comboboxtext functions also manage the comboboxentry:
+					 * if default text not found then set it as default entry text */
+					if (var->Type == WIDGET_COMBOBOXENTRY) {
+						if (!found) {
+							gtk_entry_set_text(GTK_ENTRY(
+								gtk_bin_get_child(GTK_BIN(var->Widget))), string);
+						}
+					}
 				}
 			}
 
