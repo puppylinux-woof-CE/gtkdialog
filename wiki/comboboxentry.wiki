@@ -57,7 +57,7 @@ The following functions can be performed upon this widget by any widget capable 
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
-|| save || Save widget data^[1]^ || Shell variable name || ||
+|| save^[1]^ || Save widget data || Shell variable name || ||
 || fileselect || Launch file selection dialog || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
@@ -70,7 +70,7 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-1. The save function will write the entry text to the output file if it is non-null and unique.
+1. The save function will write the entry text to the output file if it is unique and non-null.
 
 This widget was introduced in version 0.7.21.
 ----
