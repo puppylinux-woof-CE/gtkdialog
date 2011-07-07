@@ -548,6 +548,8 @@ void save_comboboxtext_to_file(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 			index = 0;
+#if 0
+			/* Thunor: I don't really like this behaviour so I'm disabling it */
 			/* The comboboxtext functions also manage the comboboxentry:
 			 * save the entry if the active index is -1 and the entry
 			 * isn't empty */
@@ -558,6 +560,7 @@ void save_comboboxtext_to_file(variable *var)
 				fprintf(outfile, "%s", text);
 				index++;
 			}
+#endif
 			model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 			if (gtk_tree_model_get_iter_first(model, &iter)) {
 				do {
