@@ -37,7 +37,7 @@ Some of these may have tag attribute equivalents.
 || height || Image scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
 || input file icon="_image_" || GTK theme image name || || || ||
-|| input file stock="_gtk-image_" || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
+|| input file stock="_gtk-image_"^[2]^ || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
 || input file || Data input source || Image filename || || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
@@ -66,5 +66,5 @@ The following general functions can be performed by any widget capable of emitti
 == Notes ==
 1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
 
-Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
+2. Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
 ----
