@@ -127,6 +127,7 @@ start_up(void)
 %token         HSEPARATOR PART_HSEPARATOR EHSEPARATOR
 %token         VSEPARATOR PART_VSEPARATOR EVSEPARATOR
 %token         COMBOBOXTEXT PART_COMBOBOXTEXT ECOMBOBOXTEXT
+%token         COMBOBOXENTRY PART_COMBOBOXENTRY ECOMBOBOXENTRY
 
 %% 
 window
@@ -223,6 +224,7 @@ widget
   | hseparator
   | vseparator
   | comboboxtext
+  | comboboxentry
   ;
 
 entry
@@ -431,6 +433,15 @@ comboboxtext
 	}
   | PART_COMBOBOXTEXT tagattr '>' attr ECOMBOBOXTEXT {
 		token_store_attr(PUSH | WIDGET_COMBOBOXTEXT, $2);
+	}
+  ;
+
+comboboxentry
+  : COMBOBOXENTRY attr ECOMBOBOXENTRY {
+		token_store(PUSH | WIDGET_COMBOBOXENTRY);
+	}
+  | PART_COMBOBOXENTRY tagattr '>' attr ECOMBOBOXENTRY {
+		token_store_attr(PUSH | WIDGET_COMBOBOXENTRY, $2);
 	}
   ;
 
