@@ -288,6 +288,7 @@ widget_get_text_value(
 			}
 			break;
 			
+		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget));
 			if (string == NULL)
@@ -508,6 +509,7 @@ void save_comboboxtext_to_file(variable *var)
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
 	gchar            *text;
+	gint              index;
 
 	/* Preferably we'll use the output file filename if available */
 	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
@@ -545,16 +547,29 @@ void save_comboboxtext_to_file(variable *var)
 	 * that it can be read back in again */
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
+			index = 0;
+			/* The comboboxtext functions also manage the comboboxentry:
+			 * save the entry if the active index is -1 and the entry
+			 * isn't empty */
+			if ((var->Type == WIDGET_COMBOBOXENTRY) &&
+				(gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget)) == -1) &&
+				(text = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget))) &&
+				(strcmp(text, ""))) {
+				fprintf(outfile, "%s", text);
+				index++;
+			}
 			model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 			if (gtk_tree_model_get_iter_first(model, &iter)) {
-				gtk_tree_model_get(model, &iter, 0, &text, -1);
-				fprintf(outfile, "%s", text);
-				g_free(text);
-				while (gtk_tree_model_iter_next(model, &iter)) {
+				do {
 					gtk_tree_model_get(model, &iter, 0, &text, -1);
-					fprintf(outfile, "\n%s", text);
+					if (index) {
+						fprintf(outfile, "\n%s", text);
+					} else {
+						fprintf(outfile, "%s", text);
+						index++;
+					}
 					g_free(text);
-				}
+				} while (gtk_tree_model_iter_next(model, &iter));
 			}
 			fclose(outfile);
 		} else {
@@ -1040,7 +1055,7 @@ void widget_comboboxtext_refresh(variable *var)
 	char             *act;
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
-	gint              handler_id;
+	gint              handler_id_changed;
 	gint              rowcount;
 	gchar             oldselected[512];
 	gchar             newselected[512];
@@ -1061,9 +1076,9 @@ void widget_comboboxtext_refresh(variable *var)
 		if ((GTK_WIDGET_REALIZED(var->Widget))) {
 #endif
 			/* Block the signal handler */
-			handler_id = (gint)g_object_get_data(
-				G_OBJECT(var->Widget), "handler_id");
-			g_signal_handler_block(var->Widget, handler_id);
+			handler_id_changed = (gint)g_object_get_data(
+				G_OBJECT(var->Widget), "handler_id_changed");
+			g_signal_handler_block(var->Widget, handler_id_changed);
 			/* Record the currently selected text if any */
 			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
 				strcpy(oldselected, string);
@@ -1071,7 +1086,7 @@ void widget_comboboxtext_refresh(variable *var)
 				strcpy(oldselected, "");
 			}
 #ifdef DEBUG
-			fprintf(stderr, "%s: oldselected=%s\n", __func__, oldselected);
+			fprintf(stderr, "%s: oldselected=\"%s\"\n", __func__, oldselected);
 #endif
 		}
 
@@ -1094,6 +1109,12 @@ void widget_comboboxtext_refresh(variable *var)
 					gtk_combo_box_remove_text(
 						GTK_COMBO_BOX(var->Widget), rowcount);
 			}
+			/* The comboboxtext functions also manage the comboboxentry:
+			 * clear the entry */
+			if (var->Type == WIDGET_COMBOBOXENTRY) {
+				gtk_entry_set_text(
+					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(var->Widget))), "");
+			}
 		}
 
 		/* The <input> tag... */
@@ -1112,7 +1133,13 @@ void widget_comboboxtext_refresh(variable *var)
 			fill_comboboxtext_by_items(var->Attributes, var->Widget);
 
 		/* Select a default item */
-		gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), 0);
+		if (var->Type == WIDGET_COMBOBOXTEXT) {
+			gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), 0);
+		} else if (var->Type == WIDGET_COMBOBOXENTRY) {
+			/* The comboboxtext functions also manage the comboboxentry:
+			 * default to the entry */
+			gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), -1);
+		}
 
 		/* We'll manage signals ourselves */
 #if GTK_CHECK_VERSION(2,20,0)
@@ -1121,7 +1148,7 @@ void widget_comboboxtext_refresh(variable *var)
 		if ((GTK_WIDGET_REALIZED(var->Widget))) {
 #endif
 			/* Unblock the signal handler */
-			g_signal_handler_unblock(var->Widget, handler_id);
+			g_signal_handler_unblock(var->Widget, handler_id_changed);
 			/* Record the currently selected text if any */
 			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
 				strcpy(newselected, string);
@@ -1129,12 +1156,16 @@ void widget_comboboxtext_refresh(variable *var)
 				strcpy(newselected, "");
 			}
 #ifdef DEBUG
-			fprintf(stderr, "%s: newselected=%s\n", __func__, newselected);
+			fprintf(stderr, "%s: newselected=\"%s\"\n", __func__, newselected);
 #endif
-			/* If the before and after selected items are
-			 * different then emit a changed signal */
-			if (strcmp(oldselected, newselected))
+			/* If the before and after selected items are different then
+			 * emit a changed signal */
+			if (strcmp(oldselected, newselected)) {
+#ifdef DEBUG
+				fprintf(stderr, "%s: emitting \"changed\" signal\n", __func__);
+#endif
 				g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
+			}
 		}
 
 		/* Initialise these only once i.e. when the widget is unrealized.
@@ -1172,12 +1203,20 @@ void widget_comboboxtext_refresh(variable *var)
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 
 			/* Connect uncommon signals */
-			handler_id = g_signal_connect(G_OBJECT(var->Widget), "changed", 
+			handler_id_changed = g_signal_connect(G_OBJECT(var->Widget), "changed", 
 				G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
 			/* Store the handler id as a piece of widget data so that
 			 * it can be blocked and unblocked later when necessary */
-			g_object_set_data(G_OBJECT(var->Widget), "handler_id",
-				(gpointer)handler_id);
+			g_object_set_data(G_OBJECT(var->Widget), "handler_id_changed",
+				(gpointer)handler_id_changed);
+			/* The comboboxtext functions also manage the comboboxentry:
+			 * connect to the activate signal emitted when Enter is pressed
+			 * within the entry (storing the handler id is not necessary) */
+			if (var->Type == WIDGET_COMBOBOXENTRY) {
+				g_signal_connect(G_OBJECT(gtk_bin_get_child(GTK_BIN(var->Widget))),
+					"activate", G_CALLBACK(on_any_widget_activate_event),
+					(gpointer)var->Attributes);
+			}
 		}
 	}
 }
@@ -1510,6 +1549,9 @@ char *widgets_to_str(int itype)
 	    break;
 	case WIDGET_COMBOBOXTEXT:
 		type = "COMBOBOXTEXT";
+		break;
+	case WIDGET_COMBOBOXENTRY:
+		type = "COMBOBOXENTRY";
 		break;
 	default:
 		type = "THINGY";

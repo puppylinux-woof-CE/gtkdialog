@@ -63,6 +63,7 @@ typedef struct actioncommand {
 #define WIDGET_HSEPARATOR     0x00A40000
 #define WIDGET_VSEPARATOR     0x00A50000
 #define WIDGET_COMBOBOXTEXT   0x00A60000
+#define WIDGET_COMBOBOXENTRY  0x00A70000
 
 /*
  * Imperative stuff.
@@ -150,5 +151,6 @@ gint instruction_get_pc(void);
 void instruction_set_jump(gint from, gint where);
 
 void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr);
+void on_any_widget_activate_event(GtkWidget *widget, AttributeSet  *Attr);
 
 #endif

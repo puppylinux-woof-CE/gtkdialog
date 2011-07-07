@@ -200,7 +200,7 @@ gchar *Token;
 }
 
 \<vbox[ ]+ { 
-	Token="<hbox>"; 
+	Token="<vbox>"; 
 	BEGIN(ST_TAG_ATTR);
 	return(PART_VBOX);
 }
@@ -374,7 +374,7 @@ gchar *Token;
 
 \<checkbox\>				{ Token="<checkbox>"; return(CHECKBOX);       		}
 \<\/checkbox\>  			{ Token="</checkbox>"; return(ECHECKBOX);     		}
-\<checkbox[ ]+  			{ Token="<chackbox>"; 
+\<checkbox[ ]+  			{ Token="<checkbox>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_CHECKBOX);  				}
 
@@ -445,6 +445,12 @@ gchar *Token;
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_COMBOBOXTEXT); }
 \<\/comboboxtext\>  		{ Token="</comboboxtext>"; return(ECOMBOBOXTEXT); }
+
+\<comboboxentry\>   		{ Token="<comboboxentry>"; return(COMBOBOXENTRY); }
+\<comboboxentry[ ]+  		{ Token="<comboboxentry>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_COMBOBOXENTRY); }
+\<\/comboboxentry\>  		{ Token="</comboboxentry>"; return(ECOMBOBOXENTRY); }
 
 
 

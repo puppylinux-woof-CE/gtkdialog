@@ -290,6 +290,11 @@ void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
 	widget_signal_executor(widget, Attr, "changed");
 }
 
+void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
+{
+	widget_signal_executor(widget, Attr, "activate");
+}
+
 static gboolean
 widget_connect_signals(
 		GtkWidget    *widget,
@@ -791,6 +796,9 @@ void print_command(instruction command)
 	case WIDGET_COMBOBOXTEXT:
 	    printf("(new comboboxtext())");
 	    break;
+	case WIDGET_COMBOBOXENTRY:
+	    printf("(new comboboxentry())");
+	    break;
 	default:
 	    printf("(Unknown Widget: %d)", Widget_Type);
 	}
@@ -1023,6 +1031,9 @@ void print_token(token Token)
 	    break;
 	case WIDGET_COMBOBOXTEXT:
 		printf("(COMBOBOXTEXT)");
+		break;
+	case WIDGET_COMBOBOXENTRY:
+		printf("(COMBOBOXENTRY)");
 		break;
 	default:
 		printf("Unknown Widget (%d)", Widget_Type);
@@ -2784,6 +2795,15 @@ instruction_execute_push(
 		/* The directives are applied in the refresh function */
 		/* The signals are connected in the refresh function post
 		 * initialisation and pre-realization */
+		push_widget(Widget, Widget_Type);
+		break;
+
+	case WIDGET_COMBOBOXENTRY:
+		/* Thunor: gtk_combo_box_entry_new_text() is deprectated too:
+		 * gtk_combo_box_new_with_entry() is unavailable,
+		 * gtk_combo_box_text_new_with_entry() is unavailable,
+		 * and my brain hurts badly when I read the API ;) */
+		Widget = gtk_combo_box_entry_new_text();
 		push_widget(Widget, Widget_Type);
 		break;
 
