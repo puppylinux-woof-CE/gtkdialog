@@ -7,7 +7,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 == Definition ==
 {{{
 <button yes no ok cancel help tag_attr="value"...>
-	<label>string</label>
+	<label>text</label>
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
@@ -27,7 +27,7 @@ See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hie
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Version* ||
-|| image-position || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
+|| image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -49,7 +49,7 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.signals GtkButton] widget signals.
 
-The default signal is "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton-clicked clicked]".
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton-clicked clicked]", emitted when the button has been activated (pressed and released).
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
@@ -64,5 +64,7 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
+1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
+
 Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
 ----
