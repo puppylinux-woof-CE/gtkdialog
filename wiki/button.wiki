@@ -1,7 +1,7 @@
 #summary button widget reference
 
 = button widget =
-A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkBox.html GtkBox]
+A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] or [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox]
 ----
 
 == Definition ==
