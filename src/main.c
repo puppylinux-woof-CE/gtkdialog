@@ -1,17 +1,30 @@
+/*
+ * main.c: Starting up the program.
+ * Gtkdialog - A small utility for fast and easy GUI building.
+ * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 /* 
-** main.c: Starting up the program.
-** copyright: (c) 2003--2007 by László Pere
-** email: pipas@linux.pte.hu
-**
-** This program is free software; you can redistribute it and/or 
-** modify  it under the terms of the GNU General Public License as
-** published by the Free Software Foundation; either version 2 of
-** the License, or (at your option) any later version.
 **
 ** $Id: main.c,v 1.1 2004/11/16 20:47:40 root Exp root $
 ** $Log: main.c,v $
 ** Revision 1.1  2004/11/16 20:47:40  root
 ** Initial revision
+**
 */
 
 #define _GNU_SOURCE
@@ -315,7 +328,7 @@ print_version_exit(int exitcode)
 {	
 	PIP_DEBUG("Start.");
 
-	printf("%s version %s (C) 2004, 2005, 2006, 2007 by Laszlo Pere\n", 
+	printf("%s version %s (C) 2003-2007 Laszlo Pere, 2011 Thunor\n", 
 			PACKAGE_NAME, PACKAGE_VERSION);
 	exit(exitcode);
 }

@@ -1,12 +1,25 @@
 /*
-** automaton.c: An automaton executing the program, creating widgets. 
-** copyright: (c) 2003 by László Pere
-** email: pipas@linux.pte.hu
-**
-** This program is free software; you can redistribute it and/or 
-** modify  it under the terms of the GNU General Public License as
-** published by the Free Software Foundation; either version 2 of
-** the License, or (at your option) any later version.
+ * automaton.c: An automaton executing the program, creating widgets. 
+ * Gtkdialog - A small utility for fast and easy GUI building.
+ * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2011  Thunor <thunorsif@hotmail.com>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+/*
 **
 ** $Id: automaton.c,v 1.3 2004/11/25 18:26:48 pipas Exp pipas $
 ** $Log: automaton.c,v $
@@ -20,6 +33,7 @@
 ** Initial revision
 **
 */
+
 #include <gtk/gtk.h>
 
 #include "config.h"
@@ -119,6 +133,9 @@ widget_signal_executor(
 				__func__, command, type, signal, signal_name);
 #endif
 			if (GTK_IS_COMBO_BOX(widget) && strcasecmp(signal_name, "changed") == 0) {
+				execute_action(widget, command, type);
+			}
+			if (GTK_IS_SCALE(widget) && strcasecmp(signal_name, "value_changed") == 0) {
 				execute_action(widget, command, type);
 			}
 		}
@@ -293,6 +310,11 @@ void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 {
 	widget_signal_executor(widget, Attr, "activate");
+}
+
+void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
+{
+	widget_signal_executor(widget, Attr, "value_changed");
 }
 
 static gboolean
@@ -799,6 +821,12 @@ void print_command(instruction command)
 	case WIDGET_COMBOBOXENTRY:
 	    printf("(new comboboxentry())");
 	    break;
+	case WIDGET_HSCALE:
+	    printf("(new hscale())");
+	    break;
+	case WIDGET_VSCALE:
+	    printf("(new vscale())");
+	    break;
 	default:
 	    printf("(Unknown Widget: %d)", Widget_Type);
 	}
@@ -1034,6 +1062,12 @@ void print_token(token Token)
 		break;
 	case WIDGET_COMBOBOXENTRY:
 		printf("(COMBOBOXENTRY)");
+		break;
+	case WIDGET_HSCALE:
+		printf("(HSCALE)");
+		break;
+	case WIDGET_VSCALE:
+		printf("(VSCALE)");
 		break;
 	default:
 		printf("Unknown Widget (%d)", Widget_Type);
@@ -2804,6 +2838,33 @@ instruction_execute_push(
 		 * gtk_combo_box_text_new_with_entry() is unavailable,
 		 * and my brain hurts badly when I read the API ;) */
 		Widget = gtk_combo_box_entry_new_text();
+		/* The directives are applied in the refresh function */
+		/* The signals are connected in the refresh function post
+		 * initialisation and pre-realization */
+		push_widget(Widget, Widget_Type);
+		break;
+
+	case WIDGET_HSCALE:
+
+		Widget = gtk_hscale_new_with_range(0, 100, 10);
+
+/*		gtk_range_set_value(GTK_RANGE(Widget), 50);
+		gtk_scale_add_mark(GTK_SCALE(Widget), 20, GTK_POS_BOTTOM, NULL);
+		gtk_scale_add_mark(GTK_SCALE(Widget), 50, GTK_POS_TOP, NULL);
+		gtk_scale_add_mark(GTK_SCALE(Widget), 80, GTK_POS_BOTTOM, NULL);
+temp temp */
+
+		/* The signals are connected in the refresh function post
+		 * initialisation and pre-realization */
+		push_widget(Widget, Widget_Type);
+		break;
+
+	case WIDGET_VSCALE:
+
+		Widget = gtk_vscale_new_with_range(0, 100, 10);
+
+		/* The signals are connected in the refresh function post
+		 * initialisation and pre-realization */
 		push_widget(Widget, Widget_Type);
 		break;
 

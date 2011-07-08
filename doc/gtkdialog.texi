@@ -8,7 +8,7 @@
 @copying
 This manual documents version @value{VERSION} of the Gtkdialog utility.
 
-Copyright @copyright{} 2003 Laszlo Pere. 
+Copyright @copyright{} 2003-2007 Laszlo Pere. 
 
 
 @quotation
@@ -68,7 +68,7 @@ details can be found in the @file{INSTALL} file included.
 
 
 @section Copying
-Copyright @copyright{} 2003 Laszlo Pere. 
+Copyright @copyright{} 2003-2007 Laszlo Pere. 
 
 The gtkdialog is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by

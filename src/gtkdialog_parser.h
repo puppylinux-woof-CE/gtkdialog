@@ -158,7 +158,13 @@
      ECOMBOBOXTEXT = 374,
      COMBOBOXENTRY = 375,
      PART_COMBOBOXENTRY = 376,
-     ECOMBOBOXENTRY = 377
+     ECOMBOBOXENTRY = 377,
+     HSCALE = 378,
+     PART_HSCALE = 379,
+     EHSCALE = 380,
+     VSCALE = 381,
+     PART_VSCALE = 382,
+     EVSCALE = 383
    };
 #endif
 /* Tokens.  */
@@ -282,6 +288,12 @@
 #define COMBOBOXENTRY 375
 #define PART_COMBOBOXENTRY 376
 #define ECOMBOBOXENTRY 377
+#define HSCALE 378
+#define PART_HSCALE 379
+#define EHSCALE 380
+#define VSCALE 381
+#define PART_VSCALE 382
+#define EVSCALE 383
 
 
 
@@ -291,7 +303,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 63 "gtkdialog_parser.y"
+#line 77 "gtkdialog_parser.y"
  
   double     dval;
   char      *cval;
@@ -302,7 +314,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 306 "gtkdialog_parser.h"
+#line 318 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

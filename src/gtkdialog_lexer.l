@@ -1,11 +1,34 @@
 %{
 /*
+ * gtkdialog_lexer.l:
+ * Gtkdialog - A small utility for fast and easy GUI building.
+ * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2011  Thunor <thunorsif@hotmail.com>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+/*
+**
 ** $Id: lexer.l,v 1.2 2004/11/20 20:01:25 root Exp root $
 ** $Log: lexer.l,v $
 ** Revision 1.2  2004/11/20 20:01:25  root
 ** - Log entries.
 **
 */
+
 #define YY_INPUT(buf,result,max_size) \
     { \
     int c = getnextchar(); \
@@ -427,7 +450,9 @@ gchar *Token;
 \<separator\>    			{ Token="<separator>"; return(SEPARATOR);  		}
 \<\/separator\>				{ Token="</separator>"; return(ESEPARATOR);		}
 
-	/* Thunor: Newly supported widgets */
+	/**************************************************************
+	 * Thunor: Newly supported widgets.
+	 **************************************************************/
 \<hseparator\>    			{ Token="<hseparator>"; return(HSEPARATOR); }
 \<\/hseparator\>			{ Token="</hseparator>"; return(EHSEPARATOR); }
 \<hseparator[ ]+  			{ Token="<hseparator>"; 
@@ -452,6 +477,17 @@ gchar *Token;
 					  return(PART_COMBOBOXENTRY); }
 \<\/comboboxentry\>  		{ Token="</comboboxentry>"; return(ECOMBOBOXENTRY); }
 
+\<hscale\>					{ Token="<hscale>"; return(HSCALE); }
+\<hscale[ ]+				{ Token="<hscale>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_HSCALE); }
+\<\/hscale\>				{ Token="</hscale>"; return(EHSCALE); }
+
+\<vscale\>					{ Token="<vscale>"; return(VSCALE); }
+\<vscale[ ]+				{ Token="<vscale>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_VSCALE); }
+\<\/vscale\>				{ Token="</vscale>"; return(EVSCALE); }
 
 
 
