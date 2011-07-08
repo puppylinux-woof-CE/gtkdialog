@@ -1,13 +1,26 @@
 %{
 /*
-** parser.y: A simple grammar for the XML-like language we use.
-** copyright: (c) 2003 by László Pere
-** email: pipas@linux.pte.hu
-**
-** This program is free software; you can redistribute it and/or 
-** modify  it under the terms of the GNU General Public License as
-** published by the Free Software Foundation; either version 2 of
-** the License, or (at your option) any later version.
+ * gtkdialog_parser.y: A simple grammar for the XML-like language we use.
+ * Gtkdialog - A small utility for fast and easy GUI building.
+ * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2011  Thunor <thunorsif@hotmail.com>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+/*
 **
 ** $Id: parser.y,v 1.5 2004/11/25 21:16:57 root Exp root $
 ** $Log: parser.y,v $
@@ -24,6 +37,7 @@
 ** Initial revision
 **
 */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -123,11 +137,15 @@ start_up(void)
 
 %nonassoc      UMINUS 
 
-	/* Thunor: Newly supported widgets */
+	/**************************************************************
+	 * Thunor: Newly supported widgets.
+	 **************************************************************/
 %token         HSEPARATOR PART_HSEPARATOR EHSEPARATOR
 %token         VSEPARATOR PART_VSEPARATOR EVSEPARATOR
 %token         COMBOBOXTEXT PART_COMBOBOXTEXT ECOMBOBOXTEXT
 %token         COMBOBOXENTRY PART_COMBOBOXENTRY ECOMBOBOXENTRY
+%token         HSCALE PART_HSCALE EHSCALE
+%token         VSCALE PART_VSCALE EVSCALE
 
 %% 
 window
@@ -225,6 +243,8 @@ widget
   | vseparator
   | comboboxtext
   | comboboxentry
+  | hscale
+  | vscale
   ;
 
 entry
@@ -407,8 +427,12 @@ menuitems
 	}
   ;
 
-	/* Thunor: Newly supported widgets.
-	 * Don't forget to add them to the widget list above */
+	/**************************************************************
+	 * Thunor: Newly supported widgets.
+	 * Don't forget to add them to the widget list above and
+	 * to create a token for them towards the top of this file.
+	 * The WIDGET_*s are defined in automaton.h.
+	 **************************************************************/
 hseparator
   : HSEPARATOR EHSEPARATOR {
 		token_store(PUSH | WIDGET_HSEPARATOR);
@@ -442,6 +466,24 @@ comboboxentry
 	}
   | PART_COMBOBOXENTRY tagattr '>' attr ECOMBOBOXENTRY {
 		token_store_attr(PUSH | WIDGET_COMBOBOXENTRY, $2);
+	}
+  ;
+
+hscale
+  : HSCALE attr EHSCALE {
+		token_store(PUSH | WIDGET_HSCALE);
+	}
+  | PART_HSCALE tagattr '>' attr EHSCALE {
+		token_store_attr(PUSH | WIDGET_HSCALE, $2);
+	}
+  ;
+
+vscale
+  : VSCALE attr EVSCALE {
+		token_store(PUSH | WIDGET_VSCALE);
+	}
+  | PART_VSCALE tagattr '>' attr EVSCALE {
+		token_store_attr(PUSH | WIDGET_VSCALE, $2);
 	}
   ;
 

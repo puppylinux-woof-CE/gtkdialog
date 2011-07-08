@@ -1,3 +1,23 @@
+/*
+ * automaton.h: An automaton executing the program, creating widgets. 
+ * Gtkdialog - A small utility for fast and easy GUI building.
+ * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 #ifndef AUTOMATON_H
 #define AUTOMATON_H
 
@@ -64,6 +84,8 @@ typedef struct actioncommand {
 #define WIDGET_VSEPARATOR     0x00A50000
 #define WIDGET_COMBOBOXTEXT   0x00A60000
 #define WIDGET_COMBOBOXENTRY  0x00A70000
+#define WIDGET_HSCALE         0x00A80000
+#define WIDGET_VSCALE         0x00A90000
 
 /*
  * Imperative stuff.
@@ -152,5 +174,6 @@ void instruction_set_jump(gint from, gint where);
 
 void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet  *Attr);
+void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 
 #endif

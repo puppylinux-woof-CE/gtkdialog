@@ -1,3 +1,12 @@
+* Fri Jul 8 2011 Thunor <thunorsif@hotmail.com>
+- Overhauled the copyright and license notices atop most source files.
+  Quite a few were missing, some were only snippets of the license and
+  some weren't attributed to anyone. Where applicable I've included
+  myself in the copyright notices since I've introduced a fair amount of
+  code now. Everything is now consistently (C) 2003-2007 László Pere
+  which correctly covers the period of all of his work.
+- Started adding the new hscale and vscale widgets.
+
 * Thu Jul 7 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <comboboxentry></comboboxentry>, full action function set.
 - Modified the behaviour of the comboboxentry widget's default directive
