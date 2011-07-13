@@ -1,6 +1,7 @@
 * Wed Jul 13 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <hscale>.
 - New widget: <vscale>.
+- Connected up the GtkScale's "value_changed" signal in glade_support.c.
 
 * Fri Jul 8 2011 Thunor <thunorsif@hotmail.com>
 - Overhauled the copyright and license notices atop most source files.
