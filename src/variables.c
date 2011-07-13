@@ -298,6 +298,10 @@ variables_save(const char *name)
 		case WIDGET_COMBOBOXTEXT:
 			save_comboboxtext_to_file(var);
 			break;
+		case WIDGET_VSCALE:
+		case WIDGET_HSCALE:
+			save_scale_to_file(var);
+			break;
 		default:
 			yywarning("Save not implemented for this widget.");
 	}

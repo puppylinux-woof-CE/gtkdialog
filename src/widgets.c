@@ -32,6 +32,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <math.h>
 #include "widgets.h"
 #include "stringman.h"
 
@@ -121,24 +122,53 @@ void fill_comboboxtext_by_items(AttributeSet *Attr,
 	}
 }
 
+static
+void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale)
+{
+#if GTK_CHECK_VERSION(2,16,0)
+	gchar            *text;
+	gdouble           value;
+	gint              position, count;
+
+	g_assert(Attr != NULL && scale != NULL);
+
+	text = attributeset_get_first(Attr, ATTR_ITEM);
+	while (text) {
+		/* sscanf is good for the first two values */
+		if (sscanf(text, "%lf | %d", &value, &position) == 2) {
+			/* Now we'll position on the markup or the terminating zero */
+			count = 0;
+			while (*text != 0 && count < 2) {
+				if (*text == '|') count++;
+				text++;
+			}
+#ifdef DEBUG
+			printf("%s: value=%.16f position=%i markup=\"%s\"\n",
+				__func__, value, position, text);
+#endif
+			gtk_scale_add_mark(GTK_SCALE(scale), value, position, text);
+		}
+		text = attributeset_get_next(Attr, ATTR_ITEM);
+	}
+#endif
+}
+
 char *
 widget_get_text_value(
 		GtkWidget *widget, 
 		int type)
 {
-	GtkTextBuffer    *text_buffer;
-	GtkTextIter       start, end;		
-	GList            *item;
 	GtkTreeSelection *selection;
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
-	gchar            *string;
-	gint              n;
-	gchar            *tmp;
-	gint              selectionmode, initialrow, column;
-	GList            *selectedrows, *row;
 	GtkTreePath      *path;
-	gchar            *line;
+	GtkTextBuffer    *text_buffer;
+	GtkTextIter       start, end;		
+	GList            *item, *selectedrows, *row;
+	gchar            *string, *tmp, *line;
+	gchar             value[32];
+	gint              n, selectionmode, initialrow, column, digits;
+	gdouble           val;
 
 #ifdef DEBUG
 	g_message("%s(): type: %08x\n", __func__, type);
@@ -309,6 +339,69 @@ widget_get_text_value(
 			return string;
 			break;
 		
+		case WIDGET_VSCALE:
+		case WIDGET_HSCALE:
+			digits = gtk_scale_get_digits(GTK_SCALE(widget));
+			val = gtk_range_get_value(GTK_RANGE(widget));
+			switch (digits) {
+				case 0:
+					sprintf(value, "%.0f", val);
+					break;
+				case 1:
+					sprintf(value, "%.1f", val);
+					break;
+				case 2:
+					sprintf(value, "%.2f", val);
+					break;
+				case 3:
+					sprintf(value, "%.3f", val);
+					break;
+				case 4:
+					sprintf(value, "%.4f", val);
+					break;
+				case 5:
+					sprintf(value, "%.5f", val);
+					break;
+				case 6:
+					sprintf(value, "%.6f", val);
+					break;
+				case 7:
+					sprintf(value, "%.7f", val);
+					break;
+				case 8:
+					sprintf(value, "%.8f", val);
+					break;
+				case 9:
+					sprintf(value, "%.9f", val);
+					break;
+				case 10:
+					sprintf(value, "%.10f", val);
+					break;
+				case 11:
+					sprintf(value, "%.11f", val);
+					break;
+				case 12:
+					sprintf(value, "%.12f", val);
+					break;
+				case 13:
+					sprintf(value, "%.13f", val);
+					break;
+				case 14:
+					sprintf(value, "%.14f", val);
+					break;
+				case 15:
+					sprintf(value, "%.15f", val);
+					break;
+				case 16:
+					sprintf(value, "%.16f", val);
+					break;
+				default:
+					sprintf(value, "%f", val);
+					break;
+			}
+			return g_strdup(value);
+			break;
+
 		default:
 			return NULL;
 	}
@@ -333,7 +426,7 @@ void fill_label_by_file(GtkWidget * widget, char *filename)
 	infile = open(filename, O_RDONLY);
 	if (infile == -1) {
 		if (!option_no_warning)
-			g_warning("%s(): Could't open '%s' for reading.", 
+			g_warning("%s(): Couldn't open '%s' for reading.", 
 					__func__, filename);
 		return;
 	}
@@ -367,7 +460,7 @@ void save_edit_to_file(GtkWidget * widget, char *filename)
 
 	outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
 	if (outfile == -1) {
-		fprintf(stderr, "%s(): Could't open '%s' for writing.\n",
+		fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
 			__func__, filename);
 		return;
 	}
@@ -438,10 +531,29 @@ void fill_comboboxtext_by_file(GtkWidget *widget, char *filename)
 		fclose(infile);
 	} else {
 		if (!option_no_warning)
-			g_warning("%s(): Could't open '%s' for reading.", 
+			g_warning("%s(): Couldn't open '%s' for reading.", 
 				__func__, filename);
 	}
 
+}
+
+static
+void fill_scale_by_file(GtkWidget *widget, char *filename)
+{
+	FILE *infile;
+	char line[512];
+
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if ((fgets(line, 512, infile)))
+			gtk_range_set_value(GTK_RANGE(widget), atof(line));
+		/* Close the file */
+		fclose(infile);
+	} else {
+		if (!option_no_warning)
+			g_warning("%s(): Couldn't open '%s' for reading.", 
+				__func__, filename);
+	}
 }
 
 int widget_label_refresh(variable * var)
@@ -583,6 +695,96 @@ void save_comboboxtext_to_file(variable *var)
 					}
 					g_free(text);
 				} while (gtk_tree_model_iter_next(model, &iter));
+			}
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		yywarning("No output file directive found");
+	}
+}
+
+void save_scale_to_file(variable *var)
+{
+	FILE             *outfile;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gint              digits;
+	gdouble           val;
+
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+			digits = gtk_scale_get_digits(GTK_SCALE(var->Widget));
+			val = gtk_range_get_value(GTK_RANGE(var->Widget));
+			switch (digits) {
+				case 0:
+					fprintf(outfile, "%.0f", val);
+					break;
+				case 1:
+					fprintf(outfile, "%.1f", val);
+					break;
+				case 2:
+					fprintf(outfile, "%.2f", val);
+					break;
+				case 3:
+					fprintf(outfile, "%.3f", val);
+					break;
+				case 4:
+					fprintf(outfile, "%.4f", val);
+					break;
+				case 5:
+					fprintf(outfile, "%.5f", val);
+					break;
+				case 6:
+					fprintf(outfile, "%.6f", val);
+					break;
+				case 7:
+					fprintf(outfile, "%.7f", val);
+					break;
+				case 8:
+					fprintf(outfile, "%.8f", val);
+					break;
+				case 9:
+					fprintf(outfile, "%.9f", val);
+					break;
+				case 10:
+					fprintf(outfile, "%.10f", val);
+					break;
+				case 11:
+					fprintf(outfile, "%.11f", val);
+					break;
+				case 12:
+					fprintf(outfile, "%.12f", val);
+					break;
+				case 13:
+					fprintf(outfile, "%.13f", val);
+					break;
+				case 14:
+					fprintf(outfile, "%.14f", val);
+					break;
+				case 15:
+					fprintf(outfile, "%.15f", val);
+					break;
+				case 16:
+					fprintf(outfile, "%.16f", val);
+					break;
+				default:
+					fprintf(outfile, "%f", val);
+					break;
 			}
 			fclose(outfile);
 		} else {
@@ -1253,13 +1455,32 @@ void widget_comboboxtext_refresh(variable *var)
 
 void widget_scale_refresh(variable *var)
 {
-	gint              handler_id_value_changed;
+	gchar            *act;
 
 	if (var != NULL && var->Attributes != NULL) {
 
 #ifdef DEBUG
 		g_message("%s(): entering.", __func__);
 #endif
+
+		/* The <input> tag... */
+		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+		while (act) {
+			/* input file stock = "File:", input file = "File:/path/to/file" */
+			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
+				fill_scale_by_file(var->Widget, act + 5);
+			if (input_is_shell_command(act))
+				fill_scale_by_command(var->Widget, act + 8);
+			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		}
+
+		/* The <item> tags... */
+		if (attributeset_is_avail(var->Attributes, ATTR_ITEM)) {
+#if GTK_CHECK_VERSION(2,16,0)
+			gtk_scale_clear_marks(GTK_SCALE(var->Widget));
+#endif
+			fill_scale_by_items(var->Attributes, var->Widget);
+		}
 
 		/* Initialise these only once i.e. when the widget is unrealized.
 		 * Also, directives should only really be applied once at start-up */
@@ -1269,23 +1490,20 @@ void widget_scale_refresh(variable *var)
 		if (!(GTK_WIDGET_REALIZED(var->Widget)))
 #endif
 		{
+			/* Apply the default directive if available */
+			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
+				gtk_range_set_value(GTK_RANGE(var->Widget),
+					atof(attributeset_get_first(var->Attributes, ATTR_DEFAULT)));
+
 			/* Apply the visible directive if available */
 			if (attributeset_cmp_left
 				(var->Attributes, ATTR_VISIBLE, "disabled"))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 
 			/* Connect uncommon signals */
-			handler_id_value_changed = g_signal_connect(G_OBJECT(var->Widget),
-				"value_changed", G_CALLBACK(on_any_widget_value_changed_event),
+			g_signal_connect(G_OBJECT(var->Widget), "value_changed",
+				G_CALLBACK(on_any_widget_value_changed_event),
 				(gpointer)var->Attributes);
-			/* Store the handler id as a piece of widget data so that
-			 * it can be blocked and unblocked later when necessary */
-			g_object_set_data(G_OBJECT(var->Widget), "handler_id_value_changed",
-				(gpointer)handler_id_value_changed);
-
-
-
-
 		}
 	}
 }
@@ -1536,6 +1754,29 @@ void fill_comboboxtext_by_command(GtkWidget *widget, char *command)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 			gtk_combo_box_append_text(GTK_COMBO_BOX(widget), line);
 		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		g_warning("%s(): command %s, %m\n", __func__, command);
+	}
+}
+
+void fill_scale_by_command(GtkWidget *widget, char *command)
+{
+	FILE *infile;
+	char line[512];
+
+	g_assert(widget != NULL && command != NULL);
+
+#ifdef DEBUG
+	g_message("%s(): command: '%s'", __func__, command);
+#endif
+
+	/* Opening pipe for reading... */
+	if (infile = widget_opencommand(command)) {
+		/* Just one line */
+		if ((fgets(line, 512, infile)))
+			gtk_range_set_value(GTK_RANGE(widget), atof(line));
 		/* Close the file */
 		pclose(infile);
 	} else {
