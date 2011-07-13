@@ -1,3 +1,7 @@
+* Wed Jul 13 2011 Thunor <thunorsif@hotmail.com>
+- New widget: <hscale>.
+- New widget: <vscale>.
+
 * Fri Jul 8 2011 Thunor <thunorsif@hotmail.com>
 - Overhauled the copyright and license notices atop most source files.
   Quite a few were missing, some were only snippets of the license and

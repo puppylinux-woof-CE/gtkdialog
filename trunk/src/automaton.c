@@ -2257,6 +2257,40 @@ create_pixmap(AttributeSet * Attr)
 	return Pixmap;
 }
 
+static GtkWidget *
+create_scale(AttributeSet * Attr, tag_attr *attr, gint horv)
+{
+	GtkWidget        *scale;
+	gdouble           scale_min = 0;
+	gdouble           scale_max = 100;
+	gdouble           scale_step = 10;
+	gdouble           scale_value = 0;
+	gchar            *value;
+
+	if (attr) {
+		if (!(value = get_tag_attribute(attr, "scale_min")))
+			value = get_tag_attribute(attr, "scale-min");
+		if (value) scale_min = atof(value);
+		if (!(value = get_tag_attribute(attr, "scale_max")))
+			value = get_tag_attribute(attr, "scale-max");
+		if (value) scale_max = atof(value);
+		if (!(value = get_tag_attribute(attr, "scale_step")))
+			value = get_tag_attribute(attr, "scale-step");
+		if (value) scale_step = atof(value);
+		if (!(value = get_tag_attribute(attr, "scale_value")))
+			value = get_tag_attribute(attr, "scale-value");
+		if (value) scale_value = atof(value);
+	}
+
+	if (!horv) {
+		scale = gtk_hscale_new_with_range(scale_min, scale_max, scale_step);
+	} else {
+		scale = gtk_vscale_new_with_range(scale_min, scale_max, scale_step);
+	}
+	gtk_range_set_value(GTK_RANGE(scale), scale_value);
+
+	return scale;
+}
 
 static gint 
 instruction_execute_push(
@@ -2845,26 +2879,16 @@ instruction_execute_push(
 		break;
 
 	case WIDGET_HSCALE:
-
-		Widget = gtk_hscale_new_with_range(0, 100, 10);
-
-/*		gtk_range_set_value(GTK_RANGE(Widget), 50);
-		gtk_scale_add_mark(GTK_SCALE(Widget), 20, GTK_POS_BOTTOM, NULL);
-		gtk_scale_add_mark(GTK_SCALE(Widget), 50, GTK_POS_TOP, NULL);
-		gtk_scale_add_mark(GTK_SCALE(Widget), 80, GTK_POS_BOTTOM, NULL);
-temp temp */
-
-		/* The signals are connected in the refresh function post
-		 * initialisation and pre-realization */
+		Widget = create_scale(Attr, tag_attributes, 0);
+		/* The directives are applied in the refresh function */
+		/* The signals are connected in the refresh function */
 		push_widget(Widget, Widget_Type);
 		break;
 
 	case WIDGET_VSCALE:
-
-		Widget = gtk_vscale_new_with_range(0, 100, 10);
-
-		/* The signals are connected in the refresh function post
-		 * initialisation and pre-realization */
+		Widget = create_scale(Attr, tag_attributes, 1);
+		/* The directives are applied in the refresh function */
+		/* The signals are connected in the refresh function */
 		push_widget(Widget, Widget_Type);
 		break;
 

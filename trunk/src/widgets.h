@@ -61,12 +61,14 @@ typedef struct _progr_descr progr_descr;
 static void fill_clist_by_items(AttributeSet *Attr, GtkWidget *list, int separator);
 static void fill_combo_by_items(AttributeSet *Attr, GtkWidget *combo);
 static void fill_comboboxtext_by_items(AttributeSet *Attr, GtkWidget *comboboxtext);
+static void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale);
 static void fill_list_by_items(AttributeSet *Attr, GtkWidget *list);
 void fill_tree_model_by_items(GtkTreeModel *tree_model, variable *var);
 
 char *widget_get_text_value(GtkWidget *widget, int type);
 
 static void fill_comboboxtext_by_file(GtkWidget *widget, char *filename);
+static void fill_scale_by_file(GtkWidget *widget, char *filename);
 static void fill_edit_by_file(GtkWidget *widget, char *filename);
 static void fill_label_by_file(GtkWidget *widget, char *filename);
 void fill_text_by_file(GtkTextBuffer *buffer, char *filename );	/* Redundant: never implemented */
@@ -85,6 +87,7 @@ void widget_table_refresh(variable *var);
 void widget_tree_refresh(variable *var);
 
 void save_comboboxtext_to_file(variable *var);
+void save_scale_to_file(variable *var);
 void widget_edit_save(variable *var);
 static void save_edit_to_file(GtkWidget *widget, char *filename);
 
@@ -93,6 +96,7 @@ FILE *widget_opencommand(const char *command);
 void fill_checkbox_by_command(GtkWidget *checkbox, char *command);
 void fill_clist_by_command(GtkWidget *list, int columns, char *command);
 void fill_comboboxtext_by_command(GtkWidget *widget, char *command);
+void fill_scale_by_command(GtkWidget *widget, char *command);
 void fill_entry_by_command(GtkWidget *entry, char *command);
 void fill_label_by_command(GtkWidget *label, char *command);
 void fill_list_by_command(GtkWidget *list, char *command);
