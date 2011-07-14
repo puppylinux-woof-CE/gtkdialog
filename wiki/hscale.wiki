@@ -44,7 +44,7 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| item || Input data for marks and markup^[1]^ || TODO || || ||
+|| item || Input data for marks and markup^[1]^ || _value_ {{{|}}} _[http://developer.gnome.org/gtk/2.24/gtk-Standard-Enumerations.html#GtkPositionType position]_ {{{|}}} _[http://developer.gnome.org/pango/stable/PangoMarkupFormat.html markup]_ (optional) || || ||
 || output file || Data output target || Filename || || ||
 
 == Signals ==
@@ -68,7 +68,7 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-1. Adding scale marks and markup requires at least [http://developer.gnome.org/gtk/2.24/GtkScale.html#gtk-scale-add-mark GTK+ 2.16].
+1. Scale marks and markup requires at least [http://developer.gnome.org/gtk/2.24/GtkScale.html#gtk-scale-add-mark GTK+ 2.16].
 
 This widget was introduced in version 0.7.21.
 ----
