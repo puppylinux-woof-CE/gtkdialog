@@ -1,0 +1,74 @@
+#summary vscale widget reference
+
+= vscale widget =
+A [http://developer.gnome.org/gtk/2.24/GtkVScale.html GtkVScale]
+----
+
+== Definition ==
+{{{
+<vscale tag_attr="value"...>
+	<default>value</default>
+	<variable>varname</variable>
+	<input>command</input>
+	<input file>filename</input>
+	<visible>state</visible>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+	<item>data</item>...
+	<output file>filename</output>
+</vscale>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkVScale.html#GtkVScale.object-hierarchy GtkVScale] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+|| *Name* || *Description* || *Value* || *Version* ||
+|| scale-min || Minimum value || A double precision floating point value || ||
+|| scale-max || Maximum value || A double precision floating point value || ||
+|| scale-step || Step increment || A double precision floating point value || ||
+|| scale-value || Initial value || A double precision floating point value || ||
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
+|| default || Initial value || A double precision floating point value || || ||
+|| variable || Shell variable name || || || ||
+|| input || Data input source || Shell command || || ||
+|| input file || Data input source || Filename || || ||
+|| visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+|| item || Input data for marks and markup^[1]^ || _value_ {{{|}}} _[http://developer.gnome.org/gtk/2.24/gtk-Standard-Enumerations.html#GtkPositionType position]_ {{{|}}} _[http://developer.gnome.org/pango/stable/PangoMarkupFormat.html markup]_ (optional) || || ||
+|| output file || Data output target || Filename || || ||
+
+== Signals ==
+See the [http://developer.gnome.org/gtk/2.24/GtkScale.html#GtkScale.signals GtkScale] widget signals.
+
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkRange.html#GtkRange-value-changed value_changed]", emitted when the range value changes.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Version* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || ||
+
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Version* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+1. Scale marks and markup requires at least [http://developer.gnome.org/gtk/2.24/GtkScale.html#gtk-scale-add-mark GTK+ 2.16].
+
+This widget was introduced in version 0.7.21.
+----
