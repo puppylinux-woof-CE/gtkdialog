@@ -1,3 +1,7 @@
+* Thu Jul 14 2011 Thunor <thunorsif@hotmail.com>
+- Deprecated the badly named menu item <separator> widget and added an
+  equivalent <menuitemseparator> (I'm reviewing the menu system).
+
 * Wed Jul 13 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <hscale>.
 - New widget: <vscale>.

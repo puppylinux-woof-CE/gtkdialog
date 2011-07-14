@@ -797,6 +797,9 @@ void print_command(instruction command)
 	case WIDGET_MENUITEM:
 	    printf("(new menuitem())");
 	    break;
+	case WIDGET_MENUITEMSEPARATOR:
+	    printf("(new menuitemseparator())");
+	    break;
 	case WIDGET_GVIM:
 	    printf("(new gvim())");
 	    break;
@@ -805,9 +808,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_CHOOSER:
 	    printf("(new chooser())");
-	    break;
-	case WIDGET_MENUSEP:
-	    printf("(new menuseparator())");
 	    break;
 	case WIDGET_HSEPARATOR:
 	    printf("(new hseparator())");
@@ -2517,7 +2517,7 @@ instruction_execute_push(
 		Widget = create_menuitem(Attr, tag_attributes);
 		push_widget(Widget, Widget_Type);
 		break;
-	case WIDGET_MENUSEP:
+	case WIDGET_MENUITEMSEPARATOR:
 		Widget = gtk_separator_menu_item_new();
 		push_widget(Widget, Widget_Type);
 		break;

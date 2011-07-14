@@ -447,8 +447,11 @@ gchar *Token;
 					  return(PART_MENUITEM);  				}
 \<\/menuitem\>  			{ Token="</menuitem>"; return(EMENUITEM);		}
 
-\<separator\>    			{ Token="<separator>"; return(SEPARATOR);  		}
-\<\/separator\>				{ Token="</separator>"; return(ESEPARATOR);		}
+\<menuitemseparator\>    	{ Token="<menuitemseparator>"; return(MENUITEMSEPARATOR); }
+\<\/menuitemseparator\>		{ Token="</menuitemseparator>"; return(EMENUITEMSEPARATOR); }
+
+\<separator\>    			{ Token="<menuitemseparator>"; return(MENUITEMSEPARATOR); }
+\<\/separator\>				{ Token="</menuitemseparator>"; return(EMENUITEMSEPARATOR); }
 
 	/**************************************************************
 	 * Thunor: Newly supported widgets.

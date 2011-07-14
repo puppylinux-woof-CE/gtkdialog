@@ -92,8 +92,8 @@ start_up(void)
 %token         EFRAME
 %token         ENTRY EENTRY PART_ENTRY
 %token         MENUBAR EMENUBAR MENU EMENU 
-%token         SEPARATOR ESEPARATOR
 %token         MENUITEM PART_MENUITEM EMENUITEM
+%token         MENUITEMSEPARATOR EMENUITEMSEPARATOR
 %token         EDIT PART_EDIT EEDIT
 %token         TREE PART_TREE ETREE
 %token         CHOOSER PART_CHOOSER ECHOOSER
@@ -421,8 +421,8 @@ menuitems
     		token_store_attr(PUSH | WIDGET_MENUITEM, $3); 
 		token_store(SUM);
     	}
-  | menuitems SEPARATOR ESEPARATOR {
-		token_store(PUSH | WIDGET_MENUSEP);
+  | menuitems MENUITEMSEPARATOR EMENUITEMSEPARATOR {
+		token_store(PUSH | WIDGET_MENUITEMSEPARATOR);
 		token_store(SUM);
 	}
   ;
