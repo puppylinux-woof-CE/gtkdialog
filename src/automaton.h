@@ -48,44 +48,44 @@ typedef struct actioncommand {
   char        *destination_name;
 } actioncommand;
 
-/*                                -- Type of widget      */
-/*                              xxxxxxxx                 */
-#define WIDGET_TYPE           0x00FF0000
-#define WIDGET_LABEL          0x00010000
-#define WIDGET_ENTRY          0x00020000
-#define WIDGET_EDIT           0x00030000
-#define WIDGET_BUTTON         0x00040000
-#define WIDGET_CHECKBOX       0x00050000
-#define WIDGET_RADIO          0x00060000
-#define WIDGET_LIST           0x00070000
-#define WIDGET_TABLE          0x00080000
-#define WIDGET_COMBO          0x00090000
-#define WIDGET_OKBUTTON       0x000A0000
-#define WIDGET_CANCELBUTTON   0x000B0000
-#define WIDGET_HELPBUTTON     0x000C0000
-#define WIDGET_NOBUTTON       0x000D0000
-#define WIDGET_YESBUTTON      0x000E0000
-#define WIDGET_SCROLLEDW      0x000F0000
-#define WIDGET_VBOX           0x00100000
-#define WIDGET_HBOX           0x00200000
-#define WIDGET_FRAME          0x00300000
-#define WIDGET_NOTEBOOK       0x00310000
-#define WIDGET_WINDOW         0x00400000
-#define WIDGET_PIXMAP         0x00500000
-#define WIDGET_MENUBAR        0x00600000
-#define WIDGET_MENU           0x00700000
-#define WIDGET_MENUITEM       0x00800000
-#define WIDGET_GVIM           0x00900000
-#define WIDGET_TREE           0x00A00000
-#define WIDGET_CHOOSER        0x00A10000
-#define WIDGET_MENUSEP        0x00A20000
-#define WIDGET_PROGRESS       0x00A30000
-#define WIDGET_HSEPARATOR     0x00A40000
-#define WIDGET_VSEPARATOR     0x00A50000
-#define WIDGET_COMBOBOXTEXT   0x00A60000
-#define WIDGET_COMBOBOXENTRY  0x00A70000
-#define WIDGET_HSCALE         0x00A80000
-#define WIDGET_VSCALE         0x00A90000
+/*                                   -- Type of widget      */
+/*                                 xxxxxxxx                 */
+#define WIDGET_TYPE              0x00FF0000
+#define WIDGET_LABEL             0x00010000
+#define WIDGET_ENTRY             0x00020000
+#define WIDGET_EDIT              0x00030000
+#define WIDGET_BUTTON            0x00040000
+#define WIDGET_CHECKBOX          0x00050000
+#define WIDGET_RADIO             0x00060000
+#define WIDGET_LIST              0x00070000
+#define WIDGET_TABLE             0x00080000
+#define WIDGET_COMBO             0x00090000
+#define WIDGET_OKBUTTON          0x000A0000
+#define WIDGET_CANCELBUTTON      0x000B0000
+#define WIDGET_HELPBUTTON        0x000C0000
+#define WIDGET_NOBUTTON          0x000D0000
+#define WIDGET_YESBUTTON         0x000E0000
+#define WIDGET_SCROLLEDW         0x000F0000
+#define WIDGET_VBOX              0x00100000
+#define WIDGET_HBOX              0x00200000
+#define WIDGET_FRAME             0x00300000
+#define WIDGET_NOTEBOOK          0x00310000
+#define WIDGET_WINDOW            0x00400000
+#define WIDGET_PIXMAP            0x00500000
+#define WIDGET_MENUBAR           0x00600000
+#define WIDGET_MENU              0x00700000
+#define WIDGET_MENUITEM          0x00800000
+#define WIDGET_MENUITEMSEPARATOR 0x00900000
+#define WIDGET_GVIM              0x00A00000
+#define WIDGET_TREE              0x00A10000
+#define WIDGET_CHOOSER           0x00A20000
+#define WIDGET_PROGRESS          0x00A30000
+#define WIDGET_HSEPARATOR        0x00A40000
+#define WIDGET_VSEPARATOR        0x00A50000
+#define WIDGET_COMBOBOXTEXT      0x00A60000
+#define WIDGET_COMBOBOXENTRY     0x00A70000
+#define WIDGET_HSCALE            0x00A80000
+#define WIDGET_VSCALE            0x00A90000
 
 /*
  * Imperative stuff.
