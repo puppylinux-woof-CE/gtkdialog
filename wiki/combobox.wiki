@@ -5,5 +5,5 @@ A [http://developer.gnome.org/gtk/2.24/GtkCombo.html GtkCombo]
 ----
 
 == Notes ==
-This widget has been deprecated since 0.7.21 in favour of [comboboxtext] or [comboboxentry].
+This widget has been deprecated since 0.7.21 and you should use [comboboxtext] or [comboboxentry] instead.
 ----
