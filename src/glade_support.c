@@ -41,6 +41,9 @@ typedef struct _gtkdialog_signal {
 	GCallback callback;
 } gtkdialog_signal;
 
+/* function prototypes */
+gint widget_get_type_from_pointer(GtkWidget *widget);
+
 /*
 ** Signal handler callbascks.
 */
@@ -604,6 +607,137 @@ refresh_widgets(GladeXML *glade_xml)
 	g_list_free(widget_list);
 }
 
+/* Thunor 2011-07-16: This seems so incredibly out-of-date -- it's only
+ * got 20% of the widgets in there! It's returning the widget type to
+ * glade_support.c and variable->Type is checked throughout the code so
+ * it must be important.
+ * 
+ * These MUST be in an order that returns widgets lower down the
+ * hierarchy before those higher up.
+ * 
+ * WIDGET_GVIM is a custom widget and isn't included.
+ */
+
+gint widget_get_type_from_pointer(GtkWidget *widget)
+{
+	gint              retval = 0;
+
+/*	/$	Redundant: incredibly out-of-date.
+	 $ Must be in a perfect order, since there is a class hierarchy here!
+	 $/
+	if (GTK_IS_LABEL(widget))
+		return WIDGET_LABEL;
+	else if (GTK_IS_ENTRY(widget))
+		return WIDGET_ENTRY;
+	else if (GTK_IS_TEXT_VIEW(widget))
+		return WIDGET_EDIT;
+	else if (GTK_IS_CHECK_BUTTON(widget))
+		return WIDGET_CHECKBOX;
+	else if (GTK_IS_RADIO_BUTTON(widget))
+		return WIDGET_RADIO;
+	else if (GTK_IS_PROGRESS_BAR(widget))
+		return WIDGET_PROGRESS;
+	else if (GTK_IS_WINDOW(widget))
+		return WIDGET_WINDOW;
+	else if (GTK_IS_BUTTON(widget))
+		return WIDGET_BUTTON;
+	return 0; */
+
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton--->GtkRadioButton */
+	if (GTK_IS_RADIO_BUTTON(widget))
+		retval = WIDGET_RADIO;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton */
+	else if (GTK_IS_CHECK_BUTTON(widget))
+		retval = WIDGET_CHECKBOX;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton */
+	else if (GTK_IS_BUTTON(widget))
+		retval = WIDGET_BUTTON;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkComboBox--->GtkComboBoxEntry */
+	else if (GTK_IS_COMBO_BOX_ENTRY(widget))
+		retval = WIDGET_COMBOBOXENTRY;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkComboBox--->GtkComboBoxText
+	else if (GTK_IS_COMBO_BOX_TEXT(widget)) WARNING: I don't have access to this */
+	else if (GTK_IS_COMBO_BOX(widget))
+		retval = WIDGET_COMBOBOXTEXT;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkFrame */
+	else if (GTK_IS_FRAME(widget))
+		retval = WIDGET_FRAME;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkSeparatorMenuItem */
+	else if (GTK_IS_SEPARATOR_MENU_ITEM(widget))
+		retval = WIDGET_MENUITEMSEPARATOR;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem */
+	else if (GTK_IS_MENU_ITEM(widget))
+		retval = WIDGET_MENUITEM;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkScrolledWindow */
+	else if (GTK_IS_SCROLLED_WINDOW(widget))
+		retval = WIDGET_SCROLLEDW;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkWindow */
+	else if (GTK_IS_WINDOW(widget))
+		retval = WIDGET_WINDOW;
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkCombo */
+	else if (GTK_IS_COMBO(widget))
+		retval = WIDGET_COMBO;
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox */
+	else if (GTK_IS_HBOX(widget))
+		retval = WIDGET_HBOX;
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkVBox--->GtkFileChooserWidget */
+	else if (GTK_IS_FILE_CHOOSER_WIDGET(widget))
+		retval = WIDGET_CHOOSER;
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkVBox */
+	else if (GTK_IS_VBOX(widget))
+		retval = WIDGET_VBOX;
+/* GtkWidget--->GtkContainer--->GtkCList */
+	else if (GTK_IS_CLIST(widget))
+		retval = WIDGET_TABLE;
+/* GtkWidget--->GtkContainer--->GtkList */
+	else if (GTK_IS_LIST(widget))
+		retval = WIDGET_LIST;
+/* GtkWidget--->GtkContainer--->GtkMenuShell--->GtkMenuBar */
+	else if (GTK_IS_MENU_BAR(widget))
+		retval = WIDGET_MENUBAR;
+/* GtkWidget--->GtkContainer--->GtkMenuShell--->GtkMenu */
+	else if (GTK_IS_MENU(widget))
+		retval = WIDGET_MENU;
+/* GtkWidget--->GtkContainer--->GtkNotebook */
+	else if (GTK_IS_NOTEBOOK(widget))
+		retval = WIDGET_NOTEBOOK;
+/* GtkWidget--->GtkContainer--->GtkTextView */
+	else if (GTK_IS_TEXT_VIEW(widget))
+		retval = WIDGET_EDIT;
+/* GtkWidget--->GtkContainer--->GtkTreeView */
+	else if (GTK_IS_TREE_VIEW(widget))
+		retval = WIDGET_TREE;
+/* GtkWidget--->GtkEntry */
+	else if (GTK_IS_ENTRY(widget))
+		retval = WIDGET_ENTRY;
+/* GtkWidget--->GtkMisc--->GtkImage */
+	else if (GTK_IS_IMAGE(widget))
+		retval = WIDGET_PIXMAP;
+/* GtkWidget--->GtkMisc--->GtkLabel */
+	else if (GTK_IS_LABEL(widget))
+		retval = WIDGET_LABEL;
+/* GtkWidget--->GtkProgress--->GtkProgressBar */
+	else if (GTK_IS_PROGRESS_BAR(widget))
+		retval = WIDGET_PROGRESS;
+/* GtkWidget--->GtkRange--->GtkScale--->GtkHScale */
+	else if (GTK_IS_HSCALE(widget))
+		retval = WIDGET_HSCALE;
+/* GtkWidget--->GtkRange--->GtkScale--->GtkVScale */
+	else if (GTK_IS_VSCALE(widget))
+		retval = WIDGET_VSCALE;
+/* GtkWidget--->GtkSeparator--->GtkHSeparator */
+	else if (GTK_IS_HSEPARATOR(widget))
+		retval = WIDGET_HSEPARATOR;
+/* GtkWidget--->GtkSeparator--->GtkVSeparator */
+	else if (GTK_IS_VSEPARATOR(widget))
+		retval = WIDGET_VSEPARATOR;
+/* GtkWidget hasn't been accounted for */
+	else
+		retval = 0;
+
+	return retval;
+}
+
 /*************************************************************************
  * Public functions:                                                     *
  *                                                                       *
@@ -645,5 +779,5 @@ run_program_by_glade(
 	gtk_widget_show(main_window);
 	gtk_main();
 }
-#endif
 
+#endif	/* HAVE_GLADE_LIB */

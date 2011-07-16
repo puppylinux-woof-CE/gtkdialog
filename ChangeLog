@@ -1,3 +1,10 @@
+* Sat Jul 16 2011 Thunor <thunorsif@hotmail.com>
+- Updated the long forgotten about widget_get_type_from_pointer() which
+  was in widgets.c and used exclusively by glade_support.c. I came across
+  it whilst searching and found it to be only accounting for 20% of the
+  widgets and I don't know what impact this would have had if any since
+  only one application is using Glade. I've moved it to glade_support.c.
+
 * Thu Jul 14 2011 Thunor <thunorsif@hotmail.com>
 - Deprecated the badly named menu item <separator> widget and added an
   equivalent <menuitemseparator> (I'm reviewing the menu system).
