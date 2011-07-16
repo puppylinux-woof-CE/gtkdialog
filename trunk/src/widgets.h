@@ -107,8 +107,6 @@ static void fill_tree_view_by_command(GtkWidget *tree_view,
 
 char *widgets_to_str(int itype);
 
-gint widget_get_type_from_pointer(GtkWidget *widget);
-
 void perform_progress_bar_actions(progr_descr *descr);
 gpointer progress_bar_thread_entry(progr_descr *descr);
 void descriptor_destroy_notify(progr_descr *descr);
