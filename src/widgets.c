@@ -1455,13 +1455,38 @@ void widget_comboboxtext_refresh(variable *var)
 
 void widget_scale_refresh(variable *var)
 {
-	gchar            *act;
+	gchar            *act, *value;
+	gint              handler_id_value_changed;
+	gint              block_function_signals = FALSE;
 
 	if (var != NULL && var->Attributes != NULL) {
 
 #ifdef DEBUG
 		g_message("%s(): entering.", __func__);
 #endif
+
+#if GTK_CHECK_VERSION(2,20,0)
+		if ((gtk_widget_get_realized(var->Widget)))
+#else
+		if ((GTK_WIDGET_REALIZED(var->Widget)))
+#endif
+		{
+			/* If the custom attribute "block-function-signals" is true
+			 * then block signals whilst performing this function */
+			if (var->widget_tag_attr &&
+				((value = get_tag_attribute(var->widget_tag_attr, "block_function_signals")) ||
+				(value = get_tag_attribute(var->widget_tag_attr, "block-function-signals"))) &&
+				((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
+				(atoi(value) == 1))) {
+				block_function_signals = TRUE;
+				/* Block the signal handler */
+				handler_id_value_changed = (gint)g_object_get_data(
+					G_OBJECT(var->Widget), "handler_id_value_changed");
+				g_signal_handler_block(var->Widget, handler_id_value_changed);
+			} else {
+				block_function_signals = FALSE;
+			}
+		}
 
 		/* The <input> tag... */
 		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
@@ -1480,6 +1505,18 @@ void widget_scale_refresh(variable *var)
 			gtk_scale_clear_marks(GTK_SCALE(var->Widget));
 #endif
 			fill_scale_by_items(var->Attributes, var->Widget);
+		}
+
+#if GTK_CHECK_VERSION(2,20,0)
+		if ((gtk_widget_get_realized(var->Widget)))
+#else
+		if ((GTK_WIDGET_REALIZED(var->Widget)))
+#endif
+		{
+			if (block_function_signals) {
+				/* Unblock the signal handler */
+				g_signal_handler_unblock(var->Widget, handler_id_value_changed);
+			}
 		}
 
 		/* Initialise these only once i.e. when the widget is unrealized.
@@ -1501,9 +1538,13 @@ void widget_scale_refresh(variable *var)
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 
 			/* Connect uncommon signals */
-			g_signal_connect(G_OBJECT(var->Widget), "value_changed",
-				G_CALLBACK(on_any_widget_value_changed_event),
+			handler_id_value_changed = g_signal_connect(G_OBJECT(var->Widget),
+				"value_changed", G_CALLBACK(on_any_widget_value_changed_event),
 				(gpointer)var->Attributes);
+			/* Store the handler id as a piece of widget data so that
+			 * it can be blocked and unblocked later when necessary */
+			g_object_set_data(G_OBJECT(var->Widget), "handler_id_value_changed",
+				(gpointer)handler_id_value_changed);
 		}
 	}
 }
