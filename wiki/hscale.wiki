@@ -30,7 +30,7 @@ The following custom tag attributes are available:
 || scale-max || Maximum value || A double precision floating point value || ||
 || scale-step || Step increment || A double precision floating point value || ||
 || scale-value || Initial value || A double precision floating point value || ||
-|| block-function-signals || Block signals emissions from functions || {{{true}}} or {{{false}}} || ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
