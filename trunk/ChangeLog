@@ -1,3 +1,10 @@
+* Sun Jul 17 2011 Thunor <thunorsif@hotmail.com>
+- Added a custom tag attribute called "block-function-signals" that's
+  currently being used in the h/vscale code, but it can be applied to
+  other widgets if required. It blocks signal emissions when functions
+  are being performed (refresh etc.) so that application developers can
+  isolate signals originating from user widget manipulation.
+
 * Sat Jul 16 2011 Thunor <thunorsif@hotmail.com>
 - Updated the long forgotten about widget_get_type_from_pointer() which
   was in widgets.c and used exclusively by glade_support.c. I came across
