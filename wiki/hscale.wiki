@@ -26,11 +26,11 @@ See the [http://developer.gnome.org/gtk/2.24/GtkHScale.html#GtkHScale.object-hie
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Version* ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 || scale-min || Minimum value || A double precision floating point value || ||
 || scale-max || Maximum value || A double precision floating point value || ||
 || scale-step || Step increment || A double precision floating point value || ||
 || scale-value || Initial value || A double precision floating point value || ||
-|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
