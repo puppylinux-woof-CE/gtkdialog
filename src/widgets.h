@@ -69,6 +69,7 @@ char *widget_get_text_value(GtkWidget *widget, int type);
 
 static void fill_comboboxtext_by_file(GtkWidget *widget, char *filename);
 static void fill_scale_by_file(GtkWidget *widget, char *filename);
+static void fill_entry_by_file(GtkWidget *entry, char *filename);
 static void fill_edit_by_file(GtkWidget *widget, char *filename);
 static void fill_label_by_file(GtkWidget *widget, char *filename);
 void fill_text_by_file(GtkTextBuffer *buffer, char *filename );	/* Redundant: never implemented */
@@ -86,10 +87,11 @@ void widget_pixmap_refresh(variable *var);
 void widget_table_refresh(variable *var);
 void widget_tree_refresh(variable *var);
 
-void save_comboboxtext_to_file(variable *var);
-void save_scale_to_file(variable *var);
 void widget_edit_save(variable *var);
 static void save_edit_to_file(GtkWidget *widget, char *filename);
+void save_entry_to_file(variable *var);
+void save_comboboxtext_to_file(variable *var);
+void save_scale_to_file(variable *var);
 
 FILE *widget_opencommand(const char *command);
 

@@ -440,40 +440,6 @@ void fill_label_by_file(GtkWidget * widget, char *filename)
 }
 
 static
-void save_edit_to_file(GtkWidget * widget, char *filename)
-{
-	int outfile, result;
-	GtkTextBuffer *buffer;
-	GtkTextIter start, end;
-	gchar *text;
-#ifdef DEBUG
-	fprintf(stderr, "%s() Saving to '%s'.\n", __func__, filename);
-	fflush(stderr);
-#endif
-	// FIXME: this is stupid, I really should correct this
-	//
-	if (strncasecmp(filename, "File: ", 6) == 0)
-		filename += 6;
-	if (strncasecmp(filename, "File:", 5) == 0)
-		filename += 5;
-
-
-	outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
-	if (outfile == -1) {
-		fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
-			__func__, filename);
-		return;
-	}
-	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
-	gtk_text_buffer_get_start_iter(buffer, &start);
-	gtk_text_buffer_get_end_iter(buffer, &end);
-	text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
-	result = write(outfile, text, strlen(text));
-	close(outfile);
-}
-
-
-static
 void fill_edit_by_file(GtkWidget * widget, char *filename)
 {
 	struct stat st;
@@ -556,6 +522,31 @@ void fill_scale_by_file(GtkWidget *widget, char *filename)
 	}
 }
 
+static
+void fill_entry_by_file(GtkWidget *widget, char *filename)
+{
+	FILE *infile;
+	char line[512];
+	int count;
+
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if ((fgets(line, 512, infile))) {
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			gtk_entry_set_text(GTK_ENTRY(widget), line);
+		}
+		/* Close the file */
+		fclose(infile);
+	} else {
+		if (!option_no_warning)
+			g_warning("%s(): Couldn't open '%s' for reading.", 
+				__func__, filename);
+	}
+
+}
+
 int widget_label_refresh(variable * var)
 {
 	char *act;
@@ -591,6 +582,39 @@ int widget_edit_refresh(variable * var)
 }
 
 
+void save_entry_to_file(variable *var)
+{
+	FILE             *outfile;
+	gchar            *act;
+	gchar            *filename = NULL;
+	const gchar      *text;
+
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+			text = gtk_entry_get_text(GTK_ENTRY(var->Widget));
+			fprintf(outfile, "%s", text);
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		yywarning("No output file directive found");
+	}
+}
+
 void widget_edit_save(variable * var)
 {
 	char *filename;
@@ -624,6 +648,39 @@ try_input:
 		return;
 	}
 	save_edit_to_file(var->Widget, filename);
+}
+
+static
+void save_edit_to_file(GtkWidget * widget, char *filename)
+{
+	int outfile, result;
+	GtkTextBuffer *buffer;
+	GtkTextIter start, end;
+	gchar *text;
+#ifdef DEBUG
+	fprintf(stderr, "%s() Saving to '%s'.\n", __func__, filename);
+	fflush(stderr);
+#endif
+	// FIXME: this is stupid, I really should correct this
+	//
+	if (strncasecmp(filename, "File: ", 6) == 0)
+		filename += 6;
+	if (strncasecmp(filename, "File:", 5) == 0)
+		filename += 5;
+
+
+	outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+	if (outfile == -1) {
+		fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+			__func__, filename);
+		return;
+	}
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
+	gtk_text_buffer_get_start_iter(buffer, &start);
+	gtk_text_buffer_get_end_iter(buffer, &end);
+	text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
+	result = write(outfile, text, strlen(text));
+	close(outfile);
 }
 
 void save_comboboxtext_to_file(variable *var)
@@ -799,16 +856,29 @@ void save_scale_to_file(variable *var)
 void 
 widget_entry_refresh(variable *var)
 {
-	char *act;
+	gchar            *act, *value;
+	gint              handler_id_changed;
+	gint              block_function_signals = FALSE;
+
+	if (var != NULL && var->Attributes != NULL) {
+
+#ifdef DEBUG
+		g_message("%s(): entering.", __func__);
+#endif
+
+/* Thunor: This is bugged as it doesn't distinguish between <input> and
+ * <input file> directives and attempts to execute both of them */
+
+/*	char *act;	Redundant.
 	
 	g_assert(var != NULL);
 	
 #ifdef DEBUG
 	g_message("%s(%p)", __func__, var);
 #endif
-	/*
-	 ** The <input> tag... 
-	 */
+	/$
+	 $$ The <input> tag... 
+	 $/
 	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
 	while (act != NULL) {
 		if (input_is_shell_command(act)) {
@@ -824,6 +894,101 @@ next_input:
 	if (attributeset_cmp_left
 	    (var->Attributes, ATTR_VISIBLE, "disabled"))
 		gtk_widget_set_sensitive(var->Widget, FALSE);
+*/
+
+#if GTK_CHECK_VERSION(2,20,0)
+		if ((gtk_widget_get_realized(var->Widget)))
+#else
+		if ((GTK_WIDGET_REALIZED(var->Widget)))
+#endif
+		{
+			/* If the custom attribute "block-function-signals" is true
+			 * then block signals whilst performing this function */
+			if (var->widget_tag_attr &&
+				((value = get_tag_attribute(var->widget_tag_attr, "block_function_signals")) ||
+				(value = get_tag_attribute(var->widget_tag_attr, "block-function-signals"))) &&
+				((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
+				(atoi(value) == 1))) {
+				block_function_signals = TRUE;
+				/* Block the signal handler */
+				handler_id_changed = (gint)g_object_get_data(
+					G_OBJECT(var->Widget), "handler_id_changed");
+				g_signal_handler_block(var->Widget, handler_id_changed);
+			} else {
+				block_function_signals = FALSE;
+			}
+		}
+
+		/* The <input> tag... */
+		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+		while (act) {
+			/* input file stock = "File:", input file = "File:/path/to/file" */
+			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
+				fill_entry_by_file(var->Widget, act + 5);
+			if (input_is_shell_command(act))
+				fill_entry_by_command(var->Widget, act + 8);
+			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		}
+
+#if GTK_CHECK_VERSION(2,20,0)
+		if ((gtk_widget_get_realized(var->Widget)))
+#else
+		if ((GTK_WIDGET_REALIZED(var->Widget)))
+#endif
+		{
+			if (block_function_signals) {
+				/* Unblock the signal handler */
+				g_signal_handler_unblock(var->Widget, handler_id_changed);
+			}
+		}
+
+		/* Initialise these only once i.e. when the widget is unrealized.
+		 * Also, directives should only really be applied once at start-up */
+#if GTK_CHECK_VERSION(2,20,0)
+		if (!(gtk_widget_get_realized(var->Widget)))
+#else
+		if (!(GTK_WIDGET_REALIZED(var->Widget)))
+#endif
+		{
+			/* Apply the default directive if available */
+			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
+				gtk_entry_set_text(GTK_ENTRY(var->Widget),
+				attributeset_get_first(var->Attributes, ATTR_DEFAULT));
+
+			/* Apply the visible directive if available */
+			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
+				gtk_widget_set_sensitive(var->Widget, FALSE);
+			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "password"))
+				gtk_entry_set_visibility(GTK_ENTRY(var->Widget), FALSE);
+
+			/* Apply the width and height directives if available */
+			if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT) &&
+				attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+				gtk_widget_set_usize(var->Widget, 
+					atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH)),
+					atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT)));
+
+			/* Connect uncommon signals */
+			handler_id_changed = g_signal_connect(G_OBJECT(var->Widget), "changed", 
+				G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
+			/* Store the handler id as a piece of widget data so that
+			 * it can be blocked and unblocked later when necessary */
+			g_object_set_data(G_OBJECT(var->Widget), "handler_id_changed",
+				(gpointer)handler_id_changed);
+			g_signal_connect(G_OBJECT(var->Widget), "activate",
+				G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
+#if GTK_CHECK_VERSION(2,16,0)
+			/* Despite what the GTK+ 2 Reference Manual says, I found
+			 * these to be activatable by default. They will actually
+			 * be prefixed with either primary- or secondary- for use
+			 * withn action directives */
+			g_signal_connect(G_OBJECT(var->Widget), "icon-press",
+				G_CALLBACK(on_any_widget_icon_press_event), (gpointer)var->Attributes);
+			g_signal_connect(G_OBJECT(var->Widget), "icon-release",
+				G_CALLBACK(on_any_widget_icon_release_event), (gpointer)var->Attributes);
+#endif
+		}
+	}
 }
 
 void widget_checkbox_refresh(variable * var)
