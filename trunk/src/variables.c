@@ -241,8 +241,11 @@ variable *
 variables_set_value(const char *name, 
 		const char *value)
 {
-	variable *toset;
-	gint      index;
+	variable         *toset;
+	gint              index;
+	gchar            *string;
+	gint              handler_id_changed;
+	gint              block_function_signals = FALSE;
 
 #ifdef DEBUG
 	fprintf(stderr, "%s(): variable '%s'.\n", __func__, name);
@@ -256,9 +259,31 @@ variables_set_value(const char *name,
 
 	switch (toset->Type) {
 		case WIDGET_ENTRY:
+			/* If the custom attribute "block-function-signals" is true
+			 * then block signals whilst performing this function */
+			if (toset->widget_tag_attr &&
+				((string = get_tag_attribute(toset->widget_tag_attr, "block_function_signals")) ||
+				(string = get_tag_attribute(toset->widget_tag_attr, "block-function-signals"))) &&
+				((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
+				(atoi(string) == 1))) {
+				block_function_signals = TRUE;
+				/* Block the signal handler */
+				handler_id_changed = (gint)g_object_get_data(
+					G_OBJECT(toset->Widget), "handler_id_changed");
+				g_signal_handler_block(toset->Widget, handler_id_changed);
+			} else {
+				block_function_signals = FALSE;
+			}
+			/* Insert the data into the widget */
 			gtk_entry_set_text(GTK_ENTRY(toset->Widget), value);
-			gtk_signal_emit_by_name(GTK_OBJECT(toset->Widget),
-						"changed");
+			/* Thunor: This is a bug: it causes the signal to be
+			 * emitted twice when using the fileselect function.
+			gtk_signal_emit_by_name(GTK_OBJECT(toset->Widget),	Redundant
+						"changed");*/
+			if (block_function_signals) {
+				/* Unblock the signal handler */
+				g_signal_handler_unblock(toset->Widget, handler_id_changed);
+			}
 			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
@@ -291,6 +316,9 @@ variables_save(const char *name)
 		return (NULL);
 
 	switch (var->Type) {
+		case WIDGET_ENTRY:
+			save_entry_to_file(var);
+			break;
 		case WIDGET_EDIT:
 			widget_edit_save(var);
 			break;
@@ -1038,6 +1066,7 @@ variables_clear(const char *name)
 	gint              rowcount;
 	gchar             oldselected[512];
 	gchar            *string;
+	gint              block_function_signals = FALSE;
 
 #ifdef DEBUG
 	fprintf(stderr, "%s(): variable: %s\n", __func__, name);
@@ -1050,7 +1079,27 @@ variables_clear(const char *name)
 
 	switch (toclear->Type) {
 		case WIDGET_ENTRY:
+			/* If the custom attribute "block-function-signals" is true
+			 * then block signals whilst performing this function */
+			if (toclear->widget_tag_attr &&
+				((string = get_tag_attribute(toclear->widget_tag_attr, "block_function_signals")) ||
+				(string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
+				((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
+				(atoi(string) == 1))) {
+				block_function_signals = TRUE;
+				/* Block the signal handler */
+				handler_id_changed = (gint)g_object_get_data(
+					G_OBJECT(toclear->Widget), "handler_id_changed");
+				g_signal_handler_block(toclear->Widget, handler_id_changed);
+			} else {
+				block_function_signals = FALSE;
+			}
+			/* Clear the data from the widget */
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
+			if (block_function_signals) {
+				/* Unblock the signal handler */
+				g_signal_handler_unblock(toclear->Widget, handler_id_changed);
+			}
 			break;
 		case WIDGET_TABLE:
 			gtk_clist_clear(GTK_CLIST(toclear->Widget));
@@ -1157,6 +1206,7 @@ remove_selected_variable(const char *name)
 	gchar             oldselected[512];
 	gchar             newselected[512];
 	gchar            *string;
+	gint              block_function_signals = FALSE;
 
 	g_assert(name != NULL);
 
@@ -1175,7 +1225,27 @@ remove_selected_variable(const char *name)
 	 */
 	switch (toclear->Type) {
 		case WIDGET_ENTRY:
+			/* If the custom attribute "block-function-signals" is true
+			 * then block signals whilst performing this function */
+			if (toclear->widget_tag_attr &&
+				((string = get_tag_attribute(toclear->widget_tag_attr, "block_function_signals")) ||
+				(string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
+				((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
+				(atoi(string) == 1))) {
+				block_function_signals = TRUE;
+				/* Block the signal handler */
+				handler_id_changed = (gint)g_object_get_data(
+					G_OBJECT(toclear->Widget), "handler_id_changed");
+				g_signal_handler_block(toclear->Widget, handler_id_changed);
+			} else {
+				block_function_signals = FALSE;
+			}
+			/* Remove the data from the widget */
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
+			if (block_function_signals) {
+				/* Unblock the signal handler */
+				g_signal_handler_unblock(toclear->Widget, handler_id_changed);
+			}
 			break;
 
 		case WIDGET_LIST:

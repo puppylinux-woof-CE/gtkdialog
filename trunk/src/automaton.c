@@ -132,11 +132,12 @@ widget_signal_executor(
 			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
 				__func__, command, type, signal, signal_name);
 #endif
-			if (GTK_IS_COMBO_BOX(widget) && strcasecmp(signal_name, "changed") == 0) {
-				execute_action(widget, command, type);
-			}
-			if (GTK_IS_SCALE(widget) && strcasecmp(signal_name, "value_changed") == 0) {
-				execute_action(widget, command, type);
+			if (strcasecmp(signal_name, "changed") == 0) {
+				if (GTK_IS_ENTRY(widget) || GTK_IS_COMBO_BOX(widget))
+					execute_action(widget, command, type);
+			} else if (strcasecmp(signal_name, "value_changed") == 0) {
+				if (GTK_IS_SCALE(widget))
+					execute_action(widget, command, type);
 			}
 		}
 next_command:   
@@ -317,6 +318,26 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 	widget_signal_executor(widget, Attr, "value_changed");
 }
 
+#if GTK_CHECK_VERSION(2,16,0)
+void on_any_widget_icon_press_event(GtkWidget *widget,
+	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
+{
+	if (pos == GTK_ENTRY_ICON_PRIMARY)
+		widget_signal_executor(widget, Attr, "primary-icon-press");
+	else
+		widget_signal_executor(widget, Attr, "secondary-icon-press");
+}
+
+void on_any_widget_icon_release_event(GtkWidget *widget,
+	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
+{
+	if (pos == GTK_ENTRY_ICON_PRIMARY)
+		widget_signal_executor(widget, Attr, "primary-icon-release");
+	else
+		widget_signal_executor(widget, Attr, "secondary-icon-release");
+}
+#endif
+
 static gboolean
 widget_connect_signals(
 		GtkWidget    *widget,
@@ -405,11 +426,11 @@ table_selection(GtkWidget      *clist,
 }
 
 
-void 
+/*void 	Redundant
 entry_inserted(GtkWidget * entry, gpointer str)
 {
 	button_pressed(entry, str);
-}
+}*/
 
 void button_toggled(GtkToggleButton * button, gpointer str)
 {
@@ -2263,7 +2284,7 @@ create_scale(AttributeSet * Attr, tag_attr *attr, gint horv)
 	GtkWidget        *scale;
 	gdouble           scale_min = 0;
 	gdouble           scale_max = 100;
-	gdouble           scale_step = 10;
+	gdouble           scale_step = 1;
 	gdouble           scale_value = 0;
 	gchar            *value;
 
@@ -2328,7 +2349,14 @@ instruction_execute_push(
 		Widget = gtk_entry_new();
 		push_widget(Widget, Widget_Type);
 
-		if (attributeset_is_avail(Attr, ATTR_DEFAULT))
+/* Thunor: This is bugged: it doesn't allow having a default <action>
+ * and an <action signal="changed"> activated at the same time.
+ * Also it's connecting to entry_inserted() which fakes a button press! Why?
+ * I've moved everything to the refresh function and I've used the normal
+ * code to connect the signals. I'll leave this code here for a while to
+ * make sure I haven't upset something and then purge it all later on */
+
+/*		if (attributeset_is_avail(Attr, ATTR_DEFAULT))	Redundant
 			gtk_entry_set_text(GTK_ENTRY(Widget),
 					   attributeset_get_first(Attr,
 								  ATTR_DEFAULT));
@@ -2342,12 +2370,12 @@ instruction_execute_push(
 					     atoi(attributeset_get_first
 						  (Attr, ATTR_WIDTH)),
 					     atoi(attributeset_get_first
-						  (Attr, ATTR_HEIGHT)));
+						  (Attr, ATTR_HEIGHT))); */
 		/*
 		 * If this entry has an action which we didn't specify with a
 		 * signal name we execute when the text changes.
 		 */
-		if (attributeset_is_avail(Attr, ATTR_ACTION)) {
+/*		if (attributeset_is_avail(Attr, ATTR_ACTION)) {	Redundant
 			char  *act;
 			gchar *signal;
 
@@ -2381,6 +2409,7 @@ instruction_execute_push(
 				NULL);
 	}
 #endif
+ */
 		break;
 
 	case WIDGET_CHOOSER:
