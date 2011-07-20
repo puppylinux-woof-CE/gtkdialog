@@ -74,6 +74,8 @@ instruction *program = NULL;
 int instruction_counter = 0;	/* The first available memory cell. */
 size_t memory_counter = 0;	/* The size of program memory.     */
 GtkWidget *window = NULL;	/* The actual window.              */
+GList *accel_groups = NULL;
+
 
 /*
  * Static function definitions.
@@ -1317,13 +1319,14 @@ static GtkWidget *
 create_menuitem(AttributeSet *Attr, 
 		tag_attr     *attr)
 {
-	GtkIconTheme *icon_theme;
-	GdkPixbuf    *pixbuf;
-	GError       *error = NULL;
-	GtkWidget    *menu_item;
-	GtkWidget    *Icon;
-	gchar        *label;
-	int           q;
+	GtkWidget        *menu_item, *Icon;
+	GError           *error = NULL;
+	GtkIconTheme     *icon_theme;
+	GdkPixbuf        *pixbuf;
+	gchar            *label, *value;
+	gchar             accel_path[64];
+	guint             accel_key = 0, accel_mods = 0;
+	gint              q;
 
 	PIP_DEBUG("");
 
@@ -1359,26 +1362,81 @@ item_ready:
 		if (!option_no_warning)
 			g_warning("%s(): Menu item without action.", __func__);
 	}
+
+	/* Thunor: We can add an accelerator for this menuitem if both
+	 * "accel-key" and "accel-mods" are valid custom tag attributes.
+	 * Note that because these widgets are created and pushed when the
+	 * end tags are detected, everything gets done in reverse! So here
+	 * the menuitems are created with possibly an accelerator, then
+	 * when the menu end tag is detected the menu and accelerator group
+	 * are created and finally the menuitems are appended to the menu */
+	if (attr) {
+		if (!(value = get_tag_attribute(attr, "accel_key")))
+			value = get_tag_attribute(attr, "accel-key");
+		if (value) {
+			/* Read accel-key as a decimal integer or hex value */
+			if (strncasecmp(value, "0x", 2) == 0) {
+				sscanf(value, "%x", &accel_key);
+			} else {
+				sscanf(value, "%u", &accel_key);
+			}
+			if (!(value = get_tag_attribute(attr, "accel_mods")))
+				value = get_tag_attribute(attr, "accel-mods");
+			if (value) {
+				/* Read accel-mods as a decimal integer or hex value */
+				if (strncasecmp(value, "0x", 2) == 0) {
+					sscanf(value, "%x", &accel_mods);
+				} else {
+					sscanf(value, "%u", &accel_mods);
+				}
+				/* Create a random accel-path (yeah, this is fine) */
+				sprintf(accel_path, "<%i>/%i", rand(), rand());
+#ifdef DEBUG
+				fprintf(stderr, "%s: accel-path=%s\n", __func__, accel_path);
+				fprintf(stderr, "%s: accel-key=%u\n", __func__, accel_key);
+				fprintf(stderr, "%s: accel-mods=%u\n", __func__, accel_mods);
+#endif
+				/* Register and set the accelerator path on the menuitem */
+				gtk_accel_map_add_entry(accel_path, accel_key, accel_mods);
+				gtk_menu_item_set_accel_path(GTK_MENU_ITEM(menu_item), accel_path);
+			}
+		}
+	}
+
 	return menu_item;
 }
 
 static
 GtkWidget *create_menu(AttributeSet *Attr, stackelement items){
-	int n;
-	GtkWidget *menu;
-	GtkWidget *root_menu;
-	GtkWidget *menu_items;
-	
+	GtkAccelGroup    *accel_group;
+	GtkWidget        *menu_items;
+	GtkWidget        *root_menu;
+	GtkWidget        *menu;
+	gint              n;
+
 	menu = gtk_menu_new();
+
+	/* Thunor: Each menu needs an accelerator group which requires adding
+	 * to the window, but because everything is being done in reverse i.e.
+	 * the window is created last, the accelerators have to be temporarily
+	 * stored within a list for adding later when the window is created */
+	accel_group = gtk_accel_group_new();
+	gtk_menu_set_accel_group(GTK_MENU(menu), accel_group);
+	accel_groups = g_list_append(accel_groups, accel_group);
+#ifdef DEBUG
+	fprintf(stderr, "%s: Appending accel_group=%p to GList\n",
+		__func__, accel_group);
+#endif
+
 	for (n = 0; n < items.nwidgets; ++n){
 		menu_items = items.widgets[n];
-        	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);
+       	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
 	}
-	
-	root_menu = gtk_menu_item_new_with_label (
-			attributeset_get_first(Attr, ATTR_LABEL));
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (root_menu), menu);
-	
+
+	root_menu = gtk_menu_item_new_with_label(
+		attributeset_get_first(Attr, ATTR_LABEL));
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(root_menu), menu);
+
 	return root_menu;
 }
 
@@ -2319,14 +2377,13 @@ instruction_execute_push(
 		AttributeSet  *Attr,
 		tag_attr      *tag_attributes)
 {
-	GtkWidget        *scrolled_window;	
-	int 		  Widget_Type;
-	GtkWidget 	 *Widget;
-	GtkWidget 	 *OtherWidget;
-	int 		  n;
 	static GtkWidget *LastRadioButton = NULL;
-	//char 		 *attribute_value;
-	gchar		 *value;
+	GtkWidget        *scrolled_window;	
+	GtkWidget        *OtherWidget;
+	GtkWidget        *Widget;
+	gint              Widget_Type, n;
+	gchar            *value;
+	GList            *accel_group = NULL;
 
 	PIP_DEBUG("token: %d", Token);
 	
@@ -2869,6 +2926,21 @@ instruction_execute_push(
 		Widget = create_window(Attr, tag_attributes);
 		gtk_container_add(GTK_CONTAINER (Widget), s.widgets[0]);
 		push_widget(Widget, Widget_Type);
+		/* Thunor: Each menu created will have an accelerator group
+		 * for its menitems which will require adding to the window */
+		if (accel_groups) {
+			accel_group = g_list_first(accel_groups);
+			while (accel_group) {
+				gtk_window_add_accel_group(GTK_WINDOW(Widget),
+					GTK_ACCEL_GROUP(accel_group->data));
+#ifdef DEBUG
+				fprintf(stderr, "%s: Adding accel_group=%p to window\n",
+					__func__, accel_group->data);
+#endif
+				accel_group = accel_group->next;
+			}
+			g_list_free(accel_groups);
+		}
 		}
 		break;
 

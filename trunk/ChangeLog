@@ -1,17 +1,24 @@
+* Wed Jul 20 2011 Thunor <thunorsif@hotmail.com>
+- Added support for menuitem accelerators via the "accel-key" and
+  "accel-mods" custom tag attributes and both values can be entered as
+  either decimal or hexadecimal integers (when you see gdk/gdkkeysyms.h
+  you'll know why ;) ). gdk/gdktypes.h holds the modifier values.
+
 * Mon Jul 18 2011 Thunor <thunorsif@hotmail.com>
 - Overhauled the entry widget:
-- * Fixed the exclusive default signal i.e. it wasn't possible to have
-    a default action and another action specifying the same signal.
-- * Removed the odd manual emission of the default "changed" signal when
-    using the fileselect function i.e. inserting text.
-- * Fixed widget_entry_refresh which wasn't distinguishing between
-    <input> and <input file> directives (file loading wasn't implemented
-    anyway) and then attempted to execute the <input file> is declared.
+- Fixed the exclusive default signal i.e. it wasn't possible to have a
+  default action and another action specifying the same signal.
+- Removed the odd manual emission of the default "changed" signal when
+  using the fileselect function i.e. inserting text.
+- Fixed widget_entry_refresh which wasn't distinguishing between <input>
+  and <input file> directives (file loading wasn't implemented anyway)
+  and then attempted to execute the <input file> if declared.
 - Added support for the save function (now a full action function set).
 - Added support for the custom tag attribute "block-function-signals".
 - Added support for the "activate" signal emitted from pressing Enter.
-- Added support for the "icon-press" and "icon-release" signals, actually
-  prefixed with "primary-" or "secondary-" to distinguish between them.
+- Added support for the "icon-press" and "icon-release" signals,
+  actually prefixed with "primary-" or "secondary-" to distinguish
+  between them.
 
 * Sun Jul 17 2011 Thunor <thunorsif@hotmail.com>
 - Added a custom tag attribute called "block-function-signals" that's
