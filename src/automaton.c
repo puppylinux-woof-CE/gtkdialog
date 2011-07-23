@@ -134,7 +134,10 @@ widget_signal_executor(
 			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
 				__func__, command, type, signal, signal_name);
 #endif
-			if (strcasecmp(signal_name, "changed") == 0) {
+			if (strcasecmp(signal_name, "activate") == 0) {
+				if (GTK_IS_MENU_ITEM(widget))
+					execute_action(widget, command, type);
+			} else if (strcasecmp(signal_name, "changed") == 0) {
 				if (GTK_IS_ENTRY(widget) || GTK_IS_COMBO_BOX(widget))
 					execute_action(widget, command, type);
 			} else if (strcasecmp(signal_name, "value_changed") == 0) {
@@ -1222,7 +1225,7 @@ instruction_execute(instruction command)
 	return 0;
 }
 
-static void
+/*static void	Redundant: Duplication of code inside widget_signal_executor
 menu_callback(
 		GtkWidget *menu_item, 
 		AttributeSet *Attr)
@@ -1249,7 +1252,7 @@ menu_callback(
 next_command:   
 		command = attributeset_get_next(Attr, ATTR_ACTION);
 	}
-}
+} */
 
 /*
  * Puts the widget into a scolled window. This function is similar to the
@@ -1315,53 +1318,28 @@ put_in_the_scrolled_window(GtkWidget *widget,
 	return scrolledwindow;
 }
 
-static GtkWidget *
-create_menuitem(AttributeSet *Attr, 
-		tag_attr     *attr)
+static
+GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 {
-	GtkWidget        *menu_item, *Icon;
-	GError           *error = NULL;
+	GtkWidget        *menu_item;
 	GtkIconTheme     *icon_theme;
+	gchar            *icon_name;
+	GError           *error = NULL;
 	GdkPixbuf        *pixbuf;
-	gchar            *label, *value;
+	GtkWidget        *image;
+	GtkAccelGroup    *accel_group = NULL;
 	gchar             accel_path[64];
-	guint             accel_key = 0, accel_mods = 0;
-	gint              q;
+	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
+	gchar            *label, *stock_id, *value;
+	#define           TYPE_MENUITEM 0
+	#define           TYPE_MENUITEM_IMAGE_STOCK 1
+	#define           TYPE_MENUITEM_IMAGE_ICON 2
+	gint              menuitemtype = TYPE_MENUITEM;
 
 	PIP_DEBUG("");
 
+	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu Item");
 	label = attributeset_get_first(Attr, ATTR_LABEL);
-	
-	if (attr != NULL) {
-		for (q = 0; q < attr->n; ++q) {
-			if (strcmp(attr->pairs[q].name, "stock") == 0) {
-				menu_item = gtk_image_menu_item_new_from_stock(
-						attr->pairs[q].value, NULL);
-				goto item_ready;
-			}
-			if (strcmp(attr->pairs[q].name, "icon") == 0) {
-				icon_theme = gtk_icon_theme_get_default();
-				pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                   attr->pairs[q].value, 20, 0, &error);
-				Icon = gtk_image_new_from_pixbuf(pixbuf);	
-				menu_item = gtk_image_menu_item_new_with_label(label);
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), Icon);
-				goto item_ready;
-			}
-
-		}
-	}
-	menu_item = gtk_menu_item_new_with_label(label);
-	
-item_ready:
-	
-	if (attributeset_is_avail(Attr, ATTR_ACTION)){
-		g_signal_connect(G_OBJECT(menu_item), 
-				"activate", (GCallback)menu_callback, Attr);
-	}else{
-		if (!option_no_warning)
-			g_warning("%s(): Menu item without action.", __func__);
-	}
 
 	/* Thunor: We can add an accelerator for this menuitem if both
 	 * "accel-key" and "accel-mods" are valid custom tag attributes.
@@ -1391,17 +1369,144 @@ item_ready:
 				}
 				/* Create a random accel-path (yeah, this is fine) */
 				sprintf(accel_path, "<%i>/%i", rand(), rand());
-#ifdef DEBUG
-				fprintf(stderr, "%s: accel-path=%s\n", __func__, accel_path);
-				fprintf(stderr, "%s: accel-key=%u\n", __func__, accel_key);
-				fprintf(stderr, "%s: accel-mods=%u\n", __func__, accel_mods);
-#endif
-				/* Register and set the accelerator path on the menuitem */
-				gtk_accel_map_add_entry(accel_path, accel_key, accel_mods);
-				gtk_menu_item_set_accel_path(GTK_MENU_ITEM(menu_item), accel_path);
+				custom_accel = TRUE;
 			}
 		}
 	}
+
+#ifdef DEBUG
+	fprintf(stderr, "%s: accel-path=%s\n", __func__, accel_path);
+	fprintf(stderr, "%s: accel-key=%u\n", __func__, accel_key);
+	fprintf(stderr, "%s: accel-mods=%u\n", __func__, accel_mods);
+#endif
+
+	/* We need to decode exactly what it is the user is
+	 * trying to create and then make the right widget */
+	if (attr &&
+		(stock_id = get_tag_attribute(attr, "label")) &&
+		((value = get_tag_attribute(attr, "use-stock")) &&
+		((strcasecmp(value, "true") == 0) ||
+		(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)))) {
+		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
+	} else if (attr &&
+		(stock_id = get_tag_attribute(attr, "stock"))) {
+		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
+	} else if (attr &&
+		(icon_name = get_tag_attribute(attr, "icon"))) {
+		menuitemtype = TYPE_MENUITEM_IMAGE_ICON;
+	} else {
+		menuitemtype = TYPE_MENUITEM;
+	}
+
+	/* Create the menuitem */
+	switch (menuitemtype) {
+		case TYPE_MENUITEM_IMAGE_STOCK:
+			/* Create the GtkImageMenuItem from stock without stock
+			 * accelerator */
+			menu_item = gtk_image_menu_item_new_from_stock(stock_id, NULL);
+#if 0
+			/* Thunor: Unfortunately I can't enable stock accelerators
+			 * by default as all existing applications will then get key
+			 * combinations redirected to menuitems which might have
+			 * unforseen consequences, but I'll leave this here anyway */
+
+			/* Who is going to set the accelerator? */
+			if (custom_accel) {
+				/* Create the GtkImageMenuItem from stock without stock
+				 * accelerator */
+				menu_item = gtk_image_menu_item_new_from_stock(stock_id, NULL);
+			} else {
+				/* Create an accelerator group for this stock item and
+				 * add it to the accelerator groups list which will get
+				 * added to the window later */
+				accel_group = gtk_accel_group_new();
+				accel_groups = g_list_append(accel_groups, accel_group);
+				/* Create the GtkImageMenuItem from stock with stock accelerator */
+				menu_item = gtk_image_menu_item_new_from_stock(stock_id, accel_group);
+			}
+#endif
+			break;
+		case TYPE_MENUITEM_IMAGE_ICON:
+			icon_theme = gtk_icon_theme_get_default();
+			pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name, 16, 0, &error);
+			image = gtk_image_new_from_pixbuf(pixbuf);
+			/* Create the GtkImageMenuItem using an image from the theme */
+			menu_item = gtk_image_menu_item_new_with_label(label);
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);
+			break;
+		case TYPE_MENUITEM:
+		default:
+			/* Create the GtkMenuItem */
+			menu_item = gtk_menu_item_new_with_label(label);
+			break;
+	}
+
+	/* Are we setting an accelerator? */
+	if (custom_accel) {
+		/* Register and set the accelerator path on the menuitem */
+		gtk_accel_map_add_entry(accel_path, accel_key, accel_mods);
+		gtk_menu_item_set_accel_path(GTK_MENU_ITEM(menu_item), accel_path);
+	}
+
+	/* Apply the visible directive if available */
+	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		gtk_widget_set_sensitive(menu_item, FALSE);
+	/* The GTK "sensitive" property (if present) will be set later after
+	 * widget realization, but this doesn't have any effect until after
+	 * the menu has been opened by the user which results in accelerators
+	 * being live up until that point. I don't know why that is -- it 
+	 * looks as though GTK is initialising the menus on first opening as
+	 * they render much quicker on subsequent openings -- but it can be
+	 * dealt with by applying the property right here right now.
+	 * Note that I'm applying this after any visible directive which
+	 * would be the normal sequence of things */
+	if (attr &&
+		(value = get_tag_attribute(attr, "sensitive")) &&
+		((strcasecmp(value, "false") == 0) ||
+		(strcasecmp(value, "no") == 0) || (atoi(value) == 0))) {
+		gtk_widget_set_sensitive(menu_item, FALSE);
+	}
+
+	/* Connect signals */
+	g_signal_connect(G_OBJECT(menu_item), "activate",
+		G_CALLBACK(on_any_widget_activate_event), (gpointer)Attr);
+
+	/* Thunor: Redundant, old code! There's a function to get custom tag
+	 * attributes, the themed icon is fixed at 20px, we don't require a
+	 * warning about no action, the stock icon's default accelerator is
+	 * nullified, we may as well always connect signals and the signal
+	 * handler menu_callback is pointless as the code inside it is a
+	 * duplicate of that already inside the widget_signal_executor.
+	if (attr != NULL) {
+		for (q = 0; q < attr->n; ++q) {
+			if (strcmp(attr->pairs[q].name, "stock") == 0) {
+				menu_item = gtk_image_menu_item_new_from_stock(
+						attr->pairs[q].value, NULL);
+				goto item_ready;
+			}
+			if (strcmp(attr->pairs[q].name, "icon") == 0) {
+				icon_theme = gtk_icon_theme_get_default();
+				pixbuf = gtk_icon_theme_load_icon (icon_theme,
+                                   attr->pairs[q].value, 20, 0, &error);
+				Icon = gtk_image_new_from_pixbuf(pixbuf);	
+				menu_item = gtk_image_menu_item_new_with_label(label);
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), Icon);
+				goto item_ready;
+			}
+
+		}
+	}
+	menu_item = gtk_menu_item_new_with_label(label);
+	
+item_ready:
+	
+	if (attributeset_is_avail(Attr, ATTR_ACTION)){
+		g_signal_connect(G_OBJECT(menu_item), 
+				"activate", (GCallback)menu_callback, Attr);
+	}else{
+		if (!option_no_warning)
+			g_warning("%s(): Menu item without action.", __func__);
+	}*/
 
 	return menu_item;
 }
@@ -1412,13 +1517,14 @@ GtkWidget *create_menu(AttributeSet *Attr, stackelement items){
 	GtkWidget        *menu_items;
 	GtkWidget        *root_menu;
 	GtkWidget        *menu;
+	gchar            *label;
 	gint              n;
 
 	menu = gtk_menu_new();
 
 	/* Thunor: Each menu needs an accelerator group which requires adding
 	 * to the window, but because everything is being done in reverse i.e.
-	 * the window is created last, the accelerators have to be temporarily
+	 * the window is created last, the accel-groups have to be temporarily
 	 * stored within a list for adding later when the window is created */
 	accel_group = gtk_accel_group_new();
 	gtk_menu_set_accel_group(GTK_MENU(menu), accel_group);
@@ -1430,11 +1536,13 @@ GtkWidget *create_menu(AttributeSet *Attr, stackelement items){
 
 	for (n = 0; n < items.nwidgets; ++n){
 		menu_items = items.widgets[n];
-       	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
 	}
 
-	root_menu = gtk_menu_item_new_with_label(
-		attributeset_get_first(Attr, ATTR_LABEL));
+	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu");
+	label = attributeset_get_first(Attr, ATTR_LABEL);
+
+	root_menu = gtk_menu_item_new_with_label(label);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(root_menu), menu);
 
 	return root_menu;
@@ -2594,12 +2702,10 @@ instruction_execute_push(
 		break;
 
 	case WIDGET_MENU:
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Unlabelled menu");
 		Widget = create_menu(Attr, pop());
 		push_widget(Widget, Widget_Type);
 		break;
 	case WIDGET_MENUITEM:
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Unlabelled menu item");
 		Widget = create_menuitem(Attr, tag_attributes);
 		push_widget(Widget, Widget_Type);
 		break;

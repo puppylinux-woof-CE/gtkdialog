@@ -1,3 +1,8 @@
+* Sat Jul 23 2011 Thunor <thunorsif@hotmail.com>
+- Tidied-up the create_menuitem function (preparatory work in readiness
+  for extending the menuitems) and now the GTK properties "use-stock"
+  and "label" work together as expected.
+
 * Wed Jul 20 2011 Thunor <thunorsif@hotmail.com>
 - Added support for menuitem accelerators via the "accel-key" and
   "accel-mods" custom tag attributes and both values can be entered as
