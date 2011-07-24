@@ -435,17 +435,20 @@ gchar *Token;
 \<table\>    				{ Token="<table>"; return(TABLE);  			}
 \<\/table\>  				{ Token="</table>"; return(ETABLE);  			}
 
-\<menubar\>    				{ Token="<menubar>"; return(MENUBAR);  			}
-\<\/menubar\>  				{ Token="</menubar>"; return(EMENUBAR);			}
+\<menubar\>    				{ Token="<menubar>"; return(MENUBAR); }
+\<\/menubar\>  				{ Token="</menubar>"; return(EMENUBAR); }
 
-\<menu\>    				{ Token="<menu>"; return(MENU);  			}
-\<\/menu\>  				{ Token="</menu>"; return(EMENU);			}
+\<menu\>    				{ Token="<menu>"; return(MENU); }
+\<menu[ ]+    				{ Token="<menu>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_MENU); }
+\<\/menu\>  				{ Token="</menu>"; return(EMENU); }
 
-\<menuitem\>    			{ Token="<menuitem>"; return(MENUITEM);  		}
+\<menuitem\>    			{ Token="<menuitem>"; return(MENUITEM); }
 \<menuitem[ ]+  			{ Token="<menuitem>"; 
 					  BEGIN(ST_TAG_ATTR);
-					  return(PART_MENUITEM);  				}
-\<\/menuitem\>  			{ Token="</menuitem>"; return(EMENUITEM);		}
+					  return(PART_MENUITEM); }
+\<\/menuitem\>  			{ Token="</menuitem>"; return(EMENUITEM); }
 
 \<menuitemseparator\>    	{ Token="<menuitemseparator>"; return(MENUITEMSEPARATOR); }
 \<\/menuitemseparator\>		{ Token="</menuitemseparator>"; return(EMENUITEMSEPARATOR); }
@@ -457,16 +460,16 @@ gchar *Token;
 	 * Thunor: Newly supported widgets.
 	 **************************************************************/
 \<hseparator\>    			{ Token="<hseparator>"; return(HSEPARATOR); }
-\<\/hseparator\>			{ Token="</hseparator>"; return(EHSEPARATOR); }
 \<hseparator[ ]+  			{ Token="<hseparator>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_HSEPARATOR); }
+\<\/hseparator\>			{ Token="</hseparator>"; return(EHSEPARATOR); }
 
 \<vseparator\>    			{ Token="<vseparator>"; return(VSEPARATOR); }
-\<\/vseparator\>			{ Token="</vseparator>"; return(EVSEPARATOR); }
 \<vseparator[ ]+  			{ Token="<vseparator>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_VSEPARATOR); }
+\<\/vseparator\>			{ Token="</vseparator>"; return(EVSEPARATOR); }
 
 \<comboboxtext\>   			{ Token="<comboboxtext>"; return(COMBOBOXTEXT); }
 \<comboboxtext[ ]+  		{ Token="<comboboxtext>"; 
