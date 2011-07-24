@@ -91,7 +91,8 @@ start_up(void)
 %type  <nvval> tagattr
 %token         EFRAME
 %token         ENTRY EENTRY PART_ENTRY
-%token         MENUBAR EMENUBAR MENU EMENU 
+%token         MENUBAR EMENUBAR
+%token         MENU PART_MENU EMENU
 %token         MENUITEM PART_MENUITEM EMENUITEM
 %token         MENUITEMSEPARATOR EMENUITEMSEPARATOR
 %token         EDIT PART_EDIT EEDIT
@@ -390,35 +391,50 @@ pixmap
   ;
 
 menubar
-  : MENUBAR EMENUBAR        {
-                    yyerror("Empty menubar without a single <menu> tag.");
-		    }
-  | MENUBAR menus EMENUBAR  {token_store(PUSH | WIDGET_MENUBAR);}
+  : MENUBAR EMENUBAR {
+		yyerror("Empty menubar without a single <menu> tag.");
+	}
+  | MENUBAR menus EMENUBAR {
+		token_store(PUSH | WIDGET_MENUBAR);
+	}
   ;
 
 menus
-  : MENU EMENU                { yyerror("Empty menu without <menuitem> tag.");}
-  | MENU menuitems attr EMENU      { token_store(PUSH | WIDGET_MENU);   } 
-  | menus MENU EMENU          { yyerror("Empty menu without <menuitem> tag.");}
-  | menus MENU menuitems attr EMENU { 
-		token_store(PUSH | WIDGET_MENU);   
-		token_store(SUM); 
-	} 
+  : MENU EMENU {
+		yyerror("Empty menu without <menuitem> tag.");
+	}
+  | MENU menuitems attr EMENU {
+		token_store(PUSH | WIDGET_MENU);
+	}
+  | PART_MENU tagattr '>' menuitems attr EMENU {
+		token_store_attr(PUSH | WIDGET_MENU, $2);
+	}
+  | menus MENU EMENU {
+		yyerror("Empty menu without <menuitem> tag.");
+	}
+  | menus MENU menuitems attr EMENU {
+		token_store(PUSH | WIDGET_MENU);
+		token_store(SUM);
+	}
+  | menus PART_MENU tagattr '>' menuitems attr EMENU {
+		token_store_attr(PUSH | WIDGET_MENU, $3);
+		token_store(SUM);
+	}
   ;
 
 menuitems
   : MENUITEM attr EMENUITEM {
-		token_store(PUSH | WIDGET_MENUITEM); 
-	} 
+		token_store(PUSH | WIDGET_MENUITEM);
+	}
   | PART_MENUITEM tagattr '>' attr EMENUITEM {
-    		token_store_attr(PUSH | WIDGET_MENUITEM, $2); 
+    		token_store_attr(PUSH | WIDGET_MENUITEM, $2);
     	}
-  | menuitems MENUITEM attr EMENUITEM { 
-		token_store(PUSH | WIDGET_MENUITEM); 
+  | menuitems MENUITEM attr EMENUITEM {
+		token_store(PUSH | WIDGET_MENUITEM);
 		token_store(SUM);
-	} 
+	}
   | menuitems PART_MENUITEM tagattr '>' attr EMENUITEM {
-    		token_store_attr(PUSH | WIDGET_MENUITEM, $3); 
+    		token_store_attr(PUSH | WIDGET_MENUITEM, $3);
 		token_store(SUM);
     	}
   | menuitems MENUITEMSEPARATOR EMENUITEMSEPARATOR {

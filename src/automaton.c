@@ -2142,12 +2142,24 @@ create_window(
 		AttributeSet *Attr, 
 		tag_attr   *attr)
 {
+	gint              border_width;
+	gchar            *value;
+
 	PIP_DEBUG("Attr: %p", Attr);
 	/*
 	 * Creating a window with the default settings.
 	 */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
-	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
+
+	/* Thunor: Default the border_width to 5 and override it with the
+	 * "margin" custom tag attribute if present (using the border_width
+	 * property as a tag attribute always seems to result in about 50px so 
+	 * it doesn't work if you leave it up to GTK to set after realization */
+	border_width = 5;
+	if (attr && (value = get_tag_attribute(attr, "margin")))
+		border_width = atoi(value);
+
+	gtk_container_set_border_width(GTK_CONTAINER(window), border_width);
 	
 	/*
 	 * The windows can send signals, so they can have actions.
@@ -2489,7 +2501,7 @@ instruction_execute_push(
 	GtkWidget        *scrolled_window;	
 	GtkWidget        *OtherWidget;
 	GtkWidget        *Widget;
-	gint              Widget_Type, n;
+	gint              Widget_Type, n, border_width;
 	gchar            *value;
 	GList            *accel_group = NULL;
 
@@ -2705,14 +2717,17 @@ instruction_execute_push(
 		Widget = create_menu(Attr, pop());
 		push_widget(Widget, Widget_Type);
 		break;
+
 	case WIDGET_MENUITEM:
 		Widget = create_menuitem(Attr, tag_attributes);
 		push_widget(Widget, Widget_Type);
 		break;
+
 	case WIDGET_MENUITEMSEPARATOR:
 		Widget = gtk_separator_menu_item_new();
 		push_widget(Widget, Widget_Type);
 		break;
+
 	case WIDGET_CHECKBOX:
 		/*
 		 **
@@ -2910,9 +2925,19 @@ instruction_execute_push(
 			 ** thanks to the SUM instruction), then we add it to the box.
 			 ** The last step is pushing the box back to the stack.
 			 */
-			stackelement s;
-			s = pop();
+			stackelement s = pop();
+
+			/* The spacing value here is the GtkBox "spacing" property
+			 * and therefore can be overridden with a spacing="0" tag
+			 * attribute*/
 			Widget = gtk_vbox_new(FALSE, 5);
+
+			if (tag_attributes &&
+				(value = get_tag_attribute(tag_attributes, "margin"))) {
+				border_width = atoi(value);
+				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
+			}
+
 			for (n = 0; n < s.nwidgets; ++n)
 				if (s.widgettypes[n] == WIDGET_EDIT ||
 				    s.widgettypes[n] == WIDGET_FRAME ||
@@ -2949,9 +2974,19 @@ instruction_execute_push(
 			/*
 			 ** The hbox is very similar to vbox...
 			 */
-			stackelement s;
-			s = pop();
+			stackelement s = pop();
+
+			/* The spacing value here is the GtkBox "spacing" property
+			 * and therefore can be overridden with a spacing="0" tag
+			 * attribute*/
 			Widget = gtk_hbox_new(FALSE, 5);
+
+			if (tag_attributes &&
+				(value = get_tag_attribute(tag_attributes, "margin"))) {
+				border_width = atoi(value);
+				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
+			}
+
 			for (n = s.nwidgets - 1; n >= 0; --n)
 				if (s.widgettypes[n] == WIDGET_EDIT ||
 				    s.widgettypes[n] == WIDGET_FRAME ||
@@ -2996,6 +3031,9 @@ instruction_execute_push(
 			stackelement s;
 			GtkWidget *vbox;
 			s = pop();
+			/* Thunor: I'm noting this embedded unreachable vbox spacing
+			 * and the border_width that can't be overidden because of
+			 * the frame widget not supporting tag attributes temp temp */
 			vbox = gtk_vbox_new(FALSE, 5);
 			gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 

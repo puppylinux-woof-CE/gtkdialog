@@ -1,3 +1,11 @@
+* Sun Jul 24 2011 Thunor <thunorsif@hotmail.com>
+- Added tag attribute support to the menu widget which means it's now
+  possible to set label="_File" use-underline="true".
+- Added the "margin" custom tag attribute to the window widget to
+  control the border-width as it was previously hardcoded to 5. This
+  now makes it possible to pull the menubar up into the corners.
+- Added the "margin" custom tag attribute to the hbox and vbox widgets.
+
 * Sat Jul 23 2011 Thunor <thunorsif@hotmail.com>
 - Tidied-up the create_menuitem function (preparatory work in readiness
   for extending the menuitems) and now the GTK properties "use-stock"
