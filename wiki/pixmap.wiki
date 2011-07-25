@@ -25,10 +25,10 @@ None.
 
 == Directives ==
 Some of these may have tag attribute equivalents.
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
-|| height || Image scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
-|| width || Image scaling dimension || Positive integer, {{{-1}}} to ignore || || 0.7.21 ||
+|| height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
+|| width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || input file stock="_gtk-image_"^[1]^ || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || (0) || ||
 || input file || Data input source || Image filename || (0) || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
@@ -38,7 +38,7 @@ None.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
-|| *Type* || *Description* || *Parameter* || *Version* ||
+|| *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
