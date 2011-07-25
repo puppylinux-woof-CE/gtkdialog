@@ -25,12 +25,12 @@ A [http://developer.gnome.org/gtk/2.24/GtkComboBox.html GtkComboBox]
 See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.object-hierarchy GtkComboBox] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-|| *Name* || *Description* || *Value* || *Version* ||
+|| *Name* || *Description* || *Value* || *Since* ||
 || accept || fileselect function file type || {{{filename}}}, {{{savefilename}}}, {{{directory}}} or {{{newdirectory}}} || ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial selection || Text || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
@@ -51,7 +51,7 @@ The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#Gtk
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
-|| *Type* || *Description* || *Parameter* || *Version* ||
+|| *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
@@ -61,7 +61,7 @@ The following functions can be performed upon this widget by any widget capable 
 || removeselected || Remove selected widget data || Shell variable name || ||
 
 The following general functions can be performed by any widget capable of emitting signals:
-|| *Type* || *Description* || *Parameter* || *Version* ||
+|| *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
