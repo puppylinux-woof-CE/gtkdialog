@@ -1,3 +1,6 @@
+* Mon Jul 25 2011 Thunor <thunorsif@hotmail.com>
+- Added <visible> directive support to the menu widget.
+
 * Sun Jul 24 2011 Thunor <thunorsif@hotmail.com>
 - Added tag attribute support to the menu widget which means it's now
   possible to set label="_File" use-underline="true".

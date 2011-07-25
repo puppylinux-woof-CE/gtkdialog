@@ -1512,7 +1512,8 @@ item_ready:
 }
 
 static
-GtkWidget *create_menu(AttributeSet *Attr, stackelement items){
+GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
+{
 	GtkAccelGroup    *accel_group;
 	GtkWidget        *menu_items;
 	GtkWidget        *root_menu;
@@ -1544,6 +1545,10 @@ GtkWidget *create_menu(AttributeSet *Attr, stackelement items){
 
 	root_menu = gtk_menu_item_new_with_label(label);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(root_menu), menu);
+
+	/* Apply the visible directive if available */
+	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		gtk_widget_set_sensitive(root_menu, FALSE);
 
 	return root_menu;
 }
@@ -2714,7 +2719,7 @@ instruction_execute_push(
 		break;
 
 	case WIDGET_MENU:
-		Widget = create_menu(Attr, pop());
+		Widget = create_menu(Attr, tag_attributes, pop());
 		push_widget(Widget, Widget_Type);
 		break;
 
