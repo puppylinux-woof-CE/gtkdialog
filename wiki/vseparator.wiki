@@ -1,7 +1,7 @@
 #summary vseparator widget reference
 
 = vseparator widget =
-A [http://developer.gnome.org/gtk/2.24/GtkVSeparator.html GtkVSeparator] widget
+A [http://developer.gnome.org/gtk/2.24/GtkVSeparator.html GtkVSeparator]
 ----
 
 == Definition ==
