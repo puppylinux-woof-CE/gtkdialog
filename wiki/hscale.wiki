@@ -25,7 +25,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkHScale.html GtkHScale]
 See the [http://developer.gnome.org/gtk/2.24/GtkHScale.html#GtkHScale.object-hierarchy GtkHScale] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-|| *Name* || *Description* || *Value* || *Version* ||
+|| *Name* || *Description* || *Value* || *Since* ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 || scale-min || Minimum value || A double precision floating point value || ||
 || scale-max || Maximum value || A double precision floating point value || ||
@@ -34,7 +34,7 @@ The following custom tag attributes are available:
 
 == Directives ==
 Some of these may have tag attribute equivalents.
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Version* ||
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial value || A double precision floating point value || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
@@ -55,14 +55,14 @@ The default signal is "[http://developer.gnome.org/gtk/2.24/GtkRange.html#GtkRan
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
-|| *Type* || *Description* || *Parameter* || *Version* ||
+|| *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
 || save || Save widget data || Shell variable name || ||
 
 The following general functions can be performed by any widget capable of emitting signals:
-|| *Type* || *Description* || *Parameter* || *Version* ||
+|| *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
