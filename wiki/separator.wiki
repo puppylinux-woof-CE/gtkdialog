@@ -1,0 +1,9 @@
+#summary separator widget reference
+
+= separator widget =
+A [http://developer.gnome.org/gtk/2.24/GtkSeparatorMenuItem.html GtkSeparatorMenuItem]
+----
+
+== Notes ==
+This widget has been deprecated since 0.7.21 and [menuitemseparator] should be used instead.
+----
