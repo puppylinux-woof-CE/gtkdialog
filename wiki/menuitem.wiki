@@ -38,7 +38,7 @@ Some of these may have tag attribute equivalents.
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
-See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem] widget or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.signals GtkImageMenuItem] widget signals.
+See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem] widget signals.
 
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
 
