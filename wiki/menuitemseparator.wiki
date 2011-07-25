@@ -1,0 +1,29 @@
+#summary menuitemseparator widget reference
+
+= menuitemseparator widget =
+A [http://developer.gnome.org/gtk/2.24/GtkSeparatorMenuItem.html GtkSeparatorMenuItem]
+----
+
+== Definition ==
+{{{
+<menuitemseparator></menuitemseparator>
+}}}
+
+== Tag Attributes ==
+None.
+
+The following custom tag attributes are available:
+None.
+
+== Directives ==
+None.
+
+== Signals ==
+None.
+
+== Functions ==
+None.
+
+== Notes ==
+This widget was introduced in version 0.7.21.
+----
