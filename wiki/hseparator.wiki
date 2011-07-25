@@ -1,7 +1,7 @@
 #summary hseparator widget reference
 
 = hseparator widget =
-A [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html GtkHSeparator] widget
+A [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html GtkHSeparator]
 ----
 
 == Definition ==
