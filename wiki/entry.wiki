@@ -35,8 +35,8 @@ Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial data || Text || || ||
 || variable || Shell variable name || || || ||
-|| height || Initial minimum height || Positive integer, {{{-1}}} to ignore || || ||
-|| width || Initial minimum width || Positive integer, {{{-1}}} to ignore || || ||
+|| height || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
+|| width || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || 0.7.21 ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
