@@ -9,9 +9,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkWindow.html GtkWindow]
 <window tag_attr="value"...>
 	widget...
 	<variable>varname</variable>
-	<action>activity</action>...
 	<action signal="type">activity</action>...
-	<action type="function">parameter</action>...
 </window>
 }}}
 "..." denotes acceptance of multiples of the same thing.
@@ -21,20 +19,17 @@ See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.object-hie
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
-|| margin^[1]^ || Surrounding space || An integer >= {{{0}}} || 0.7.21 ||
+|| margin^[1]^ || Surrounding blank space || An integer >= {{{0}}} || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
-|| action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
-See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.signals GtkWindow] widget signals.
+See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.signals GtkWindow] widget and ancestor class signals.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
@@ -50,5 +45,5 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-1. This widget has a default border width of 5 which can be overridden using the custom tag attribute margin="0".
+1. This widget has a default border width of 5 which can be overridden with margin="0".
 ----
