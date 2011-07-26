@@ -69,7 +69,7 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-1. Scale marks and markup requires at least [http://developer.gnome.org/gtk/2.24/GtkScale.html#gtk-scale-add-mark GTK+ 2.16].
+1. Scale marks and markup require at least [http://developer.gnome.org/gtk/2.24/GtkScale.html#gtk-scale-add-mark GTK+ 2.16].
 
 This widget was introduced in version 0.7.21.
 ----
