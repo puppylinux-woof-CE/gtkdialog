@@ -32,5 +32,5 @@ None.
 None.
 
 == Notes ==
-This widget has a default spacing of 5 which can be overridden with the spacing="0" tag attribute.
+This widget has a default spacing of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkBox.html#GtkBox--spacing spacing]" tag attribute.
 ----
