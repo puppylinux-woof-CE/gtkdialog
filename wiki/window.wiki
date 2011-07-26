@@ -19,7 +19,7 @@ See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.object-hie
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
-|| margin^[1]^ || Surrounding blank space || An integer >= {{{0}}} || 0.7.21 ||
+|| margin || Surrounding blank space || An integer >= {{{0}}} || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -45,5 +45,5 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-1. This widget has a default border width of 5 which can be overridden with margin="0".
+This widget has a default border width of 5 which can be overridden with the "margin" custom tag attribute.
 ----
