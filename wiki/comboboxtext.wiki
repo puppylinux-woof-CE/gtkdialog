@@ -45,7 +45,7 @@ Some of these may have tag attribute equivalents.
 || output file || Data output target || Filename || || ||
 
 == Signals ==
-See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.signals GtkComboBox] widget signals.
+See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.signals GtkComboBox] widget and ancestor class signals.
 
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox-changed changed]", emitted when the active item is changed.
 
