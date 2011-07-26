@@ -27,7 +27,7 @@ See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hie
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
-|| image-position^[2]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
+|| image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -37,7 +37,7 @@ Some of these may have tag attribute equivalents.
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || input file icon="_image_" || GTK theme image name || || || ||
-|| input file stock="_gtk-image_"^[1]^ || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
+|| input file stock="_gtk-image_"^[2]^ || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
 || input file || Data input source || Image filename || || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
@@ -47,9 +47,9 @@ Some of these may have tag attribute equivalents.
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
-See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.signals GtkButton] widget signals.
-
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton-clicked clicked]", emitted when the button has been activated (pressed and released).
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.signals GtkButton] widget and ancestor class signals.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
@@ -66,7 +66,7 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-1. Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
+1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
 
-2. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
+2. Stock images are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale.
 ----
