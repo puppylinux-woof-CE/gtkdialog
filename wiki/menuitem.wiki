@@ -22,7 +22,7 @@ See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || accel-key || Accelerator key || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h (full list)] || 0.7.21 ||
-|| accel-mods || Accelerator modifiers || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h (full list)]^[1]^ || 0.7.21 ||
+|| accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h (full list)] || 0.7.21 ||
 || icon || GTK theme image name ||  || ||
 || stock || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || ||
 
@@ -38,9 +38,9 @@ Some of these may have tag attribute equivalents.
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
-See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem] widget signals.
-
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem] widget and ancestor class signals.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
