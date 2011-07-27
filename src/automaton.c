@@ -1322,8 +1322,8 @@ static
 GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 {
 	GtkWidget        *menu_item;
+	gchar            *icon_name, *icon_file_name;
 	GtkIconTheme     *icon_theme;
-	gchar            *icon_name;
 	GError           *error = NULL;
 	GdkPixbuf        *pixbuf;
 	GtkWidget        *image;
@@ -1331,15 +1331,22 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	gchar             accel_path[64];
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 	gchar            *label, *stock_id, *value;
+	gint              width = -1, height = -1;
 	#define           TYPE_MENUITEM 0
 	#define           TYPE_MENUITEM_IMAGE_STOCK 1
 	#define           TYPE_MENUITEM_IMAGE_ICON 2
+	#define           TYPE_MENUITEM_IMAGE_FILE 3
 	gint              menuitemtype = TYPE_MENUITEM;
 
 	PIP_DEBUG("");
 
+	/* Read declared directives */
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu Item");
 	label = attributeset_get_first(Attr, ATTR_LABEL);
+	if (attributeset_is_avail(Attr, ATTR_WIDTH))
+		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
+	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
+		height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
 
 	/* Thunor: We can add an accelerator for this menuitem if both
 	 * "accel-key" and "accel-mods" are valid custom tag attributes.
@@ -1389,11 +1396,16 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 		(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)))) {
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
-		(stock_id = get_tag_attribute(attr, "stock"))) {
+		((stock_id = get_tag_attribute(attr, "imgstock")) ||
+		(stock_id = get_tag_attribute(attr, "stock")))) {	/* Deprecated */
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
-		(icon_name = get_tag_attribute(attr, "icon"))) {
+		((icon_name = get_tag_attribute(attr, "imgicon")) ||
+		(icon_name = get_tag_attribute(attr, "icon")))) {	/* Deprecated */
 		menuitemtype = TYPE_MENUITEM_IMAGE_ICON;
+	} else if (attr &&
+		(icon_file_name = get_tag_attribute(attr, "imgfile"))) {
+		menuitemtype = TYPE_MENUITEM_IMAGE_FILE;
 	} else {
 		menuitemtype = TYPE_MENUITEM;
 	}
@@ -1431,6 +1443,28 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 			pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name, 16, 0, &error);
 			image = gtk_image_new_from_pixbuf(pixbuf);
 			/* Create the GtkImageMenuItem using an image from the theme */
+			menu_item = gtk_image_menu_item_new_with_label(label);
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);
+			break;
+		case TYPE_MENUITEM_IMAGE_FILE:
+			if (width == -1 && height == -1) {
+				/* Handle unscaled images */
+				image = gtk_image_new_from_file(find_pixmap(icon_file_name));
+			} else {
+				/* Handle scaled images */
+				pixbuf = gdk_pixbuf_new_from_file_at_size(
+					find_pixmap(icon_file_name), width, height, NULL);
+				if (pixbuf) {
+					image = gtk_image_new_from_pixbuf(pixbuf);
+					/* pixbuf is no longer required and should be unreferenced */
+					g_object_unref(pixbuf);
+				} else {
+					/* pixbuf is null (file not found) so by using this
+					* function gtk will substitute a broken image icon */
+					image = gtk_image_new_from_file("");
+				}
+			}
+			/* Create the GtkImageMenuItem using an image from a file */
 			menu_item = gtk_image_menu_item_new_with_label(label);
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);
 			break;
@@ -1543,12 +1577,13 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu");
 	label = attributeset_get_first(Attr, ATTR_LABEL);
 
-	root_menu = gtk_menu_item_new_with_label(label);
+//	root_menu = gtk_menu_item_new_with_label(label);	Redundant
+	root_menu = create_menuitem(Attr, attr);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(root_menu), menu);
 
-	/* Apply the visible directive if available */
+	/* Apply the visible directive if available	Redundant
 	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
-		gtk_widget_set_sensitive(root_menu, FALSE);
+		gtk_widget_set_sensitive(root_menu, FALSE); */
 
 	return root_menu;
 }
@@ -2159,7 +2194,7 @@ create_window(
 	/* Thunor: Default the border_width to 5 and override it with the
 	 * "margin" custom tag attribute if present (using the border_width
 	 * property as a tag attribute always seems to result in about 50px so 
-	 * it doesn't work if you leave it up to GTK to set after realization */
+	 * it doesn't work if you leave it up to GTK to set after realization) */
 	border_width = 5;
 	if (attr && (value = get_tag_attribute(attr, "margin")))
 		border_width = atoi(value);
