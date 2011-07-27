@@ -8,6 +8,8 @@ A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem] or [http://
 {{{
 <menuitem tag_attr="value"...>
 	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
 	<visible>state</visible>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
@@ -23,13 +25,16 @@ The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || accel-key || Accelerator key || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h (full list)] || 0.7.21 ||
 || accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h (full list)] || 0.7.21 ||
-|| icon || GTK theme image name ||  || ||
-|| stock || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || ||
+|| imgicon^[2]^ || GTK theme image name ||  || 0.7.21 ||
+|| imgstock || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || 0.7.21 ||
+|| imgfile || Image filename ||  || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
+|| height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
+|| width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || 0.7.21 ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
@@ -57,4 +62,6 @@ The following general functions can be performed by any widget capable of emitti
 
 == Notes ==
 1. SHIFT is 1, CTRL is 4 and ALT is 8 and you can OR them together.
+
+2. Theme images are hardcoded to 16x16 and do not scale.
 ----
