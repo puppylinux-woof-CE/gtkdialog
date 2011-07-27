@@ -1,3 +1,11 @@
+* Wed Jul 27 2011 Thunor <thunorsif@hotmail.com>
+- The menu widget is in fact a menuitem widget with a submenu, so it's
+  created the same way as any other menuitem which means it can now have
+  an icon and the "activate" signal works on selection.
+- Submenus now work by nesting menu widgets (menu == menuitem+submenu).
+- Deprecated "icon" and "stock" and replaced with "imgicon" and
+  "imgstock" and added "imgfile" which supports scaled images from files.
+
 * Mon Jul 25 2011 Thunor <thunorsif@hotmail.com>
 - Added <visible> directive support to the menu widget.
 
