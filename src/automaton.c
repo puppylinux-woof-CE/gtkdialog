@@ -1331,11 +1331,13 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	gchar             accel_path[64];
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 	gchar            *label, *stock_id, *value;
-	gint              width = -1, height = -1;
+	gint              width = -1, height = -1, is_active;
 	#define           TYPE_MENUITEM 0
 	#define           TYPE_MENUITEM_IMAGE_STOCK 1
 	#define           TYPE_MENUITEM_IMAGE_ICON 2
 	#define           TYPE_MENUITEM_IMAGE_FILE 3
+	#define           TYPE_MENUITEM_CHECK 4
+	#define           TYPE_MENUITEM_RADIO 5
 	gint              menuitemtype = TYPE_MENUITEM;
 
 	PIP_DEBUG("");
@@ -1396,16 +1398,25 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 		(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)))) {
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
-		((stock_id = get_tag_attribute(attr, "imgstock")) ||
+		((stock_id = get_tag_attribute(attr, "image_stock")) ||
+		(stock_id = get_tag_attribute(attr, "image-stock")) ||
 		(stock_id = get_tag_attribute(attr, "stock")))) {	/* Deprecated */
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
-		((icon_name = get_tag_attribute(attr, "imgicon")) ||
+		((icon_name = get_tag_attribute(attr, "image_icon")) ||
+		(icon_name = get_tag_attribute(attr, "image-icon")) ||
 		(icon_name = get_tag_attribute(attr, "icon")))) {	/* Deprecated */
 		menuitemtype = TYPE_MENUITEM_IMAGE_ICON;
 	} else if (attr &&
-		(icon_file_name = get_tag_attribute(attr, "imgfile"))) {
+		((icon_file_name = get_tag_attribute(attr, "image_file")) ||
+		(icon_file_name = get_tag_attribute(attr, "image-file")))) {
 		menuitemtype = TYPE_MENUITEM_IMAGE_FILE;
+	} else if (attr &&
+		(value = get_tag_attribute(attr, "checkbox"))) {
+		menuitemtype = TYPE_MENUITEM_CHECK;
+	} else if (attr &&
+		(value = get_tag_attribute(attr, "radiobutton"))) {
+		menuitemtype = TYPE_MENUITEM_RADIO;
 	} else {
 		menuitemtype = TYPE_MENUITEM;
 	}
@@ -1467,6 +1478,27 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 			/* Create the GtkImageMenuItem using an image from a file */
 			menu_item = gtk_image_menu_item_new_with_label(label);
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);
+			break;
+		case TYPE_MENUITEM_CHECK:
+			/* Create the GtkCheckMenuItem */
+			menu_item = gtk_check_menu_item_new_with_label(label);
+			/* Get the active state */
+			if ((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+				is_active = 1;
+			} else {
+				is_active = 0;
+			}
+			/* Set the active state */
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), is_active);
+			break;
+		case TYPE_MENUITEM_RADIO:
+			/* Create the GtkRadioMenuItem */
+
+			/* TODO temp temp */
+			/* TODO temp temp */
+			/* TODO temp temp */
+
 			break;
 		case TYPE_MENUITEM:
 		default:
