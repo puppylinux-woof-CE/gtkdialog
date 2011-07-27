@@ -5,6 +5,9 @@
 - Submenus now work by nesting menu widgets (menu == menuitem+submenu).
 - Deprecated "icon" and "stock" and replaced with "imgicon" and
   "imgstock" and added "imgfile" which supports scaled images from files.
+- Renamed "imgicon", "imgstock" and "imgfile" to "image-icon",
+  "image-stock" and "image-file".
+- Added the checkbox menuitem and checkbox="state" custom tag attribute.
 
 * Mon Jul 25 2011 Thunor <thunorsif@hotmail.com>
 - Added <visible> directive support to the menu widget.
