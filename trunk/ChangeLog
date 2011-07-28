@@ -1,3 +1,10 @@
+* Thu Jul 28 2011 Thunor <thunorsif@hotmail.com>
+- Set the default checkbox menuitem signal to "toggled".
+- Added checkbox menuitem support for conditional function execution.
+- Added the radiobutton menuitem widget (grouped by any non radiobutton
+  menuitem widget), set the default signal to "toggled" and added support
+  for conditional function execution.
+
 * Wed Jul 27 2011 Thunor <thunorsif@hotmail.com>
 - The menu widget is in fact a menuitem widget with a submenu, so it's
   created the same way as any other menuitem which means it can now have
