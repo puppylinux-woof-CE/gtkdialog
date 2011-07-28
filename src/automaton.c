@@ -71,10 +71,11 @@ extern gint geometry_y;
 
 
 instruction *program = NULL;
-int instruction_counter = 0;	/* The first available memory cell. */
-size_t memory_counter = 0;	/* The size of program memory.     */
-GtkWidget *window = NULL;	/* The actual window.              */
-GList *accel_groups = NULL;
+int instruction_counter = 0;		/* The first available memory cell */
+size_t memory_counter = 0;			/* The size of program memory */
+GtkWidget *window = NULL;			/* The actual window */
+GList *accel_groups = NULL;			/* An accumulated list of menu accelerator groups to be added to the window */
+GtkWidget *lastradiowidget = NULL;	/* The most recently created radiobutton widget (used for grouping */
 
 
 /*
@@ -99,57 +100,98 @@ on_any_widget_realized(
 }
 
 static void
-widget_signal_executor(
-		GtkWidget    *widget,
-		AttributeSet *Attr,
-		const gchar  *signal_name)
+widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
+	const gchar *signal_name)
 {
-	gchar *signal;
-	gchar *command;
-	gchar *type;
+	gchar            *command, *type, *signal;
+	gint              execute, is_active;
 
 #ifdef LOTS_OF_MESSAGES
 	PIP_DEBUG("Executing signal '%s' on widget %p.", signal_name, widget);
 #endif
+
 	g_return_if_fail(GTK_IS_WIDGET(widget));
 
 	command = attributeset_get_first(Attr, ATTR_ACTION);
-	if (command == NULL){
-		return;
-	}
+	while (command) {
+		execute = FALSE;
 
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, 
-				ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, 
-				ATTR_ACTION, "signal");
-		if (signal != NULL && 
-				g_ascii_strcasecmp(signal, signal_name) == 0) {
-			//g_message("'%s' = '%s'", signal, signal_name);
-			execute_action(widget, command, type);
-		} else if (signal == NULL) {
-			/* Thunor: I've added this to automate managing the default
-			 * signal for the widget type as it's so much easier like this */
+		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+
+		if (signal &&
+			g_ascii_strcasecmp(signal, signal_name) == 0) {
+			/************************************************************************
+			 * Thunor: This manages <action signal="type"> i.e the specified signal *
+			 ************************************************************************/
+
 #ifdef DEBUG
 			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
 				__func__, command, type, signal, signal_name);
 #endif
-			if (strcasecmp(signal_name, "activate") == 0) {
-				if (GTK_IS_MENU_ITEM(widget))
-					execute_action(widget, command, type);
-			} else if (strcasecmp(signal_name, "changed") == 0) {
-				if (GTK_IS_ENTRY(widget) || GTK_IS_COMBO_BOX(widget))
-					execute_action(widget, command, type);
-			} else if (strcasecmp(signal_name, "value_changed") == 0) {
-				if (GTK_IS_SCALE(widget))
-					execute_action(widget, command, type);
+
+			/* Some widgets support conditional function execution on certain signals */
+			if (strncasecmp(command, "if true ", 8) == 0) {
+				if (strcasecmp(signal_name, "toggled") == 0) {
+					/* There's a class hierarchy to be aware of here */
+					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
+						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
+						command += 8;
+						if (is_active) execute = TRUE;
+					}
+				}
+			} else if (strncasecmp(command, "if false ", 9) == 0) {
+				if (strcasecmp(signal_name, "toggled") == 0) {
+					/* There's a class hierarchy to be aware of here */
+					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
+						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
+						command += 9;
+						if (!is_active) execute = TRUE;
+					}
+				}
+			} else {
+				execute = TRUE;
+			}
+		} else if (signal == NULL) {
+			/************************************************************************
+			 * Thunor: This manages <action> i.e. the default widget signal         *
+			 ************************************************************************/
+
+#ifdef DEBUG
+			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
+				__func__, command, type, signal, signal_name);
+#endif
+
+			/* There's a class hierarchy to be aware of here */
+			if (GTK_IS_CHECK_MENU_ITEM(widget)) {
+				if (strcasecmp(signal_name, "toggled") == 0) {
+					/* Checkbox menuitems support conditional function execution */
+					is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
+					if (strncasecmp(command, "if true ", 8) == 0) {
+						command += 8;
+						if (is_active) execute = TRUE;
+					} else if (strncasecmp(command, "if false ", 9) == 0) {
+						command += 9;
+						if (!is_active) execute = TRUE;
+					} else {
+						execute = TRUE;
+					}
+				}
+			} else if (GTK_IS_MENU_ITEM(widget)) {
+				if (strcasecmp(signal_name, "activate") == 0)
+					execute = TRUE;
+			} else if (GTK_IS_ENTRY(widget) || GTK_IS_COMBO_BOX(widget)) {
+				if (strcasecmp(signal_name, "changed") == 0)
+					execute = TRUE;
+			} else if (GTK_IS_SCALE(widget)) {
+				if (strcasecmp(signal_name, "value_changed") == 0)
+					execute = TRUE;
 			}
 		}
-next_command:   
+		if (execute) execute_action(widget, command, type);
 		command = attributeset_get_next(Attr, ATTR_ACTION);
 	}
 }
-
 
 static gboolean
 on_any_widget_button_pressed(
@@ -321,6 +363,11 @@ void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
 	widget_signal_executor(widget, Attr, "value_changed");
+}
+
+void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr)
+{
+	widget_signal_executor(widget, Attr, "toggled");
 }
 
 #if GTK_CHECK_VERSION(2,16,0)
@@ -1494,11 +1541,22 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 			break;
 		case TYPE_MENUITEM_RADIO:
 			/* Create the GtkRadioMenuItem */
-
-			/* TODO temp temp */
-			/* TODO temp temp */
-			/* TODO temp temp */
-
+			if (lastradiowidget == NULL) {
+				menu_item = gtk_radio_menu_item_new_with_label(NULL, label);
+				lastradiowidget = menu_item;
+			} else {
+				menu_item = gtk_radio_menu_item_new_with_label_from_widget(
+					GTK_RADIO_MENU_ITEM(lastradiowidget), label);
+			}
+			/* Get the active state */
+			if ((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+				is_active = 1;
+			} else {
+				is_active = 0;
+			}
+			/* Set the active state (yeah, it uses the same base class function) */
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), is_active);
 			break;
 		case TYPE_MENUITEM:
 		default:
@@ -1534,45 +1592,14 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	}
 
 	/* Connect signals */
+	/* Only the checkbox and radiobutton emit the toggled signal */
+	if (GTK_IS_CHECK_MENU_ITEM(menu_item)) {
+		g_signal_connect(G_OBJECT(menu_item), "toggled",
+			G_CALLBACK(on_any_widget_toggled_event), (gpointer)Attr);
+	}
+	/* All menuitems emit the activate signal */
 	g_signal_connect(G_OBJECT(menu_item), "activate",
 		G_CALLBACK(on_any_widget_activate_event), (gpointer)Attr);
-
-	/* Thunor: Redundant, old code! There's a function to get custom tag
-	 * attributes, the themed icon is fixed at 20px, we don't require a
-	 * warning about no action, the stock icon's default accelerator is
-	 * nullified, we may as well always connect signals and the signal
-	 * handler menu_callback is pointless as the code inside it is a
-	 * duplicate of that already inside the widget_signal_executor.
-	if (attr != NULL) {
-		for (q = 0; q < attr->n; ++q) {
-			if (strcmp(attr->pairs[q].name, "stock") == 0) {
-				menu_item = gtk_image_menu_item_new_from_stock(
-						attr->pairs[q].value, NULL);
-				goto item_ready;
-			}
-			if (strcmp(attr->pairs[q].name, "icon") == 0) {
-				icon_theme = gtk_icon_theme_get_default();
-				pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                   attr->pairs[q].value, 20, 0, &error);
-				Icon = gtk_image_new_from_pixbuf(pixbuf);	
-				menu_item = gtk_image_menu_item_new_with_label(label);
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), Icon);
-				goto item_ready;
-			}
-
-		}
-	}
-	menu_item = gtk_menu_item_new_with_label(label);
-	
-item_ready:
-	
-	if (attributeset_is_avail(Attr, ATTR_ACTION)){
-		g_signal_connect(G_OBJECT(menu_item), 
-				"activate", (GCallback)menu_callback, Attr);
-	}else{
-		if (!option_no_warning)
-			g_warning("%s(): Menu item without action.", __func__);
-	}*/
 
 	return menu_item;
 }
@@ -1610,6 +1637,12 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 	label = attributeset_get_first(Attr, ATTR_LABEL);
 
 //	root_menu = gtk_menu_item_new_with_label(label);	Redundant
+
+	/* Thunor: A menu widget is in fact a menuitem widget with a submenu
+	 * so it'll be created just like any other menuitem widget. It's
+	 * possible to create image, checkbox or radiobutton menu widgets but
+	 * their usefulness is questionable. In fact creating a menu widget
+	 * closes any open radiobutton group so that makes that pointless */
 	root_menu = create_menuitem(Attr, attr);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(root_menu), menu);
 
@@ -2569,7 +2602,6 @@ instruction_execute_push(
 		AttributeSet  *Attr,
 		tag_attr      *tag_attributes)
 {
-	static GtkWidget *LastRadioButton = NULL;
 	GtkWidget        *scrolled_window;	
 	GtkWidget        *OtherWidget;
 	GtkWidget        *Widget;
@@ -2783,21 +2815,29 @@ instruction_execute_push(
 	case WIDGET_MENUBAR:
 		Widget = create_menubar(Attr, pop());
 		push_widget(Widget, Widget_Type);
+		/* Creating this widget closes any open group */
+		lastradiowidget = NULL;
 		break;
 
 	case WIDGET_MENU:
 		Widget = create_menu(Attr, tag_attributes, pop());
 		push_widget(Widget, Widget_Type);
+		/* Creating this widget closes any open group */
+		lastradiowidget = NULL;
 		break;
 
 	case WIDGET_MENUITEM:
 		Widget = create_menuitem(Attr, tag_attributes);
 		push_widget(Widget, Widget_Type);
+		/* Creating a non radiobutton menuitem widget closes any open group */
+		if (!(GTK_IS_RADIO_MENU_ITEM(Widget))) lastradiowidget = NULL;
 		break;
 
 	case WIDGET_MENUITEMSEPARATOR:
 		Widget = gtk_separator_menu_item_new();
 		push_widget(Widget, Widget_Type);
+		/* Creating this widget closes any open group */
+		lastradiowidget = NULL;
 		break;
 
 	case WIDGET_CHECKBOX:
@@ -2849,16 +2889,16 @@ instruction_execute_push(
 		 ** It is a little strange hack with the radiobuttons. Not easy
 		 ** to force them work together.
 		 */
-		if (LastRadioButton == NULL) {
+		if (lastradiowidget == NULL) {
 			Widget = gtk_radio_button_new_with_label(NULL,
 								 attributeset_get_first
 								 (Attr,
 								  ATTR_LABEL));
-			LastRadioButton = Widget;
+			lastradiowidget = Widget;
 		} else {
 			Widget =
 			    gtk_radio_button_new_with_label_from_widget
-			    (GTK_RADIO_BUTTON(LastRadioButton),
+			    (GTK_RADIO_BUTTON(lastradiowidget),
 			     attributeset_get_first(Attr, ATTR_LABEL));
 //        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(Widget),
 //                                      FALSE );
@@ -2984,7 +3024,8 @@ instruction_execute_push(
 				gtk_notebook_append_page(GTK_NOTEBOOK(Widget), s.widgets[n], Label);
 			}
 			push_widget(Widget, Widget_Type);
-			LastRadioButton = NULL;
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
 		}
 		break;
 
@@ -3034,11 +3075,8 @@ instruction_execute_push(
 				push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			} else
 				push_widget(Widget, Widget_Type);
-			/*
-			 ** The box widgets are holding the radiobuttons to groups, so
-			 ** one radiobutton can turn off the others. 
-			 */
-			LastRadioButton = NULL;
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
 		}
 		break;
 	case WIDGET_HBOX:
@@ -3090,11 +3128,8 @@ instruction_execute_push(
 				push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			} else
 				push_widget(Widget, Widget_Type);
-			/*
-			 ** The box widgets holds the radiobuttons to groups, so
-			 ** one radiobutton can turn off the others. 
-			 */
-			LastRadioButton = NULL;
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
 		}
 		break;
 
@@ -3128,11 +3163,8 @@ instruction_execute_push(
 			gtk_container_add(GTK_CONTAINER(Widget), vbox);
 		}
 		push_widget(Widget, Widget_Type);
-		/*
-		 ** The frame widget holds the radiobuttons to groups, so
-		 ** one radiobutton can turn off the others. 
-		 */
-		LastRadioButton = NULL;
+		/* Creating this widget closes any open group */
+		lastradiowidget = NULL;
 		break;
 
 	case WIDGET_WINDOW:

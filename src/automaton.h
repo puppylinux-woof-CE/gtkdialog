@@ -175,6 +175,7 @@ void instruction_set_jump(gint from, gint where);
 void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet  *Attr);
 void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
+void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr);
 
 #if GTK_CHECK_VERSION(2,16,0)
 void on_any_widget_icon_press_event(GtkWidget *widget,
