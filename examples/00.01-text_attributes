@@ -1,7 +1,9 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
- <vbox>
+<vbox>
   <text use-markup="true">
     <label>"<b>use-markup</b>, which is cool."</label>
   </text>
@@ -12,12 +14,10 @@ export MAIN_DIALOG='
     <label>selectable text, also cool</label>
   </text>
   <hbox>
-   <button ok></button>
-   <button cancel></button>
+    <button ok></button>
+    <button cancel></button>
   </hbox>
- </vbox>
+</vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

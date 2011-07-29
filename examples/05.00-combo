@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>
@@ -14,12 +16,10 @@ export MAIN_DIALOG='
     </combobox>
   </hbox>
   <hbox>
-   <button ok></button>
-   <button cancel></button>
+    <button ok></button>
+    <button cancel></button>
   </hbox>
- </vbox>
+</vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

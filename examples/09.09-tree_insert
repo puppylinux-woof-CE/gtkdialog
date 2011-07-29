@@ -1,9 +1,15 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# Thunor: This won't work on *nix as the "insert/append" function has
+# only been written for G_OS_WIN32 -- I don't know why that is.
 
 export MAIN_DIALOG='
 <vbox>
   <frame Insert and Remove>
     <tree rules_hint="true" headers_visible="false">
+      <label>This label is invisible but required</label>
       <height>100</height><width>400</width>
       <variable>TREE</variable>
     </tree>
@@ -28,4 +34,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
+$GTKDIALOG --program=MAIN_DIALOG

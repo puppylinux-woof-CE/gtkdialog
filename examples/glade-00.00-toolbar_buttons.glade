@@ -28,123 +28,123 @@
       <property name="show_arrow">True</property>
 
       <child>
-	<widget class="GtkToolButton" id="toolbutton1">
-	  <property name="visible">True</property>
-	  <property name="tooltip" translatable="yes">Terminal emulator.</property>
-	  <property name="label" translatable="yes">Terminal</property>
-	  <property name="use_underline">True</property>
-	  <property name="stock_id">gtk-execute</property>
-	  <property name="visible_horizontal">True</property>
-	  <property name="visible_vertical">True</property>
-	  <property name="is_important">False</property>
-	  <signal name="clicked" handler="gnome-terminal&amp;" last_modification_time="Thu, 26 Oct 2006 17:51:24 GMT"/>
-	</widget>
-	<packing>
-	  <property name="expand">False</property>
-	  <property name="homogeneous">True</property>
-	</packing>
+    <widget class="GtkToolButton" id="toolbutton1">
+      <property name="visible">True</property>
+      <property name="tooltip" translatable="yes">Terminal emulator.</property>
+      <property name="label" translatable="yes">Terminal</property>
+      <property name="use_underline">True</property>
+      <property name="stock_id">gtk-execute</property>
+      <property name="visible_horizontal">True</property>
+      <property name="visible_vertical">True</property>
+      <property name="is_important">False</property>
+      <signal name="clicked" handler="gnome-terminal&amp;" last_modification_time="Thu, 26 Oct 2006 17:51:24 GMT"/>
+    </widget>
+    <packing>
+      <property name="expand">False</property>
+      <property name="homogeneous">True</property>
+    </packing>
       </child>
 
       <child>
-	<widget class="GtkToolButton" id="info_toolbutton">
-	  <property name="visible">True</property>
-	  <property name="tooltip" translatable="yes">The devhelp documentation browser.</property>
-	  <property name="label" translatable="yes"></property>
-	  <property name="use_underline">True</property>
-	  <property name="stock_id">gtk-info</property>
-	  <property name="visible_horizontal">True</property>
-	  <property name="visible_vertical">True</property>
-	  <property name="is_important">False</property>
-	  <signal name="clicked" handler="devhelp&amp;" last_modification_time="Thu, 26 Oct 2006 17:54:17 GMT"/>
-	</widget>
-	<packing>
-	  <property name="expand">False</property>
-	  <property name="homogeneous">True</property>
-	</packing>
+    <widget class="GtkToolButton" id="info_toolbutton">
+      <property name="visible">True</property>
+      <property name="tooltip" translatable="yes">The devhelp documentation browser.</property>
+      <property name="label" translatable="yes"></property>
+      <property name="use_underline">True</property>
+      <property name="stock_id">gtk-info</property>
+      <property name="visible_horizontal">True</property>
+      <property name="visible_vertical">True</property>
+      <property name="is_important">False</property>
+      <signal name="clicked" handler="devhelp&amp;" last_modification_time="Thu, 26 Oct 2006 17:54:17 GMT"/>
+    </widget>
+    <packing>
+      <property name="expand">False</property>
+      <property name="homogeneous">True</property>
+    </packing>
       </child>
 
       <child>
-	<widget class="GtkToolButton" id="home_toolbutton">
-	  <property name="visible">True</property>
-	  <property name="tooltip" translatable="yes">The firefox web browser.</property>
-	  <property name="label" translatable="yes"></property>
-	  <property name="use_underline">True</property>
-	  <property name="stock_id">gtk-home</property>
-	  <property name="visible_horizontal">True</property>
-	  <property name="visible_vertical">True</property>
-	  <property name="is_important">False</property>
-	</widget>
-	<packing>
-	  <property name="expand">False</property>
-	  <property name="homogeneous">True</property>
-	</packing>
+    <widget class="GtkToolButton" id="home_toolbutton">
+      <property name="visible">True</property>
+      <property name="tooltip" translatable="yes">The firefox web browser.</property>
+      <property name="label" translatable="yes"></property>
+      <property name="use_underline">True</property>
+      <property name="stock_id">gtk-home</property>
+      <property name="visible_horizontal">True</property>
+      <property name="visible_vertical">True</property>
+      <property name="is_important">False</property>
+    </widget>
+    <packing>
+      <property name="expand">False</property>
+      <property name="homogeneous">True</property>
+    </packing>
       </child>
 
       <child>
-	<widget class="GtkToolButton" id="filesystem_toolbutton">
-	  <property name="visible">True</property>
-	  <property name="tooltip" translatable="yes">The nautilus filemanager.</property>
-	  <property name="label" translatable="yes"></property>
-	  <property name="use_underline">True</property>
-	  <property name="stock_id">gtk-directory</property>
-	  <property name="visible_horizontal">True</property>
-	  <property name="visible_vertical">True</property>
-	  <property name="is_important">False</property>
-	  <signal name="clicked" handler="nautilus&amp;" last_modification_time="Thu, 26 Oct 2006 17:58:32 GMT"/>
-	</widget>
-	<packing>
-	  <property name="expand">False</property>
-	  <property name="homogeneous">True</property>
-	</packing>
+    <widget class="GtkToolButton" id="filesystem_toolbutton">
+      <property name="visible">True</property>
+      <property name="tooltip" translatable="yes">The nautilus filemanager.</property>
+      <property name="label" translatable="yes"></property>
+      <property name="use_underline">True</property>
+      <property name="stock_id">gtk-directory</property>
+      <property name="visible_horizontal">True</property>
+      <property name="visible_vertical">True</property>
+      <property name="is_important">False</property>
+      <signal name="clicked" handler="nautilus&amp;" last_modification_time="Thu, 26 Oct 2006 17:58:32 GMT"/>
+    </widget>
+    <packing>
+      <property name="expand">False</property>
+      <property name="homogeneous">True</property>
+    </packing>
       </child>
 
       <child>
-	<widget class="GtkToolButton" id="editor_toolbutton">
-	  <property name="visible">True</property>
-	  <property name="tooltip" translatable="yes">The gvim text editor.</property>
-	  <property name="label" translatable="yes"></property>
-	  <property name="use_underline">True</property>
-	  <property name="stock_id">gtk-file</property>
-	  <property name="visible_horizontal">True</property>
-	  <property name="visible_vertical">True</property>
-	  <property name="is_important">False</property>
-	  <signal name="clicked" handler="gvim" last_modification_time="Thu, 26 Oct 2006 17:59:18 GMT"/>
-	</widget>
-	<packing>
-	  <property name="expand">False</property>
-	  <property name="homogeneous">True</property>
-	</packing>
+    <widget class="GtkToolButton" id="editor_toolbutton">
+      <property name="visible">True</property>
+      <property name="tooltip" translatable="yes">The gvim text editor.</property>
+      <property name="label" translatable="yes"></property>
+      <property name="use_underline">True</property>
+      <property name="stock_id">gtk-file</property>
+      <property name="visible_horizontal">True</property>
+      <property name="visible_vertical">True</property>
+      <property name="is_important">False</property>
+      <signal name="clicked" handler="gvim" last_modification_time="Thu, 26 Oct 2006 17:59:18 GMT"/>
+    </widget>
+    <packing>
+      <property name="expand">False</property>
+      <property name="homogeneous">True</property>
+    </packing>
       </child>
 
       <child>
-	<widget class="GtkSeparatorToolItem" id="separatortoolitem1">
-	  <property name="visible">True</property>
-	  <property name="draw">True</property>
-	  <property name="visible_horizontal">True</property>
-	  <property name="visible_vertical">True</property>
-	</widget>
-	<packing>
-	  <property name="expand">False</property>
-	  <property name="homogeneous">False</property>
-	</packing>
+    <widget class="GtkSeparatorToolItem" id="separatortoolitem1">
+      <property name="visible">True</property>
+      <property name="draw">True</property>
+      <property name="visible_horizontal">True</property>
+      <property name="visible_vertical">True</property>
+    </widget>
+    <packing>
+      <property name="expand">False</property>
+      <property name="homogeneous">False</property>
+    </packing>
       </child>
 
       <child>
-	<widget class="GtkToolButton" id="quit_toolbutton">
-	  <property name="visible">True</property>
-	  <property name="tooltip" translatable="yes">Quit this demo.</property>
-	  <property name="label" translatable="yes">Quit</property>
-	  <property name="use_underline">True</property>
-	  <property name="stock_id">gtk-quit</property>
-	  <property name="visible_horizontal">True</property>
-	  <property name="visible_vertical">True</property>
-	  <property name="is_important">False</property>
-	  <signal name="clicked" handler="exit:Normal" last_modification_time="Thu, 26 Oct 2006 17:46:34 GMT"/>
-	</widget>
-	<packing>
-	  <property name="expand">False</property>
-	  <property name="homogeneous">True</property>
-	</packing>
+    <widget class="GtkToolButton" id="quit_toolbutton">
+      <property name="visible">True</property>
+      <property name="tooltip" translatable="yes">Quit this demo.</property>
+      <property name="label" translatable="yes">Quit</property>
+      <property name="use_underline">True</property>
+      <property name="stock_id">gtk-quit</property>
+      <property name="visible_horizontal">True</property>
+      <property name="visible_vertical">True</property>
+      <property name="is_important">False</property>
+      <signal name="clicked" handler="exit:Normal" last_modification_time="Thu, 26 Oct 2006 17:46:34 GMT"/>
+    </widget>
+    <packing>
+      <property name="expand">False</property>
+      <property name="homogeneous">True</property>
+    </packing>
       </child>
     </widget>
   </child>

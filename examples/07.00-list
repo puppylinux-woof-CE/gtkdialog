@@ -1,20 +1,20 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-  <vbox>
-    <list>
-      <variable>LIST</variable>
-      <item>First item</item>
-      <item>Second item</item>
-      <item>Third item</item>
-    </list>
-    <hbox>
-     <button ok></button>
-     <button cancel></button>
-    </hbox>
-  </vbox>
+<vbox>
+  <list>
+    <variable>LIST</variable>
+    <item>First item</item>
+    <item>Second item</item>
+    <item>Third item</item>
+  </list>
+  <hbox>
+    <button ok></button>
+    <button cancel></button>
+  </hbox>
+</vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

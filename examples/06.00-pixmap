@@ -1,17 +1,46 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>
-  <frame Pixmap from Stock>
-    <pixmap icon_size="6">
-      <input file stock="gtk-info"></input>
-    </pixmap>
-  </frame>
-  <frame Pixmap from File>
-    <pixmap>
-      <input file>gvim.png</input>
-    </pixmap>
-  </frame>
+  <hbox>
+    <frame Pixmap from stock icon_size="1">
+      <pixmap icon_size="1">
+        <input file stock="gtk-save"></input>
+      </pixmap>
+    </frame>
+    <frame Pixmap from stock icon_size="3">
+      <pixmap icon_size="3">
+        <input file stock="gtk-save"></input>
+      </pixmap>
+    </frame>
+  </hbox>
+  <hbox>
+    <frame Pixmap from stock icon_size="5">
+      <pixmap icon_size="5">
+        <input file stock="gtk-save"></input>
+      </pixmap>
+    </frame>
+    <frame Pixmap from stock icon_size="6">
+      <pixmap icon_size="6">
+        <input file stock="gtk-save"></input>
+      </pixmap>
+    </frame>
+  </hbox>
+  <hbox>
+    <frame Pixmap from file>
+      <pixmap>
+        <input file>image.svg</input>
+      </pixmap>
+    </frame>
+    <frame Pixmap from file scaled>
+      <pixmap>
+        <width>128</width>
+        <input file>image.svg</input>
+      </pixmap>
+    </frame>
+  </hbox>
   <hbox>
     <button cancel></button>
     <button ok></button>
@@ -19,5 +48,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
+$GTKDIALOG --program=MAIN_DIALOG

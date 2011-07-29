@@ -1,29 +1,20 @@
-#! /usr/local/bin/gtkdialog -e
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 function progress() {
-	for i in $(seq 0 10 100); do 
-		echo $i
-		[ "$i" -le 30 ] && echo "Start..."
-		[ "$i" -le 60 -a "$i" -gt 30 ] && echo "Middle..."
-		[ "$i" -gt 60 ] && echo "End..."
-
-		sleep 0.3 
-	done; 
-	
-	echo ready
-}
-
-export MAIN_DIALOG='
-<hbox>
-  <button cancel> </button>
-  <button>
-    <label>Launch</label>
-    <action type="launch">BAR_DIALOG</action>
-  </button>
-</hbox>
-'
+  for i in $(seq 0 10 100); do
+    echo $i
+    [ "$i" -le 30 ] && echo "Start..."
+    [ "$i" -le 60 -a "$i" -gt 30 ] && echo "Middle..."
+    [ "$i" -gt 60 ] && echo "End..."
+    sleep 0.3
+  done;
+  echo ready
+}; export -f progress
 
 export BAR_DIALOG='
+<variable>BAR_DIALOG</variable>
 <vbox>
   <frame Progress>
     <text>
@@ -36,12 +27,21 @@ export BAR_DIALOG='
     </progressbar>
   </frame>
   <hbox>
-   <button cancel>
-     <action type="closewindow">BAR_DIALOG</action>
-   </button>
+    <button cancel>
+      <action type="closewindow">BAR_DIALOG</action>
+    </button>
   </hbox>
- </vbox>
+</vbox>
 '
 
+export MAIN_DIALOG='
+<hbox>
+  <button cancel> </button>
+  <button>
+    <label>Launch</label>
+    <action type="launch">BAR_DIALOG</action>
+  </button>
+</hbox>
+'
 
-
+$GTKDIALOG --program=MAIN_DIALOG

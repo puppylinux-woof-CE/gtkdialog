@@ -1,7 +1,9 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
- <vbox>
+<vbox>
   <frame Checkbox attributes example>
     <checkbox active="true">
       <label>Checkbox with active set to true</label>
@@ -20,14 +22,12 @@ export MAIN_DIALOG='
     </checkbox>
   </frame>
   <hbox>
-   <button ok>
-     <variable>OKBUTTON</variable>
-   </button>
-   <button cancel></button>
+    <button ok>
+      <variable>OKBUTTON</variable>
+    </button>
+    <button cancel></button>
   </hbox>
- </vbox>
+</vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

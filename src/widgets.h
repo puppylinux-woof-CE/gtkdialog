@@ -79,6 +79,7 @@ void widget_checkbox_refresh(variable *var);
 void widget_combo_refresh(variable *var);
 void widget_comboboxtext_refresh(variable *var);
 void widget_scale_refresh(variable *var);
+void widget_menuitem_refresh(variable *var);
 int widget_edit_refresh(variable *var);
 void widget_entry_refresh(variable *var);
 int widget_label_refresh(variable *var);

@@ -1,3 +1,8 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export MAIN_DIALOG='
 <vbox>
   <hbox>
     <text>
@@ -13,3 +18,6 @@
     <button ok></button>
   </hbox>
 </vbox>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

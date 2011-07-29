@@ -1714,6 +1714,34 @@ void widget_scale_refresh(variable *var)
 	}
 }
 
+void widget_menuitem_refresh(variable *var)
+{
+	gchar            *act, *value;
+	gint              handler_id_toggled;
+	gint              block_function_signals = FALSE;
+
+	if (var != NULL && var->Attributes != NULL) {
+
+#ifdef DEBUG
+		g_message("%s(): entering.", __func__);
+#endif
+
+		/* TODO temp temp */
+		/* TODO temp temp */
+		/* TODO temp temp */
+
+
+
+
+
+
+
+
+
+
+	}
+}
+
 extern gchar *option_include_file;
 
 FILE *

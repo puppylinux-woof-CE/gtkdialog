@@ -1,9 +1,13 @@
-#! /usr/local/bin/gtkdialog -e
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# Thunor: This example is broken.
 
 function list() {
-	ls -lha | grep ^d | awk '{print "stock_folder|" $9}'
-	ls -lha | grep ^- | awk '{print "file-executable|" $9}'
-}
+  ls -lha | grep ^d | awk '{print "stock_folder|" $9}'
+  ls -lha | grep ^- | awk '{print "file-executable|" $9}'
+}; export -f list
 
 export MAIN_DIALOG='
 <vbox>
@@ -22,4 +26,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-
+$GTKDIALOG --program=MAIN_DIALOG

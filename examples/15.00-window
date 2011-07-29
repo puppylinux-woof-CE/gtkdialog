@@ -1,9 +1,11 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <window>
   <vbox>
-    <frame DEscription>
+    <frame Description>
       <text>
         <label>This is an example window.</label>
       </text>
@@ -16,6 +18,4 @@ export MAIN_DIALOG='
 </window>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

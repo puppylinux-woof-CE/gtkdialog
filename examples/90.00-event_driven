@@ -1,8 +1,10 @@
-#! /usr/local/bin/gtkdialog -e
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 function print_this() {
   echo "print: $1"
-}
+}; export -f print_this
 
 export MAIN_DIALOG='
 <vbox>
@@ -16,3 +18,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
+$GTKDIALOG --program=MAIN_DIALOG

@@ -1,7 +1,9 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
- <vbox>
+<vbox>
   <hbox>
     <text>
       <label>activates_default:</label>
@@ -11,7 +13,6 @@ export MAIN_DIALOG='
       <variable>ENTRY1</variable>
     </entry>
   </hbox>
-  
   <hbox>
     <text>
       <label>editable:</label>
@@ -21,7 +22,6 @@ export MAIN_DIALOG='
       <variable>ENTRY2</variable>
     </entry>
   </hbox>
-  
   <hbox>
     <text>
       <label>has_frame:</label>
@@ -31,7 +31,6 @@ export MAIN_DIALOG='
       <variable>ENTRY3</variable>
     </entry>
   </hbox>
-  
   <hbox>
     <text>
       <label>invisible_char:</label>
@@ -41,7 +40,6 @@ export MAIN_DIALOG='
       <variable>ENTRY4</variable>
     </entry>
   </hbox>
-  
   <hbox>
     <text>
       <label>max_length:</label>
@@ -51,7 +49,6 @@ export MAIN_DIALOG='
       <variable>ENTRY5</variable>
     </entry>
   </hbox>
-  
   <hbox>
     <text>
       <label>width_chars:</label>
@@ -61,14 +58,11 @@ export MAIN_DIALOG='
       <variable>ENTRY6</variable>
     </entry>
   </hbox>
-  
   <hbox>
-   <button ok></button>
-   <button cancel></button>
+    <button ok></button>
+    <button cancel></button>
   </hbox>
- </vbox>
+</vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

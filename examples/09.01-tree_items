@@ -1,10 +1,13 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 #
 # The <item> tag can hold the following attributes:
 #   o stock or stock_id
 #   o icon or icon_name
 #
+
 export MAIN_DIALOG='
 <vbox>
   <tree>
@@ -25,10 +28,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-GTKDIALOG=gtkdialog
-if [ -x "$HOME/bin/gtkdialog" ]; then
-	GTKDIALOG="$HOME/bin/gtkdialog"
-fi
-
 $GTKDIALOG --program=MAIN_DIALOG 
-
