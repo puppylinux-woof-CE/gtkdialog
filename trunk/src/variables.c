@@ -395,6 +395,10 @@ variables_refresh(const char *name)
 		case WIDGET_HSCALE:
 			widget_scale_refresh(var);
 			break;
+		case WIDGET_MENU:
+		case WIDGET_MENUITEM:
+			widget_menuitem_refresh(var);
+			break;
 #ifdef DEBUG
 		default:
 			if (!option_no_warning)

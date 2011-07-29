@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export DIALOG='
 <window title="Question" icon-name="gtk-dialog-question">
@@ -9,7 +11,7 @@ export DIALOG='
       </text>
       <entry activates-default="true">
         <default>Default text</default>
-	<variable>ENTRY</variable>
+        <variable>ENTRY</variable>
       </entry>
     </hbox>
     <hbox>
@@ -21,4 +23,5 @@ export DIALOG='
   </vbox>
 </window>
 '
-gtkdialog --program=DIALOG
+
+$GTKDIALOG --program=DIALOG

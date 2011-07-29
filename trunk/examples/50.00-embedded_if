@@ -1,7 +1,11 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# Thunor: This example is broken.
 
 export MAIN_DIALOG='
- <vbox>
+<vbox>
   <frame Imperative Example>
     <checkbox active="true">
       <label>First checkbox</label>
@@ -16,16 +20,13 @@ export MAIN_DIALOG='
     </while>
   </frame>
   <hbox>
-   <button ok>
-     <variable>OKBUTTON</variable>
-   </button>
-   <button cancel></button>
+    <button ok>
+      <variable>OKBUTTON</variable>
+    </button>
+    <button cancel></button>
   </hbox>
- </vbox>
+</vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG --print-ir
-#gtkdialog --program=MAIN_DIALOG
-
-
-
+$GTKDIALOG --program=MAIN_DIALOG
+#$GTKDIALOG --program=MAIN_DIALOG --print-ir

@@ -1,40 +1,42 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>
   <menubar>
     <menu>
       <menuitem stock="gtk-open">
-	<action>echo You selected the open menu item.</action>
+        <action>echo You selected the open menu item.</action>
       </menuitem>
       <menuitem stock="gtk-save">
         <action>echo You selected the open menu item.</action>
       </menuitem>
       <separator></separator>
       <menuitem stock="gtk-quit">
-	<action>echo You selected the quit menu item</action>
-	<action type="exit">exit by menu</action>
+        <action>echo You selected the quit menu item</action>
+        <action type="exit">exit by menu</action>
       </menuitem>
       <label>File</label>
     </menu>
     <menu>
       <menuitem stock="gtk-copy">
-	<action>echo You selected the copy menuitem.</action>
+        <action>echo You selected the copy menuitem.</action>
       </menuitem>
       <menuitem stock="gtk-cut">
-	<action>echo You selected the cut menuitem.</action>
+        <action>echo You selected the cut menuitem.</action>
       </menuitem>
       <menuitem stock="gtk-paste">
-	<action>echo You selected the paste menuitem.</action>
+        <action>echo You selected the paste menuitem.</action>
       </menuitem>
       <label>Edit</label>
     </menu>
     <menu>
-	<menuitem>
-	  <label>A menu item</label>
-	  <action>echo You selected the custom menu item.</action>
-	</menuitem>
-	<label>Item</label>
+      <menuitem>
+        <label>A menu item</label>
+        <action>echo You selected the custom menu item.</action>
+      </menuitem>
+      <label>Item</label>
     </menu>
   </menubar>
   <hbox>
@@ -44,4 +46,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
+$GTKDIALOG --program=MAIN_DIALOG

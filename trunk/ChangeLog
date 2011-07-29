@@ -1,3 +1,13 @@
+* Fri Jul 29 2011 Thunor <thunorsif@hotmail.com>
+- Fixed exported_column being 1 based within the examples
+  09.02-tree_actions, 09.10-tree_icon_stocks and 09.11-tree_icon_names.
+- Fixed all the shebangs (bashim) within the examples and used
+  GTKDIALOG=gtkdialog so that they can all be easily changed with sed.
+- Fixed 05.01-progress_bar_closewindow: closewindow issue.
+- Fixed 05.02-progress_bar_test: closewindow issue.
+- Fixed 06.00-pixmap: missing image.
+- Fixed various other examples and identified the non-working ones.
+
 * Thu Jul 28 2011 Thunor <thunorsif@hotmail.com>
 - Set the default checkbox menuitem signal to "toggled".
 - Added checkbox menuitem support for conditional function execution.

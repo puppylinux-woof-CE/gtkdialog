@@ -1,4 +1,8 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# Thunor: This example is broken.
 
 export DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
@@ -16,5 +20,5 @@ export DIALOG='
   <action signal="button-press-event">echo delete-event</action>
 </window>
 '
-gtkdialog --program=DIALOG
 
+$GTKDIALOG --program=DIALOG

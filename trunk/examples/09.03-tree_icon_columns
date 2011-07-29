@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 #
 # The <input> tags can have attributes setting which input column holds the
@@ -7,20 +9,40 @@
 #   o icon_column
 #
 
+function list() {
+  echo "gtk-open | | gtk-open | 2 "
+  echo "gtk-about | | gtk-about | 2 "
+  echo "gtk-add | | gtk-add | 2 "
+  echo "gtk-apply | | gtk-apply | 2 "
+  echo "gtk-bold | | gtk-bold | 2 "
+  echo "gtk-cancel | | gtk-cancel | 2 "
+  echo "gtk-cdrom | | gtk-cdrom | 2 "
+  echo "gtk-clear | | gtk-clear | 2 "
+  echo "gtk-close | | gtk-close | 2 "
+  echo "gtk-color-picker | | gtk-color-picker | 2 "
+  echo "gtk-convert | | gtk-convert | 2 "
+}; export -f list
+
 export MAIN_DIALOG='
 <vbox>
-  <tree>
-    <label>Stock name | Permissions|Filename</label>
-    <input>./list.sh</input>
-    <height>200</height><width>600</width>
-    <variable>TREE1</variable>
-  </tree>
-  <tree stock="gtk-file">
-    <label>Permissions|Filename</label>
-    <input icon_column="0">./list.sh</input>
-    <height>200</height><width>600</width>
-    <variable>TREE2</variable>
-  </tree>
+  <hbox>
+    <frame Stock icons from input command>
+      <tree>
+        <label>0 | 1 | 2</label>
+        <input stock_column="0">list</input>
+        <height>350</height><width>250</width>
+        <variable>TREE1</variable>
+      </tree>
+    </frame>
+    <frame Theme icons from input command>
+      <tree stock="gtk-file">
+        <label>0 | 1 | 2</label>
+        <input icon_column="0">list</input>
+        <height>350</height><width>250</width>
+        <variable>TREE2</variable>
+      </tree>
+    </frame>
+  </hbox>
   <hbox>
     <button cancel></button>
     <button ok></button>
@@ -28,10 +50,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-GTKDIALOG=gtkdialog
-if [ -x "$HOME/bin/gtkdialog" ]; then
-	GTKDIALOG="$HOME/bin/gtkdialog"
-fi
-
 $GTKDIALOG --program=MAIN_DIALOG 
-

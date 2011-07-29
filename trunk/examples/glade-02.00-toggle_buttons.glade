@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
-	Version: 3.0.1
-	Date: Thu Oct 26 21:47:10 2006
-	User: pipas
-	Host: desktop.otthon
+    Version: 3.0.1
+    Date: Thu Oct 26 21:47:10 2006
+    User: pipas
+    Host: desktop.otthon
 -->
 <glade-interface>
   <widget class="GtkWindow" id="toggle_window">

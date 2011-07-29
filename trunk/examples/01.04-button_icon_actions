@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>
@@ -99,8 +101,8 @@ export MAIN_DIALOG='
       <input file icon="edit"></input>
       <action>echo edit</action>
     </button>
-</hbox>
-<hbox>
+  </hbox>
+  <hbox>
     <button>
       <input file icon="edit_remove"></input>
       <action>echo edit_remove</action>
@@ -197,8 +199,8 @@ export MAIN_DIALOG='
       <input file icon="player-eject"></input>
       <action>echo player-eject</action>
     </button>
-</hbox>
-<hbox>
+  </hbox>
+  <hbox>
     <button>
       <input file icon="player_end"></input>
       <action>echo player_end</action>
@@ -295,8 +297,8 @@ export MAIN_DIALOG='
       <input file icon="up"></input>
       <action>echo up</action>
     </button>
-</hbox>
-<hbox>
+  </hbox>
+  <hbox>
     <button>
       <input file icon="viewmag1"></input>
       <action>echo viewmag1</action>
@@ -321,6 +323,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

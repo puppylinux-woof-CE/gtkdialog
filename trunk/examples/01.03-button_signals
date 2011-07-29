@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 #
 # Some action types are still missing. See execute_action() for more 
@@ -6,7 +8,7 @@
 #
 
 export MAIN_DIALOG='
- <vbox>
+<vbox>
   <frame Button signals>
     <hbox>
       <button>
@@ -15,30 +17,28 @@ export MAIN_DIALOG='
       <button>
         <label>Enter/Leave/Clicked</label>
         <action signal="clicked">echo Signal: clicked /default/</action>
-	<action signal="enter">echo Signal: enter</action>
-	<action signal="leave">echo Signal: leave</action>
+        <action signal="enter">echo Signal: enter</action>
+        <action signal="leave">echo Signal: leave</action>
       </button>
       <button>
         <label>Pressed/Released/Clicked</label>
         <action signal="clicked">echo Signal: clicked /default/</action>
-	<action signal="pressed">echo Signal: pressed</action>
-	<action signal="released">echo Signal: released</action>
+        <action signal="pressed">echo Signal: pressed</action>
+        <action signal="released">echo Signal: released</action>
       </button>
     </hbox>
   </frame>
   <hbox>
-   <button cancel>
-     <action signal="enter">echo Do you really want to exit?</action>
-     <action type="exit">Cancel</action>
-   </button>
-   <button ok>
-     <action signal="enter">echo Do you really want to exit?</action>
-     <action type="exit">OK</action>
-   </button>
+    <button cancel>
+      <action signal="enter">echo Do you really want to exit?</action>
+      <action type="exit">Cancel</action>
+    </button>
+    <button ok>
+      <action signal="enter">echo Do you really want to exit?</action>
+      <action type="exit">OK</action>
+    </button>
   </hbox>
- </vbox>
+</vbox>
 '
 
-gtkdialog --program=MAIN_DIALOG
-
-
+$GTKDIALOG --program=MAIN_DIALOG

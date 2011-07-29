@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 #
 # stock_column
@@ -17,7 +19,7 @@ export MAIN_DIALOG='
     <label>Permissions|Filename</label>
     <input icon_column="0">./list.sh</input>
     <height>100</height><width>400</width>
-    <variable>TREE1</variable>
+    <variable>TREE2</variable>
   </tree>
   <tree>
     <label>Device                        | Directory | File</label>
@@ -27,7 +29,7 @@ export MAIN_DIALOG='
     <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
     <item stock="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
     <height>100</height><width>400</width>
-    <variable>TREE2</variable>
+    <variable>TREE3</variable>
   </tree>
   <hbox>
     <button cancel></button>
@@ -36,10 +38,4 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-GTKDIALOG=gtkdialog
-if [ -x "$HOME/bin/gtkdialog" ]; then
-	GTKDIALOG="$HOME/bin/gtkdialog"
-fi
-
 $GTKDIALOG --program=MAIN_DIALOG 
-

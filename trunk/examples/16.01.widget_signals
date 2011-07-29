@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
 
 export DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
@@ -72,4 +74,5 @@ export DIALOG='
   <action signal="unmap-event">echo Window: unmap-event</action>
 </window>
 '
-gtkdialog --program=DIALOG
+
+$GTKDIALOG --program=DIALOG
