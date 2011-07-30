@@ -8,9 +8,10 @@ GTKDIALOG=gtkdialog
 #
 
 export DIALOG='
+<variable>DIALOG</variable>
 <vbox>
   <text>
-    <label>This is an other dialog window.</label>
+    <label>This is another dialog window.</label>
   </text>
   <button>
     <label>Close</label>

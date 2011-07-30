@@ -10,7 +10,8 @@ export MAIN_DIALOG='
       <action>echo You pressed the button with the label.</action>
     </button>
     <button sensitive="false">
-      <input file>fileopen.xpm</input>
+      <width>16</width>
+      <input file>image.svg</input>
       <action>echo You pressed the button with the pixmap.</action>
     </button>
   </hbox>

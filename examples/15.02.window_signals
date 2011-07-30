@@ -2,14 +2,12 @@
 
 GTKDIALOG=gtkdialog
 
-# Thunor: This example is broken.
-
 export DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
   <vbox>
     <frame Description>
       <text>
-        <label>Text</label>
+        <label>Close via the title bar</label>
       </text>
     </frame>
     <hbox>
@@ -17,7 +15,7 @@ export DIALOG='
       <button cancel></button>
     </hbox>
   </vbox>
-  <action signal="button-press-event">echo delete-event</action>
+  <action signal="delete-event">echo delete-event</action>
 </window>
 '
 

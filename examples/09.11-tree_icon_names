@@ -6,7 +6,7 @@ export MAIN_DIALOG='
 <vbox>
   <frame Icon name examples>
     <tree rules_hint="true" exported_column="0">
-      <height>400</height><width>550</width>
+      <height>400</height><width>250</width>
       <label>Icon Names</label>
       <item icon="gimp">gimp</item>
       <item icon="gnumeric">gnumeric</item>
@@ -14,15 +14,15 @@ export MAIN_DIALOG='
       <item icon="glade-3">glade-3</item>
       <item icon="uget-icon">uget-icon</item>
       <item icon="viewnior">viewnior</item>
-      <item icon="install">install</item>
-      <item icon="log">log</item>
-      <item icon="make">make</item>
-      <item icon="man">man</item>
-      <item icon="metafont">metafont</item>
-      <item icon="midi">midi</item>
-      <item icon="mime_ascii">mime_ascii</item>
-      <item icon="mime_empty">mime_empty</item>
-      <item icon="misc_doc">misc_doc</item>
+      <item icon="xarchive">xarchive</item>
+      <item icon="scribus">scribus</item>
+      <item icon="inkscape">inkscape</item>
+      <item icon="html">html</item>
+      <item icon="gz">gz</item>
+      <item icon="top">top</item>
+      <item icon="midori">midori</item>
+      <item icon="adblock">adblock</item>
+      <item icon="abiword">abiword</item>
     </tree>
   </frame>
   <hbox>

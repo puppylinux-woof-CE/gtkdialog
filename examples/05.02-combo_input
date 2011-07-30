@@ -2,6 +2,9 @@
 
 GTKDIALOG=gtkdialog
 
+# Thunor: This example is broken: input from a command has not been
+# implemented for this widget and it's now old and deprecated.
+
 export MAIN_DIALOG='
 <vbox>
   <hbox>

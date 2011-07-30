@@ -4,10 +4,15 @@ GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>
-  <entry>
-    <input>whoami</input>
-    <variable>ENTRY</variable>
-  </entry>
+  <hbox>
+    <text>
+      <label>whoami:</label>
+    </text>
+    <entry>
+      <input>whoami</input>
+      <variable>ENTRY</variable>
+    </entry>
+  </hbox>
   <hbox>
     <button ok></button>
     <button cancel></button>

@@ -2,6 +2,8 @@
 
 GTKDIALOG=gtkdialog
 
+# Thunor: Input from a file has not been implemented for this widget.
+
 export MAIN_DIALOG='
 <vbox>
   <notebook labels="Checkbox|Radiobutton|Tree">
@@ -29,7 +31,7 @@ export MAIN_DIALOG='
       </radiobutton>
     </vbox>
     <tree>
-      <input file>tmp.text</input>
+      <input file>list.txt</input>
       <label>First</label>
       <item stock="gtk-floppy">This is a floppy</item>
       <item stock="gtk-cdrom">This is a CD-ROM</item>

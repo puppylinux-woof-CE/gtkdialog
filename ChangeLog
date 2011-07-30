@@ -1,3 +1,6 @@
+* Sat Jul 30 2011 Thunor <thunorsif@hotmail.com>
+- Reviewed the examples, fixed a few more, commented within 17 of them.
+
 * Fri Jul 29 2011 Thunor <thunorsif@hotmail.com>
 - Fixed exported_column being 1 based within the examples
   09.02-tree_actions, 09.10-tree_icon_stocks and 09.11-tree_icon_names.
