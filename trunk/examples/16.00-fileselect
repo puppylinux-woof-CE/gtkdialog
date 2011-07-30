@@ -2,8 +2,8 @@
 
 GTKDIALOG=gtkdialog
 
-# Thunor: This FILE_BROWSE_NEWDIRECTORY example crashes
-# if a directory name isn't supplied.
+# Thunor: The FILE_BROWSE_NEWDIRECTORY example crashes if a directory
+# name isn't supplied.
 
 export MAIN_DIALOG='
 <vbox>

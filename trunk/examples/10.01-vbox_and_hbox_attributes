@@ -2,6 +2,10 @@
 
 GTKDIALOG=gtkdialog
 
+# Thunor: I'm not sure that this example is doing what was originally intended.
+# The label isn't resizing with the window (Gtkdialog's support for resizing
+# requires attention) and both "fill" and "expand" default to true anyway.
+
 export MAIN_DIALOG='
 <vbox>
   <frame Space>
@@ -20,9 +24,7 @@ export MAIN_DIALOG='
         <input file stock="gtk-info"></input>
       </pixmap>
       <text>
-        <label>
-"This is a label with a rather long text, so it must be wrapped as the user
-resizes the window. However, the default label width is 30 characters."
+        <label>"This is a label with a rather long text, so it must be wrapped as the user resizes the window. However, the default label width is 30 characters."
         </label>
       </text>
     </hbox>
@@ -33,9 +35,7 @@ resizes the window. However, the default label width is 30 characters."
         <input file stock="gtk-info"></input>
       </pixmap>
       <text>
-        <label>
-"This is a label with a rather long text, so it must be wrapped as the user
-resizes the window. However, the default label width is 30 characters."
+        <label>"This is a label with a rather long text, so it must be wrapped as the user resizes the window. However, the default label width is 30 characters."
         </label>
       </text>
     </hbox>

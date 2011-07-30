@@ -2,6 +2,8 @@
 
 GTKDIALOG=gtkdialog
 
+# Thunor: Input from a file has not been implemented for this widget.
+
 #
 # The <item> tag can hold the following attributes:
 #   o stock or stock_id
@@ -11,7 +13,7 @@ GTKDIALOG=gtkdialog
 export MAIN_DIALOG='
 <vbox>
   <tree>
-    <input file>tmp.text</input>
+    <input file>list.txt</input>
     <label>Device                        | Directory | File</label>
     <item stock_id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
     <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
