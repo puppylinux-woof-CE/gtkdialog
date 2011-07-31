@@ -52,9 +52,7 @@ Some of these may have tag attribute equivalents.
 || output file || Data output target || Filename || || 0.7.21 ||
 
 == Signals ==
-The default signal for the GtkMenuItem and GtkImageMenuItem widgets is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
-
-The default signal for the GtkCheckMenuItem and GtkRadioMenuItem widgets is "[http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem-toggled toggled]", emitted when the state is changed.
+The default signal for the checkbox and radiobutton menuitem widgets is "[http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem-toggled toggled]", emitted when the state is changed, otherwise the default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
 
 All widgets emit the "activate" signal.
 
