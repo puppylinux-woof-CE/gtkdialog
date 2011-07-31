@@ -1,7 +1,7 @@
 #summary menuitem widget reference
 
 = menuitem widget =
-A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html GtkImageMenuItem]
+A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://developer.gnome.org/gtk/2.24/GtkCheckMenuItem.html GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html GtkImageMenuItem]
 ----
 
 == Definition ==
@@ -10,19 +10,23 @@ A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem] or [http://
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
+	<input>command</input>
+	<input file>filename</input>
 	<visible>state</visible>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
+	<output file>filename</output>
 </menuitem>
 }}}
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
-See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem] widget or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem], [http://developer.gnome.org/gtk/2.24/GtkCheckMenuItem.html#GtkCheckMenuItem.object-hierarchy GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.object-hierarchy GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || accel-key || Accelerator key || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h (full list)] || 0.7.21 ||
 || accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h (full list)] || 0.7.21 ||
 || image-icon^[2]^ || GTK theme image name ||  || 0.7.21 ||
@@ -37,23 +41,32 @@ Some of these may have tag attribute equivalents.
 || variable || Shell variable name || || || ||
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
+|| input || Data input source || Shell command || || 0.7.21 ||
+|| input file || Data input source || Filename || || 0.7.21 ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || 0.7.21 ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
+|| output file || Data output target || Filename || || 0.7.21 ||
 
 == Signals ==
-The default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
+The default signal for the GtkMenuItem and GtkImageMenuItem widgets is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
 
-See also the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem] widget and ancestor class signals.
+The default signal for the GtkCheckMenuItem and GtkRadioMenuItem widgets is "[http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem-toggled toggled]", emitted when the state is changed.
+
+All widgets emit the "activate" signal.
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#gtk-gtkcheckmenuitem.signals GtkCheckMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.signals GtkRadioMenuItem] widget and ancestor class signals.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || 0.7.21 ||
+|| save || Save widget data || Shell variable name || 0.7.21 ||
 
 The following general functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
