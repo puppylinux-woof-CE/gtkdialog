@@ -1,7 +1,7 @@
 #summary menuitem widget reference
 
 = menuitem widget =
-A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://developer.gnome.org/gtk/2.24/GtkCheckMenuItem.html GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html GtkImageMenuItem]
+A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html GtkImageMenuItem]
 ----
 
 == Definition ==
