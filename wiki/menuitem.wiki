@@ -22,7 +22,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://de
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
-See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem], [http://developer.gnome.org/gtk/2.24/GtkCheckMenuItem.html#GtkCheckMenuItem.object-hierarchy GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.object-hierarchy GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#gtk-gtkcheckmenuitem.object-hierarchy GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.object-hierarchy GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
