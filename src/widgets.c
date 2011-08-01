@@ -167,7 +167,7 @@ widget_get_text_value(
 	GList            *item, *selectedrows, *row;
 	gchar            *string, *tmp, *line;
 	gchar             value[32];
-	gint              n, selectionmode, initialrow, column, digits;
+	gint              n, selectionmode, initialrow, column, digits, is_active;
 	gdouble           val;
 
 #ifdef DEBUG
@@ -402,6 +402,20 @@ widget_get_text_value(
 			return g_strdup(value);
 			break;
 
+		case WIDGET_MENU:
+		case WIDGET_MENUITEM:
+			if (GTK_IS_CHECK_MENU_ITEM(widget)) {
+				if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+					string =  g_strdup("true");
+				} else {
+					string =  g_strdup("false");
+				}
+			} else {
+				string = g_strdup("");
+			}
+			return string;
+			break;
+
 		default:
 			return NULL;
 	}
@@ -481,13 +495,15 @@ void fill_edit_by_file(GtkWidget * widget, char *filename)
 static
 void fill_comboboxtext_by_file(GtkWidget *widget, char *filename)
 {
-	FILE *infile;
-	char line[512];
-	int count;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 	if (infile = fopen(filename, "r")) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
 		while (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
@@ -506,13 +522,52 @@ void fill_comboboxtext_by_file(GtkWidget *widget, char *filename)
 static
 void fill_scale_by_file(GtkWidget *widget, char *filename)
 {
-	FILE *infile;
-	char line[512];
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
-		if ((fgets(line, 512, infile)))
+		if ((fgets(line, 512, infile))) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 			gtk_range_set_value(GTK_RANGE(widget), atof(line));
+		}
+		/* Close the file */
+		fclose(infile);
+	} else {
+		if (!option_no_warning)
+			g_warning("%s(): Couldn't open '%s' for reading.", 
+				__func__, filename);
+	}
+}
+
+static
+void fill_menuitem_by_file(GtkWidget *widget, char *filename)
+{
+	FILE             *infile;
+	gchar             line[512];
+	gint              count, is_active;
+
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if ((fgets(line, 512, infile))) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			if ((strcasecmp(line, "true") == 0) ||
+				(strcasecmp(line, "yes") == 0) || (atoi(line) == 1)) {
+				is_active = 1;
+			} else {
+				is_active = 0;
+			}
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), is_active);
+		}
 		/* Close the file */
 		fclose(infile);
 	} else {
@@ -525,13 +580,15 @@ void fill_scale_by_file(GtkWidget *widget, char *filename)
 static
 void fill_entry_by_file(GtkWidget *widget, char *filename)
 {
-	FILE *infile;
-	char line[512];
-	int count;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
 		if ((fgets(line, 512, infile))) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
@@ -853,12 +910,44 @@ void save_scale_to_file(variable *var)
 	}
 }
 
+void save_menuitem_to_file(variable *var)
+{
+	FILE             *outfile;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gint              is_active;
+
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+			is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(var->Widget));
+			fprintf(outfile, "%i", is_active);
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		yywarning("No output file directive found");
+	}
+}
+
 void 
 widget_entry_refresh(variable *var)
 {
 	gchar            *act, *value;
-	gint              handler_id_changed;
-	gint              block_function_signals = FALSE;
+	gint              initialised = FALSE;
 
 	if (var != NULL && var->Attributes != NULL) {
 
@@ -866,58 +955,9 @@ widget_entry_refresh(variable *var)
 		g_message("%s(): entering.", __func__);
 #endif
 
-/* Thunor: This is bugged as it doesn't distinguish between <input> and
- * <input file> directives and attempts to execute both of them */
-
-/*	char *act;	Redundant.
-	
-	g_assert(var != NULL);
-	
-#ifdef DEBUG
-	g_message("%s(%p)", __func__, var);
-#endif
-	/$
-	 $$ The <input> tag... 
-	 $/
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		if (input_is_shell_command(act)) {
-			fill_entry_by_command(var->Widget, act + 8);
-			goto next_input;
-		}
-		
-		fill_entry_by_command(var->Widget, act);
-next_input:
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
-	}
-
-	if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))
-		gtk_widget_set_sensitive(var->Widget, FALSE);
-*/
-
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
-			/* If the custom attribute "block-function-signals" is true
-			 * then block signals whilst performing this function */
-			if (var->widget_tag_attr &&
-				((value = get_tag_attribute(var->widget_tag_attr, "block_function_signals")) ||
-				(value = get_tag_attribute(var->widget_tag_attr, "block-function-signals"))) &&
-				((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
-				(atoi(value) == 1))) {
-				block_function_signals = TRUE;
-				/* Block the signal handler */
-				handler_id_changed = (gint)g_object_get_data(
-					G_OBJECT(var->Widget), "handler_id_changed");
-				g_signal_handler_block(var->Widget, handler_id_changed);
-			} else {
-				block_function_signals = FALSE;
-			}
-		}
+		/* Get initialised state of widget */
+		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 		/* The <input> tag... */
 		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
@@ -930,37 +970,17 @@ next_input:
 			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
 		}
 
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
-			if (block_function_signals) {
-				/* Unblock the signal handler */
-				g_signal_handler_unblock(var->Widget, handler_id_changed);
-			}
-		}
-
-		/* Initialise these only once i.e. when the widget is unrealized.
-		 * Also, directives should only really be applied once at start-up */
-#if GTK_CHECK_VERSION(2,20,0)
-		if (!(gtk_widget_get_realized(var->Widget)))
-#else
-		if (!(GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
+		/* Initialise these only once at start-up */
+		if (!initialised) {
 			/* Apply the default directive if available */
 			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 				gtk_entry_set_text(GTK_ENTRY(var->Widget),
 				attributeset_get_first(var->Attributes, ATTR_DEFAULT));
-
 			/* Apply the visible directive if available */
 			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "password"))
 				gtk_entry_set_visibility(GTK_ENTRY(var->Widget), FALSE);
-
 			/* Apply the width and height directives if available */
 			if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT) &&
 				attributeset_is_avail(var->Attributes, ATTR_WIDTH))
@@ -968,13 +988,9 @@ next_input:
 					atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH)),
 					atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT)));
 
-			/* Connect uncommon signals */
-			handler_id_changed = g_signal_connect(G_OBJECT(var->Widget), "changed", 
+			/* Connect signals */
+			g_signal_connect(G_OBJECT(var->Widget), "changed", 
 				G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
-			/* Store the handler id as a piece of widget data so that
-			 * it can be blocked and unblocked later when necessary */
-			g_object_set_data(G_OBJECT(var->Widget), "handler_id_changed",
-				(gpointer)handler_id_changed);
 			g_signal_connect(G_OBJECT(var->Widget), "activate",
 				G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
 #if GTK_CHECK_VERSION(2,16,0)
@@ -1307,6 +1323,7 @@ void widget_button_refresh(variable *var)
 	GList            *child;
 	GdkPixbuf        *pixbuf;
 	gint              width = -1, height = -1;
+	gint              initialised = FALSE;
 
 	if (var != NULL && var->Attributes != NULL) {
 
@@ -1314,16 +1331,11 @@ void widget_button_refresh(variable *var)
 		g_message("%s(): entering.", __func__);
 #endif
 
-		/* Thunor: Refresh functions are also called at start-up so this
-		 * has to be taken into account to avoid duplicating code that
-		 * already exists in the creation function. The way to do this
-		 * is to simply check if the widget has been realized yet */
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
+		/* Get initialised state of widget */
+		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+
+		if (initialised) {
 			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
 			while (act != NULL) {
 				/* input file stock = "File:", input file = "File:/path/to/file" */
@@ -1382,6 +1394,7 @@ void widget_pixmap_refresh(variable *var)
 	gchar            *act;
 	GdkPixbuf        *pixbuf;
 	gint              width = -1, height = -1;
+	gint              initialised = FALSE;
 
 	if (var != NULL && var->Attributes != NULL) {
 
@@ -1389,16 +1402,11 @@ void widget_pixmap_refresh(variable *var)
 		g_message("%s(): entering.", __func__);
 #endif
 
-		/* Thunor: Refresh functions are also called at start-up so this
-		 * has to be taken into account to avoid duplicating code that
-		 * already exists in the creation function. The way to do this
-		 * is to simply check if the widget has been realized yet */
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
+		/* Get initialised state of widget */
+		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+
+		if (initialised) {
 			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
 			while (act != NULL) {
 				/* input file stock = "File:", input file = "File:/path/to/file" */
@@ -1437,7 +1445,6 @@ void widget_comboboxtext_refresh(variable *var)
 	char             *act;
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
-	gint              handler_id_changed;
 	gint              rowcount;
 	gchar             oldselected[512];
 	gchar             newselected[512];
@@ -1445,6 +1452,7 @@ void widget_comboboxtext_refresh(variable *var)
 	gchar            *text;
 	gint              index;
 	gint              found;
+	gint              initialised = FALSE;
 
 	if (var != NULL && var->Attributes != NULL) {
 
@@ -1452,35 +1460,25 @@ void widget_comboboxtext_refresh(variable *var)
 		g_message("%s(): entering.", __func__);
 #endif
 
-		/* We'll manage signals ourselves */
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
-			/* Block the signal handler */
-			handler_id_changed = (gint)g_object_get_data(
-				G_OBJECT(var->Widget), "handler_id_changed");
-			g_signal_handler_block(var->Widget, handler_id_changed);
-			/* Record the currently selected text if any */
-			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
-				strcpy(oldselected, string);
-			} else {
-				strcpy(oldselected, "");
-			}
-#ifdef DEBUG
-			fprintf(stderr, "%s: oldselected=\"%s\"\n", __func__, oldselected);
-#endif
-		}
+		/* Get initialised state of widget */
+		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
-		/* Clear the widget if it has been realized */
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
+		/* We'll manage signals ourselves */
+		FUNCTION_SIGNALS_BLOCK;
+
+		/* Record the currently selected text if any */
+		if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
+			strcpy(oldselected, string);
+		} else {
+			strcpy(oldselected, "");
+		}
+#ifdef DEBUG
+		fprintf(stderr, "%s: oldselected=\"%s\"\n", __func__, oldselected);
 #endif
-		{
+
+		/* Clear the widget if it has been initialised */
+		if (initialised) {
 			model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 			if (gtk_tree_model_get_iter_first(model, &iter)) {
 				/* Count the number of rows in the GtkComboBox */
@@ -1527,41 +1525,28 @@ void widget_comboboxtext_refresh(variable *var)
 		}
 
 		/* We'll manage signals ourselves */
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
-			/* Unblock the signal handler */
-			g_signal_handler_unblock(var->Widget, handler_id_changed);
-			/* Record the currently selected text if any */
-			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
-				strcpy(newselected, string);
-			} else {
-				strcpy(newselected, "");
-			}
+		FUNCTION_SIGNALS_UNBLOCK;
+
+		/* Record the currently selected text if any */
+		if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
+			strcpy(newselected, string);
+		} else {
+			strcpy(newselected, "");
+		}
 #ifdef DEBUG
-			fprintf(stderr, "%s: newselected=\"%s\"\n", __func__, newselected);
+		fprintf(stderr, "%s: newselected=\"%s\"\n", __func__, newselected);
 #endif
-			/* If the before and after selected items are different then
-			 * emit a changed signal */
-			if (strcmp(oldselected, newselected)) {
+		/* If the before and after selected items are different then
+		 * emit a changed signal */
+		if (strcmp(oldselected, newselected)) {
 #ifdef DEBUG
-				fprintf(stderr, "%s: emitting \"changed\" signal\n", __func__);
+			fprintf(stderr, "%s: emitting \"changed\" signal\n", __func__);
 #endif
-				g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
-			}
+			g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
 		}
 
-		/* Initialise these only once i.e. when the widget is unrealized.
-		 * Also, directives should only really be applied once at start-up */
-#if GTK_CHECK_VERSION(2,20,0)
-		if (!(gtk_widget_get_realized(var->Widget)))
-#else
-		if (!(GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
+		/* Initialise these only once at start-up */
+		if (!initialised) {
 			/* Apply the default directive if available */
 			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
 				string = attributeset_get_first(var->Attributes, ATTR_DEFAULT);
@@ -1593,19 +1578,14 @@ void widget_comboboxtext_refresh(variable *var)
 					}
 				}
 			}
-
 			/* Apply the visible directive if available */
 			if (attributeset_cmp_left
 				(var->Attributes, ATTR_VISIBLE, "disabled"))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 
-			/* Connect uncommon signals */
-			handler_id_changed = g_signal_connect(G_OBJECT(var->Widget), "changed", 
+			/* Connect signals */
+			g_signal_connect(G_OBJECT(var->Widget), "changed", 
 				G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
-			/* Store the handler id as a piece of widget data so that
-			 * it can be blocked and unblocked later when necessary */
-			g_object_set_data(G_OBJECT(var->Widget), "handler_id_changed",
-				(gpointer)handler_id_changed);
 			/* The comboboxtext functions also manage the comboboxentry:
 			 * connect to the activate signal emitted when Enter is pressed
 			 * within the entry (storing the handler id is not necessary) */
@@ -1621,8 +1601,7 @@ void widget_comboboxtext_refresh(variable *var)
 void widget_scale_refresh(variable *var)
 {
 	gchar            *act, *value;
-	gint              handler_id_value_changed;
-	gint              block_function_signals = FALSE;
+	gint              initialised = FALSE;
 
 	if (var != NULL && var->Attributes != NULL) {
 
@@ -1630,28 +1609,9 @@ void widget_scale_refresh(variable *var)
 		g_message("%s(): entering.", __func__);
 #endif
 
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
-			/* If the custom attribute "block-function-signals" is true
-			 * then block signals whilst performing this function */
-			if (var->widget_tag_attr &&
-				((value = get_tag_attribute(var->widget_tag_attr, "block_function_signals")) ||
-				(value = get_tag_attribute(var->widget_tag_attr, "block-function-signals"))) &&
-				((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
-				(atoi(value) == 1))) {
-				block_function_signals = TRUE;
-				/* Block the signal handler */
-				handler_id_value_changed = (gint)g_object_get_data(
-					G_OBJECT(var->Widget), "handler_id_value_changed");
-				g_signal_handler_block(var->Widget, handler_id_value_changed);
-			} else {
-				block_function_signals = FALSE;
-			}
-		}
+		/* Get initialised state of widget */
+		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 		/* The <input> tag... */
 		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
@@ -1672,53 +1632,31 @@ void widget_scale_refresh(variable *var)
 			fill_scale_by_items(var->Attributes, var->Widget);
 		}
 
-#if GTK_CHECK_VERSION(2,20,0)
-		if ((gtk_widget_get_realized(var->Widget)))
-#else
-		if ((GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
-			if (block_function_signals) {
-				/* Unblock the signal handler */
-				g_signal_handler_unblock(var->Widget, handler_id_value_changed);
-			}
-		}
-
-		/* Initialise these only once i.e. when the widget is unrealized.
-		 * Also, directives should only really be applied once at start-up */
-#if GTK_CHECK_VERSION(2,20,0)
-		if (!(gtk_widget_get_realized(var->Widget)))
-#else
-		if (!(GTK_WIDGET_REALIZED(var->Widget)))
-#endif
-		{
+		/* Initialise these only once at start-up */
+		if (!initialised) {
 			/* Apply the default directive if available */
 			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 				gtk_range_set_value(GTK_RANGE(var->Widget),
 					atof(attributeset_get_first(var->Attributes, ATTR_DEFAULT)));
-
 			/* Apply the visible directive if available */
 			if (attributeset_cmp_left
 				(var->Attributes, ATTR_VISIBLE, "disabled"))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 
-			/* Connect uncommon signals */
-			handler_id_value_changed = g_signal_connect(G_OBJECT(var->Widget),
-				"value_changed", G_CALLBACK(on_any_widget_value_changed_event),
-				(gpointer)var->Attributes);
-			/* Store the handler id as a piece of widget data so that
-			 * it can be blocked and unblocked later when necessary */
-			g_object_set_data(G_OBJECT(var->Widget), "handler_id_value_changed",
-				(gpointer)handler_id_value_changed);
+			/* Connect signals */
+			g_signal_connect(G_OBJECT(var->Widget), "value_changed",
+				G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
 		}
 	}
 }
 
 void widget_menuitem_refresh(variable *var)
 {
-	gchar            *act, *value;
-	gint              handler_id_toggled;
-	gint              block_function_signals = FALSE;
+	gchar            *act, *value, *icon_file_name;
+	gint              width = -1, height = -1;
+	GdkPixbuf        *pixbuf;
+	GtkWidget        *image;
+	gint              initialised = FALSE;
 
 	if (var != NULL && var->Attributes != NULL) {
 
@@ -1726,19 +1664,95 @@ void widget_menuitem_refresh(variable *var)
 		g_message("%s(): entering.", __func__);
 #endif
 
-		/* TODO temp temp */
-		/* TODO temp temp */
-		/* TODO temp temp */
+		/* Get initialised state of widget */
+		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
+		/* Image menuitems from file can be refreshed (GTK+ destroys the
+		 * original image when a new one is set) */
+		if (initialised && GTK_IS_IMAGE_MENU_ITEM(var->Widget)) {
+			if (var->widget_tag_attr &&
+				((icon_file_name = get_tag_attribute(var->widget_tag_attr, "image_file")) ||
+				(icon_file_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
+				if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+					width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
+				if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
+					height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
 
+				if (width == -1 && height == -1) {
+					/* Handle unscaled images */
+					image = gtk_image_new_from_file(find_pixmap(icon_file_name));
+				} else {
+					/* Handle scaled images */
+					pixbuf = gdk_pixbuf_new_from_file_at_size(
+						find_pixmap(icon_file_name), width, height, NULL);
+					if (pixbuf) {
+						image = gtk_image_new_from_pixbuf(pixbuf);
+						/* pixbuf is no longer required and should be unreferenced */
+						g_object_unref(pixbuf);
+					} else {
+						/* pixbuf is null (file not found) so by using this
+						* function gtk will substitute a broken image icon */
+						image = gtk_image_new_from_file("");
+					}
+				}
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(var->Widget), image);
+			}
+		}
 
+		/* Checkbox and radiobutton menuitems can be refreshed */
+		if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
+			/* The <input> tag... */
+			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+			while (act) {
+				/* input file stock = "File:", input file = "File:/path/to/file" */
+				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
+					fill_menuitem_by_file(var->Widget, act + 5);
+				if (input_is_shell_command(act))
+					fill_menuitem_by_command(var->Widget, act + 8);
+				act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+			}
+		}
 
+		/* Initialise these only once at start-up */
+		if (!initialised) {
+			/* Apply the visible directive if available */
+			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
+				gtk_widget_set_sensitive(var->Widget, FALSE);
+			/* The GTK "sensitive" property (if present) will be set later after
+			 * widget realization, but this doesn't have any effect until after
+			 * the menu has been opened by the user which results in accelerators
+			 * being live up until that point. I don't know why that is -- it 
+			 * looks as though GTK is initialising the menus on first opening as
+			 * they render much quicker on subsequent openings -- but it can be
+			 * dealt with by applying the property right here right now.
+			 * Note that I'm applying this after any visible directive which
+			 * would be the normal sequence of things.
+			 * 
+			 * [UPDATE] Menuitems are realized when the menu is opened which could
+			 * be a problem since then tag attributes that are GTK properties will
+			 * sit there waiting to be applied at some later time. Something is
+			 * going to have to be done about the on_any_widget_realized method
+			 * of setting tag attributes because it will be affecting other widgets
+			 * such as the notebook including all of the widgets within that!
+			 * When that's dealt with I can remove the following code temp temp */
+			if (var->widget_tag_attr &&
+				(value = get_tag_attribute(var->widget_tag_attr, "sensitive")) &&
+				((strcasecmp(value, "false") == 0) ||
+				(strcasecmp(value, "no") == 0) || (atoi(value) == 0))) {
+				gtk_widget_set_sensitive(var->Widget, FALSE);
+			}
 
-
-
-
-
-
+			/* Connect signals */
+			/* Only the checkbox and radiobutton emit the toggled signal */
+			if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
+				g_signal_connect(G_OBJECT(var->Widget), "toggled",
+					G_CALLBACK(on_any_widget_toggled_event), (gpointer)var->Attributes);
+			}
+			/* All menuitems emit the activate signal */
+			g_signal_connect(G_OBJECT(var->Widget), "activate",
+				G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
+		}
 	}
 }
 
@@ -1969,9 +1983,9 @@ fill_table_by_command(
 
 void fill_comboboxtext_by_command(GtkWidget *widget, char *command)
 {
-	FILE *infile;
-	char line[512];
-	int count;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 	g_assert(widget != NULL && command != NULL);
 
@@ -1983,6 +1997,8 @@ void fill_comboboxtext_by_command(GtkWidget *widget, char *command)
 	if (infile = widget_opencommand(command)) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
 		while (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
@@ -1997,8 +2013,9 @@ void fill_comboboxtext_by_command(GtkWidget *widget, char *command)
 
 void fill_scale_by_command(GtkWidget *widget, char *command)
 {
-	FILE *infile;
-	char line[512];
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 	g_assert(widget != NULL && command != NULL);
 
@@ -2009,8 +2026,50 @@ void fill_scale_by_command(GtkWidget *widget, char *command)
 	/* Opening pipe for reading... */
 	if (infile = widget_opencommand(command)) {
 		/* Just one line */
-		if ((fgets(line, 512, infile)))
+		if ((fgets(line, 512, infile))) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 			gtk_range_set_value(GTK_RANGE(widget), atof(line));
+		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		g_warning("%s(): command %s, %m\n", __func__, command);
+	}
+}
+
+void fill_menuitem_by_command(GtkWidget *widget, char *command)
+{
+	FILE             *infile;
+	gchar             line[512];
+	gint              count, is_active;
+
+	g_assert(widget != NULL && command != NULL);
+
+#ifdef DEBUG
+	g_message("%s(): command: '%s'", __func__, command);
+#endif
+
+	/* Opening pipe for reading... */
+	if (infile = widget_opencommand(command)) {
+		/* Just one line */
+		if ((fgets(line, 512, infile))) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			if ((strcasecmp(line, "true") == 0) ||
+				(strcasecmp(line, "yes") == 0) || (atoi(line) == 1)) {
+				is_active = 1;
+			} else {
+				is_active = 0;
+			}
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), is_active);
+		}
 		/* Close the file */
 		pclose(infile);
 	} else {

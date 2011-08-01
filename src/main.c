@@ -434,6 +434,8 @@ set_program_source(gchar *name)
 int 
 main(int argc, char *argv[])
 {
+	FUNCTION_SIGNALS_RESET;
+
 	setlocale(LC_ALL, "");
 	/*
 	 * 

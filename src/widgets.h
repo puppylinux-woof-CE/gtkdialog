@@ -69,6 +69,7 @@ char *widget_get_text_value(GtkWidget *widget, int type);
 
 static void fill_comboboxtext_by_file(GtkWidget *widget, char *filename);
 static void fill_scale_by_file(GtkWidget *widget, char *filename);
+static void fill_menuitem_by_file(GtkWidget *widget, char *filename);
 static void fill_entry_by_file(GtkWidget *entry, char *filename);
 static void fill_edit_by_file(GtkWidget *widget, char *filename);
 static void fill_label_by_file(GtkWidget *widget, char *filename);
@@ -93,6 +94,7 @@ static void save_edit_to_file(GtkWidget *widget, char *filename);
 void save_entry_to_file(variable *var);
 void save_comboboxtext_to_file(variable *var);
 void save_scale_to_file(variable *var);
+void save_menuitem_to_file(variable *var);
 
 FILE *widget_opencommand(const char *command);
 
@@ -100,6 +102,7 @@ void fill_checkbox_by_command(GtkWidget *checkbox, char *command);
 void fill_clist_by_command(GtkWidget *list, int columns, char *command);
 void fill_comboboxtext_by_command(GtkWidget *widget, char *command);
 void fill_scale_by_command(GtkWidget *widget, char *command);
+void fill_menuitem_by_command(GtkWidget *widget, char *command);
 void fill_entry_by_command(GtkWidget *entry, char *command);
 void fill_label_by_command(GtkWidget *label, char *command);
 void fill_list_by_command(GtkWidget *list, char *command);
