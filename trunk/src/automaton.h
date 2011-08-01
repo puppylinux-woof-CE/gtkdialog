@@ -149,6 +149,12 @@ typedef struct actioncommand {
 #endif
 
 
+/* Thunor: Used to block signal emissions from action functions */
+#define FUNCTION_SIGNALS_BLOCK (function_signals_block++)
+#define FUNCTION_SIGNALS_UNBLOCK (function_signals_block--)
+#define FUNCTION_SIGNALS_RESET (function_signals_block = FALSE)
+gint function_signals_block;
+
 /*************************************************************************
  * Public functions:                                                     *
  *                                                                       *

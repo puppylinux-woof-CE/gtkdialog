@@ -1,3 +1,24 @@
+* Mon Aug 1 2011 Thunor <thunorsif@hotmail.com>
+- The overhaul of the menu system is now complete. New checkbox,
+  radiobutton and image from file menuitem widgets added and refresh and
+  save action functions implemented.
+
+* Sun Jul 31 2011 Thunor <thunorsif@hotmail.com>
+- Discovered that the menuitems aren't realized until the menu is opened
+  which means that using gtk_widget_get_realized is pointless. I've now
+  replaced that within the refresh functions with an item of widget data
+  named "initialised" which marks the widgets at start-up. I believe
+  this is also going to be an issue with the notebook widget so the
+  on_any_widget_realized method of setting tag attributes is going to
+  require changing else properties won't be set until widgets get shown
+  and an action function could have changed them in that time.
+- Re-engineered the "block-function-signals" code so that I don't have
+  to micro-manage signal handler IDs. Instead I set a global flag which
+  blocks execute_action from executing any action functions. The check
+  for "block-function-signals" is now done not within specific widget
+  functions but at a higher level so theoretically all widgets now
+  support blocking signals from action functions.
+
 * Sat Jul 30 2011 Thunor <thunorsif@hotmail.com>
 - Reviewed the examples, fixed a few more, commented within 17 of them.
 

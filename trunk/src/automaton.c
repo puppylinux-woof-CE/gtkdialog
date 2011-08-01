@@ -540,75 +540,84 @@ execute_action(GtkWidget *widget,
 	gchar *command_string;
 	CommandType t;
 
-	if (type == NULL || g_utf8_strlen(type, -1) == 0) {
-		command_get_prefix(command, &command_prefix, &command_string);
-	} else {
-		command_prefix = g_strdup(type);
-		command_string = g_strdup(command);
+	/* Thunor: I've re-engineered my signal blocking mechanism.
+	 * There are a multitude of signal callbacks -- not just the
+	 * widget_signal_executor -- but they all end up here, so if the
+	 * global flag is true then the action functions simply don't
+	 * get executed */
+	if (!function_signals_block) {
+
+		if (type == NULL || g_utf8_strlen(type, -1) == 0) {
+			command_get_prefix(command, &command_prefix, &command_string);
+		} else {
+			command_prefix = g_strdup(type);
+			command_string = g_strdup(command);
+		}
+
+		PIP_DEBUG("command: '%s' type: '%s'.", command_string, command_prefix);
+
+		t = command_prefix_get_type(command_prefix);
+		switch (t) {
+			case CommandShellCommand:
+				action_shellcommand(widget, command_string);
+				break;
+
+			case CommandExit:
+				action_exitprogram(widget, command_string);
+				break;
+
+			case CommandCloseWindow:
+				action_closewindow(widget, command_string);
+				break;
+
+			case CommandLaunch:
+				action_launchwindow(widget, command_string);
+				break;
+
+			case CommandEnable:
+				action_enable(widget, command_string);
+				break;
+
+			case CommandDisable:
+				action_disable(widget, command_string);
+				break;
+
+			case CommandRefresh:
+				variables_export_all();
+				action_refreshwidget(widget, command_string);
+				break;
+
+			case CommandSave:
+				action_savewidget(widget, command_string);
+				break;
+
+			case CommandFileSelect:
+				action_fileselect(widget, command_string);
+				break;
+
+			case CommandClear:
+				action_clearwidget(widget, command_string);
+				break;
+
+			case CommandRemoveSelected:
+				action_removeselected(widget, command_string);
+				break;
+
+			case CommandInsert:
+				action_append(widget, command_string);
+				break;
+
+			case CommandAppend:
+				action_append(widget, command_string);
+				break;
+			default:
+				g_error("%s(): Unknown action type", __func__);
+		}
+			
+		g_free(command_prefix);
+		g_free(command_string);
 	}
 
-	PIP_DEBUG("command: '%s' type: '%s'.", command_string, command_prefix);
-
-	t = command_prefix_get_type(command_prefix);
-	switch (t) {
-		case CommandShellCommand:
-			action_shellcommand(widget, command_string);
-			break;
-
-		case CommandExit:
-			action_exitprogram(widget, command_string);
-			break;
-
-		case CommandCloseWindow:
-			action_closewindow(widget, command_string);
-			break;
-
-		case CommandLaunch:
-			action_launchwindow(widget, command_string);
-			break;
-
-		case CommandEnable:
-			action_enable(widget, command_string);
-			break;
-
-		case CommandDisable:
-			action_disable(widget, command_string);
-			break;
-
-		case CommandRefresh:
-			variables_export_all();
-			action_refreshwidget(widget, command_string);
-			break;
-
-		case CommandSave:
-			action_savewidget(widget, command_string);
-			break;
-
-		case CommandFileSelect:
-			action_fileselect(widget, command_string);
-			break;
-
-		case CommandClear:
-			action_clearwidget(widget, command_string);
-			break;
-
-		case CommandRemoveSelected:
-			action_removeselected(widget, command_string);
-			break;
-
-		case CommandInsert:
-			action_append(widget, command_string);
-			break;
-
-		case CommandAppend:
-			action_append(widget, command_string);
-			break;
-		default:
-			g_error("%s(): Unknown action type", __func__);
-	}
-		
-	g_free(command_prefix);
-	g_free(command_string);
 	return TRUE;
 }
 
@@ -1379,6 +1388,7 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 	gchar            *label, *stock_id, *value;
 	gint              width = -1, height = -1, is_active;
+//	gint              handler_id_toggled;	Redundant
 	#define           TYPE_MENUITEM 0
 	#define           TYPE_MENUITEM_IMAGE_STOCK 1
 	#define           TYPE_MENUITEM_IMAGE_ICON 2
@@ -1571,35 +1581,6 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 		gtk_accel_map_add_entry(accel_path, accel_key, accel_mods);
 		gtk_menu_item_set_accel_path(GTK_MENU_ITEM(menu_item), accel_path);
 	}
-
-	/* Apply the visible directive if available */
-	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
-		gtk_widget_set_sensitive(menu_item, FALSE);
-	/* The GTK "sensitive" property (if present) will be set later after
-	 * widget realization, but this doesn't have any effect until after
-	 * the menu has been opened by the user which results in accelerators
-	 * being live up until that point. I don't know why that is -- it 
-	 * looks as though GTK is initialising the menus on first opening as
-	 * they render much quicker on subsequent openings -- but it can be
-	 * dealt with by applying the property right here right now.
-	 * Note that I'm applying this after any visible directive which
-	 * would be the normal sequence of things */
-	if (attr &&
-		(value = get_tag_attribute(attr, "sensitive")) &&
-		((strcasecmp(value, "false") == 0) ||
-		(strcasecmp(value, "no") == 0) || (atoi(value) == 0))) {
-		gtk_widget_set_sensitive(menu_item, FALSE);
-	}
-
-	/* Connect signals */
-	/* Only the checkbox and radiobutton emit the toggled signal */
-	if (GTK_IS_CHECK_MENU_ITEM(menu_item)) {
-		g_signal_connect(G_OBJECT(menu_item), "toggled",
-			G_CALLBACK(on_any_widget_toggled_event), (gpointer)Attr);
-	}
-	/* All menuitems emit the activate signal */
-	g_signal_connect(G_OBJECT(menu_item), "activate",
-		G_CALLBACK(on_any_widget_activate_event), (gpointer)Attr);
 
 	return menu_item;
 }
