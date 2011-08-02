@@ -42,7 +42,7 @@ Some of these may have tag attribute equivalents.
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || input || Data input source || Shell command || || 0.7.21 ||
-|| input file || Data input source || Filename || || 0.7.21 ||
+|| input file^[3]^ || Data input source || Filename || || 0.7.21 ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || 0.7.21 ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
@@ -77,4 +77,6 @@ The following general functions can be performed by any widget capable of emitti
 1. SHIFT is 1, CTRL is 4 and ALT is 8 and you can OR them together.
 
 2. Theme images are hardcoded to 16x16 and do not scale.
+
+3. The input file directive is used exclusively by the checkbox and radiobutton menuitem widgets since the "image-file" custom tag attribute would contain any image filename.
 ----
