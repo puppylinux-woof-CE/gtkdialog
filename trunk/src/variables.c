@@ -22,6 +22,8 @@
 #include "variables.h"
 #include "gtkdialog.h"
 #include "widgets.h"
+#include "widget_comboboxtext.h"
+#include "widget_pixmap.h"
 
 extern gboolean option_no_warning;
 
@@ -242,7 +244,6 @@ variables_set_value(const char *name,
 		const char *value)
 {
 	variable         *toset;
-	gint              index;
 	gchar            *string;
 
 #ifdef DEBUG
@@ -267,21 +268,20 @@ variables_set_value(const char *name,
 	}
 
 	switch (toset->Type) {
+
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			widget_comboboxtext_fileselect(toset, name, value);
+			break;
+
+		case WIDGET_PIXMAP:
+			widget_pixmap_fileselect(toset, name, value);
+			break;
+
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toset->Widget), value);
 			break;
-		case WIDGET_COMBOBOXENTRY:
-		case WIDGET_COMBOBOXTEXT:
-			index = gtk_combo_box_get_active(GTK_COMBO_BOX(toset->Widget));
-#ifdef DEBUG
-			fprintf(stderr, "%s: index=%i name=%s value=%s\n", __func__,
-				index, name, value);
-#endif
-			if (index < 0) index = 0;
-			gtk_combo_box_insert_text(
-				GTK_COMBO_BOX(toset->Widget), index, value);
-			gtk_combo_box_set_active(GTK_COMBO_BOX(toset->Widget), index);
-			break;
+
 		default:
 			yywarning("Set-value not implemented for this widget.");
 	}
@@ -303,15 +303,21 @@ variables_save(const char *name)
 		return (NULL);
 
 	switch (var->Type) {
+
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			widget_comboboxtext_save_to_file(var);
+			break;
+
+		case WIDGET_PIXMAP:
+			widget_pixmap_save_to_file(var);
+			break;
+
 		case WIDGET_ENTRY:
 			save_entry_to_file(var);
 			break;
 		case WIDGET_EDIT:
 			widget_edit_save(var);
-			break;
-		case WIDGET_COMBOBOXENTRY:
-		case WIDGET_COMBOBOXTEXT:
-			save_comboboxtext_to_file(var);
 			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
@@ -352,6 +358,8 @@ variables_refresh(const char *name)
 	if (var == NULL || var->Widget == NULL)
 		return NULL;
 
+	g_assert(var->Attributes != NULL);
+
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
@@ -367,6 +375,16 @@ variables_refresh(const char *name)
 	}
 
 	switch (var->Type) {
+
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			widget_comboboxtext_refresh(var);
+			break;
+
+		case WIDGET_PIXMAP:
+			widget_pixmap_refresh(var);
+			break;
+
 		case WIDGET_ENTRY:
 			widget_entry_refresh(var);
 			break;
@@ -391,16 +409,9 @@ variables_refresh(const char *name)
 		case WIDGET_TREE:
 			widget_tree_refresh(var);
 			break;
-		case WIDGET_PIXMAP:
-			widget_pixmap_refresh(var);
-			break;
 		case WIDGET_BUTTON:
 			widget_button_refresh(var);
 			break; 
-		case WIDGET_COMBOBOXENTRY:
-		case WIDGET_COMBOBOXTEXT:
-			widget_comboboxtext_refresh(var);
-			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
 			widget_scale_refresh(var);
@@ -687,7 +698,7 @@ _variables_export(variable *actual)
 {
 	gchar            *value;
 	GList            *itemlist;
-	size_t            length;
+//	size_t            length;	Redundant
 	gint              n;
 	gint              column;
 	gchar            *tmp;
@@ -695,7 +706,6 @@ _variables_export(variable *actual)
 	GtkTreeIter       iter;
 	gchar            *text;
 	gchar            *line;
-	gint              index;
 
 #ifdef DEBUG
 	g_message("%s(%p)", __func__, actual);
@@ -793,39 +803,7 @@ _variables_export(variable *actual)
 
 			case WIDGET_COMBOBOXENTRY:
 			case WIDGET_COMBOBOXTEXT:
-				/* Thunor: I've noticed that the existing combobox widget isn't
-				 * completely dumped, but it's my new widget so I'll be thorough :) */
-				line = g_strdup_printf("%s_ALL=\"", actual->Name);
-				index = 0;
-				/* The comboboxtext functions also manage the comboboxentry:
-				 * export the entry if the active index is -1 and the entry
-				 * isn't empty */
-				if ((actual->Type == WIDGET_COMBOBOXENTRY) &&
-					(gtk_combo_box_get_active(GTK_COMBO_BOX(actual->Widget)) == -1) &&
-					(text = gtk_combo_box_get_active_text(GTK_COMBO_BOX(actual->Widget))) &&
-					(strcmp(text, ""))) {
-					tmp = g_strconcat(line, "'", text, "'", NULL);
-					g_free(line);
-					line = tmp;
-					index++;
-				}
-				model = gtk_combo_box_get_model(GTK_COMBO_BOX(actual->Widget));
-				if (gtk_tree_model_get_iter_first(model, &iter)) {
-					do {
-						gtk_tree_model_get(model, &iter, 0, &text, -1);
-						if (index) {
-							tmp = g_strconcat(line, " '", text, "'", NULL);
-						} else {
-							tmp = g_strconcat(line, "'", text, "'", NULL);
-							index++;
-						}
-						g_free(line);
-						line = tmp;
-						g_free(text);
-					} while (gtk_tree_model_iter_next(model, &iter));
-				}
-				tmp = g_strconcat(line, "\"\n", NULL);
-				g_free(line); line = NULL;
+				tmp = widget_comboboxtext_envvar_all_compose(actual);
 				putenv(tmp);
 				break;
 		}
@@ -864,7 +842,6 @@ print_variables(variable * actual)
 	GtkTreeIter       iter;
 	gchar            *text;
 	gchar            *line;
-	gint              index;
 
 	if (actual == NULL)
 		actual = root;
@@ -955,40 +932,8 @@ next_item:
 
 			case WIDGET_COMBOBOXENTRY:
 			case WIDGET_COMBOBOXTEXT:
-				/* Thunor: I've noticed that the existing combobox widget isn't
-				 * completely dumped, but it's my new widget so I'll be thorough :) */
-				line = g_strdup_printf("%s_ALL=\"", actual->Name);
-				index = 0;
-				/* The comboboxtext functions also manage the comboboxentry:
-				 * export the entry if the active index is -1 and the entry
-				 * isn't empty */
-				if ((actual->Type == WIDGET_COMBOBOXENTRY) &&
-					(gtk_combo_box_get_active(GTK_COMBO_BOX(actual->Widget)) == -1) &&
-					(text = gtk_combo_box_get_active_text(GTK_COMBO_BOX(actual->Widget))) &&
-					(strcmp(text, ""))) {
-					tmp = g_strconcat(line, "'", text, "'", NULL);
-					g_free(line);
-					line = tmp;
-					index++;
-				}
-				model = gtk_combo_box_get_model(GTK_COMBO_BOX(actual->Widget));
-				if (gtk_tree_model_get_iter_first(model, &iter)) {
-					do {
-						gtk_tree_model_get(model, &iter, 0, &text, -1);
-						if (index) {
-							tmp = g_strconcat(line, " '", text, "'", NULL);
-						} else {
-							tmp = g_strconcat(line, "'", text, "'", NULL);
-							index++;
-						}
-						g_free(line);
-						line = tmp;
-						g_free(text);
-					} while (gtk_tree_model_iter_next(model, &iter));
-				}
-				tmp = g_strconcat(line, "\"\n", NULL);
+				tmp = widget_comboboxtext_envvar_all_compose(actual);
 				g_printf("%s", tmp);
-				g_free(line);
 				g_free(tmp);
 				break;
 		}
@@ -1082,10 +1027,6 @@ variables_clear(const char *name)
 {
 	variable         *toclear;
 	GList            *empty = NULL;
-	GtkTreeModel     *model;
-	GtkTreeIter       iter;
-	gint              rowcount;
-	gchar             oldselected[512];
 	gchar            *string;
 
 #ifdef DEBUG
@@ -1108,6 +1049,16 @@ variables_clear(const char *name)
 	}
 
 	switch (toclear->Type) {
+
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			widget_comboboxtext_clear(toclear);
+			break;
+
+		case WIDGET_PIXMAP:
+			widget_pixmap_clear(toclear);
+			break;
+
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
 			break;
@@ -1135,58 +1086,6 @@ variables_clear(const char *name)
 					0
 					);
 			break;
-		case WIDGET_COMBOBOXENTRY:
-		case WIDGET_COMBOBOXTEXT:
-			/* We'll manage signals ourselves */
-			FUNCTION_SIGNALS_BLOCK;
-
-			/* Record the currently selected text if any */
-			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(toclear->Widget)))) {
-				strcpy(oldselected, string);
-			} else {
-				strcpy(oldselected, "");
-			}
-#ifdef DEBUG
-			fprintf(stderr, "%s: oldselected=\"%s\"\n", __func__, oldselected);
-#endif
-
-			model = gtk_combo_box_get_model(GTK_COMBO_BOX(toclear->Widget));
-			if (gtk_tree_model_get_iter_first(model, &iter)) {
-				/* Count the number of rows in the GtkComboBox */
-				rowcount = 1;
-				while (gtk_tree_model_iter_next(model, &iter)) rowcount++;
-#ifdef DEBUG
-				fprintf(stderr, "%s: rowcount=%i\n", __func__, rowcount);
-#endif
-				/* Delete the rows */
-				while (rowcount--)
-					gtk_combo_box_remove_text(
-						GTK_COMBO_BOX(toclear->Widget), rowcount);
-			}
-			/* The comboboxtext functions also manage the comboboxentry:
-			 * clear the entry */
-			if (toclear->Type == WIDGET_COMBOBOXENTRY) {
-#ifdef DEBUG
-				fprintf(stderr, "%s: clearing the entry\n", __func__);
-#endif
-				gtk_entry_set_text(
-					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(toclear->Widget))), "");
-			}
-
-			/* We'll manage signals ourselves */
-			FUNCTION_SIGNALS_UNBLOCK;
-
-			/* The widget will now be empty (entry included if applicable)
-			 * and its active index will be -1, so if the recorded text
-			 * isn't null then we'll emit a changed signal */
-			if (strcmp(oldselected, "")) {
-				g_signal_emit_by_name(GTK_OBJECT(toclear->Widget), "changed");
-#ifdef DEBUG
-				fprintf(stderr, "%s: emitting \"changed\" signal\n", __func__);
-#endif
-			}
-			break;
-
 		default:
 			yywarning("Clear not implemented for this widget.");
 	}
@@ -1205,14 +1104,11 @@ remove_selected_variable(const char *name)
 	GtkTreeSelection *selection;
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
-	GList            *empty = NULL;
+//	GList            *empty = NULL;	Redundant
 	variable         *toclear;
 	gint              selectionmode;
 	GList            *selectedrows, *row;
 	GList            *rowreferences = NULL;
-	gint              index;
-	gchar             oldselected[512];
-	gchar             newselected[512];
 	gchar            *string;
 
 	g_assert(name != NULL);
@@ -1241,6 +1137,16 @@ remove_selected_variable(const char *name)
 	 * Removing the selected item or text range from the widget.
 	 */
 	switch (toclear->Type) {
+
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			widget_comboboxtext_removeselected(toclear);
+			break;
+
+		case WIDGET_PIXMAP:
+			widget_pixmap_removeselected(toclear);
+			break;
+
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
 			break;
@@ -1313,57 +1219,6 @@ remove_selected_variable(const char *name)
 				 * Gtk-CRITICAL message appearing in the terminal */
 				if (gtk_tree_selection_get_selected(selection, &model, &iter))
 					gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
-			}
-			break;
-			
-		case WIDGET_COMBOBOXENTRY:
-		case WIDGET_COMBOBOXTEXT:
-			/* Thunor: We'll manage signals ourselves */
-			FUNCTION_SIGNALS_BLOCK;
-
-			/* Record the currently selected text if any */
-			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(toclear->Widget)))) {
-				strcpy(oldselected, string);
-			} else {
-				strcpy(oldselected, "");
-			}
-#ifdef DEBUG
-			fprintf(stderr, "%s: oldselected=\"%s\"\n", __func__, oldselected);
-#endif
-			/* Delete the selected item */
-			index = gtk_combo_box_get_active(GTK_COMBO_BOX(toclear->Widget));
-			if (index >= 0) {
-				gtk_combo_box_remove_text(GTK_COMBO_BOX(toclear->Widget), index);
-			}
-			/* The comboboxtext functions also manage the comboboxentry:
-			 * clear the entry */
-			if (toclear->Type == WIDGET_COMBOBOXENTRY) {
-				gtk_entry_set_text(
-					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(toclear->Widget))), "");
-			}
-			/* Auto-select the previous item rather than leaving it empty */
-			if (index > 0) index--; else index = 0;
-			gtk_combo_box_set_active(GTK_COMBO_BOX(toclear->Widget), index);
-
-			/* Thunor: We'll manage signals ourselves */
-			FUNCTION_SIGNALS_UNBLOCK;
-
-			/* Record the currently selected text if any */
-			if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(toclear->Widget)))) {
-				strcpy(newselected, string);
-			} else {
-				strcpy(newselected, "");
-			}
-#ifdef DEBUG
-			fprintf(stderr, "%s: newselected=\"%s\"\n", __func__, newselected);
-#endif
-			/* If the before and after selected items are different then
-			 * emit a changed signal */
-			if (strcmp(oldselected, newselected)) {
-#ifdef DEBUG
-				fprintf(stderr, "%s: emitting \"changed\" signal\n", __func__);
-#endif
-				g_signal_emit_by_name(GTK_OBJECT(toclear->Widget), "changed");
 			}
 			break;
 

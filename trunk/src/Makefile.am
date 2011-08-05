@@ -22,7 +22,9 @@ gtkdialog_SOURCES = \
 		    widgets.c widgets.h \
 		    actions.c actions.h \
 		    tag_attributes.h tag_attributes.c \
-		    glade_support.c glade_support.h
+		    glade_support.c glade_support.h \
+		    widget_pixmap.c widget_pixmap.h \
+		    widget_comboboxtext.c widget_comboboxtext.h
 
 AM_CFLAGS = $(GTK_CFLAGS) \
 	    $(GTHREAD_CFLAGS) \

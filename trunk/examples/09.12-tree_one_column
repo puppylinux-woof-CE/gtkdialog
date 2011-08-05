@@ -2,11 +2,9 @@
 
 GTKDIALOG=gtkdialog
 
-# Thunor: This example is broken.
-
 function list() {
-  ls -lha | grep ^d | awk '{print "stock_folder|" $9}'
-  ls -lha | grep ^- | awk '{print "file-executable|" $9}'
+  ls -lha | grep ^d | awk '{print "dir_o|" $8}'
+  ls -lha | grep ^- | awk '{print "gexec|" $8}'
 }; export -f list
 
 export MAIN_DIALOG='

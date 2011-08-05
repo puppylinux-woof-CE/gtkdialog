@@ -44,6 +44,8 @@
 #include "attributes.h"
 #include "tag_attributes.h"
 #include "widgets.h"
+#include "widget_comboboxtext.h"
+#include "widget_pixmap.h"
 
 #undef DEBUG
 #undef WARNING
@@ -1388,7 +1390,6 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 	gchar            *label, *stock_id, *value;
 	gint              width = -1, height = -1, is_active;
-//	gint              handler_id_toggled;	Redundant
 	#define           TYPE_MENUITEM 0
 	#define           TYPE_MENUITEM_IMAGE_STOCK 1
 	#define           TYPE_MENUITEM_IMAGE_ICON 2
@@ -2495,54 +2496,6 @@ create_edit(AttributeSet *Attr,
 }
 
 static GtkWidget *
-create_pixmap(AttributeSet * Attr)
-{
-	GdkPixbuf *pixbuf;
-	GtkWidget *Pixmap;
-	char *icon_file_name;
-	char *icon_stock_name;
-	int width = -1, height = -1;
-	
-	icon_file_name = attributeset_get_first(Attr, ATTR_INPUT) + 5;
-	icon_stock_name = attributeset_get_this_tagattr(Attr, 
-				ATTR_INPUT, 
-				"stock");
-	// GTK_STOCK_OPEN
-	if (icon_stock_name != NULL)
-		Pixmap = gtk_image_new_from_stock(icon_stock_name,
-					GTK_ICON_SIZE_DND);
-	else {
-		if (attributeset_is_avail(Attr, ATTR_WIDTH))
-			width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
-		if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-			height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
-
-		if (width == -1 && height == -1) {
-			/* Handle unscaled images */
-			Pixmap = gtk_image_new_from_file(find_pixmap(icon_file_name));
-		} else {
-			/* Handle scaled images */
-			pixbuf = gdk_pixbuf_new_from_file_at_size(
-				find_pixmap(icon_file_name), width, height, NULL);
-			if (pixbuf) {
-				Pixmap = gtk_image_new_from_pixbuf(pixbuf);
-				/* pixbuf is no longer required and should be unreferenced */
-				g_object_unref(pixbuf);
-			} else {
-				/* pixbuf is null (file not found) so by using this
-				 * function gtk will substitute a broken image icon */
-				Pixmap = gtk_image_new_from_file("");
-			}
-		}
-	}
-
-	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
-		gtk_widget_set_sensitive(Pixmap, FALSE);
-	
-	return Pixmap;
-}
-
-static GtkWidget *
 create_scale(AttributeSet * Attr, tag_attr *attr, gint horv)
 {
 	GtkWidget        *scale;
@@ -2595,12 +2548,20 @@ instruction_execute_push(
 	Widget_Type = Token & WIDGET_TYPE;
 
 	switch (Widget_Type) {
-	case WIDGET_LABEL:
-		Widget = create_label(Attr);
+
+	case WIDGET_COMBOBOXENTRY:
+	case WIDGET_COMBOBOXTEXT:
+		Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
 		push_widget(Widget, Widget_Type);
 		break;
+
 	case WIDGET_PIXMAP:
-		Widget = create_pixmap(Attr);
+		Widget = widget_pixmap_create(Attr, tag_attributes, Widget_Type);
+		push_widget(Widget, Widget_Type);
+		break;
+
+	case WIDGET_LABEL:
+		Widget = create_label(Attr);
 		push_widget(Widget, Widget_Type);
 		break;
 
@@ -3182,29 +3143,6 @@ instruction_execute_push(
 	case WIDGET_VSEPARATOR:
 		/* Thunor: I'm on a roll now... */
 		Widget = gtk_vseparator_new();
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_COMBOBOXTEXT:
-		/* Thunor: gtk_combo_box_new_text() is deprecated but
-		 * gtk_combo_box_text_new() and associated functions are
-		 * unavailable so I have to use the deprecated functions */
-		Widget = gtk_combo_box_new_text();
-		/* The directives are applied in the refresh function */
-		/* The signals are connected in the refresh function post
-		 * initialisation and pre-realization */
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_COMBOBOXENTRY:
-		/* Thunor: gtk_combo_box_entry_new_text() is deprectated too:
-		 * gtk_combo_box_new_with_entry() is unavailable,
-		 * gtk_combo_box_text_new_with_entry() is unavailable,
-		 * and my brain hurts badly when I read the API ;) */
-		Widget = gtk_combo_box_entry_new_text();
-		/* The directives are applied in the refresh function */
-		/* The signals are connected in the refresh function post
-		 * initialisation and pre-realization */
 		push_widget(Widget, Widget_Type);
 		break;
 

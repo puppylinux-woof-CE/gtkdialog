@@ -13,16 +13,16 @@ GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>
-  <tree stock="gtk-file">
+  <tree>
     <label>Permissions|Filename</label>
-    <input>./list.sh</input>
-    <height>100</height><width>400</width>
+    <input icon_column="0">./list.sh</input>
+    <height>150</height><width>500</width>
     <variable>TREE1</variable>
   </tree>
   <tree stock="gtk-file">
-    <label>Permissions|Filename</label>
-    <input icon_column="0">./list.sh</input>
-    <height>100</height><width>400</width>
+    <label>Icon Name|Permissions|Filename</label>
+    <input>./list.sh</input>
+    <height>150</height><width>500</width>
     <variable>TREE2</variable>
   </tree>
   <tree>
@@ -32,7 +32,7 @@ export MAIN_DIALOG='
     <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
     <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
     <item stock="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-    <height>100</height><width>400</width>
+    <height>150</height><width>500</width>
     <variable>TREE3</variable>
   </tree>
   <hbox>
