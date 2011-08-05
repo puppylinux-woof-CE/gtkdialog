@@ -1,3 +1,9 @@
+* Fri Aug 5 2011 Thunor <thunorsif@hotmail.com>
+- Updated the old TODO although I'm using the issue tracker myself.
+- Added widget_pixmap.c/h, the start of my refactoring intentions.
+- Fixed examples 09.00-tree, 09.12-tree_one_column including list.sh.
+- Added widget_comboboxtext.c/h.
+
 * Mon Aug 1 2011 Thunor <thunorsif@hotmail.com>
 - The overhaul of the menu system is now complete. New checkbox,
   radiobutton and image from file menuitem widgets added and refresh and

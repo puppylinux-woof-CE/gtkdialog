@@ -35,6 +35,8 @@
 #include <math.h>
 #include "widgets.h"
 #include "stringman.h"
+#include "widget_comboboxtext.h"
+#include "widget_pixmap.h"
 
 #undef DEBUG
 #undef WARNING
@@ -109,20 +111,6 @@ next_line:	text = attributeset_get_next(Attr, ATTR_ITEM);
 }
 
 static
-void fill_comboboxtext_by_items(AttributeSet *Attr,
-	GtkWidget *comboboxtext)
-{
-	gchar *text;
-
-	g_assert(Attr != NULL && comboboxtext != NULL);
-	text = attributeset_get_first(Attr, ATTR_ITEM);
-	while (text) {
-		gtk_combo_box_append_text(GTK_COMBO_BOX(comboboxtext), text);
-		text = attributeset_get_next(Attr, ATTR_ITEM);
-	}
-}
-
-static
 void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale)
 {
 #if GTK_CHECK_VERSION(2,16,0)
@@ -143,7 +131,7 @@ void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale)
 				text++;
 			}
 #ifdef DEBUG
-			printf("%s: value=%.16f position=%i markup=\"%s\"\n",
+			printf("%s: value=%.16f position=%i markup='%s'\n",
 				__func__, value, position, text);
 #endif
 			gtk_scale_add_mark(GTK_SCALE(scale), value, position, text);
@@ -167,7 +155,7 @@ widget_get_text_value(
 	GList            *item, *selectedrows, *row;
 	gchar            *string, *tmp, *line;
 	gchar             value[32];
-	gint              n, selectionmode, initialrow, column, digits, is_active;
+	gint              n, selectionmode, initialrow, column, digits;
 	gdouble           val;
 
 #ifdef DEBUG
@@ -179,6 +167,18 @@ widget_get_text_value(
 	}
 
 	switch (type) {
+
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			string = widget_comboboxtext_envvar_one_compose(widget);
+			return string;
+			break;
+		
+		case WIDGET_PIXMAP:
+			string = widget_pixmap_envvar_one_compose(widget);
+			return string;
+			break;
+
 #if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_CHOOSER:
 			return gtk_file_chooser_get_filename(
@@ -331,14 +331,6 @@ widget_get_text_value(
 			}
 			break;
 			
-		case WIDGET_COMBOBOXENTRY:
-		case WIDGET_COMBOBOXTEXT:
-			string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget));
-			if (string == NULL)
-				string = g_strdup("");
-			return string;
-			break;
-		
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
 			digits = gtk_scale_get_digits(GTK_SCALE(widget));
@@ -490,33 +482,6 @@ void fill_edit_by_file(GtkWidget * widget, char *filename)
 
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
 	gtk_text_buffer_set_text(buffer, filebuffer, st.st_size);
-}
-
-static
-void fill_comboboxtext_by_file(GtkWidget *widget, char *filename)
-{
-	FILE             *infile;
-	gchar             line[512];
-	gint              count;
-
-	if (infile = fopen(filename, "r")) {
-		/* Read the file one line at a time (trailing [CR]LFs are read too) */
-		while (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of more chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			gtk_combo_box_append_text(GTK_COMBO_BOX(widget), line);
-		}
-		/* Close the file */
-		fclose(infile);
-	} else {
-		if (!option_no_warning)
-			g_warning("%s(): Couldn't open '%s' for reading.", 
-				__func__, filename);
-	}
-
 }
 
 static
@@ -738,86 +703,6 @@ void save_edit_to_file(GtkWidget * widget, char *filename)
 	text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
 	result = write(outfile, text, strlen(text));
 	close(outfile);
-}
-
-void save_comboboxtext_to_file(variable *var)
-{
-	FILE             *outfile;
-	gchar            *act;
-	gchar            *filename = NULL;
-	GtkTreeModel     *model;
-	GtkTreeIter       iter;
-	gchar            *text;
-	gint              index;
-
-	/* Preferably we'll use the output file filename if available */
-	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
-	while (act) {
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			filename = act + 5;
-			break;
-		}
-		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
-	}
-
-#if 0
-	/* Thunor: I don't really like this behaviour so I'm disabling it */
-	if (filename == NULL) {
-		/* The output file filename isn't available but we can use
-		 * the input file filename instead if available (it's the
-		 * same method that the existing functions use) */
-		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
-		while (act) {
-			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-				filename = act + 5;
-				break;
-			}
-			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
-		}
-	}
-#endif
-
-#ifdef DEBUG
-	fprintf(stderr, "%s: filename=%s\n", __func__, filename);
-#endif
-
-	/* If we have a valid filename then open it and dump the
-	 * widget's data to it carefully not leaving a newline so
-	 * that it can be read back in again */
-	if (filename) {
-		if ((outfile = fopen(filename, "w"))) {
-			index = 0;
-			/* The comboboxtext functions also manage the comboboxentry:
-			 * save the entry if the active index is -1 and the entry
-			 * isn't empty */
-			if ((var->Type == WIDGET_COMBOBOXENTRY) &&
-				(gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget)) == -1) &&
-				(text = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget))) &&
-				(strcmp(text, ""))) {
-				fprintf(outfile, "%s", text);
-				index++;
-			}
-			model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
-			if (gtk_tree_model_get_iter_first(model, &iter)) {
-				do {
-					gtk_tree_model_get(model, &iter, 0, &text, -1);
-					if (index) {
-						fprintf(outfile, "\n%s", text);
-					} else {
-						fprintf(outfile, "%s", text);
-						index++;
-					}
-					g_free(text);
-				} while (gtk_tree_model_iter_next(model, &iter));
-			}
-			fclose(outfile);
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
-				__func__, filename);
-		}
-	} else {
-		yywarning("No output file directive found");
-	}
 }
 
 void save_scale_to_file(variable *var)
@@ -1389,215 +1274,6 @@ void widget_button_refresh(variable *var)
 	}
 }
 
-void widget_pixmap_refresh(variable *var)
-{
-	gchar            *act;
-	GdkPixbuf        *pixbuf;
-	gint              width = -1, height = -1;
-	gint              initialised = FALSE;
-
-	if (var != NULL && var->Attributes != NULL) {
-
-#ifdef DEBUG
-		g_message("%s(): entering.", __func__);
-#endif
-
-		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
-
-		if (initialised) {
-			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
-			while (act != NULL) {
-				/* input file stock = "File:", input file = "File:/path/to/file" */
-				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-					if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-						width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
-					if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-						height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
-
-					if (width == -1 && height == -1) {
-						/* Handle unscaled images */
-						gtk_image_set_from_file(GTK_IMAGE(var->Widget), find_pixmap(act + 5));
-					} else {
-						/* Handle scaled images */
-						pixbuf = gdk_pixbuf_new_from_file_at_size(
-							find_pixmap(act + 5), width, height, NULL);
-						if (pixbuf) {
-							gtk_image_set_from_pixbuf(GTK_IMAGE(var->Widget), pixbuf);
-							/* pixbuf is no longer required and should be unreferenced */
-							g_object_unref(pixbuf);
-						} else {
-							/* pixbuf is null (file not found) so by using this
-							 * function gtk will substitute a broken image icon */
-							gtk_image_set_from_file(GTK_IMAGE(var->Widget), "");
-						}
-					}
-				}
-				act = attributeset_get_next(var->Attributes, ATTR_INPUT);
-			}
-		}
-	}
-}
-
-void widget_comboboxtext_refresh(variable *var)
-{
-	char             *act;
-	GtkTreeModel     *model;
-	GtkTreeIter       iter;
-	gint              rowcount;
-	gchar             oldselected[512];
-	gchar             newselected[512];
-	gchar            *string;
-	gchar            *text;
-	gint              index;
-	gint              found;
-	gint              initialised = FALSE;
-
-	if (var != NULL && var->Attributes != NULL) {
-
-#ifdef DEBUG
-		g_message("%s(): entering.", __func__);
-#endif
-
-		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
-
-		/* We'll manage signals ourselves */
-		FUNCTION_SIGNALS_BLOCK;
-
-		/* Record the currently selected text if any */
-		if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
-			strcpy(oldselected, string);
-		} else {
-			strcpy(oldselected, "");
-		}
-#ifdef DEBUG
-		fprintf(stderr, "%s: oldselected=\"%s\"\n", __func__, oldselected);
-#endif
-
-		/* Clear the widget if it has been initialised */
-		if (initialised) {
-			model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
-			if (gtk_tree_model_get_iter_first(model, &iter)) {
-				/* Count the number of rows in the GtkComboBox */
-				rowcount = 1;
-				while (gtk_tree_model_iter_next(model, &iter)) rowcount++;
-#ifdef DEBUG
-				fprintf(stderr, "%s: rowcount=%i\n", __func__, rowcount);
-#endif
-				/* Delete the rows */
-				while (rowcount--)
-					gtk_combo_box_remove_text(
-						GTK_COMBO_BOX(var->Widget), rowcount);
-			}
-			/* The comboboxtext functions also manage the comboboxentry:
-			 * clear the entry */
-			if (var->Type == WIDGET_COMBOBOXENTRY) {
-				gtk_entry_set_text(
-					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(var->Widget))), "");
-			}
-		}
-
-		/* The <input> tag... */
-		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
-		while (act) {
-			/* input file stock = "File:", input file = "File:/path/to/file" */
-			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-				fill_comboboxtext_by_file(var->Widget, act + 5);
-			if (input_is_shell_command(act))
-				fill_comboboxtext_by_command(var->Widget, act + 8);
-			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
-		}
-
-		/* The <item> tags... */
-		if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-			fill_comboboxtext_by_items(var->Attributes, var->Widget);
-
-		/* Select a default item */
-		if (var->Type == WIDGET_COMBOBOXTEXT) {
-			gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), 0);
-		} else if (var->Type == WIDGET_COMBOBOXENTRY) {
-			/* The comboboxtext functions also manage the comboboxentry:
-			 * default to the entry */
-			gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), -1);
-		}
-
-		/* We'll manage signals ourselves */
-		FUNCTION_SIGNALS_UNBLOCK;
-
-		/* Record the currently selected text if any */
-		if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
-			strcpy(newselected, string);
-		} else {
-			strcpy(newselected, "");
-		}
-#ifdef DEBUG
-		fprintf(stderr, "%s: newselected=\"%s\"\n", __func__, newselected);
-#endif
-		/* If the before and after selected items are different then
-		 * emit a changed signal */
-		if (strcmp(oldselected, newselected)) {
-#ifdef DEBUG
-			fprintf(stderr, "%s: emitting \"changed\" signal\n", __func__);
-#endif
-			g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
-		}
-
-		/* Initialise these only once at start-up */
-		if (!initialised) {
-			/* Apply the default directive if available */
-			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
-				string = attributeset_get_first(var->Attributes, ATTR_DEFAULT);
-				model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
-				if (gtk_tree_model_get_iter_first(model, &iter)) {
-					index = 0;
-					found = FALSE;
-					do {
-						gtk_tree_model_get(model, &iter, 0, &text, -1);
-#ifdef DEBUG
-						fprintf(stderr, "%s: string=%s text=%s\n", __func__, string, text);
-#endif
-						if (strcmp(string, text) == 0) {
-							gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), index);
-							g_free(text);
-							found = TRUE;
-							break;
-						}
-						g_free(text);
-						index++;
-					} while (gtk_tree_model_iter_next(model, &iter));
-					/* The comboboxtext functions also manage the comboboxentry:
-					 * if default text not found then set it as default entry text */
-					if (var->Type == WIDGET_COMBOBOXENTRY) {
-						if (!found) {
-							gtk_entry_set_text(GTK_ENTRY(
-								gtk_bin_get_child(GTK_BIN(var->Widget))), string);
-						}
-					}
-				}
-			}
-			/* Apply the visible directive if available */
-			if (attributeset_cmp_left
-				(var->Attributes, ATTR_VISIBLE, "disabled"))
-				gtk_widget_set_sensitive(var->Widget, FALSE);
-
-			/* Connect signals */
-			g_signal_connect(G_OBJECT(var->Widget), "changed", 
-				G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
-			/* The comboboxtext functions also manage the comboboxentry:
-			 * connect to the activate signal emitted when Enter is pressed
-			 * within the entry (storing the handler id is not necessary) */
-			if (var->Type == WIDGET_COMBOBOXENTRY) {
-				g_signal_connect(G_OBJECT(gtk_bin_get_child(GTK_BIN(var->Widget))),
-					"activate", G_CALLBACK(on_any_widget_activate_event),
-					(gpointer)var->Attributes);
-			}
-		}
-	}
-}
-
 void widget_scale_refresh(variable *var)
 {
 	gchar            *act, *value;
@@ -1979,36 +1655,6 @@ fill_table_by_command(
 		gtk_clist_append((GtkCList *) list, c);
 	}
 	pclose(infile);
-}
-
-void fill_comboboxtext_by_command(GtkWidget *widget, char *command)
-{
-	FILE             *infile;
-	gchar             line[512];
-	gint              count;
-
-	g_assert(widget != NULL && command != NULL);
-
-#ifdef DEBUG
-	g_message("%s(): command: '%s'", __func__, command);
-#endif
-
-	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
-		/* Read the file one line at a time (trailing [CR]LFs are read too) */
-		while (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of more chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			gtk_combo_box_append_text(GTK_COMBO_BOX(widget), line);
-		}
-		/* Close the file */
-		pclose(infile);
-	} else {
-		g_warning("%s(): command %s, %m\n", __func__, command);
-	}
 }
 
 void fill_scale_by_command(GtkWidget *widget, char *command)

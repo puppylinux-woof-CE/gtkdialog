@@ -1,17 +1,22 @@
+Thunor: I've fixed these or found them to have already been fixed:
+------------------------------------------------------------------
 (1)  05.02-combo_input: the input is not working in comboboxes.
 (2)  There is no gtk_combo_box support, we have only gtk_combo.
 (3)  The edit is not producing value on the output.
 (4)  06.01-editor_attributes: The edit does not handle the <default> attribute.
+(7)  Segfault if no name given for the frame.
+(12) Segmentation fault when the table has no variable name.
+
+Thunor: These still remain:
+---------------------------
 (5)  06.01-editor_attributes: Custom type properties, such as 
       "wrap-mode"            GtkWrapMode           : Read / Write
      are not supported.
 (6)  10.01-vbox_and_hbox_attributes: we always packing with the defaults.
-(7)  Segfault if no name given for the frame.
 (8)  All the action handling functions (button_pressed) should get a type
      parameter showing what kind of command has to be executed.
 (9)  Opening multiple window with the same name leads to confusion.
 (10) The tree widget is virtually unhandled.
 (11) At the creation of the widgets the initialization should be sorted
      as the dependencies are dictating.
-(12) Segmentation fault when the table has no variable name.
 (13) Unpaired " is printed to the standard output, which is very problematic.
