@@ -3,6 +3,8 @@
   directives can be used to specify the "size" else it defaults to 32.
 - Tweaked the new widget template somewhat.
 - Renamed main.c to gtkdialog.c and main.h to gtkdialog.h.
+- Updated the button widget to support using the height or width
+  directives to override the default theme icon size of 20.
 
 * Fri Aug 5 2011 Thunor <thunorsif@hotmail.com>
 - Updated the old TODO although I'm using the issue tracker myself.
