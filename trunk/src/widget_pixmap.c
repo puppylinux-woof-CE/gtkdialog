@@ -51,7 +51,7 @@ void widget_pixmap_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Not implemented for this widget.\n", __func__);
+	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -100,7 +100,8 @@ GtkWidget *widget_pixmap_create(
 				Attr, ATTR_INPUT, "icon")) != NULL) {
 				icon_theme = gtk_icon_theme_get_default();
 				/* Use the height or width dimension to override the default size */
-				if (height > -1) size = height; if (width > -1) size = width;
+				if (height > -1) size = height;
+				else if (width > -1) size = width;
 				pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
 					size, 0, &error);
 				widget = gtk_image_new_from_pixbuf(pixbuf);
@@ -196,7 +197,7 @@ void widget_pixmap_fileselect(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Not implemented for this widget.\n", __func__);
+	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -240,6 +241,9 @@ void widget_pixmap_refresh(variable *var)
 	/* Initialise these only once at start-up */
 	if (!initialised) {
 		/* Apply directives */
+		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
+			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
+				__func__);
 		if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
@@ -286,7 +290,7 @@ void widget_pixmap_save(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Not implemented for this widget.\n", __func__);
+	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -306,7 +310,7 @@ static void widget_pixmap_input_by_command(variable *var, char *command)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Not implemented for this widget.\n", __func__);
+	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -367,7 +371,7 @@ static void widget_pixmap_input_by_items(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Not implemented for this widget.\n", __func__);
+	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

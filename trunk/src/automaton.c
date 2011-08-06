@@ -2320,17 +2320,23 @@ create_button(AttributeSet *Attr,
 	GtkWidget *Label = NULL;
 	GtkWidget *Box = NULL;
 	GdkPixbuf *pixbuf = NULL;
+	GtkIconTheme *icon_theme;
+	GError *error = NULL;
 	char *icon_stock_name = NULL;
 	char *icon_file_name = NULL;
-//	char *str;	Redundant: not used
-//	char *act;	Redundant: not used
 	int type;
 	int width = -1, height = -1;
 	gchar *value;
 	gint position = -1;
-	
+	gint size = 20;
+
 	PIP_DEBUG("");
 	
+	if (attributeset_is_avail(Attr, ATTR_WIDTH))
+		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
+	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
+		height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+
 	type = TYPE_NOTHING;
 	if (!attributeset_is_avail(Attr, ATTR_INPUT) &&
 		attributeset_is_avail(Attr, ATTR_LABEL))
@@ -2356,23 +2362,16 @@ create_button(AttributeSet *Attr,
 			char *icon_name = attributeset_get_this_tagattr(Attr, ATTR_INPUT, "icon");
 			
 			if (icon_name != NULL){
-				GtkIconTheme *icon_theme;
-				GdkPixbuf *pixbuf;
-				GError *error = NULL;
-				
 				icon_theme = gtk_icon_theme_get_default();
-				pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                   icon_name,
-                                   20,
-                                   0,
-                                   &error);
+				/* Use the height or width dimension to override the default size */
+				if (height > -1) size = height;
+				else if (width > -1) size = width;
+				pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name,
+					size, 0, &error);
 				Icon = gtk_image_new_from_pixbuf(pixbuf);	
+				/* pixbuf is no longer required and should be unreferenced */
+				g_object_unref(pixbuf);
 			}else{
-				if (attributeset_is_avail(Attr, ATTR_WIDTH))
-					width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
-				if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-					height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
-
 				if (width == -1 && height == -1) {
 					/* Handle unscaled images */
 					Icon = gtk_image_new_from_file(find_pixmap(icon_file_name));
