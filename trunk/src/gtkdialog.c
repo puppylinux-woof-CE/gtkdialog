@@ -1,5 +1,5 @@
 /*
- * main.c: Starting up the program.
+ * gtkdialog.c: Starting up the program.
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * 
@@ -41,7 +41,6 @@
 
 #include "config.h"
 #include "gtkdialog.h"
-#include "main.h"
 #include "variables.h"
 #include "automaton.h"
 #include "gtkdialog_parser.h"
@@ -434,7 +433,7 @@ set_program_source(gchar *name)
 int 
 main(int argc, char *argv[])
 {
-	FUNCTION_SIGNALS_RESET;
+	GTKD_FUNCTION_SIGNALS_RESET;
 
 	setlocale(LC_ALL, "");
 	/*

@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include "gtkdialog.h"
 
 #define MAXWIDGETS 256;
 

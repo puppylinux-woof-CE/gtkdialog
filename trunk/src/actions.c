@@ -29,10 +29,10 @@
 #include <regex.h>
 #endif
 
+#include "gtkdialog.h"
 #include "widgets.h"
 #include "actions.h"
 #include "attributes.h"
-#include "gtkdialog.h"
 #include "variables.h"
 
 extern gchar *option_include_file;

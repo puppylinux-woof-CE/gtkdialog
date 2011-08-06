@@ -19,8 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "variables.h"
 #include "gtkdialog.h"
+#include "variables.h"
 #include "widgets.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
@@ -264,7 +264,7 @@ variables_set_value(const char *name,
 		(string = get_tag_attribute(toset->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
-		FUNCTION_SIGNALS_BLOCK;
+		GTKD_FUNCTION_SIGNALS_BLOCK;
 	}
 
 	switch (toset->Type) {
@@ -286,7 +286,7 @@ variables_set_value(const char *name,
 			yywarning("Set-value not implemented for this widget.");
 	}
 
-	FUNCTION_SIGNALS_RESET;
+	GTKD_FUNCTION_SIGNALS_RESET;
 
 	return (toset);
 }
@@ -306,11 +306,11 @@ variables_save(const char *name)
 
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
-			widget_comboboxtext_save_to_file(var);
+			widget_comboboxtext_save(var);
 			break;
 
 		case WIDGET_PIXMAP:
-			widget_pixmap_save_to_file(var);
+			widget_pixmap_save(var);
 			break;
 
 		case WIDGET_ENTRY:
@@ -371,7 +371,7 @@ variables_refresh(const char *name)
 		(string = get_tag_attribute(var->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
-		FUNCTION_SIGNALS_BLOCK;
+		GTKD_FUNCTION_SIGNALS_BLOCK;
 	}
 
 	switch (var->Type) {
@@ -432,7 +432,7 @@ variables_refresh(const char *name)
 		g_object_set_data(G_OBJECT(var->Widget), "initialised", (gpointer)1);
 	}
 
-	FUNCTION_SIGNALS_RESET;
+	GTKD_FUNCTION_SIGNALS_RESET;
 
 #ifdef DEBUG
 	g_message("%s(): end", __func__);
@@ -803,7 +803,7 @@ _variables_export(variable *actual)
 
 			case WIDGET_COMBOBOXENTRY:
 			case WIDGET_COMBOBOXTEXT:
-				tmp = widget_comboboxtext_envvar_all_compose(actual);
+				tmp = widget_comboboxtext_envvar_all_construct(actual);
 				putenv(tmp);
 				break;
 		}
@@ -932,7 +932,7 @@ next_item:
 
 			case WIDGET_COMBOBOXENTRY:
 			case WIDGET_COMBOBOXTEXT:
-				tmp = widget_comboboxtext_envvar_all_compose(actual);
+				tmp = widget_comboboxtext_envvar_all_construct(actual);
 				g_printf("%s", tmp);
 				g_free(tmp);
 				break;
@@ -1045,7 +1045,7 @@ variables_clear(const char *name)
 		(string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
-		FUNCTION_SIGNALS_BLOCK;
+		GTKD_FUNCTION_SIGNALS_BLOCK;
 	}
 
 	switch (toclear->Type) {
@@ -1090,7 +1090,7 @@ variables_clear(const char *name)
 			yywarning("Clear not implemented for this widget.");
 	}
 
-	FUNCTION_SIGNALS_RESET;
+	GTKD_FUNCTION_SIGNALS_RESET;
 
 	return (toclear);
 }
@@ -1130,7 +1130,7 @@ remove_selected_variable(const char *name)
 		(string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
-		FUNCTION_SIGNALS_BLOCK;
+		GTKD_FUNCTION_SIGNALS_BLOCK;
 	}
 
 	/*
@@ -1226,7 +1226,7 @@ remove_selected_variable(const char *name)
 			yywarning("Delete not implemented for this widget.");
 	}
 
-	FUNCTION_SIGNALS_RESET;
+	GTKD_FUNCTION_SIGNALS_RESET;
 
 	return 0;
 }

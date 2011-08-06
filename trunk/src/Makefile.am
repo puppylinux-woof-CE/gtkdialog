@@ -9,8 +9,7 @@ BUILT_SOURCES = \
 
 bin_PROGRAMS = gtkdialog 
 gtkdialog_SOURCES = \
-		    gtkdialog.h \
-		    main.c main.h \
+		    gtkdialog.c gtkdialog.h \
 		    macros.h \
 		    printing.h printing.c \
 		    variables.h variables.c \

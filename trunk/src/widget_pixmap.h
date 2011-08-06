@@ -26,12 +26,12 @@
 void widget_pixmap_clear(variable *var);
 GtkWidget *widget_pixmap_create(
 	AttributeSet *Attr, tag_attr *tag_attributes, gint Type);
-gchar *widget_pixmap_envvar_all_compose(variable *var);
-gchar *widget_pixmap_envvar_one_compose(GtkWidget *widget);
+gchar *widget_pixmap_envvar_all_construct(variable *var);
+gchar *widget_pixmap_envvar_construct(GtkWidget *widget);
 void widget_pixmap_fileselect(
 	variable *var, const char *name, const char *value);
 void widget_pixmap_refresh(variable *var);
 void widget_pixmap_removeselected(variable *var);
-void widget_pixmap_save_to_file(variable *var);
+void widget_pixmap_save(variable *var);
 
 #endif

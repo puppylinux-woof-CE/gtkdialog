@@ -26,12 +26,12 @@
 void widget_comboboxtext_clear(variable *var);
 GtkWidget *widget_comboboxtext_create(
 	AttributeSet *Attr, tag_attr *tag_attributes, gint Type);
-gchar *widget_comboboxtext_envvar_all_compose(variable *var);
-gchar *widget_comboboxtext_envvar_one_compose(GtkWidget *widget);
+gchar *widget_comboboxtext_envvar_all_construct(variable *var);
+gchar *widget_comboboxtext_envvar_construct(GtkWidget *widget);
 void widget_comboboxtext_fileselect(
 	variable *var, const char *name, const char *value);
 void widget_comboboxtext_refresh(variable *var);
 void widget_comboboxtext_removeselected(variable *var);
-void widget_comboboxtext_save_to_file(variable *var);
+void widget_comboboxtext_save(variable *var);
 
 #endif

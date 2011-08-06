@@ -27,11 +27,11 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
+#include "gtkdialog.h"
 #include "stack.h"
 #include "attributes.h"
 #include "stringman.h"
 #include "automaton.h"
-#include "main.h"
 
 extern char *program_name;
 extern char *includefile;

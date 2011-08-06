@@ -21,8 +21,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gtk/gtk.h>
-#include "stack.h"
 #include "gtkdialog.h"
+#include "stack.h"
 
 #ifndef STACKSIZE
 #define STACKSIZE 2048 

@@ -3399,7 +3399,7 @@ static int yy_init_globals (void)
     (yy_full_match) = 0;
     (yy_lp) = 0;
 
-/* Defined in main.c */
+/* Defined in gtkdialog.c */
 #ifdef YY_STDINIT
     gtkdialog_in = stdin;
     gtkdialog_out = stdout;

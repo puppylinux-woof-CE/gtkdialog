@@ -31,7 +31,6 @@
 #include "stack.h"
 #include "attributes.h"
 #include "stringman.h"
-#include "main.h"
 
 
 typedef int token;
@@ -148,12 +147,6 @@ typedef struct actioncommand {
 #define SUB_ATTR_LAUNCH       0x0D000000
 #endif
 
-
-/* Thunor: Used to block signal emissions from action functions */
-#define FUNCTION_SIGNALS_BLOCK (function_signals_block++)
-#define FUNCTION_SIGNALS_UNBLOCK (function_signals_block--)
-#define FUNCTION_SIGNALS_RESET (function_signals_block = FALSE)
-gint function_signals_block;
 
 /*************************************************************************
  * Public functions:                                                     *

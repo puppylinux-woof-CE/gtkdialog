@@ -23,6 +23,7 @@
 #endif
 
 #include <string.h>
+#include "gtkdialog.h"
 #include "tag_attributes.h"
 #include "attributes.h"
 
