@@ -25,6 +25,8 @@
 #  include <config.h>
 #endif
 
+#include "gtkdialog.h"
+
 /*************************************************************************
  * Structures, unions, types:                                            *
  *                                                                       *

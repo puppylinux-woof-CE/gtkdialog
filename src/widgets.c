@@ -33,6 +33,7 @@
 
 #include <gtk/gtk.h>
 #include <math.h>
+#include "gtkdialog.h"
 #include "widgets.h"
 #include "stringman.h"
 #include "widget_comboboxtext.h"
@@ -170,12 +171,12 @@ widget_get_text_value(
 
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
-			string = widget_comboboxtext_envvar_one_compose(widget);
+			string = widget_comboboxtext_envvar_construct(widget);
 			return string;
 			break;
 		
 		case WIDGET_PIXMAP:
-			string = widget_pixmap_envvar_one_compose(widget);
+			string = widget_pixmap_envvar_construct(widget);
 			return string;
 			break;
 

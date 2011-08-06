@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include "gtkdialog.h"
 #include "stack.h"
 #include "attributes.h"
 #include "stringman.h"
