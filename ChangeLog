@@ -1,5 +1,8 @@
 * Sun Aug 7 2011 Thunor <thunorsif@hotmail.com>
 - Fixed a bug I added to the pixmap widget that caused a segfault.
+- Updated the menuitem widget to support custom tag attributes of
+  "stock[-id]", "icon[-name]" and "image-name" plus underscores. This
+  is consistent with the extended names accepted by the tree widget.
 
 * Sat Aug 6 2011 Thunor <thunorsif@hotmail.com>
 - Added theme icon support to the pixmap widget: the height or width

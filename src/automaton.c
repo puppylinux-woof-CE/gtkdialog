@@ -1380,7 +1380,7 @@ static
 GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 {
 	GtkWidget        *menu_item;
-	gchar            *icon_name, *icon_file_name;
+	gchar            *icon_name, *image_name;
 	GtkIconTheme     *icon_theme;
 	GError           *error = NULL;
 	GdkPixbuf        *pixbuf;
@@ -1447,8 +1447,15 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	fprintf(stderr, "%s: accel-mods=%u\n", __func__, accel_mods);
 #endif
 
-	/* We need to decode exactly what it is the user is
-	 * trying to create and then make the right widget */
+	/* We need to decode exactly what it is the user is trying to create
+	 * and then make the right widget.
+	 * 
+	 * Originally as I couldn't use "stock", "icon" and "image" (image
+	 * is a GTK+ property) I decided to make the meaningful names of
+	 * "image-stock", "image-icon" and "image-file", but then I found that
+	 * "stock[_id]" and "icon[_name]" were already being used within the
+	 * tree widget (I missed that) so I'll document the latter but accept
+	 * everything below (I'll have to now as they're likely being used) */
 	if (attr &&
 		(stock_id = get_tag_attribute(attr, "label")) &&
 		((value = get_tag_attribute(attr, "use-stock")) &&
@@ -1456,18 +1463,24 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 		(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)))) {
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
-		((stock_id = get_tag_attribute(attr, "image_stock")) ||
-		(stock_id = get_tag_attribute(attr, "image-stock")) ||
-		(stock_id = get_tag_attribute(attr, "stock")))) {	/* Deprecated */
+		((stock_id = get_tag_attribute(attr, "stock")) ||
+		(stock_id = get_tag_attribute(attr, "stock_id")) ||
+		(stock_id = get_tag_attribute(attr, "stock-id")) ||
+		(stock_id = get_tag_attribute(attr, "image_stock")) ||
+		(stock_id = get_tag_attribute(attr, "image-stock")))) {
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
-		((icon_name = get_tag_attribute(attr, "image_icon")) ||
-		(icon_name = get_tag_attribute(attr, "image-icon")) ||
-		(icon_name = get_tag_attribute(attr, "icon")))) {	/* Deprecated */
+		((icon_name = get_tag_attribute(attr, "icon")) ||
+		(icon_name = get_tag_attribute(attr, "icon_name")) ||
+		(icon_name = get_tag_attribute(attr, "icon-name")) ||
+		(icon_name = get_tag_attribute(attr, "image_icon")) ||
+		(icon_name = get_tag_attribute(attr, "image-icon")))) {
 		menuitemtype = TYPE_MENUITEM_IMAGE_ICON;
 	} else if (attr &&
-		((icon_file_name = get_tag_attribute(attr, "image_file")) ||
-		(icon_file_name = get_tag_attribute(attr, "image-file")))) {
+		((image_name = get_tag_attribute(attr, "image_name")) ||
+		(image_name = get_tag_attribute(attr, "image-name")) ||
+		(image_name = get_tag_attribute(attr, "image_file")) ||
+		(image_name = get_tag_attribute(attr, "image-file")))) {
 		menuitemtype = TYPE_MENUITEM_IMAGE_FILE;
 	} else if (attr &&
 		(value = get_tag_attribute(attr, "checkbox"))) {
@@ -1518,11 +1531,11 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 		case TYPE_MENUITEM_IMAGE_FILE:
 			if (width == -1 && height == -1) {
 				/* Handle unscaled images */
-				image = gtk_image_new_from_file(find_pixmap(icon_file_name));
+				image = gtk_image_new_from_file(find_pixmap(image_name));
 			} else {
 				/* Handle scaled images */
 				pixbuf = gdk_pixbuf_new_from_file_at_size(
-					find_pixmap(icon_file_name), width, height, NULL);
+					find_pixmap(image_name), width, height, NULL);
 				if (pixbuf) {
 					image = gtk_image_new_from_pixbuf(pixbuf);
 					/* pixbuf is no longer required and should be unreferenced */

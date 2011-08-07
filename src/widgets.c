@@ -1329,7 +1329,7 @@ void widget_scale_refresh(variable *var)
 
 void widget_menuitem_refresh(variable *var)
 {
-	gchar            *act, *value, *icon_file_name;
+	gchar            *act, *value, *image_name;
 	gint              width = -1, height = -1;
 	GdkPixbuf        *pixbuf;
 	GtkWidget        *image;
@@ -1349,8 +1349,10 @@ void widget_menuitem_refresh(variable *var)
 		 * original image when a new one is set) */
 		if (initialised && GTK_IS_IMAGE_MENU_ITEM(var->Widget)) {
 			if (var->widget_tag_attr &&
-				((icon_file_name = get_tag_attribute(var->widget_tag_attr, "image_file")) ||
-				(icon_file_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
+				((image_name = get_tag_attribute(var->widget_tag_attr, "image_name")) ||
+				(image_name = get_tag_attribute(var->widget_tag_attr, "image-name")) ||
+				(image_name = get_tag_attribute(var->widget_tag_attr, "image_file")) ||
+				(image_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
 				if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 					width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
 				if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
@@ -1358,11 +1360,11 @@ void widget_menuitem_refresh(variable *var)
 
 				if (width == -1 && height == -1) {
 					/* Handle unscaled images */
-					image = gtk_image_new_from_file(find_pixmap(icon_file_name));
+					image = gtk_image_new_from_file(find_pixmap(image_name));
 				} else {
 					/* Handle scaled images */
 					pixbuf = gdk_pixbuf_new_from_file_at_size(
-						find_pixmap(icon_file_name), width, height, NULL);
+						find_pixmap(image_name), width, height, NULL);
 					if (pixbuf) {
 						image = gtk_image_new_from_pixbuf(pixbuf);
 						/* pixbuf is no longer required and should be unreferenced */
