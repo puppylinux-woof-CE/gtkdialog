@@ -29,6 +29,8 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 
 == Signals ==
+There is no default signal for this widget.
+
 See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.signals GtkWindow] widget and ancestor class signals.
 
 == Functions ==
