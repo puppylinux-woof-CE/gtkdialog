@@ -29,9 +29,9 @@ The following custom tag attributes are available:
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || accel-key || Accelerator key || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h (full list)] || 0.7.21 ||
 || accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h (full list)] || 0.7.21 ||
-|| image-icon^[2]^ || GTK theme image name ||  || 0.7.21 ||
-|| image-stock || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || 0.7.21 ||
-|| image-file || Image filename ||  || 0.7.21 ||
+|| icon-name^[2]^ || GTK theme icon name ||  || 0.7.21 ||
+|| stock-id || GTK stock id || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || 0.7.21 ||
+|| image-name || Image filename ||  || 0.7.21 ||
 || checkbox || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
 || radiobutton || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
 
@@ -76,7 +76,7 @@ The following general functions can be performed by any widget capable of emitti
 == Notes ==
 1. SHIFT is 1, CTRL is 4 and ALT is 8 and you can OR them together.
 
-2. Theme images are hardcoded to 16x16 and do not scale.
+2. Theme icons are hardcoded to 16x16 and do not scale.
 
-3. The input file directive is used exclusively by the checkbox and radiobutton menuitem widgets since the "image-file" custom tag attribute would contain any image filename.
+3. The input file directive is used exclusively by the checkbox and radiobutton menuitem widgets since the "image-name" custom tag attribute would contain any image filename.
 ----
