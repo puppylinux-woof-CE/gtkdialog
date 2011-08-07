@@ -30,8 +30,8 @@ Some of these may have tag attribute equivalents.
 || variable || Shell variable name || || || ||
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
-|| input file icon="_image_"^[1]^ || GTK theme image name  || || (0) || 0.7.21 ||
-|| input file stock="_gtk-image_"^[2]^ || Stock GTK image name || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || (0) || ||
+|| input file icon="_image_"^[1]^ || GTK theme icon name  || || (0) || 0.7.21 ||
+|| input file stock="_gtk-image_"^[2]^ || GTK stock icon id || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || (0) || ||
 || input file || Data input source || Image filename || (0) || ||
 || visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
 
@@ -48,8 +48,8 @@ The following functions can be performed upon this widget by any widget capable 
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
 
 == Notes ==
-1. Theme images default to 32 and do not scale or refresh (the height or width directives can be used to request a size).
+1. Theme icons default to 32 and do not scale or refresh (the height or width directives can be used to request a size).
 
-2. Stock images default to GTK_ICON_SIZE_DND and do not scale or refresh (the GTK+ "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" property can be used to adjust the size).
+2. Stock icons default to GTK_ICON_SIZE_DND and do not scale or refresh (the GTK+ "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" property can be used to adjust the size).
 
 ----
