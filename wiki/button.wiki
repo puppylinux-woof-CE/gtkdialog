@@ -70,5 +70,5 @@ The following general functions can be performed by any widget capable of emitti
 
 2. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
 
-3. Stock icons are hardcoded to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the GTK+ "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" property can be used to adjust the size).
+3. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the GTK+ "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" property can be used to adjust the size).
 ----
