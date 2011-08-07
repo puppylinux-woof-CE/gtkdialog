@@ -1,3 +1,6 @@
+* Sun Aug 7 2011 Thunor <thunorsif@hotmail.com>
+- Fixed a bug I added to the pixmap widget that caused a segfault.
+
 * Sat Aug 6 2011 Thunor <thunorsif@hotmail.com>
 - Added theme icon support to the pixmap widget: the height or width
   directives can be used to specify the "size" else it defaults to 32.
