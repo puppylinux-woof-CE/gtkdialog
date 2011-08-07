@@ -110,7 +110,7 @@ GtkWidget *widget_pixmap_create(
 				break;	/* Only one image is required */
 			}
 			if (strlen(act) > 5) {
-				strcpy(file_name, act + 5);
+				file_name = act + 5;
 				if (width == -1 && height == -1) {
 					/* Handle unscaled images */
 					widget = gtk_image_new_from_file(find_pixmap(file_name));
