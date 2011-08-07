@@ -3,6 +3,8 @@
 - Updated the menuitem widget to support custom tag attributes of
   "stock[-id]", "icon[-name]" and "image-name" plus underscores. This
   is consistent with the extended names accepted by the tree widget.
+- Updated the menuitem widget to support using the height or width
+  directives to override the default theme icon size of 16.
 
 * Sat Aug 6 2011 Thunor <thunorsif@hotmail.com>
 - Added theme icon support to the pixmap widget: the height or width

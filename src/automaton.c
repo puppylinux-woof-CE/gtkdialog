@@ -1390,6 +1390,7 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 	gchar            *label, *stock_id, *value;
 	gint              width = -1, height = -1, is_active;
+	gint              size = 16;
 	#define           TYPE_MENUITEM 0
 	#define           TYPE_MENUITEM_IMAGE_STOCK 1
 	#define           TYPE_MENUITEM_IMAGE_ICON 2
@@ -1522,8 +1523,14 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 			break;
 		case TYPE_MENUITEM_IMAGE_ICON:
 			icon_theme = gtk_icon_theme_get_default();
-			pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name, 16, 0, &error);
+			/* Use the height or width dimension to override the default size */
+			if (height > -1) size = height;
+			else if (width > -1) size = width;
+			pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
+				size, 0, &error);
 			image = gtk_image_new_from_pixbuf(pixbuf);
+			/* pixbuf is no longer required and should be unreferenced */
+			g_object_unref(pixbuf);
 			/* Create the GtkImageMenuItem using an image from the theme */
 			menu_item = gtk_image_menu_item_new_with_label(label);
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);
