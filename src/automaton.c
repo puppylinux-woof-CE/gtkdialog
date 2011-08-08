@@ -46,6 +46,7 @@
 #include "widgets.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
+#include "widget_spinbutton.h"
 
 #undef DEBUG
 #undef WARNING
@@ -911,6 +912,9 @@ void print_command(instruction command)
 	case WIDGET_VSCALE:
 	    printf("(new vscale())");
 	    break;
+	case WIDGET_SPINBUTTON:
+	    printf("(new spinbutton())");
+	    break;
 	default:
 	    printf("(Unknown Widget: %d)", Widget_Type);
 	}
@@ -1152,6 +1156,9 @@ void print_token(token Token)
 		break;
 	case WIDGET_VSCALE:
 		printf("(VSCALE)");
+		break;
+	case WIDGET_SPINBUTTON:
+		printf("(SPINBUTTON)");
 		break;
 	default:
 		printf("Unknown Widget (%d)", Widget_Type);
@@ -1467,21 +1474,21 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 		((stock_id = get_tag_attribute(attr, "stock")) ||
 		(stock_id = get_tag_attribute(attr, "stock_id")) ||
 		(stock_id = get_tag_attribute(attr, "stock-id")) ||
-		(stock_id = get_tag_attribute(attr, "image_stock")) ||
-		(stock_id = get_tag_attribute(attr, "image-stock")))) {
+		(stock_id = get_tag_attribute(attr, "image_stock")) ||	/* I don't want to keep this temp temp */
+		(stock_id = get_tag_attribute(attr, "image-stock")))) {	/* I don't want to keep this temp temp */
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
 		((icon_name = get_tag_attribute(attr, "icon")) ||
 		(icon_name = get_tag_attribute(attr, "icon_name")) ||
 		(icon_name = get_tag_attribute(attr, "icon-name")) ||
-		(icon_name = get_tag_attribute(attr, "image_icon")) ||
-		(icon_name = get_tag_attribute(attr, "image-icon")))) {
+		(icon_name = get_tag_attribute(attr, "image_icon")) ||	/* I don't want to keep this temp temp */
+		(icon_name = get_tag_attribute(attr, "image-icon")))) {	/* I don't want to keep this temp temp */
 		menuitemtype = TYPE_MENUITEM_IMAGE_ICON;
 	} else if (attr &&
 		((image_name = get_tag_attribute(attr, "image_name")) ||
 		(image_name = get_tag_attribute(attr, "image-name")) ||
-		(image_name = get_tag_attribute(attr, "image_file")) ||
-		(image_name = get_tag_attribute(attr, "image-file")))) {
+		(image_name = get_tag_attribute(attr, "image_file")) ||	/* I don't want to keep this temp temp */
+		(image_name = get_tag_attribute(attr, "image-file")))) {	/* I don't want to keep this temp temp */
 		menuitemtype = TYPE_MENUITEM_IMAGE_FILE;
 	} else if (attr &&
 		(value = get_tag_attribute(attr, "checkbox"))) {
@@ -2261,9 +2268,12 @@ create_window(
 	/* Thunor: Default the border_width to 5 and override it with the
 	 * "margin" custom tag attribute if present (using the border_width
 	 * property as a tag attribute always seems to result in about 50px so 
-	 * it doesn't work if you leave it up to GTK to set after realization) */
+	 * it doesn't work if you leave it up to GTK to set after realization)
+	 * 
+	 * [UPDATE] That was because try_set_property's guint conversion was
+	 * bugged and now that I've fixed it, border_width works as expected */
 	border_width = 5;
-	if (attr && (value = get_tag_attribute(attr, "margin")))
+	if (attr && (value = get_tag_attribute(attr, "margin")))	/* Deprecated */
 		border_width = atoi(value);
 
 	gtk_container_set_border_width(GTK_CONTAINER(window), border_width);
@@ -2518,33 +2528,45 @@ static GtkWidget *
 create_scale(AttributeSet * Attr, tag_attr *attr, gint horv)
 {
 	GtkWidget        *scale;
-	gdouble           scale_min = 0;
-	gdouble           scale_max = 100;
-	gdouble           scale_step = 1;
-	gdouble           scale_value = 0;
+	gdouble           range_min = 0;
+	gdouble           range_max = 100;
+	gdouble           range_step = 1;
+	gdouble           range_value = 0;
 	gchar            *value;
 
+	/* Thunor: These "range-*" names are consistent with the spinbutton widget */
 	if (attr) {
-		if (!(value = get_tag_attribute(attr, "scale_min")))
+		if (!(value = get_tag_attribute(attr, "range_min")) &&
+			!(value = get_tag_attribute(attr, "range-min")) &&
+			!(value = get_tag_attribute(attr, "scale_min")))
 			value = get_tag_attribute(attr, "scale-min");
-		if (value) scale_min = atof(value);
-		if (!(value = get_tag_attribute(attr, "scale_max")))
+		if (value) range_min = atof(value);
+
+		if (!(value = get_tag_attribute(attr, "range_max")) &&
+			!(value = get_tag_attribute(attr, "range-max")) &&
+			!(value = get_tag_attribute(attr, "scale_max")))
 			value = get_tag_attribute(attr, "scale-max");
-		if (value) scale_max = atof(value);
-		if (!(value = get_tag_attribute(attr, "scale_step")))
+		if (value) range_max = atof(value);
+
+		if (!(value = get_tag_attribute(attr, "range_step")) &&
+			!(value = get_tag_attribute(attr, "range-step")) &&
+			!(value = get_tag_attribute(attr, "scale_step")))
 			value = get_tag_attribute(attr, "scale-step");
-		if (value) scale_step = atof(value);
-		if (!(value = get_tag_attribute(attr, "scale_value")))
+		if (value) range_step = atof(value);
+
+		if (!(value = get_tag_attribute(attr, "range_value")) &&
+			!(value = get_tag_attribute(attr, "range-value")) &&
+			!(value = get_tag_attribute(attr, "scale_value")))
 			value = get_tag_attribute(attr, "scale-value");
-		if (value) scale_value = atof(value);
+		if (value) range_value = atof(value);
 	}
 
 	if (!horv) {
-		scale = gtk_hscale_new_with_range(scale_min, scale_max, scale_step);
+		scale = gtk_hscale_new_with_range(range_min, range_max, range_step);
 	} else {
-		scale = gtk_vscale_new_with_range(scale_min, scale_max, scale_step);
+		scale = gtk_vscale_new_with_range(range_min, range_max, range_step);
 	}
-	gtk_range_set_value(GTK_RANGE(scale), scale_value);
+	gtk_range_set_value(GTK_RANGE(scale), range_value);
 
 	return scale;
 }
@@ -2568,16 +2590,22 @@ instruction_execute_push(
 
 	switch (Widget_Type) {
 
-	case WIDGET_COMBOBOXENTRY:
-	case WIDGET_COMBOBOXTEXT:
-		Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
-		push_widget(Widget, Widget_Type);
-		break;
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 
-	case WIDGET_PIXMAP:
-		Widget = widget_pixmap_create(Attr, tag_attributes, Widget_Type);
-		push_widget(Widget, Widget_Type);
-		break;
+		case WIDGET_PIXMAP:
+			Widget = widget_pixmap_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+
+		case WIDGET_SPINBUTTON:
+			Widget = widget_spinbutton_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+
 
 	case WIDGET_LABEL:
 		Widget = create_label(Attr);
@@ -3007,7 +3035,7 @@ instruction_execute_push(
 			Widget = gtk_vbox_new(FALSE, 5);
 
 			if (tag_attributes &&
-				(value = get_tag_attribute(tag_attributes, "margin"))) {
+				(value = get_tag_attribute(tag_attributes, "margin"))) {	/* Deprecated */
 				border_width = atoi(value);
 				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
 			}
@@ -3053,7 +3081,7 @@ instruction_execute_push(
 			Widget = gtk_hbox_new(FALSE, 5);
 
 			if (tag_attributes &&
-				(value = get_tag_attribute(tag_attributes, "margin"))) {
+				(value = get_tag_attribute(tag_attributes, "margin"))) {	/* Deprecated */
 				border_width = atoi(value);
 				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
 			}

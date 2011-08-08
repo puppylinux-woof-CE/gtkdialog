@@ -38,6 +38,7 @@
 #include "stringman.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
+#include "widget_spinbutton.h"
 
 #undef DEBUG
 #undef WARNING
@@ -177,6 +178,11 @@ widget_get_text_value(
 		
 		case WIDGET_PIXMAP:
 			string = widget_pixmap_envvar_construct(widget);
+			return string;
+			break;
+
+		case WIDGET_SPINBUTTON:
+			string = widget_spinbutton_envvar_construct(widget);
 			return string;
 			break;
 
@@ -388,6 +394,7 @@ widget_get_text_value(
 				case 16:
 					sprintf(value, "%.16f", val);
 					break;
+				/* Is there much point going beyond 16? */
 				default:
 					sprintf(value, "%f", val);
 					break;
@@ -782,6 +789,7 @@ void save_scale_to_file(variable *var)
 				case 16:
 					fprintf(outfile, "%.16f", val);
 					break;
+				/* Is there much point going beyond 16? */
 				default:
 					fprintf(outfile, "%f", val);
 					break;
@@ -1810,6 +1818,9 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_VSCALE:
 		type = "VSCALE";
+		break;
+	case WIDGET_SPINBUTTON:
+		type = "SPINBUTTON";
 		break;
 	default:
 		type = "THINGY";

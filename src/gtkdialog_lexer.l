@@ -495,6 +495,11 @@ gchar *Token;
 					  return(PART_VSCALE); }
 \<\/vscale\>				{ Token="</vscale>"; return(EVSCALE); }
 
+\<spinbutton\>				{ Token="<spinbutton>"; return(SPINBUTTON); }
+\<spinbutton[ ]+			{ Token="<spinbutton>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_SPINBUTTON); }
+\<\/spinbutton\>			{ Token="</spinbutton>"; return(ESPINBUTTON); }
 
 
 

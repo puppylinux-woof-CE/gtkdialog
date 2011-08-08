@@ -25,7 +25,7 @@
 /* Function prototypes */
 void widget_comboboxtext_clear(variable *var);
 GtkWidget *widget_comboboxtext_create(
-	AttributeSet *Attr, tag_attr *tag_attributes, gint Type);
+	AttributeSet *Attr, tag_attr *attr, gint Type);
 gchar *widget_comboboxtext_envvar_all_construct(variable *var);
 gchar *widget_comboboxtext_envvar_construct(GtkWidget *widget);
 void widget_comboboxtext_fileselect(

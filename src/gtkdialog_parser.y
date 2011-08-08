@@ -147,6 +147,7 @@ start_up(void)
 %token         COMBOBOXENTRY PART_COMBOBOXENTRY ECOMBOBOXENTRY
 %token         HSCALE PART_HSCALE EHSCALE
 %token         VSCALE PART_VSCALE EVSCALE
+%token         SPINBUTTON PART_SPINBUTTON ESPINBUTTON
 
 %% 
 window
@@ -246,6 +247,7 @@ widget
   | comboboxentry
   | hscale
   | vscale
+  | spinbutton
   ;
 
 entry
@@ -565,6 +567,15 @@ vscale
 	}
   | PART_VSCALE tagattr '>' attr EVSCALE {
 		token_store_attr(PUSH | WIDGET_VSCALE, $2);
+	}
+  ;
+
+spinbutton
+  : SPINBUTTON attr ESPINBUTTON {
+		token_store(PUSH | WIDGET_SPINBUTTON);
+	}
+  | PART_SPINBUTTON tagattr '>' attr ESPINBUTTON {
+		token_store_attr(PUSH | WIDGET_SPINBUTTON, $2);
 	}
   ;
 
