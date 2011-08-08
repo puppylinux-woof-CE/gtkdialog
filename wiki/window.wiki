@@ -18,8 +18,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkWindow.html GtkWindow]
 See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.object-hierarchy GtkWindow] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-|| *Name* || *Description* || *Value* || *Since* ||
-|| margin || Surrounding blank space || An integer >= {{{0}}} || 0.7.21 ||
+None.
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -47,5 +46,5 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-This widget has a default border width of 5 which can be overridden with the "margin" custom tag attribute.
+This widget has a default border width of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer--border-width border_width]" tag attribute.
 ----
