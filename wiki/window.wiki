@@ -46,5 +46,5 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-This widget has a default border width of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer--border-width border_width]" tag attribute.
+This widget has a default border width of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer--border-width border-width]" tag attribute.
 ----
