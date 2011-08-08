@@ -17,7 +17,6 @@ See the [http://developer.gnome.org/gtk/2.24/GtkVBox.html#GtkVBox.object-hierarc
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
-|| margin || Surrounding blank space || An integer >= {{{0}}} || 0.7.21 ||
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
 || width || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
