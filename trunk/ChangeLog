@@ -1,3 +1,12 @@
+* Mon Aug 8 2011 Thunor <thunorsif@hotmail.com>
+- Fixed an existing bug in try_set_property, the function that passes
+  the tag attributes that are GTK+ widget properties to GTK+ to be set.
+  The part that should have been converting a char to a guint was
+  converting a char to a [UTF8] char which resulted in all guint GTK+
+  widget properties being bugged; therefore "border_width" now works.
+- Deprecated the "margin" custom tag attribute and removed from docs.
+- Started to implement the spinbutton widget.
+
 * Sun Aug 7 2011 Thunor <thunorsif@hotmail.com>
 - Fixed a bug I added to the pixmap widget that caused a segfault.
 - Updated the menuitem widget to support custom tag attributes of

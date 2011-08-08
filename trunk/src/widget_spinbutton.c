@@ -1,5 +1,5 @@
 /*
- * widget_pixmap.c: 
+ * widget_spinbutton.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -32,9 +32,9 @@
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes */
-static void widget_pixmap_input_by_command(variable *var, char *command);
-static void widget_pixmap_input_by_file(variable *var, char *filename);
-static void widget_pixmap_input_by_items(variable *var);
+static void widget_spinbutton_input_by_command(variable *var, char *command);
+static void widget_spinbutton_input_by_file(variable *var, char *filename);
+static void widget_spinbutton_input_by_items(variable *var);
 
 /* Notes: */
 
@@ -42,7 +42,7 @@ static void widget_pixmap_input_by_items(variable *var);
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_pixmap_clear(variable *var)
+void widget_spinbutton_clear(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -61,79 +61,42 @@ void widget_pixmap_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
-GtkWidget *widget_pixmap_create(
+GtkWidget *widget_spinbutton_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
-	GError           *error = NULL;
-	GtkIconTheme     *icon_theme;
 	GtkWidget        *widget;
-	GdkPixbuf        *pixbuf;
-	gchar            *act;
-	gchar            *file_name;
-	gchar            *icon_name = NULL;
-	gchar            *stock_name = NULL;
-	gint              width = -1, height = -1;
-	gint              size = 32;
+	gdouble           range_min = 0;
+	gdouble           range_max = 100;
+	gdouble           range_step = 1;
+	gdouble           range_value = 0;
+	gchar            *value;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
-	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+	/* These "range-*" names are consistent with the h/vscale widgets */
+	if (attr) {
+		if (!(value = get_tag_attribute(attr, "range_min")))
+			value = get_tag_attribute(attr, "range-min");
+		if (value) range_min = atof(value);
 
-	/* The <input> tag... */
-	act = attributeset_get_first(Attr, ATTR_INPUT);
-	while (act) {
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): act=%s\n", __func__, act);
-#endif
-		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0) {
-			if ((stock_name = attributeset_get_this_tagattr(
-				Attr, ATTR_INPUT, "stock")) != NULL) {
-				widget = gtk_image_new_from_stock(stock_name, GTK_ICON_SIZE_DND);
-				break;	/* Only one image is required */
-			}
-			if ((icon_name = attributeset_get_this_tagattr(
-				Attr, ATTR_INPUT, "icon")) != NULL) {
-				icon_theme = gtk_icon_theme_get_default();
-				/* Use the height or width dimension to override the default size */
-				if (height > -1) size = height;
-				else if (width > -1) size = width;
-				pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
-					size, 0, &error);
-				widget = gtk_image_new_from_pixbuf(pixbuf);
-				/* pixbuf is no longer required and should be unreferenced */
-				g_object_unref(pixbuf);
-				break;	/* Only one image is required */
-			}
-			if (strlen(act) > 5) {
-				file_name = act + 5;
-				if (width == -1 && height == -1) {
-					/* Handle unscaled images */
-					widget = gtk_image_new_from_file(find_pixmap(file_name));
-				} else {
-					/* Handle scaled images */
-					pixbuf = gdk_pixbuf_new_from_file_at_size(
-						find_pixmap(file_name), width, height, NULL);
-					if (pixbuf) {
-						widget = gtk_image_new_from_pixbuf(pixbuf);
-						/* pixbuf is no longer required and should be unreferenced */
-						g_object_unref(pixbuf);
-					} else {
-						/* pixbuf is null (file not found) so by using this
-						 * function gtk will substitute a broken image icon */
-						widget = gtk_image_new_from_file("");
-					}
-				}
-				break;	/* Only one image is required */
-			}
-		}
-		act = attributeset_get_next(Attr, ATTR_INPUT);
+		if (!(value = get_tag_attribute(attr, "range_max")))
+			value = get_tag_attribute(attr, "range-max");
+		if (value) range_max = atof(value);
+
+		if (!(value = get_tag_attribute(attr, "range_step")))
+			value = get_tag_attribute(attr, "range-step");
+		if (value) range_step = atof(value);
+
+		if (!(value = get_tag_attribute(attr, "range_value")))
+			value = get_tag_attribute(attr, "range-value");
+		if (value) range_value = atof(value);
 	}
+
+	widget = gtk_spin_button_new_with_range(range_min, range_max, range_step);
+
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget), range_value);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -146,7 +109,7 @@ GtkWidget *widget_pixmap_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_pixmap_envvar_all_construct(variable *var)
+gchar *widget_spinbutton_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -167,15 +130,78 @@ gchar *widget_pixmap_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_pixmap_envvar_construct(GtkWidget *widget)
+gchar *widget_spinbutton_envvar_construct(GtkWidget *widget)
 {
+	gchar             envvar[32];
 	gchar            *string;
+	gdouble           value;
+	guint             digits;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup("");
+	digits = gtk_spin_button_get_digits(GTK_SPIN_BUTTON(widget));
+	value = gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
+	switch (digits) {
+		case 0:
+			sprintf(envvar, "%.0f", value);
+			break;
+		case 1:
+			sprintf(envvar, "%.1f", value);
+			break;
+		case 2:
+			sprintf(envvar, "%.2f", value);
+			break;
+		case 3:
+			sprintf(envvar, "%.3f", value);
+			break;
+		case 4:
+			sprintf(envvar, "%.4f", value);
+			break;
+		case 5:
+			sprintf(envvar, "%.5f", value);
+			break;
+		case 6:
+			sprintf(envvar, "%.6f", value);
+			break;
+		case 7:
+			sprintf(envvar, "%.7f", value);
+			break;
+		case 8:
+			sprintf(envvar, "%.8f", value);
+			break;
+		case 9:
+			sprintf(envvar, "%.9f", value);
+			break;
+		case 10:
+			sprintf(envvar, "%.10f", value);
+			break;
+		case 11:
+			sprintf(envvar, "%.11f", value);
+			break;
+		case 12:
+			sprintf(envvar, "%.12f", value);
+			break;
+		case 13:
+			sprintf(envvar, "%.13f", value);
+			break;
+		case 14:
+			sprintf(envvar, "%.14f", value);
+			break;
+		case 15:
+			sprintf(envvar, "%.15f", value);
+			break;
+		case 16:
+			sprintf(envvar, "%.16f", value);
+			break;
+		/* Is there much point going beyond 16? */
+		default:
+			sprintf(envvar, "%f", value);
+			break;
+	}
+
+	string = g_strdup(envvar);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -188,7 +214,7 @@ gchar *widget_pixmap_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_pixmap_fileselect(
+void widget_spinbutton_fileselect(
 	variable *var, const char *name, const char *value)
 {
 	gchar            *var1;
@@ -208,7 +234,7 @@ void widget_pixmap_fileselect(
 /***********************************************************************
  * Refresh                                                             *
  ***********************************************************************/
-void widget_pixmap_refresh(variable *var)
+void widget_spinbutton_refresh(variable *var)
 {
 	gchar            *act;
 	gint              initialised = FALSE;
@@ -225,32 +251,29 @@ void widget_pixmap_refresh(variable *var)
 	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_pixmap_input_by_command(var, act + 8);
+			widget_spinbutton_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			/* Don't refresh images on the first call otherwise they
-			 * get created and then immediately refreshed at start-up */
-			if (initialised)
-				widget_pixmap_input_by_file(var, act + 5);
-		}
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
+			widget_spinbutton_input_by_file(var, act + 5);
 		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_pixmap_input_by_items(var);
+		widget_spinbutton_input_by_items(var);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
 		/* Apply directives */
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
-			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
-				__func__);
+			gtk_spin_button_set_value(GTK_SPIN_BUTTON(var->Widget),
+				atof(attributeset_get_first(var->Attributes, ATTR_DEFAULT)));
 		if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-
+		g_signal_connect(G_OBJECT(var->Widget), "value_changed",
+			G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -262,7 +285,7 @@ void widget_pixmap_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_pixmap_removeselected(variable *var)
+void widget_spinbutton_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -283,7 +306,7 @@ void widget_pixmap_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_pixmap_save(variable *var)
+void widget_spinbutton_save(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -303,7 +326,7 @@ void widget_pixmap_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_pixmap_input_by_command(variable *var, char *command)
+static void widget_spinbutton_input_by_command(variable *var, char *command)
 {
 	gchar            *var1;
 	gint              var2;
@@ -323,37 +346,14 @@ static void widget_pixmap_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_pixmap_input_by_file(variable *var, char *filename)
+static void widget_spinbutton_input_by_file(variable *var, char *filename)
 {
-	GdkPixbuf        *pixbuf;
-	gint              width = -1, height = -1;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
-	if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
-
-	if (width == -1 && height == -1) {
-		/* Handle unscaled images */
-		gtk_image_set_from_file(GTK_IMAGE(var->Widget), find_pixmap(filename));
-	} else {
-		/* Handle scaled images */
-		pixbuf = gdk_pixbuf_new_from_file_at_size(
-			find_pixmap(filename), width, height, NULL);
-		if (pixbuf) {
-			gtk_image_set_from_pixbuf(GTK_IMAGE(var->Widget), pixbuf);
-			/* pixbuf is no longer required and should be unreferenced */
-			g_object_unref(pixbuf);
-		} else {
-			/* pixbuf is null (file not found) so by using this
-			 * function gtk will substitute a broken image icon */
-			gtk_image_set_from_file(GTK_IMAGE(var->Widget), "");
-		}
-	}
+	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -364,7 +364,7 @@ static void widget_pixmap_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_pixmap_input_by_items(variable *var)
+static void widget_spinbutton_input_by_items(variable *var)
 {
 	gchar            *var1;
 	gint              var2;

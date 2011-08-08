@@ -38,9 +38,9 @@ static gboolean
 try_set_property(GtkWidget *widget,
 		namevalue  *nameval)
 {
-	GParamSpec *paramspec;
-	gint      n = 0;
-	
+	GParamSpec       *paramspec;
+	gint              n = 0;
+
 	g_assert(nameval != NULL && GTK_IS_WIDGET(widget));
 
 #ifdef DEBUG
@@ -93,9 +93,16 @@ try_set_property(GtkWidget *widget,
 					NULL);
 			break;
 		case G_TYPE_UINT:
+			/* Thunor: Coding the spinbutton widget unearthed this rather
+			 * nasty bug. nameval->value is supposed to be converted to
+			 * a guint. I wonder how many things this has affected! Up until
+			 * now I've found "border_width" to have always been about 50
+			 * and now I understand why ;) I think that this entire function
+			 * might benefit from a review so I'll mark it temp temp */
 			g_object_set(G_OBJECT(widget),
 				nameval->name,
-				g_utf8_get_char(nameval->value),
+				/* g_utf8_get_char(nameval->value),	Redundant: Bug */
+				strtoul(nameval->value, NULL, 0),
 				NULL);
 			break;
 		case G_TYPE_INVALID:

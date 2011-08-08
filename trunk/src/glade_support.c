@@ -707,6 +707,9 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 /* GtkWidget--->GtkContainer--->GtkTreeView */
 	else if (GTK_IS_TREE_VIEW(widget))
 		retval = WIDGET_TREE;
+/* GtkWidget--->GtkEntry-->GtkSpinButton */
+	else if (GTK_IS_SPIN_BUTTON(widget))
+		retval = WIDGET_SPINBUTTON;
 /* GtkWidget--->GtkEntry */
 	else if (GTK_IS_ENTRY(widget))
 		retval = WIDGET_ENTRY;

@@ -165,7 +165,10 @@
      EHSCALE = 381,
      VSCALE = 382,
      PART_VSCALE = 383,
-     EVSCALE = 384
+     EVSCALE = 384,
+     SPINBUTTON = 385,
+     PART_SPINBUTTON = 386,
+     ESPINBUTTON = 387
    };
 #endif
 /* Tokens.  */
@@ -296,6 +299,9 @@
 #define VSCALE 382
 #define PART_VSCALE 383
 #define EVSCALE 384
+#define SPINBUTTON 385
+#define PART_SPINBUTTON 386
+#define ESPINBUTTON 387
 
 
 
@@ -316,7 +322,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 320 "gtkdialog_parser.h"
+#line 326 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

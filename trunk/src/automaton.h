@@ -85,6 +85,7 @@ typedef struct actioncommand {
 #define WIDGET_COMBOBOXENTRY     0x00A70000
 #define WIDGET_HSCALE            0x00A80000
 #define WIDGET_VSCALE            0x00A90000
+#define WIDGET_SPINBUTTON        0x00AA0000
 
 /*
  * Imperative stuff.

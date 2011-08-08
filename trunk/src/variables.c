@@ -24,6 +24,7 @@
 #include "widgets.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
+#include "widget_spinbutton.h"
 
 extern gboolean option_no_warning;
 
@@ -278,6 +279,10 @@ variables_set_value(const char *name,
 			widget_pixmap_fileselect(toset, name, value);
 			break;
 
+		case WIDGET_SPINBUTTON:
+			widget_spinbutton_fileselect(toset, name, value);
+			break;
+
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toset->Widget), value);
 			break;
@@ -311,6 +316,10 @@ variables_save(const char *name)
 
 		case WIDGET_PIXMAP:
 			widget_pixmap_save(var);
+			break;
+
+		case WIDGET_SPINBUTTON:
+			widget_spinbutton_save(var);
 			break;
 
 		case WIDGET_ENTRY:
@@ -383,6 +392,10 @@ variables_refresh(const char *name)
 
 		case WIDGET_PIXMAP:
 			widget_pixmap_refresh(var);
+			break;
+
+		case WIDGET_SPINBUTTON:
+			widget_spinbutton_refresh(var);
 			break;
 
 		case WIDGET_ENTRY:
@@ -1059,6 +1072,10 @@ variables_clear(const char *name)
 			widget_pixmap_clear(toclear);
 			break;
 
+		case WIDGET_SPINBUTTON:
+			widget_spinbutton_clear(toclear);
+			break;
+
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
 			break;
@@ -1145,6 +1162,10 @@ remove_selected_variable(const char *name)
 
 		case WIDGET_PIXMAP:
 			widget_pixmap_removeselected(toclear);
+			break;
+
+		case WIDGET_SPINBUTTON:
+			widget_spinbutton_removeselected(toclear);
 			break;
 
 		case WIDGET_ENTRY:

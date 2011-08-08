@@ -115,7 +115,7 @@ void widget_comboboxtext_clear(variable *var)
  ***********************************************************************/
 
 GtkWidget *widget_comboboxtext_create(
-	AttributeSet *Attr, tag_attr *tag_attributes, gint Type)
+	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GtkWidget        *widget;
 
