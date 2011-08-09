@@ -383,7 +383,15 @@ gtk_scale_signal_handler_connector(
 		gboolean after, 
 		gpointer user_data)
 {
-	if (g_ascii_strcasecmp(signal_name, "value_changed") == 0) {
+	/* Thunor: There's an issue with the name of this signal as the Glade
+	 * Interface Designer and the GTK+ 2 Reference Manual:GtkScale will
+	 * write it with an underscore but it's actually the GtkRange signal
+	 * value-changed and this is equivalent to the GtkSpinButton signal
+	 * value-changed and both widgets are identical in code. I'd say that
+	 * GTK+ doesn't distinguish between underscores and hyphens as a
+	 * separator within names but Gtkdialog up until now did */
+	if ((g_ascii_strcasecmp(signal_name, "value_changed") == 0) ||
+		(g_ascii_strcasecmp(signal_name, "value-changed") == 0)) {
 		g_signal_connect(object, 
 				signal_name, 
 				G_CALLBACK(on_any_scale_value_changed), 
@@ -774,7 +782,7 @@ run_program_by_glade(
 	glade_xml_signal_autoconnect_full(glade_xml,
 			(GladeXMLConnectFunc) signal_handler_connector,
 			NULL);
-	gtk_signal_connect(GTK_OBJECT(main_window), "delete_event",
+	gtk_signal_connect(GTK_OBJECT(main_window), "delete-event",
 			   GTK_SIGNAL_FUNC(window_delete_event_handler), NULL);
 	
 	refresh_widgets(glade_xml);
