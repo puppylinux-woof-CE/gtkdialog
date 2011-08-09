@@ -49,7 +49,7 @@ Some of these may have tag attribute equivalents.
 || output file || Data output target || Filename || || ||
 
 == Signals ==
-The default signal is "[http://developer.gnome.org/gtk/2.24/GtkRange.html#GtkRange-value-changed value_changed]", emitted when the range value changes.
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkRange.html#GtkRange-value-changed value-changed]", emitted when the range value changes.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkScale.html#GtkScale.signals GtkScale] widget and ancestor class signals.
 
