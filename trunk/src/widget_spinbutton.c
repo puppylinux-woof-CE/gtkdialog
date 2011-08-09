@@ -269,6 +269,12 @@ void widget_spinbutton_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(var->Widget),
 				atof(attributeset_get_first(var->Attributes, ATTR_DEFAULT)));
+		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
+			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
+				__func__);
+		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
+				__func__);
 		if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 

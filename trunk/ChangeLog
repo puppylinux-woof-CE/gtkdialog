@@ -3,6 +3,8 @@
   in from the XML separated with underscores to hyphenated strings
   (GTK+ doesn't distinguish between the two, so now we don't).
 - New widget: <spinbutton>.
+- Added default messages for unimplemented directives for widgets that
+  I've so far refactored or recently added.
 
 * Mon Aug 8 2011 Thunor <thunorsif@hotmail.com>
 - Fixed an existing bug in try_set_property, the function that passes
