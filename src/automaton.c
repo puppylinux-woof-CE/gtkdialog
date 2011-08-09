@@ -183,11 +183,14 @@ widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			} else if (GTK_IS_MENU_ITEM(widget)) {
 				if (strcasecmp(signal_name, "activate") == 0)
 					execute = TRUE;
+			} else if (GTK_IS_SPIN_BUTTON(widget)) {
+				if (strcasecmp(signal_name, "value-changed") == 0)
+					execute = TRUE;
 			} else if (GTK_IS_ENTRY(widget) || GTK_IS_COMBO_BOX(widget)) {
 				if (strcasecmp(signal_name, "changed") == 0)
 					execute = TRUE;
 			} else if (GTK_IS_SCALE(widget)) {
-				if (strcasecmp(signal_name, "value_changed") == 0)
+				if (strcasecmp(signal_name, "value-changed") == 0)
 					execute = TRUE;
 			}
 		}
@@ -365,7 +368,7 @@ void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	widget_signal_executor(widget, Attr, "value_changed");
+	widget_signal_executor(widget, Attr, "value-changed");
 }
 
 void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr)
@@ -2128,7 +2131,7 @@ tree_row_activated_attr(GtkTreeView  *tree_view,
 	while (command != NULL){
 		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
 		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
-		if (signal != NULL && g_ascii_strcasecmp(signal, "row_activated") != 0)
+		if (signal != NULL && g_ascii_strcasecmp(signal, "row-activated") != 0)
 			goto next_command;
 		
 		execute_action(GTK_WIDGET(tree_view), command, type);
@@ -2155,7 +2158,7 @@ tree_cursor_changed(
 	while (command != NULL){
 		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
 		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
-		if (signal == NULL || g_ascii_strcasecmp(signal, "cursor_changed") != 0)
+		if (signal == NULL || g_ascii_strcasecmp(signal, "cursor-changed") != 0)
 			goto next_command;
 		
 		execute_action(GTK_WIDGET(tree_view), command, type);
@@ -2283,7 +2286,7 @@ create_window(
 	 */
 	widget_connect_signals(window, Attr);
 			
-	gtk_signal_connect(GTK_OBJECT(window), "delete_event",
+	gtk_signal_connect(GTK_OBJECT(window), "delete-event",
 			   GTK_SIGNAL_FUNC(window_delete_event_handler), NULL);
 
 	/*
@@ -2962,7 +2965,7 @@ instruction_execute_push(
 		 ** The LIST widget can handle actions...
 		 */
 		gtk_signal_connect(GTK_OBJECT(Widget),
-						   "selection_changed",
+						   "selection-changed",
 						   GTK_SIGNAL_FUNC
 						   (list_selection),
 						   (gpointer) Attr);
@@ -2984,7 +2987,7 @@ instruction_execute_push(
 		 ** We need connect the select_row to a function to store the
 		 ** selected row.
 		 */
-		g_signal_connect(G_OBJECT(Widget), "select_row",
+		g_signal_connect(G_OBJECT(Widget), "select-row",
 				 G_CALLBACK(table_selection),
 				 (gpointer) Attr);
 		break;
@@ -3359,11 +3362,36 @@ token_store_with_argument_attr(
 		const char *argument, 
 		tag_attr *attributes)
 {
-	instruction inst;
-	int sub_attribute;
+	instruction       inst;
+	gint              sub_attribute;
+	gint              count, index;
 
 	PIP_DEBUG("Start argument='%s' attributes: %p", argument, attributes);
-	
+
+	/* Thunor: I've added this to convert underscores to hyphens within
+	 * signal names declared by the user so that we can deal exclusively
+	 * in hyphenated strings throughout the remainder of this program */
+	for (count = 0; count < attributes->n; count++) {
+		if (g_ascii_strcasecmp(attributes->pairs[count].name, "signal") == 0) {
+#ifdef DEBUG
+			fprintf(stderr, "%s: Before: pairs[%i].name=%s  pairs[%i].value=%s\n",
+				__func__, count, attributes->pairs[count].name,
+				count, attributes->pairs[count].value);
+#endif
+			index = 0;
+			while (attributes->pairs[count].value[index]) {
+				if (attributes->pairs[count].value[index] == '_')
+					attributes->pairs[count].value[index] = '-';
+				index++;
+			}
+#ifdef DEBUG
+			fprintf(stderr, "%s:  After: pairs[%i].name=%s  pairs[%i].value=%s\n",
+				__func__, count, attributes->pairs[count].name,
+				count, attributes->pairs[count].value);
+#endif
+		}
+	}
+
 	inst.tag_attributes = attributes;
 
 	if (argument == NULL)

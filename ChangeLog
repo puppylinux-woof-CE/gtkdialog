@@ -1,3 +1,8 @@
+* Tue Aug 9 2011 Thunor <thunorsif@hotmail.com>
+- Modified token_store_with_argument_attr to convert signal names passed
+  in from the XML separated with underscores to hyphenated strings
+  (GTK+ doesn't distinguish between the two, so now we don't).
+
 * Mon Aug 8 2011 Thunor <thunorsif@hotmail.com>
 - Fixed an existing bug in try_set_property, the function that passes
   the tag attributes that are GTK+ widget properties to GTK+ to be set.

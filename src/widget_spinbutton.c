@@ -272,7 +272,7 @@ void widget_spinbutton_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-		g_signal_connect(G_OBJECT(var->Widget), "value_changed",
+		g_signal_connect(G_OBJECT(var->Widget), "value-changed",
 			G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
 	}
 
