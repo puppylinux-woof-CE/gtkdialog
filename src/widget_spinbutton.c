@@ -26,12 +26,13 @@
 #include "gtkdialog.h"
 #include "attributes.h"
 #include "automaton.h"
+#include "widgets.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
-/* Local function prototypes */
+/* Local function prototypes, located at file bottom */
 static void widget_spinbutton_input_by_command(variable *var, char *command);
 static void widget_spinbutton_input_by_file(variable *var, char *filename);
 static void widget_spinbutton_input_by_items(variable *var);
@@ -274,6 +275,8 @@ void widget_spinbutton_refresh(variable *var)
 		/* Connect signals */
 		g_signal_connect(G_OBJECT(var->Widget), "value-changed",
 			G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
+		g_signal_connect(G_OBJECT(var->Widget), "activate",
+			G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -308,14 +311,97 @@ void widget_spinbutton_removeselected(variable *var)
 
 void widget_spinbutton_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *outfile;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gdouble           value;
+	guint             digits;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+			digits = gtk_spin_button_get_digits(GTK_SPIN_BUTTON(var->Widget));
+			value = gtk_spin_button_get_value(GTK_SPIN_BUTTON(var->Widget));
+			switch (digits) {
+				case 0:
+					fprintf(outfile, "%.0f", value);
+					break;
+				case 1:
+					fprintf(outfile, "%.1f", value);
+					break;
+				case 2:
+					fprintf(outfile, "%.2f", value);
+					break;
+				case 3:
+					fprintf(outfile, "%.3f", value);
+					break;
+				case 4:
+					fprintf(outfile, "%.4f", value);
+					break;
+				case 5:
+					fprintf(outfile, "%.5f", value);
+					break;
+				case 6:
+					fprintf(outfile, "%.6f", value);
+					break;
+				case 7:
+					fprintf(outfile, "%.7f", value);
+					break;
+				case 8:
+					fprintf(outfile, "%.8f", value);
+					break;
+				case 9:
+					fprintf(outfile, "%.9f", value);
+					break;
+				case 10:
+					fprintf(outfile, "%.10f", value);
+					break;
+				case 11:
+					fprintf(outfile, "%.11f", value);
+					break;
+				case 12:
+					fprintf(outfile, "%.12f", value);
+					break;
+				case 13:
+					fprintf(outfile, "%.13f", value);
+					break;
+				case 14:
+					fprintf(outfile, "%.14f", value);
+					break;
+				case 15:
+					fprintf(outfile, "%.15f", value);
+					break;
+				case 16:
+					fprintf(outfile, "%.16f", value);
+					break;
+				/* Is there much point going beyond 16? */
+				default:
+					fprintf(outfile, "%f", value);
+					break;
+			}
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -328,14 +414,35 @@ void widget_spinbutton_save(variable *var)
 
 static void widget_spinbutton_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
+#endif
+
+	/* Opening pipe for reading... */
+	if (infile = widget_opencommand(command)) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			gtk_spin_button_set_value(GTK_SPIN_BUTTON(var->Widget), atof(line));
+		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			command);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -348,12 +455,30 @@ static void widget_spinbutton_input_by_command(variable *var, char *command)
 
 static void widget_spinbutton_input_by_file(variable *var, char *filename)
 {
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			gtk_spin_button_set_value(GTK_SPIN_BUTTON(var->Widget), atof(line));
+		}
+		/* Close the file */
+		fclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			filename);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

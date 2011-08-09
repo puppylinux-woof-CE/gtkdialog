@@ -32,7 +32,7 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
-/* Local function prototypes */
+/* Local function prototypes, located at file bottom */
 static void widget_comboboxtext_input_by_command(variable *var, char *command);
 static void widget_comboboxtext_input_by_file(variable *var, char *filename);
 static void widget_comboboxtext_input_by_items(variable *var);
@@ -573,7 +573,7 @@ void widget_comboboxtext_save(variable *var)
 				__func__, filename);
 		}
 	} else {
-		fprintf(stderr, "%s(): No output file directive found.\n", __func__);
+		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
 #ifdef DEBUG_TRANSITS

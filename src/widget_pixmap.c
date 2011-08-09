@@ -31,7 +31,7 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
-/* Local function prototypes */
+/* Local function prototypes, located at file bottom */
 static void widget_pixmap_input_by_command(variable *var, char *command);
 static void widget_pixmap_input_by_file(variable *var, char *filename);
 static void widget_pixmap_input_by_items(variable *var);
