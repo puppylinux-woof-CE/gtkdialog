@@ -79,10 +79,10 @@ GtkWidget *widget_pixmap_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
 		height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+	if (attributeset_is_avail(Attr, ATTR_WIDTH))
+		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
 
 	/* The <input> tag... */
 	act = attributeset_get_first(Attr, ATTR_INPUT);
