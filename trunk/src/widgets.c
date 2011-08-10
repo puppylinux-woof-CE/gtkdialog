@@ -891,7 +891,7 @@ widget_entry_refresh(variable *var)
 			/* Despite what the GTK+ 2 Reference Manual says, I found
 			 * these to be activatable by default. They will actually
 			 * be prefixed with either primary- or secondary- for use
-			 * withn action directives */
+			 * within action directives */
 			g_signal_connect(G_OBJECT(var->Widget), "icon-press",
 				G_CALLBACK(on_any_widget_icon_press_event), (gpointer)var->Attributes);
 			g_signal_connect(G_OBJECT(var->Widget), "icon-release",
