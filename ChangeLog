@@ -1,7 +1,8 @@
 * Wed Aug 10 2011 Thunor <thunorsif@hotmail.com>
 - Connected-up the primary and secondary icon-press/release signals for
-  the new spinbutton widget; it's effectively a scale + entry, therefore
-  all the GtkEntry properties apply too.
+  the new spinbutton widget -- it's effectively an entry widget + scale,
+  therefore all the GtkEntry properties apply too.
+- Connected-up the changed signal for the new spinbutton widget.
 
 * Tue Aug 9 2011 Thunor <thunorsif@hotmail.com>
 - Modified token_store_with_argument_attr to convert signal names passed

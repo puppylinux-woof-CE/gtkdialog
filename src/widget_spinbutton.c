@@ -281,6 +281,8 @@ void widget_spinbutton_refresh(variable *var)
 		/* Connect signals */
 		g_signal_connect(G_OBJECT(var->Widget), "value-changed",
 			G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
+		g_signal_connect(G_OBJECT(var->Widget), "changed", 
+			G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
 		g_signal_connect(G_OBJECT(var->Widget), "activate",
 			G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
 #if GTK_CHECK_VERSION(2,16,0)
