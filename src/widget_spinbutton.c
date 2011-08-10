@@ -283,6 +283,16 @@ void widget_spinbutton_refresh(variable *var)
 			G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
 		g_signal_connect(G_OBJECT(var->Widget), "activate",
 			G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
+#if GTK_CHECK_VERSION(2,16,0)
+		/* Despite what the GTK+ 2 Reference Manual says, I found
+		 * these to be activatable by default. They will actually
+		 * be prefixed with either primary- or secondary- for use
+		 * within action directives */
+		g_signal_connect(G_OBJECT(var->Widget), "icon-press",
+			G_CALLBACK(on_any_widget_icon_press_event), (gpointer)var->Attributes);
+		g_signal_connect(G_OBJECT(var->Widget), "icon-release",
+			G_CALLBACK(on_any_widget_icon_release_event), (gpointer)var->Attributes);
+#endif
 	}
 
 #ifdef DEBUG_TRANSITS
