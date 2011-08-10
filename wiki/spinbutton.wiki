@@ -53,7 +53,7 @@ The "changed" signal is emitted when typing into the entry.
 
 The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activate]" signal is emitted when the user activates the entry with the Enter key.
 
-For GTK+ 2.16 and later, the "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-press icon-press]" and "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-release icon-release]" signals are emitted when an activatable icon is pressed or released, but these signal names will be prefixed with either "primary-" or "secondary-" to indicate the source icon (since 0.7.21).
+For GTK+ 2.16 and later, the "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-press icon-press]" and "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-release icon-release]" signals are emitted when an activatable icon is pressed or released, but these signal names will be prefixed with either "primary-" or "secondary-" to indicate the source icon.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton.signals GtkSpinButton] widget and ancestor class signals.
 
