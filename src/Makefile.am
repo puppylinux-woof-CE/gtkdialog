@@ -24,7 +24,8 @@ gtkdialog_SOURCES = \
 		    glade_support.c glade_support.h \
 		    widget_pixmap.c widget_pixmap.h \
 		    widget_comboboxtext.c widget_comboboxtext.h \
-		    widget_spinbutton.c widget_spinbutton.h
+		    widget_spinbutton.c widget_spinbutton.h \
+		    widget_timer.c widget_timer.h
 
 AM_CFLAGS = $(GTK_CFLAGS) \
 	    $(GTHREAD_CFLAGS) \

@@ -39,6 +39,7 @@
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
+#include "widget_timer.h"
 
 #undef DEBUG
 #undef WARNING
@@ -183,6 +184,11 @@ widget_get_text_value(
 
 		case WIDGET_SPINBUTTON:
 			string = widget_spinbutton_envvar_construct(widget);
+			return string;
+			break;
+
+		case WIDGET_TIMER:
+			string = widget_timer_envvar_construct(widget);
 			return string;
 			break;
 
@@ -406,9 +412,9 @@ widget_get_text_value(
 		case WIDGET_MENUITEM:
 			if (GTK_IS_CHECK_MENU_ITEM(widget)) {
 				if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
-					string =  g_strdup("true");
+					string = g_strdup("true");
 				} else {
-					string =  g_strdup("false");
+					string = g_strdup("false");
 				}
 			} else {
 				string = g_strdup("");
@@ -1821,6 +1827,9 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_SPINBUTTON:
 		type = "SPINBUTTON";
+		break;
+	case WIDGET_TIMER:
+		type = "TIMER";
 		break;
 	default:
 		type = "THINGY";

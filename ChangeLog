@@ -1,3 +1,6 @@
+* Thu Aug 11 2011 Thunor <thunorsif@hotmail.com>
+- New widget: <timer> with a custom "tick" signal.
+
 * Wed Aug 10 2011 Thunor <thunorsif@hotmail.com>
 - Connected-up the primary and secondary icon-press/release signals for
   the new spinbutton widget -- it's effectively an entry widget + scale,

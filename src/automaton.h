@@ -86,6 +86,7 @@ typedef struct actioncommand {
 #define WIDGET_HSCALE            0x00A80000
 #define WIDGET_VSCALE            0x00A90000
 #define WIDGET_SPINBUTTON        0x00AA0000
+#define WIDGET_TIMER             0x00AB0000
 
 /*
  * Imperative stuff.
@@ -154,6 +155,9 @@ typedef struct actioncommand {
  *                                                                       *
  *                                                                       *
  *************************************************************************/
+void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
+	const gchar *signal_name);
+
 gint window_delete_event_handler(
 		GtkWidget * widget, 
 		GtkWidget *event, 
