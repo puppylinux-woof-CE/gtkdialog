@@ -148,6 +148,7 @@ start_up(void)
 %token         HSCALE PART_HSCALE EHSCALE
 %token         VSCALE PART_VSCALE EVSCALE
 %token         SPINBUTTON PART_SPINBUTTON ESPINBUTTON
+%token         TIMER PART_TIMER ETIMER
 
 %% 
 window
@@ -248,6 +249,7 @@ widget
   | hscale
   | vscale
   | spinbutton
+  | timer
   ;
 
 entry
@@ -576,6 +578,15 @@ spinbutton
 	}
   | PART_SPINBUTTON tagattr '>' attr ESPINBUTTON {
 		token_store_attr(PUSH | WIDGET_SPINBUTTON, $2);
+	}
+  ;
+
+timer
+  : TIMER attr ETIMER {
+		token_store(PUSH | WIDGET_TIMER);
+	}
+  | PART_TIMER tagattr '>' attr ETIMER {
+		token_store_attr(PUSH | WIDGET_TIMER, $2);
 	}
   ;
 

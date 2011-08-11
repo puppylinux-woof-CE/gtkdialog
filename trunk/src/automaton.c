@@ -47,6 +47,7 @@
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
+#include "widget_timer.h"
 
 #undef DEBUG
 #undef WARNING
@@ -102,8 +103,7 @@ on_any_widget_realized(
 	widget_set_tag_attributes(widget, tag_attributes);
 }
 
-static void
-widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
+void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	const gchar *signal_name)
 {
 	gchar            *command, *type, *signal;
@@ -191,6 +191,10 @@ widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 					execute = TRUE;
 			} else if (GTK_IS_SCALE(widget)) {
 				if (strcasecmp(signal_name, "value-changed") == 0)
+					execute = TRUE;
+			} else if (GTK_IS_LABEL(widget)) {
+				/* A GtkLabel that ticks is a timer */
+				if (strcasecmp(signal_name, "tick") == 0)
 					execute = TRUE;
 			}
 		}
@@ -918,6 +922,9 @@ void print_command(instruction command)
 	case WIDGET_SPINBUTTON:
 	    printf("(new spinbutton())");
 	    break;
+	case WIDGET_TIMER:
+	    printf("(new timer())");
+	    break;
 	default:
 	    printf("(Unknown Widget: %d)", Widget_Type);
 	}
@@ -1162,6 +1169,9 @@ void print_token(token Token)
 		break;
 	case WIDGET_SPINBUTTON:
 		printf("(SPINBUTTON)");
+		break;
+	case WIDGET_TIMER:
+		printf("(TIMER)");
 		break;
 	default:
 		printf("Unknown Widget (%d)", Widget_Type);
@@ -2606,6 +2616,11 @@ instruction_execute_push(
 
 		case WIDGET_SPINBUTTON:
 			Widget = widget_spinbutton_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+
+		case WIDGET_TIMER:
+			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
 

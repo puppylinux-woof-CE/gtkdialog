@@ -168,7 +168,10 @@
      EVSCALE = 384,
      SPINBUTTON = 385,
      PART_SPINBUTTON = 386,
-     ESPINBUTTON = 387
+     ESPINBUTTON = 387,
+     TIMER = 388,
+     PART_TIMER = 389,
+     ETIMER = 390
    };
 #endif
 /* Tokens.  */
@@ -302,6 +305,9 @@
 #define SPINBUTTON 385
 #define PART_SPINBUTTON 386
 #define ESPINBUTTON 387
+#define TIMER 388
+#define PART_TIMER 389
+#define ETIMER 390
 
 
 
@@ -322,7 +328,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 326 "gtkdialog_parser.h"
+#line 332 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

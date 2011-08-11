@@ -501,6 +501,12 @@ gchar *Token;
 					  return(PART_SPINBUTTON); }
 \<\/spinbutton\>			{ Token="</spinbutton>"; return(ESPINBUTTON); }
 
+\<timer\>					{ Token="<timer>"; return(TIMER); }
+\<timer[ ]+					{ Token="<timer>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_TIMER); }
+\<\/timer\>					{ Token="</timer>"; return(ETIMER); }
+
 
 
 
