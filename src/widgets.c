@@ -876,10 +876,15 @@ widget_entry_refresh(variable *var)
 			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 				gtk_entry_set_text(GTK_ENTRY(var->Widget),
 				attributeset_get_first(var->Attributes, ATTR_DEFAULT));
-			/* Apply the visible directive if available */
-			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
+			/* Apply the sensitive directive if available */
+			/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
-			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "password"))
+			/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "password"))	Redundant */
+			if (attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "password"))
 				gtk_entry_set_visibility(GTK_ENTRY(var->Widget), FALSE);
 			/* Apply the width and height directives if available */
 			if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT) &&
@@ -923,8 +928,12 @@ void widget_checkbox_refresh(variable * var)
 		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
 	}
 
-	if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))
+	/* if (attributeset_cmp_left
+	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 		gtk_widget_set_sensitive(var->Widget, FALSE);
 
 }
@@ -954,8 +963,12 @@ void widget_list_refresh(variable * var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		fill_list_by_items(var->Attributes, var->Widget);
 
-	if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))
+	/* if (attributeset_cmp_left
+	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 		gtk_widget_set_sensitive(var->Widget, FALSE);
 
 	gtk_widget_queue_draw(var->Widget);
@@ -1194,8 +1207,12 @@ widget_table_refresh(variable * var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		fill_clist_by_items(var->Attributes, var->Widget, '|');
 
-	if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))
+	/* if (attributeset_cmp_left
+	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 		gtk_widget_set_sensitive(var->Widget, FALSE);
 }
 
@@ -1210,8 +1227,12 @@ widget_combo_refresh(variable * var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		fill_combo_by_items(var->Attributes, var->Widget);
 
-	if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))
+	/* if (attributeset_cmp_left
+	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 		gtk_widget_set_sensitive(var->Widget, FALSE);
 }
 
@@ -1329,9 +1350,13 @@ void widget_scale_refresh(variable *var)
 			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 				gtk_range_set_value(GTK_RANGE(var->Widget),
 					atof(attributeset_get_first(var->Attributes, ATTR_DEFAULT)));
-			/* Apply the visible directive if available */
-			if (attributeset_cmp_left
-				(var->Attributes, ATTR_VISIBLE, "disabled"))
+			/* Apply the sensitive directive if available */
+			/* if (attributeset_cmp_left
+				(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 
 			/* Connect signals */
@@ -1409,8 +1434,12 @@ void widget_menuitem_refresh(variable *var)
 
 		/* Initialise these only once at start-up */
 		if (!initialised) {
-			/* Apply the visible directive if available */
-			if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
+			/* Apply the sensitive directive if available */
+			/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
 			/* The GTK "sensitive" property (if present) will be set later after
 			 * widget realization, but this doesn't have any effect until after
@@ -1419,7 +1448,7 @@ void widget_menuitem_refresh(variable *var)
 			 * looks as though GTK is initialising the menus on first opening as
 			 * they render much quicker on subsequent openings -- but it can be
 			 * dealt with by applying the property right here right now.
-			 * Note that I'm applying this after any visible directive which
+			 * Note that I'm applying this after any sensitive directive which
 			 * would be the normal sequence of things.
 			 * 
 			 * [UPDATE] Menuitems are realized when the menu is opened which could

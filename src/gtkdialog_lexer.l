@@ -523,8 +523,11 @@ gchar *Token;
 \<default\>      			{ Token="<default>"; return(DEFAULT);  			}
 \<\/default\>    			{ Token="</default>"; return(EDEFAULT);  		}
 
-\<visible\>      			{ Token="<visible>"; return(VISIBLE);  			}
-\<\/visible\>    			{ Token="</visible>"; return(EVISIBLE);  		}
+\<visible\>      			{ Token="<sensitive>"; return(SENSITIVE);  		}
+\<\/visible\>    			{ Token="</sensitive>"; return(ESENSITIVE);  	}
+
+\<sensitive\>      			{ Token="<sensitive>"; return(SENSITIVE);  		}
+\<\/sensitive\>    			{ Token="</sensitive>"; return(ESENSITIVE);  	}
 
 \<variable\>     			{ 
 					  Token="<variable>"; 

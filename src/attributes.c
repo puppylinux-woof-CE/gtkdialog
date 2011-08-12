@@ -42,8 +42,8 @@ attribute_name(gint attribute)
 			return "width";
 		case ATTR_INPUT:
 			return "input";
-		case ATTR_VISIBLE:
-			return "visible";
+		case ATTR_SENSITIVE:
+			return "sensitive";
 		case ATTR_ACTION:
 			return "action";
 		case ATTR_ITEM:

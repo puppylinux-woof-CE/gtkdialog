@@ -250,7 +250,11 @@ void widget_timer_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
 				__func__);
-		if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
