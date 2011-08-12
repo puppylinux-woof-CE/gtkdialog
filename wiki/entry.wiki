@@ -39,7 +39,7 @@ Some of these may have tag attribute equivalents.
 || width || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || 0.7.21 ||
-|| sensitive || Sensitive state || {{{true}}}, {{{false}}} or {{{password}}} || || ||
+|| sensitive || Sensitive state || {{{true}}}, {{{false}}} or {{{password}}} || || 0.7.21 ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
