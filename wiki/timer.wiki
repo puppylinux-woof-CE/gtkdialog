@@ -28,7 +28,7 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
+|| sensitive || Active state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
@@ -41,8 +41,8 @@ The default signal is "tick", a custom signal emitted when the timer times-out.
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
-|| enable || Sensitise widget || Shell variable name || ||
-|| disable || Desensitise widget || Shell variable name || ||
+|| enable || Reactivate timer || Shell variable name || ||
+|| disable || Deactivate timer || Shell variable name || ||
 
 The following general functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
