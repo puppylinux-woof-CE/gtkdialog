@@ -460,14 +460,18 @@ main(int argc, char *argv[])
 	 * If we have an event driven program we recall the gtkdialog with
 	 * a source file included into the environment.
 	 */
+#ifdef DEBUG
+	fprintf(stderr, "%s(): argv[0]='%s'\n", __func__, argv[0]);
+#endif
 	if (option_event_file != NULL) {
 		gchar *command;
 		command = g_strdup_printf(
 				/* Debian 01_bashism patch: use dot rather than source.
 				"source %s; " */
 				". %s; "
-				"gtkdialog %s%s%s%s%s%s -i %s",
+				"%s %s%s%s%s%s%s -i %s",
 				option_event_file,
+				argv[0],
 				option_debug ? "-d " : "",
 				option_no_warning ? "-w" : "",
 				option_centering ? "-c " : "",

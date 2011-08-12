@@ -3,6 +3,7 @@
   deprecated GTK_WIDGET_SENSITIVE if older than 2.18.0.
 - Deprecated the <visible>disabled</visible> directive in favour
   of <sensitive>false/no/0</sensitive> which is what it actually is.
+- Fixed the hardcoded "gtkdialog" binary name in main.
 
 * Thu Aug 11 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <timer> with a custom "tick" signal.
