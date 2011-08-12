@@ -14,7 +14,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<input file icon="image"></input>
 	<input file stock="gtk-image"></input>
 	<input file>filename</input>
-	<visible>state</visible>
+	<sensitive>state</sensitive>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
@@ -39,7 +39,7 @@ Some of these may have tag attribute equivalents.
 || input file icon="_image_"^[2]^ || GTK theme icon name || || || ||
 || input file stock="_gtk-image_"^[3]^ || GTK stock icon id || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
 || input file || Data input source || Image filename || || ||
-|| visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||

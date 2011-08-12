@@ -13,7 +13,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkEntry.html GtkEntry]
 	<width>value</width>
 	<input>command</input>
 	<input file>filename</input>
-	<visible>state</visible>
+	<sensitive>state</sensitive>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
@@ -39,7 +39,7 @@ Some of these may have tag attribute equivalents.
 || width || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || 0.7.21 ||
-|| visible || Sensitive state || {{{enabled}}}, {{{disabled}}} or {{{password}}} || || ||
+|| sensitive || Sensitive state || {{{true}}}, {{{false}}} or {{{password}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||

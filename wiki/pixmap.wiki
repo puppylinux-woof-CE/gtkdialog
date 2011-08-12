@@ -13,7 +13,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage]
 	<input file icon="image"></input>
 	<input file stock="gtk-image"></input>
 	<input file>filename</input>
-	<visible>state</visible>
+	<sensitive>state</sensitive>
 </pixmap>
 }}}
 "..." denotes acceptance of multiples of the same thing.
@@ -33,7 +33,7 @@ Some of these may have tag attribute equivalents.
 || input file icon="_image_"^[1]^ || GTK theme icon name  || || (0) || 0.7.21 ||
 || input file stock="_gtk-image_"^[2]^ || GTK stock icon id || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || (0) || ||
 || input file || Data input source || Image filename || (0) || ||
-|| visible || Sensitive state || {{{enabled}}} or {{{disabled}}} || || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
 
 == Signals ==
 There is no default signal for this widget.
