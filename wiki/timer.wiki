@@ -22,7 +22,7 @@ See the [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget.properties
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || milliseconds || Timer precision || {{{true}}} or {{{false}}} || ||
-|| interval^[2]^ || Timer frequency || An unsigned integer value of seconds or milliseconds || ||
+|| interval^[2]^ || Timer frequency || An unsigned integer value representing seconds or milliseconds || ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -54,7 +54,7 @@ The following general functions can be performed by any widget capable of emitti
 == Notes ==
 1. The "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget--visible visible]" tag attribute will be required to hide the timer widget as it is visible by default.
 
-2. The default precision is in seconds using a default interval of 1 second.
+2. The default precision is seconds using a default interval of 1 second.
 
 This widget was introduced in version 0.7.21.
 ----
