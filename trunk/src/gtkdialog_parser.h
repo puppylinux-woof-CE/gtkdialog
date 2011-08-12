@@ -116,8 +116,8 @@
      EPIXMAP = 332,
      DEFAULT = 333,
      EDEFAULT = 334,
-     VISIBLE = 335,
-     EVISIBLE = 336,
+     SENSITIVE = 335,
+     ESENSITIVE = 336,
      VARIABLE = 337,
      EVARIABLE = 338,
      WIDTH = 339,
@@ -252,8 +252,8 @@
 #define EPIXMAP 332
 #define DEFAULT 333
 #define EDEFAULT 334
-#define VISIBLE 335
-#define EVISIBLE 336
+#define SENSITIVE 335
+#define ESENSITIVE 336
 #define VARIABLE 337
 #define EVARIABLE 338
 #define WIDTH 339

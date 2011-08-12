@@ -1705,7 +1705,11 @@ create_label(AttributeSet * Attr)
 	Label = gtk_label_new(attributeset_get_first (Attr, ATTR_LABEL));
 	gtk_label_set_line_wrap(GTK_LABEL(Label), TRUE);
 
-	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+	/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+	if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 		gtk_widget_set_sensitive(Label, FALSE);
 
 	return Label;
@@ -2526,7 +2530,11 @@ create_edit(AttributeSet *Attr,
 	text_view = gtk_text_view_new();
 	text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
 
-	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+	/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+	if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 		gtk_widget_set_sensitive(text_view, FALSE);
  
 	if (attributeset_is_avail(Attr, ATTR_DEFAULT))
@@ -2743,7 +2751,11 @@ instruction_execute_push(
 		//Widget = gtk_combo_box_new();
 		Widget = gtk_combo_new();
 
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 
 		push_widget(Widget, Widget_Type);
@@ -2753,7 +2765,11 @@ instruction_execute_push(
 		Widget = gtk_button_new_from_stock(GTK_STOCK_OK);
 		attributeset_set_if_unset(Attr, ATTR_LABEL, "OK");
 		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 		/*
 		 * The OK button is a default widget in the dialog box. FIXME:
@@ -2770,7 +2786,11 @@ instruction_execute_push(
 		Widget = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
 		attributeset_set_if_unset(Attr, ATTR_LABEL, "Cancel");
 		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 
 		push_widget(Widget, Widget_Type);
@@ -2780,7 +2800,11 @@ instruction_execute_push(
 		Widget = gtk_button_new_from_stock(GTK_STOCK_HELP);
 		attributeset_set_if_unset(Attr, ATTR_LABEL, "Help");
 		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 
 		push_widget(Widget, Widget_Type);
@@ -2790,7 +2814,11 @@ instruction_execute_push(
 		Widget = gtk_button_new_from_stock(GTK_STOCK_YES);
 		attributeset_set_if_unset(Attr, ATTR_LABEL, "Yes");
 		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 
 		push_widget(Widget, Widget_Type);
@@ -2800,7 +2828,11 @@ instruction_execute_push(
 		Widget = gtk_button_new_from_stock(GTK_STOCK_NO);
 		attributeset_set_if_unset(Attr, ATTR_LABEL, "No");
 		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 
 		push_widget(Widget, Widget_Type);
@@ -2809,7 +2841,11 @@ instruction_execute_push(
 	case WIDGET_BUTTON:
 		Widget = create_button(Attr, tag_attributes);
 		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 		push_widget(Widget, Widget_Type);
 		break;
@@ -2884,7 +2920,11 @@ instruction_execute_push(
 			}
 		}
 
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 
 		push_widget(Widget, Widget_Type);
@@ -2939,7 +2979,11 @@ instruction_execute_push(
 		
 		push_widget(Widget, Widget_Type);
 
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
+		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
+		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
+			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
 			gtk_widget_set_sensitive(Widget, FALSE);
 		break;
 

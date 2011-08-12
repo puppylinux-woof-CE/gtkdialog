@@ -112,7 +112,7 @@ start_up(void)
 %token         TEXT PART_TEXT ETEXT
 %token         PIXMAP PART_PIXMAP EPIXMAP 
 %token         DEFAULT EDEFAULT
-%token         VISIBLE EVISIBLE
+%token         SENSITIVE ESENSITIVE
 %token         VARIABLE EVARIABLE
 %token         WIDTH EWIDTH
 %token         HEIGHT EHEIGHT
@@ -593,7 +593,7 @@ timer
 attr
   :
   | attr defaultvalue
-  | attr visible
+  | attr sensitive
   | attr variable
   | attr label
   | attr width
@@ -614,9 +614,9 @@ variable
      token_store_with_argument( SET | ATTR_VARIABLE, $2); }
   ; 
 
-visible
-  : VISIBLE STRING EVISIBLE       {
-     token_store_with_argument( SET | ATTR_VISIBLE, $2);  }
+sensitive
+  : SENSITIVE STRING ESENSITIVE       {
+     token_store_with_argument( SET | ATTR_SENSITIVE, $2);  }
   ; 
 
 defaultvalue

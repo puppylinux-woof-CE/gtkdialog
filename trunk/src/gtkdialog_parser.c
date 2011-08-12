@@ -258,8 +258,8 @@ start_up(void)
      EPIXMAP = 332,
      DEFAULT = 333,
      EDEFAULT = 334,
-     VISIBLE = 335,
-     EVISIBLE = 336,
+     SENSITIVE = 335,
+     ESENSITIVE = 336,
      VARIABLE = 337,
      EVARIABLE = 338,
      WIDTH = 339,
@@ -394,8 +394,8 @@ start_up(void)
 #define EPIXMAP 332
 #define DEFAULT 333
 #define EDEFAULT 334
-#define VISIBLE 335
-#define EVISIBLE 336
+#define SENSITIVE 335
+#define ESENSITIVE 336
 #define VARIABLE 337
 #define EVARIABLE 338
 #define WIDTH 339
@@ -897,7 +897,7 @@ static const char *const yytname[] =
   "PART_RADIO", "PROGRESS", "EPROGRESS", "PART_PROGRESS", "LIST",
   "PART_LIST", "ELIST", "TABLE", "ETABLE", "COMBO", "PART_COMBO", "ECOMBO",
   "GVIM", "EGVIM", "TEXT", "PART_TEXT", "ETEXT", "PIXMAP", "PART_PIXMAP",
-  "EPIXMAP", "DEFAULT", "EDEFAULT", "VISIBLE", "EVISIBLE", "VARIABLE",
+  "EPIXMAP", "DEFAULT", "EDEFAULT", "SENSITIVE", "ESENSITIVE", "VARIABLE",
   "EVARIABLE", "WIDTH", "EWIDTH", "HEIGHT", "EHEIGHT", "INPUT",
   "INPUTFILE", "EINPUT", "PART_INPUT", "PART_INPUTFILE", "OUTPUT",
   "OUTPUTFILE", "EOUTPUT", "ACTION", "EACTION", "PART_ACTION", "COMM",
@@ -914,7 +914,7 @@ static const char *const yytname[] =
   "progressbar", "list", "table", "combo", "gvim", "pixmap", "menubar",
   "menuwlist", "menu", "menuitem", "menuitemseparator", "hseparator",
   "vseparator", "comboboxtext", "comboboxentry", "hscale", "vscale",
-  "spinbutton", "timer", "attr", "label", "variable", "visible",
+  "spinbutton", "timer", "attr", "label", "variable", "sensitive",
   "defaultvalue", "width", "height", "input", "output", "action", "item",
   "tagattr", "imperative", "assignment", "expression", "if", "then",
   "endif", "while", "ewhile", "do", 0
@@ -3635,7 +3635,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 618 "gtkdialog_parser.y"
     {
-     token_store_with_argument( SET | ATTR_VISIBLE, (yyvsp[(2) - (3)].cval));  }
+     token_store_with_argument( SET | ATTR_SENSITIVE, (yyvsp[(2) - (3)].cval));  }
     break;
 
   case 132:
