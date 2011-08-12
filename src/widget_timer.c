@@ -134,7 +134,12 @@ gchar *widget_timer_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (gtk_widget_get_sensitive(widget)) {
+#if GTK_CHECK_VERSION(2,18,0)
+	if (gtk_widget_get_sensitive(widget))
+#else
+	if (GTK_WIDGET_SENSITIVE(widget))
+#endif
+	{
 		string = g_strdup("true");
 	} else {
 		string = g_strdup("false");
@@ -376,7 +381,12 @@ gboolean widget_timer_timer_callback(gpointer data)
 #endif
 
 	/* Generate a custom signal if sensitive is true */
-	if (gtk_widget_get_sensitive(var->Widget)) {
+#if GTK_CHECK_VERSION(2,18,0)
+	if (gtk_widget_get_sensitive(var->Widget))
+#else
+	if (GTK_WIDGET_SENSITIVE(var->Widget))
+#endif
+	{
 		widget_signal_executor(var->Widget, var->Attributes, "tick");
 	}
 

@@ -1,3 +1,7 @@
+* Fri Aug 12 2011 Thunor <thunorsif@hotmail.com>
+- Added GTK_CHECK_VERSION for gtk_widget_get_sensitive which'll use the
+  deprecated GTK_WIDGET_SENSITIVE if older than 2.18.0.
+
 * Thu Aug 11 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <timer> with a custom "tick" signal.
 
