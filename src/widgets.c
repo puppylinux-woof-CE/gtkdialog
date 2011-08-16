@@ -37,6 +37,7 @@
 #include "widgets.h"
 #include "stringman.h"
 #include "widget_comboboxtext.h"
+#include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
 #include "widget_timer.h"
@@ -51,11 +52,12 @@ static void
 fill_list_by_items(AttributeSet *Attr, 
 		GtkWidget * list)
 {
+	GList     *element;
 	GtkWidget *item;
 	char      *text;
 	g_assert(Attr != NULL && list != NULL);
 	
-	text = attributeset_get_first(Attr, ATTR_ITEM);
+	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
 	if (text == NULL)
 		return;
 	
@@ -63,7 +65,7 @@ fill_list_by_items(AttributeSet *Attr,
 		item = gtk_list_item_new_with_label(text);
 		gtk_object_set_user_data(GTK_OBJECT(item), (gpointer) text);
 		gtk_container_add(GTK_CONTAINER(list), item);
-next_line:	text = attributeset_get_next(Attr, ATTR_ITEM);
+next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
 	}
 
 	gtk_list_select_item(GTK_LIST(list), 0);
@@ -74,19 +76,20 @@ fill_clist_by_items(AttributeSet *Attr,
 		         GtkWidget *list,
 			 int separator)
 {
+	GList *element;
 	char *text;
 	list_t *sliced;
 
 	g_assert(Attr != NULL && list != NULL);
 	
-	text = attributeset_get_first(Attr, ATTR_ITEM);
+	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
 	if (text == NULL)
 		return;
 	
 	while (text != NULL){
 		sliced = linecutter(text, separator);
 		gtk_clist_append(GTK_CLIST(list), sliced->line);
-next_line:	text = attributeset_get_next(Attr, ATTR_ITEM);
+next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
 	}
 
 	gtk_clist_select_row(GTK_CLIST(list), 0, 0);
@@ -97,17 +100,18 @@ static
 void fill_combo_by_items(AttributeSet *Attr,
 		         GtkWidget *combo)
 {
+	GList *element;
 	GList *glist = NULL;
 	char *text;
 	
 	g_assert(Attr != NULL && combo != NULL);
-	text = attributeset_get_first(Attr, ATTR_ITEM);
+	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
 	if (text == NULL)
 		return;
 	
 	while (text != NULL) {
 		glist = g_list_append(glist, text);
-next_line:	text = attributeset_get_next(Attr, ATTR_ITEM);
+next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
 	}
 	
 	gtk_combo_set_popdown_strings(GTK_COMBO(combo), glist);
@@ -117,13 +121,14 @@ static
 void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale)
 {
 #if GTK_CHECK_VERSION(2,16,0)
+	GList            *element;
 	gchar            *text;
 	gdouble           value;
 	gint              position, count;
 
 	g_assert(Attr != NULL && scale != NULL);
 
-	text = attributeset_get_first(Attr, ATTR_ITEM);
+	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
 	while (text) {
 		/* sscanf is good for the first two values */
 		if (sscanf(text, "%lf | %d", &value, &position) == 2) {
@@ -139,7 +144,7 @@ void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale)
 #endif
 			gtk_scale_add_mark(GTK_SCALE(scale), value, position, text);
 		}
-		text = attributeset_get_next(Attr, ATTR_ITEM);
+		text = attributeset_get_next(&element, Attr, ATTR_ITEM);
 	}
 #endif
 }
@@ -177,6 +182,11 @@ widget_get_text_value(
 			return string;
 			break;
 		
+		case WIDGET_NOTEBOOK:
+			string = widget_notebook_envvar_construct(widget);
+			return string;
+			break;
+
 		case WIDGET_PIXMAP:
 			string = widget_pixmap_envvar_construct(widget);
 			return string;
@@ -585,19 +595,20 @@ void fill_entry_by_file(GtkWidget *widget, char *filename)
 
 int widget_label_refresh(variable * var)
 {
+	GList *element;
 	char *act;
 
 	if (var == NULL || var->Attributes == NULL)
 		return FALSE;
 
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act != NULL) {
 		if (strncasecmp(act, "file:", 5) == 0)
 			fill_label_by_file(var->Widget, act + 5);
 		if (input_is_shell_command(act))
 			fill_label_by_command(var->Widget, act + 8);
 next_item:
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	return 0;
@@ -605,34 +616,35 @@ next_item:
 
 int widget_edit_refresh(variable * var)
 {
+	GList *element;
 	char *act;
 	if (var == NULL || var->Attributes == NULL)
 		return FALSE;
 
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act != NULL) {
 		fill_edit_by_file(var->Widget, act);
-		act = attributeset_get_next(var->Attributes, 
-				ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 }
 
 
 void save_entry_to_file(variable *var)
 {
+	GList            *element;
 	FILE             *outfile;
 	gchar            *act;
 	gchar            *filename = NULL;
 	const gchar      *text;
 
 	/* We'll use the output file filename if available */
-	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			filename = act + 5;
 			break;
 		}
-		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
 	}
 
 	/* If we have a valid filename then open it and dump the
@@ -653,6 +665,7 @@ void save_entry_to_file(variable *var)
 
 void widget_edit_save(variable * var)
 {
+	GList *element;
 	char *filename;
 #ifdef DEBUG
 	fprintf(stderr, "%s(): Start.\n", __func__);
@@ -660,7 +673,7 @@ void widget_edit_save(variable * var)
 #endif
 	g_assert(var != NULL);
 	
-	filename = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	filename = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	if (filename == NULL){
 		yywarning("Save activated but no output is given. "
 			"Trying to save to the input file...");
@@ -669,8 +682,7 @@ void widget_edit_save(variable * var)
 
 	while (filename != NULL) {
 		save_edit_to_file(var->Widget, filename);
-		filename = attributeset_get_next(var->Attributes, 
-			ATTR_OUTPUT);
+		filename = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
 	}
 	return;
 
@@ -678,7 +690,7 @@ void widget_edit_save(variable * var)
 	// If there is no <output>, we try to use <input> file.
 	//
 try_input:
-	filename = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	filename = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	if (filename == NULL){
 		yywarning("No input file either.");
 		return;
@@ -721,6 +733,7 @@ void save_edit_to_file(GtkWidget * widget, char *filename)
 
 void save_scale_to_file(variable *var)
 {
+	GList            *element;
 	FILE             *outfile;
 	gchar            *act;
 	gchar            *filename = NULL;
@@ -728,13 +741,13 @@ void save_scale_to_file(variable *var)
 	gdouble           val;
 
 	/* We'll use the output file filename if available */
-	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			filename = act + 5;
 			break;
 		}
-		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
 	}
 
 	/* If we have a valid filename then open it and dump the
@@ -812,19 +825,20 @@ void save_scale_to_file(variable *var)
 
 void save_menuitem_to_file(variable *var)
 {
+	GList            *element;
 	FILE             *outfile;
 	gchar            *act;
 	gchar            *filename = NULL;
 	gint              is_active;
 
 	/* We'll use the output file filename if available */
-	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			filename = act + 5;
 			break;
 		}
-		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
 	}
 
 	/* If we have a valid filename then open it and dump the
@@ -846,6 +860,7 @@ void save_menuitem_to_file(variable *var)
 void 
 widget_entry_refresh(variable *var)
 {
+	GList            *element;
 	gchar            *act, *value;
 	gint              initialised = FALSE;
 
@@ -860,14 +875,14 @@ widget_entry_refresh(variable *var)
 			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 		/* The <input> tag... */
-		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 		while (act) {
 			/* input file stock = "File:", input file = "File:/path/to/file" */
 			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
 				fill_entry_by_file(var->Widget, act + 5);
 			if (input_is_shell_command(act))
 				fill_entry_by_command(var->Widget, act + 8);
-			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+			act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 		}
 
 		/* Initialise these only once at start-up */
@@ -875,7 +890,7 @@ widget_entry_refresh(variable *var)
 			/* Apply the default directive if available */
 			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 				gtk_entry_set_text(GTK_ENTRY(var->Widget),
-				attributeset_get_first(var->Attributes, ATTR_DEFAULT));
+				attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT));
 			/* Apply the sensitive directive if available */
 			/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
@@ -890,8 +905,8 @@ widget_entry_refresh(variable *var)
 			if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT) &&
 				attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 				gtk_widget_set_usize(var->Widget, 
-					atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH)),
-					atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT)));
+					atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH)),
+					atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT)));
 
 			/* Connect signals */
 			g_signal_connect(G_OBJECT(var->Widget), "changed", 
@@ -914,6 +929,7 @@ widget_entry_refresh(variable *var)
 
 void widget_checkbox_refresh(variable * var)
 {
+	GList *element;
 	char *act;
 
 	if (var == NULL || var->Attributes == NULL)
@@ -921,11 +937,11 @@ void widget_checkbox_refresh(variable * var)
 	/*
 	 ** The <input> tag... 
 	 */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act != NULL) {
 		if (input_is_shell_command(act))
 			fill_checkbox_by_command(var->Widget, act + 8);
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* if (attributeset_cmp_left
@@ -941,6 +957,7 @@ void widget_checkbox_refresh(variable * var)
 
 void widget_list_refresh(variable * var)
 {
+	GList *element;
 	char *act;
 
 	if (var == NULL || var->Attributes == NULL)
@@ -951,11 +968,11 @@ void widget_list_refresh(variable * var)
 	/* 
 	 ** The <input> tag... 
 	 */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act != NULL) {
 		if (input_is_shell_command(act))
 			fill_list_by_command(var->Widget, act + 8);
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}			/*while */
 	/*
 	 ** The <item> tags...
@@ -992,6 +1009,7 @@ fill_tree_model_by_items(
 	GtkTreeModel  *tree_model,
 	variable      *var)
 {
+	GList        *element;
 	gchar        *act;
 	gchar       **columns;
 	gint          n, ncolumns;
@@ -1004,29 +1022,29 @@ fill_tree_model_by_items(
 	
 	ncolumns = gtk_tree_model_get_n_columns(tree_model) - FirstDataColumn;
 	
-	act = attributeset_get_first(var->Attributes, ATTR_ITEM);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
 	while (act != NULL) {
 		gtk_tree_store_append(GTK_TREE_STORE(tree_model), &iter, NULL);
 		
-		tagattr = attributeset_get_this_tagattr(var->Attributes, ATTR_ITEM, "stock");
+		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "stock");
 		if (tagattr != NULL)
 			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
 					ColumnStockId, tagattr,
 					-1);
 
-		tagattr = attributeset_get_this_tagattr(var->Attributes, ATTR_ITEM, "stock_id");
+		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "stock_id");
 		if (tagattr != NULL)
 			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
 					ColumnStockId, tagattr,
 					-1);
 		
-		tagattr = attributeset_get_this_tagattr(var->Attributes, ATTR_ITEM, "icon");
+		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "icon");
 		if (tagattr != NULL)
 			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
 					ColumnIconName, tagattr,
 					-1);
 		
-		tagattr = attributeset_get_this_tagattr(var->Attributes, ATTR_ITEM, "icon_name");
+		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "icon_name");
 		if (tagattr != NULL)
 			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
 					ColumnIconName, tagattr,
@@ -1054,7 +1072,7 @@ fill_tree_model_by_items(
 		g_strfreev(columns);
 
 next_item:
-		act = attributeset_get_next(var->Attributes, ATTR_ITEM);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 }
 
@@ -1141,6 +1159,7 @@ fill_tree_view_by_command(
 void 
 widget_tree_refresh(variable *var)
 {
+	GList        *element;
 	gchar        *act;
 	GtkTreeModel *tree_model;
 	
@@ -1160,16 +1179,16 @@ widget_tree_refresh(variable *var)
 	 * If the widget has an input tag (command, file, stc.) we load the
 	 * lines from there.
 	 */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act != NULL) {
 		gchar         *tmp;
 		gint           stock_column = -1;
 		gint           icon_column = -1;
 
-		tmp = attributeset_get_this_tagattr(var->Attributes, ATTR_INPUT, "stock_column");
+		tmp = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_INPUT, "stock_column");
 		if (tmp != NULL)
 			stock_column = atoi(tmp);
-		tmp = attributeset_get_this_tagattr(var->Attributes, ATTR_INPUT, "icon_column");
+		tmp = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_INPUT, "icon_column");
 		if (tmp != NULL)
 			icon_column = atoi(tmp);
 
@@ -1177,7 +1196,7 @@ widget_tree_refresh(variable *var)
 			fill_tree_view_by_command(var->Widget, tree_model, act + 8, stock_column, icon_column);
 		else
 			fill_tree_view_by_command(var->Widget, tree_model, act, stock_column, icon_column);
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 	/*
 	 * If there are items, we load them too.
@@ -1191,17 +1210,18 @@ widget_tree_refresh(variable *var)
 void 
 widget_table_refresh(variable * var)
 {
+	GList *element;
 	char *act;
 	if (var == NULL || var->Attributes == NULL)
 		return;
 	/*
 	 ** The <input> tags.
 	 */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act != NULL) {
 		if (input_is_shell_command(act))
 			fill_table_by_command(var->Widget, act + 8);
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
@@ -1238,6 +1258,7 @@ widget_combo_refresh(variable * var)
 
 void widget_button_refresh(variable *var)
 {
+	GList            *element;
 	gchar            *act;
 	GList            *btnchildren = NULL;
 	GList            *boxchildren = NULL;
@@ -1257,7 +1278,7 @@ void widget_button_refresh(variable *var)
 			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 		if (initialised) {
-			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+			act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 			while (act != NULL) {
 				/* input file stock = "File:", input file = "File:/path/to/file" */
 				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
@@ -1266,9 +1287,9 @@ void widget_button_refresh(variable *var)
 					while (child) {
 						if (GTK_IS_IMAGE(child->data)) {
 							if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-								width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
+								width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
 							if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-								height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
+								height = atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT));
 
 							if (width == -1 && height == -1) {
 								/* Handle unscaled images */
@@ -1304,7 +1325,7 @@ void widget_button_refresh(variable *var)
 						btnchildren = NULL;
 					}
 				}
-				act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+				act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 			}
 		}
 	}
@@ -1312,6 +1333,7 @@ void widget_button_refresh(variable *var)
 
 void widget_scale_refresh(variable *var)
 {
+	GList            *element;
 	gchar            *act, *value;
 	gint              initialised = FALSE;
 
@@ -1326,14 +1348,14 @@ void widget_scale_refresh(variable *var)
 			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 		/* The <input> tag... */
-		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 		while (act) {
 			/* input file stock = "File:", input file = "File:/path/to/file" */
 			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
 				fill_scale_by_file(var->Widget, act + 5);
 			if (input_is_shell_command(act))
 				fill_scale_by_command(var->Widget, act + 8);
-			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+			act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 		}
 
 		/* The <item> tags... */
@@ -1349,7 +1371,7 @@ void widget_scale_refresh(variable *var)
 			/* Apply the default directive if available */
 			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 				gtk_range_set_value(GTK_RANGE(var->Widget),
-					atof(attributeset_get_first(var->Attributes, ATTR_DEFAULT)));
+					atof(attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT)));
 			/* Apply the sensitive directive if available */
 			/* if (attributeset_cmp_left
 				(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
@@ -1368,6 +1390,7 @@ void widget_scale_refresh(variable *var)
 
 void widget_menuitem_refresh(variable *var)
 {
+	GList            *element;
 	gchar            *act, *value, *image_name;
 	gint              width = -1, height = -1;
 	GdkPixbuf        *pixbuf;
@@ -1393,9 +1416,9 @@ void widget_menuitem_refresh(variable *var)
 				(image_name = get_tag_attribute(var->widget_tag_attr, "image_file")) ||
 				(image_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
 				if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-					width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
+					width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
 				if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-					height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
+					height = atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT));
 
 				if (width == -1 && height == -1) {
 					/* Handle unscaled images */
@@ -1421,14 +1444,14 @@ void widget_menuitem_refresh(variable *var)
 		/* Checkbox and radiobutton menuitems can be refreshed */
 		if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
 			/* The <input> tag... */
-			act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+			act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 			while (act) {
 				/* input file stock = "File:", input file = "File:/path/to/file" */
 				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
 					fill_menuitem_by_file(var->Widget, act + 5);
 				if (input_is_shell_command(act))
 					fill_menuitem_by_command(var->Widget, act + 8);
-				act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+				act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 			}
 		}
 
@@ -1860,6 +1883,9 @@ char *widgets_to_str(int itype)
 	case WIDGET_TIMER:
 		type = "TIMER";
 		break;
+	case WIDGET_NOTEBOOK:
+		type = "NOTEBOOK";
+		break;
 	default:
 		type = "THINGY";
 	}
@@ -1874,16 +1900,17 @@ G_LOCK_DEFINE_STATIC(any_progress_bar);
 void
 perform_progress_bar_actions(progr_descr *descr)
 {
+	GList *element;
 	gchar *command;
 	gchar *type;
 
-	command = attributeset_get_first(descr->Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, descr->Attr, ATTR_ACTION);
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(descr->Attr, 
-				ATTR_ACTION, "type");
+		type = attributeset_get_this_tagattr(&element, descr->Attr,
+			ATTR_ACTION, "type");
 		execute_action(descr->widget, command, type);
 next_command:   
-		command = attributeset_get_next(descr->Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, descr->Attr, ATTR_ACTION);
 	}
 }
 
@@ -1976,6 +2003,7 @@ void
 on_any_progress_bar_realized(GtkWidget *widget, 
 		AttributeSet *Attr)
 {
+	GList *element;
 	progr_descr *descr;
 	gchar *input;
 
@@ -1991,7 +2019,7 @@ on_any_progress_bar_realized(GtkWidget *widget,
 	/*
 	 * Creating the descriptor from the first input.
 	 */
-	input = attributeset_get_first(Attr, ATTR_INPUT);
+	input = attributeset_get_first(&element, Attr, ATTR_INPUT);
 	descr = g_new0(progr_descr, 1);
 	descr->Attr = Attr;
 	descr->widget = widget;

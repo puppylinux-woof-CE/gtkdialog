@@ -165,6 +165,7 @@ int
 action_fileselect(GtkWidget *widget, 
 		char *string)
 {
+	GList                  *element;
 	GtkWidget              *chooser;
 	gint                    response;
 	gchar                  *filename;
@@ -177,9 +178,9 @@ action_fileselect(GtkWidget *widget,
 	 * The title of the chooser dialog.
 	 */
 	if (var != NULL && attributeset_is_avail(var->Attributes, ATTR_LABEL))
-		title = attributeset_get_first(var->Attributes, ATTR_LABEL);
+		title = attributeset_get_first(&element, var->Attributes, ATTR_LABEL);
 	if (title == NULL)
-		title = "GtkDialog";
+		title = "Gtkdialog";
 	/*
 	 * What type of filenames are accepted?
 	 */

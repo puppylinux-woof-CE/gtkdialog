@@ -201,17 +201,17 @@ wlist
 		token_store_attr(PUSH | WIDGET_HBOX, $3); 
 		token_store(SUM);      
 	}
-  | NOTEBOOK wlist ENOTEBOOK   { 
+  | NOTEBOOK wlist attr ENOTEBOOK   { 
 		token_store(PUSH | WIDGET_NOTEBOOK); 
 	}
-  | wlist NOTEBOOK wlist ENOTEBOOK   { 
+  | wlist NOTEBOOK wlist attr ENOTEBOOK   { 
 		token_store(PUSH | WIDGET_NOTEBOOK); 
 		token_store(SUM);      
 	}
-  | PART_NOTEBOOK tagattr '>' wlist ENOTEBOOK {
+  | PART_NOTEBOOK tagattr '>' wlist attr ENOTEBOOK {
 		token_store_attr(PUSH | WIDGET_NOTEBOOK, $2);
 	}
-  | wlist PART_NOTEBOOK tagattr '>' wlist ENOTEBOOK {
+  | wlist PART_NOTEBOOK tagattr '>' wlist attr ENOTEBOOK {
 		token_store_attr(PUSH | WIDGET_NOTEBOOK, $3);
 		token_store(SUM);      
 	}

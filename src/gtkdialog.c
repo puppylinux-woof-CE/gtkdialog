@@ -278,7 +278,7 @@ get_program_from_variable(gchar *name)
 	program_src = g_strdup(g_getenv(name));
 	if (program_src == NULL) 
 		g_error(
-"GtkDialog: Could not find the dialog description in the environment "
+"Gtkdialog: Could not find the dialog description in the environment "
 "variable '%s'.", name);
 	
 	source = PRG_MEMORY;

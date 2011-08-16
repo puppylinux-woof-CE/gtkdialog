@@ -24,7 +24,9 @@
 #include "stringman.h"
 #include "automaton.h"
 
-extern gboolean *option_no_warning;
+/* Defines */
+//#define DEBUG_CONTENT
+//#define DEBUG_TRANSITS
 
 gchar *
 attribute_name(gint attribute) 
@@ -57,9 +59,7 @@ attribute_name(gint attribute)
 	}
 }
 
-
-AttributeSet *
-attributeset_new(void)
+AttributeSet *attributeset_new(void)
 {
 	AttributeSet *new_set;
 	int n;
@@ -67,52 +67,47 @@ attributeset_new(void)
 #ifdef DEBUG
 	g_message("%s(): Start.", __func__);
 #endif
+
 	new_set = g_malloc(sizeof(AttributeSet));
 	new_set->n_attr = ATTRNUMBER;
 	new_set->attr = g_malloc(sizeof(GList *) * ATTRNUMBER);
-	new_set->_pointer = g_malloc(sizeof(GList *) * ATTRNUMBER);
+
 	/*
 	 * All the attributes are NULL pointers, thus they represent empty
 	 * lists.
 	 */
 	for (n = 0; n < ATTRNUMBER; ++n) {
 		new_set->attr[n] = NULL;
-		new_set->_pointer[n] = NULL;
 	}
 
 	return new_set;
 }
 
-gboolean 
-attributeset_is_avail(
-		AttributeSet * set, 
-		int attribute)
+gboolean attributeset_is_avail(AttributeSet *set, int attribute)
 {
 #ifdef DEBUG
 	g_message("%s(): Start attribute = %d (%s)", __func__, attribute,
 			attribute_name(attribute));
 #endif
+
 	g_assert(set != NULL);
 	g_assert(attribute >= 0 && attribute < ATTRNUMBER);
 
 	if (set->attr[attribute] == NULL) {
-		#ifdef DEBUG
+#ifdef DEBUG
 		g_message("%s(): Attribute %d is unset.", __func__, attribute);
-		#endif
+#endif
 		return FALSE;
 	} else {
-		#ifdef DEBUG
+#ifdef DEBUG
 		g_message("%s(): Attribute %d has been set.", __func__, attribute);
-		#endif
+#endif
 		return TRUE;
 	}
 }
 
-gboolean 
-attributeset_cmp_left(
-		AttributeSet *set, 
-		int           attribute,
-	        const char   *str)
+gboolean attributeset_cmp_left(
+	AttributeSet *set, int attribute, const char *str)
 {
 	Attribute *a;
 	g_assert(set != NULL && str != NULL);
@@ -121,140 +116,25 @@ attributeset_cmp_left(
 #ifdef DEBUG
 	g_message("%s(): Start attribute = %d, str = '%s'", __func__, attribute, str);
 #endif
-	
+
 	if (!attributeset_is_avail(set, attribute))
 		return FALSE;
-	
+
 	a = set->attr[attribute]->data;
 
 	if (a->text == NULL)
 		return FALSE;
-	
+
 	if (strncasecmp(a->text, str, strlen(str)) == 0)
 		return TRUE;
 	else
 		return FALSE;
 }
 
-gchar *
-attributeset_get_first(
-		AttributeSet * set, 
-		int attribute)
+gchar *attributeset_set_if_unset(
+	AttributeSet *set, gint attribute, const gchar *value)
 {
-	Attribute *a;
-#ifdef DEBUG
-	g_message("%s(): Start attribute = %d.", __func__, attribute);
-#endif
-	g_assert(set != NULL);
-	g_assert(attribute >= 0 && attribute < ATTRNUMBER);
-	/*
-	 * Resetting the actual attribute pointer to the first list item.
-	 */
-	set->_pointer[attribute] = set->attr[attribute];
-	/*
-	 * If this attribute is not available we return NULL.
-	 */
-	if (set->_pointer[attribute] == NULL)
-		return NULL;
-	/*
-	 * If available, we return the value.
-	 */
-	a = set->_pointer[attribute]->data;
-	return a->text;
-}
-
-void
-attributeset_set_this_tagattr(
-		AttributeSet *set,
-		gint attribute,
-		gchar *name,
-		gchar *value)
-{
-	Attribute *attr_pointer;
-	
-	g_assert(set != NULL && name != NULL);
-	g_assert(attribute >= 0 && attribute < ATTRNUMBER);
-#ifdef DEBUG
-	g_message("%s(): Setting for '%s' = '%s' attribute = %d, n_attr = %d", 
-			__func__, name, value, attribute, set->n_attr);
-#endif
-	
-	/*
-	 * If this is a nonexistent attribute token, we return.
-	 */
-	if (set->_pointer[attribute] == NULL) {
-		if (!option_no_warning)
-			g_warning("%s(): Attribute %d has not been set yet.", 
-					__func__, attribute);
-		return;
-	}
-	attr_pointer = set->_pointer[attribute]->data;
-	add_tag_attribute(attr_pointer->tag_attributes, name, value);
-}
-
-char *
-attributeset_get_this_tagattr(
-		AttributeSet *set,
-		int attribute,
-		const char *name)
-{
-	Attribute *attr_pointer;
-	gchar *value;	
-	
-	g_assert(set != NULL && name != NULL);
-	g_assert(attribute >= 0 && attribute < ATTRNUMBER);
-
-#ifdef DEBUG
-	g_message("%s(): Searching for '%s' attribute = %d, n_attr = %d", 
-			__func__, name, attribute, set->n_attr);
-#endif
-	/*
-	 * If this is a nonexistent attribute token, we return NULL.
-	 */
-	if (set->attr[attribute] == NULL)	
-		return NULL;
-	attr_pointer = set->_pointer[attribute]->data;
-	
-	value = get_tag_attribute(attr_pointer->tag_attributes, name);
-#ifdef DEBUG
-	g_message("%s(): end name = '%s', value = '%s'", __func__, name, value);
-#endif
-	return value;	
-}
-
-char *
-attributeset_get_next(
-		AttributeSet * set, 
-		int attribute)
-{
-	Attribute *a;
-	
-	g_assert(set != NULL);
-	g_assert(attribute >= 0 && attribute < ATTRNUMBER);
-
-#ifdef DEBUG
-	g_message("%s(): Start.", __func__);
-#endif
-	
-	if (attribute >= set->n_attr || g_list_next(set->_pointer[attribute]) == NULL)
-		return NULL;
-	
-	set->_pointer[attribute] = g_list_next(set->_pointer[attribute]);
-	
-	a = set->_pointer[attribute]->data;
-	if (a != NULL)
-		return a->text;
-	else
-		return NULL;
-}
-
-
-gchar *
-attributeset_set_if_unset(
-		AttributeSet *set, 
-		gint          attribute,
-		const gchar  *value)
-{
+	GList *element;
 	Attribute *a;
 
 	g_assert(set != NULL);
@@ -266,77 +146,210 @@ attributeset_set_if_unset(
 #endif
 	
 	if (attributeset_is_avail(set, attribute))
-		return attributeset_get_first(set, attribute);
+		return attributeset_get_first(&element, set, attribute);
 	else
 		return (gchar *)attributeset_insert(set, attribute, value);
 }
 
-const gchar *
-attributeset_insert_with_tagattrs(
-		AttributeSet *set, 
-		gint          attribute, 
-		const gchar  *value, 
-		tag_attr     *tag_attributes) 
+const gchar *attributeset_insert_with_tagattrs(
+	AttributeSet *set, gint attribute, const gchar *value, tag_attr *tag_attributes)
 {
 	Attribute *a;
 	g_assert(set != NULL);
 	g_assert(attribute >= 0 && attribute < ATTRNUMBER);
-	
+
 #ifdef DEBUG
 	g_message("%s(): Start: attribute = %d value = '%s' tag_attributes = %p", 
 			__func__, attribute, value, tag_attributes);
 #endif
-	
+
 	a = g_malloc(sizeof(Attribute));
 	a->text = g_strdup(value);
 	a->tag_attributes = tag_attributes;
+
 	/*
 	 * Adding a new attribute value to the linked list of this attribute.
 	 */
 	set->attr[attribute] = g_list_append(set->attr[attribute], a);
+
 	return value;
 }
 
-const char *
-attributeset_insert(
-		AttributeSet   *set, 
-		gint 		attribute, 
-		const char     *value)
+const char *attributeset_insert(
+	AttributeSet *set, gint attribute, const char *value)
 {
 	tag_attr *text = new_tag_attributeset("text", (gchar *)value);
+
 #ifdef DEBUG
 	g_message("%s(): Start: attribute = %d, value = '%s'", 
 			__func__, attribute, value);
 #endif
+
 	return attributeset_insert_with_tagattrs(set, attribute, value, text);
 }
 
-inline gboolean 
-is_input_with_this_tagattr(
-		AttributeSet *Attr, 
-		const char *name)
-{
-	if (attributeset_get_first(Attr, ATTR_INPUT) == NULL)
-		return FALSE;
-	do {
-		if (attributeset_get_this_tagattr(Attr, ATTR_INPUT, name) != NULL)
-			return TRUE;
-	} while (attributeset_get_next(Attr, ATTR_INPUT));
+/***********************************************************************
+ * AttributeSet Get First                                              *
+ ***********************************************************************/
+/* Thunor: I've re-engineered this function to make it reentrant */
 
-	return FALSE;
+gchar *attributeset_get_first(GList **element, AttributeSet *set, gint type)
+{
+	Attribute        *attribute = NULL;
+	gchar            *text = NULL;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i\n",
+		__func__, *element, set, type);
+#endif
+
+	if (set == NULL) {
+		fprintf(stderr, "%s(): set is NULL.\n", __func__);
+	} else if (type < 0 || type >= ATTRNUMBER) {
+		fprintf(stderr, "%s(): type %i is invalid.\n", __func__, type);
+	} else if ((*element = set->attr[type]) != NULL) {
+		attribute = (*element)->data;
+		text = attribute->text;
+	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i text=%s\n",
+		__func__, *element, set, type, text);
+#endif
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return text;
 }
 
-inline gboolean 
-is_item_with_this_tagattr(AttributeSet *Attr, 
-		const char *name)
-{
-	if (attributeset_get_first(Attr, ATTR_ITEM) == NULL)
-		return FALSE;
-	do {
-		if (attributeset_get_this_tagattr(Attr, ATTR_ITEM, name) != NULL)
-			return TRUE;
-	} while (attributeset_get_next(Attr, ATTR_ITEM));
+/***********************************************************************
+ * AttributeSet Get Next                                               *
+ ***********************************************************************/
+/* Thunor: I've re-engineered this function to make it reentrant */
 
-	return FALSE;
+gchar *attributeset_get_next(GList **element, AttributeSet *set, gint type)
+{
+	Attribute        *attribute = NULL;
+	gchar            *text = NULL;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i\n",
+		__func__, *element, set, type);
+#endif
+
+	if (*element == NULL) {
+		fprintf(stderr, "%s(): element is NULL.\n", __func__);
+	} else if (set == NULL) {
+		fprintf(stderr, "%s(): set is NULL.\n", __func__);
+	} else if (type < 0 || type >= ATTRNUMBER) {
+		fprintf(stderr, "%s(): type %i is invalid.\n", __func__, type);
+	} else if ((*element = g_list_next(*element)) != NULL) {
+		attribute = (*element)->data;
+		text = attribute->text;
+	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i text=%s\n",
+		__func__, *element, set, type, text);
+#endif
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return text;
+}
+
+/***********************************************************************
+ * AttributeSet Get This Tag Attribute                                 *
+ ***********************************************************************/
+/* Thunor: I've re-engineered this function to make it reentrant */
+
+gchar *attributeset_get_this_tagattr(GList **element, AttributeSet *set,
+	gint type, gchar *name)
+{
+	Attribute        *attribute = NULL;
+	gchar            *value = NULL;	
+	
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s\n",
+		__func__, *element, set, type, name);
+#endif
+
+	if (*element == NULL) {
+		fprintf(stderr, "%s(): element is NULL.\n", __func__);
+	} else if (set == NULL) {
+		fprintf(stderr, "%s(): set is NULL.\n", __func__);
+	} else if (type < 0 || type >= ATTRNUMBER) {
+		fprintf(stderr, "%s(): type %i is invalid.\n", __func__, type);
+	} else {
+		attribute = (*element)->data;
+		value = get_tag_attribute(attribute->tag_attributes, name);
+	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s value=%s\n",
+		__func__, *element, set, type, name, value);
+#endif
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return value;
+}
+
+/***********************************************************************
+ * AttributeSet Set This Tag Attribute                                 *
+ ***********************************************************************/
+/* Thunor: I've re-engineered this function to make it reentrant */
+
+void attributeset_set_this_tagattr(
+	GList **element, AttributeSet *set, gint type, gchar *name, gchar *value)
+{
+	Attribute        *attribute = NULL;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s value=%s\n",
+		__func__, *element, set, type, name, value);
+#endif
+
+	if (*element == NULL) {
+		fprintf(stderr, "%s(): element is NULL.\n", __func__);
+	} else if (set == NULL) {
+		fprintf(stderr, "%s(): set is NULL.\n", __func__);
+	} else if (type < 0 || type >= ATTRNUMBER) {
+		fprintf(stderr, "%s(): type %i is invalid.\n", __func__, type);
+	} else {
+		attribute = (*element)->data;
+		add_tag_attribute(attribute->tag_attributes, name, value);
+	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s value=%s\n",
+		__func__, *element, set, type, name, value);
+#endif
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
 }
 

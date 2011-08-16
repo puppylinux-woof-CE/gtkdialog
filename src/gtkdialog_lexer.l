@@ -205,15 +205,15 @@ gchar *Token;
 	return(NOTEBOOK);
 }
 
-\<\/notebook\> { 
-	Token="</notebook>"; 
-	return(ENOTEBOOK);
-}
-
 \<notebook[ ]+ { 
 	Token="<notebook>";
 	BEGIN(ST_TAG_ATTR);
 	return(PART_NOTEBOOK);
+}
+
+\<\/notebook\> { 
+	Token="</notebook>"; 
+	return(ENOTEBOOK);
 }
 
 
