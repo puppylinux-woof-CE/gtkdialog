@@ -1,0 +1,60 @@
+#summary notebook widget reference
+
+= notebook widget =
+A [http://developer.gnome.org/gtk/2.24/GtkNotebook.html GtkNotebook]
+----
+
+== Definition ==
+{{{
+<notebook tag_attr="value"...>
+	widget...
+	<variable>varname</variable>
+	<input>command</input>
+	<input file>filename</input>
+	<sensitive>state</sensitive>
+	<output file>filename</output>
+</notebook>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkNotebook.html#GtkNotebook.object-hierarchy GtkNotebook] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+|| *Name* || *Description* || *Value* || *Since* ||
+|| labels^[1]^ || Tab labels || _label0_ {{{|}}} _label1_ {{{|}}} _label2_ {{{|}}} etc. || ||
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| variable || Shell variable name || || || 0.7.21 ||
+|| input^[2]^ || Data input source || Shell command || || 0.7.21 ||
+|| input file^[2]^ || Data input source || Filename || || 0.7.21 ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
+|| output file || Data output target || Filename || || 0.7.21 ||
+
+== Signals ==
+There is no default signal for this widget.
+
+See the [http://developer.gnome.org/gtk/2.24/GtkNotebook.html#GtkNotebook.signals GtkNotebook] widget and ancestor class signals.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || 0.7.21 ||
+|| save || Save widget data || Shell variable name || 0.7.21 ||
+
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+1. If the tab labels are not defined using the "labels" custom tag attribute then the default "Page n+1" will be used instead.
+
+2. This widget does not accept setting a default page before being shown (there's a note about it [http://developer.gnome.org/gtk/2.24/GtkNotebook.html#gtk-notebook-set-current-page here]) which will result in input data being discarded at start-up. This issue can be overcome by using the "[http://developer.gnome.org/gtk/2.24/GtkNotebook.html#GtkNotebook--page page]" tag attribute which will be applied after the widget is shown.
+----
