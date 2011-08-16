@@ -1,3 +1,17 @@
+* Tue Aug 16 2011 Thunor <thunorsif@hotmail.com>
+- Re-engineered a few functions within attributes.c that needed to be
+  reentrant but weren't. The pointer being used to record the currently
+  referenced element in an AttributeSet (a GList) was being stored within
+  the AttributeSet when it should have been stored within the calling
+  function. For example, clicking a button on a notebook page would emit
+  a signal and an action would change the page, then GTK+ would hide the
+  page including button which would emit signals for the button which
+  would then iterate through the same actions causing the pointer to be
+  updated amd corrupting the original loop. Yeah, it took some finding.
+- Reviewed and extended the <notebook> widget: Now the page number is
+  stored within the variable and it can be refreshed from a command or
+  file making it possible to use another widget to change the page.
+
 * Fri Aug 12 2011 Thunor <thunorsif@hotmail.com>
 - Added GTK_CHECK_VERSION for gtk_widget_get_sensitive which'll use the
   deprecated GTK_WIDGET_SENSITIVE if older than 2.18.0.

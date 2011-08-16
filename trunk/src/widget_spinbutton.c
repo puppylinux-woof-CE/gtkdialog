@@ -237,6 +237,7 @@ void widget_spinbutton_fileselect(
  ***********************************************************************/
 void widget_spinbutton_refresh(variable *var)
 {
+	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;
 
@@ -249,14 +250,14 @@ void widget_spinbutton_refresh(variable *var)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 	/* The <input> tag... */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
 			widget_spinbutton_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
 			widget_spinbutton_input_by_file(var, act + 5);
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
@@ -268,7 +269,7 @@ void widget_spinbutton_refresh(variable *var)
 		/* Apply directives */
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(var->Widget),
-				atof(attributeset_get_first(var->Attributes, ATTR_DEFAULT)));
+				atof(attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT)));
 		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
 			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
 				__func__);
@@ -334,6 +335,7 @@ void widget_spinbutton_removeselected(variable *var)
 void widget_spinbutton_save(variable *var)
 {
 	FILE             *outfile;
+	GList            *element;
 	gchar            *act;
 	gchar            *filename = NULL;
 	gdouble           value;
@@ -344,13 +346,13 @@ void widget_spinbutton_save(variable *var)
 #endif
 
 	/* We'll use the output file filename if available */
-	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			filename = act + 5;
 			break;
 		}
-		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
 	}
 
 	/* If we have a valid filename then open it and dump the

@@ -42,59 +42,39 @@ typedef struct _tag_attr {
 	namevalue *pairs;
 } tag_attr;
 
-typedef struct _Attribute
-{
-  char *text;
-  tag_attr *tag_attributes;
+typedef struct _Attribute {
+	char *text;
+	tag_attr *tag_attributes;
 } Attribute;
 
-typedef struct _AttributeSet
-{
-  int 	  n_attr;	/* How many attributes can be found here?  */
-  GList **attr;		/* Attributes are linked lists.            */
-  GList **_pointer;	/* Pointers for incremental read function. */
+typedef struct _AttributeSet {
+	int n_attr;				/* How many attributes can be found here?  */
+	GList **attr;			/* Attributes are linked lists.            */
 } AttributeSet;
-
 
 gchar *attribute_name(gint attribute);
 
-AttributeSet *attributeset_new( void );
-gboolean attributeset_is_avail( AttributeSet *set, int attribute );
-gboolean attributeset_cmp_left( AttributeSet *set, int attribute,
-                                const char *str );
-gchar *attributeset_get_first( AttributeSet *set, int attribute );
-char *attributeset_get_next( AttributeSet *set, int attribute );
+AttributeSet *attributeset_new(void);
+gboolean attributeset_is_avail(
+	AttributeSet *set, int attribute);
+gboolean attributeset_cmp_left(
+	AttributeSet *set, int attribute, const char *str);
 gchar *attributeset_set_if_unset(
-		AttributeSet *set, 
-		gint          attribute,
-		const gchar  *value);
+	AttributeSet *set, gint attribute, const gchar *value);
+const char *attributeset_insert(
+	AttributeSet *set, int attribute, const char *value);
+const char *attributeset_insert_with_tagattrs(
+	AttributeSet *set, int attribute, const char *s, tag_attr *t_attr);
 
-const char *
-attributeset_insert(AttributeSet * set, 
-		          int attribute, 
-			  const char *value
-			  );
-
-const char *
-attributeset_insert_with_tagattrs(
-		AttributeSet * set, 
-		int attribute, 
-		const char *s, 
-		tag_attr *t_attr);
-
-char *attributeset_get_this_tagattr(
-		AttributeSet *set, 
-		int attribute, 
-		const char *name);
-
+/* Thunor: I've re-engineered these functions to make them reentrant */
+gchar *attributeset_get_first(
+	GList **element, AttributeSet *set, gint type);
+gchar *attributeset_get_next(
+	GList **element, AttributeSet *set, gint type);
+gchar *attributeset_get_this_tagattr(
+	GList **element, AttributeSet *set, gint type, gchar *name);
 void attributeset_set_this_tagattr(
-		AttributeSet *set, 
-		gint attribute, 
-		gchar *name, 
-		gchar *value);
-
-inline gboolean is_input_with_this_tagattr( AttributeSet *Attr, const char *name);
-inline gboolean is_item_with_this_tagattr(AttributeSet *Attr, const char *name);
+	GList **element, AttributeSet *set, gint type, gchar *name, gchar *value);
 
 #endif
 

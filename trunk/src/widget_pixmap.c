@@ -65,6 +65,7 @@ GtkWidget *widget_pixmap_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GError           *error = NULL;
+	GList            *element;
 	GtkIconTheme     *icon_theme;
 	GtkWidget        *widget;
 	GdkPixbuf        *pixbuf;
@@ -80,24 +81,24 @@ GtkWidget *widget_pixmap_create(
 #endif
 
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
 	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
+		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
 
 	/* The <input> tag... */
-	act = attributeset_get_first(Attr, ATTR_INPUT);
+	act = attributeset_get_first(&element, Attr, ATTR_INPUT);
 	while (act) {
 #ifdef DEBUG_CONTENT
 		fprintf(stderr, "%s(): act=%s\n", __func__, act);
 #endif
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0) {
-			if ((stock_name = attributeset_get_this_tagattr(
+			if ((stock_name = attributeset_get_this_tagattr(&element,
 				Attr, ATTR_INPUT, "stock")) != NULL) {
 				widget = gtk_image_new_from_stock(stock_name, GTK_ICON_SIZE_DND);
 				break;	/* Only one image is required */
 			}
-			if ((icon_name = attributeset_get_this_tagattr(
+			if ((icon_name = attributeset_get_this_tagattr(&element,
 				Attr, ATTR_INPUT, "icon")) != NULL) {
 				icon_theme = gtk_icon_theme_get_default();
 				/* Use the height or width dimension to override the default size */
@@ -132,7 +133,7 @@ GtkWidget *widget_pixmap_create(
 				break;	/* Only one image is required */
 			}
 		}
-		act = attributeset_get_next(Attr, ATTR_INPUT);
+		act = attributeset_get_next(&element, Attr, ATTR_INPUT);
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -210,6 +211,7 @@ void widget_pixmap_fileselect(
  ***********************************************************************/
 void widget_pixmap_refresh(variable *var)
 {
+	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;
 
@@ -222,7 +224,7 @@ void widget_pixmap_refresh(variable *var)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 	/* The <input> tag... */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
 			widget_pixmap_input_by_command(var, act + 8);
@@ -233,7 +235,7 @@ void widget_pixmap_refresh(variable *var)
 			if (initialised)
 				widget_pixmap_input_by_file(var, act + 5);
 		}
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
@@ -330,6 +332,7 @@ static void widget_pixmap_input_by_command(variable *var, char *command)
 static void widget_pixmap_input_by_file(variable *var, char *filename)
 {
 	GdkPixbuf        *pixbuf;
+	GList            *element;
 	gint              width = -1, height = -1;
 
 #ifdef DEBUG_TRANSITS
@@ -337,9 +340,9 @@ static void widget_pixmap_input_by_file(variable *var, char *filename)
 #endif
 
 	if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(var->Attributes, ATTR_WIDTH));
+		width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
 	if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(var->Attributes, ATTR_HEIGHT));
+		height = atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT));
 
 	if (width == -1 && height == -1) {
 		/* Handle unscaled images */

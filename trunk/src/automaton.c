@@ -45,6 +45,7 @@
 #include "tag_attributes.h"
 #include "widgets.h"
 #include "widget_comboboxtext.h"
+#include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
 #include "widget_timer.h"
@@ -100,12 +101,17 @@ on_any_widget_realized(
 		GtkWidget *widget, 
 		tag_attr  *tag_attributes)
 {
+#ifdef DEBUG
+	fprintf(stderr, "%s(): widget=%p  tag_attributes=%p\n", __func__,
+		widget, tag_attributes);
+#endif
 	widget_set_tag_attributes(widget, tag_attributes);
 }
 
 void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	const gchar *signal_name)
 {
+	GList            *element;
 	gchar            *command, *type, *signal;
 	gint              execute, is_active;
 
@@ -115,12 +121,12 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 	g_return_if_fail(GTK_IS_WIDGET(widget));
 
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command) {
 		execute = FALSE;
 
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 
 		if (signal &&
 			g_ascii_strcasecmp(signal, signal_name) == 0) {
@@ -199,7 +205,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			}
 		}
 		if (execute) execute_action(widget, command, type);
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 }
 
@@ -465,7 +471,7 @@ table_selection(GtkWidget      *clist,
 		GdkEventButton *event, 
 		gpointer        Attr)
 {
-
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;	
@@ -473,15 +479,16 @@ table_selection(GtkWidget      *clist,
 	if (Attr == NULL)
 		return;
     
-	variables_set_row_column(attributeset_get_first(Attr, ATTR_VARIABLE), 
-			row, column);
+	variables_set_row_column(
+		attributeset_get_first(&element, Attr, ATTR_VARIABLE),
+		row, column);
 
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		execute_action(clist, command, type);
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 	return;
 	
@@ -524,6 +531,7 @@ void button_toggled(GtkToggleButton * button, gpointer str)
 
 void list_selection(GtkWidget * list, gpointer Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;	
@@ -531,12 +539,12 @@ void list_selection(GtkWidget * list, gpointer Attr)
 	if (Attr == NULL)
 		return;
 
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		execute_action(list, command, type);
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 	return;
 }
@@ -640,29 +648,28 @@ button_pressed_attr(
 		GtkWidget     *button,
 		AttributeSet  *Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;
 
 	PIP_DEBUG("Button: %p.", button);
 	
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	if (command == NULL){
 		return;
 	}
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, 
-				ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, 
-				ATTR_ACTION, "signal");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		if (signal == NULL || 
 				g_ascii_strcasecmp(signal, "pressed") != 0)
 			goto next_command;
 		
 		execute_action(button, command, type);
 next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 }
 
@@ -671,26 +678,27 @@ void button_released_attr(
 		GtkWidget     *button,
 		AttributeSet  *Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;
 	
 	PIP_DEBUG("bitton: %p", button);
 	
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	if (command == NULL){
 		return;
 	}
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		if (signal == NULL || g_ascii_strcasecmp(signal, "released") != 0)
 			goto next_command;
 		
 		execute_action(button, command, type);
 next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 }
 
@@ -699,23 +707,24 @@ void
 button_leaved_attr(GtkWidget     *button,
 		   AttributeSet  *Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;
 
 	PIP_DEBUG("button: %p.", button);
 	
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		if (signal == NULL || g_ascii_strcasecmp(signal, "leave") != 0)
 			goto next_command;
 		
 		execute_action(button, command, type);
 next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 }
 
@@ -725,26 +734,27 @@ button_entered_attr(
 		GtkWidget     *button,
 		AttributeSet  *Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;
 	
 	PIP_DEBUG("Start.");
 	
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	if (command == NULL){
 		return;
 	}
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		if (signal == NULL || g_ascii_strcasecmp(signal, "enter") != 0)
 			goto next_command;
 		
 		execute_action(button, command, type);
 next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 }
 
@@ -753,13 +763,14 @@ button_clicked_attr(
 		GtkWidget     *button,
 		AttributeSet  *Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;
 	
 	PIP_DEBUG("button: %p, Attr: %p", button, Attr);
 	
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	if (command == NULL){
 		if (!option_no_warning)
 			g_warning("%s(): Button without action.", __func__);
@@ -767,14 +778,42 @@ button_clicked_attr(
 	}
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+
+#ifdef DEBUG
+		GList *attr;
+		Attribute *data;
+		attr = g_list_first(Attr->attr[ATTR_ACTION]);
+		while (attr) {
+			data = attr->data;
+			printf("%s: BEFORE: element=%p attr->data->text='%s'\n",
+				__func__, element, data->text);
+			attr = g_list_next(attr);
+		}
+#endif
+
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		if (signal != NULL && g_ascii_strcasecmp(signal, "clicked") != 0)
 			goto next_command;
 		
 		execute_action(button, command, type);
+
+#ifdef DEBUG
+		attr = g_list_first(Attr->attr[ATTR_ACTION]);
+		while (attr) {
+			data = attr->data;
+			printf("%s:  AFTER: element=%p attr->data->text='%s'\n",
+				__func__, element, data->text);
+			attr = g_list_next(attr);
+		}
+#endif
+
 next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
+
+#ifdef DEBUG
+		printf("%s: element=%p\n", __func__, element);
+#endif
 	}
 }
 		
@@ -1186,6 +1225,7 @@ finalize:
 int 
 instruction_execute(instruction command)
 {
+	GList *element;
 	token Token;
 	char *Argument;
 	int Instr_Code;
@@ -1219,7 +1259,7 @@ instruction_execute(instruction command)
 		 ** of them will remove elements from it.
 		 */
 		instruction_execute_push(Token, Attr, command.tag_attributes);
-		variables_refresh(attributeset_get_first(Attr, ATTR_VARIABLE));
+		variables_refresh(attributeset_get_first(&element, Attr, ATTR_VARIABLE));
 		Attr = NULL;
 		break;
 	case SET:
@@ -1342,6 +1382,7 @@ put_in_the_scrolled_window(GtkWidget *widget,
 		AttributeSet *Attr,
 		tag_attr     *attr)
 {
+	GList     *element;
 	GtkWidget *scrolledwindow;
 	#define SW_DEFAULT_WIDTH 200
 	#define SW_DEFAULT_HEIGHT 100
@@ -1362,15 +1403,15 @@ put_in_the_scrolled_window(GtkWidget *widget,
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT) && 
 			attributeset_is_avail(Attr, ATTR_WIDTH))
 		gtk_widget_set_usize(scrolledwindow, 
-				atoi(attributeset_get_first(Attr, ATTR_WIDTH)),
-				atoi(attributeset_get_first(Attr, ATTR_HEIGHT)));
+				atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
+				atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
 	else if (attributeset_is_avail(Attr, ATTR_HEIGHT))
 		gtk_widget_set_usize(scrolledwindow, 
 				-1,
-				atoi(attributeset_get_first(Attr, ATTR_HEIGHT)));
+				atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
 	else if (attributeset_is_avail(Attr, ATTR_WIDTH))
 		gtk_widget_set_usize(scrolledwindow, 
-				atoi(attributeset_get_first(Attr, ATTR_WIDTH)),
+				atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
 				-1);
 	else if (GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget)) {
 		/* Thunor: hbox and vbox are containers and don't accept the
@@ -1399,6 +1440,7 @@ put_in_the_scrolled_window(GtkWidget *widget,
 static
 GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 {
+	GList            *element;
 	GtkWidget        *menu_item;
 	gchar            *icon_name, *image_name;
 	GtkIconTheme     *icon_theme;
@@ -1423,11 +1465,11 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 
 	/* Read declared directives */
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu Item");
-	label = attributeset_get_first(Attr, ATTR_LABEL);
+	label = attributeset_get_first(&element, Attr, ATTR_LABEL);
 	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
+		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
 
 	/* Thunor: We can add an accelerator for this menuitem if both
 	 * "accel-key" and "accel-mods" are valid custom tag attributes.
@@ -1629,6 +1671,7 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 static
 GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 {
+	GList            *element;
 	GtkAccelGroup    *accel_group;
 	GtkWidget        *menu_items;
 	GtkWidget        *root_menu;
@@ -1656,7 +1699,7 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 	}
 
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu");
-	label = attributeset_get_first(Attr, ATTR_LABEL);
+	label = attributeset_get_first(&element, Attr, ATTR_LABEL);
 
 //	root_menu = gtk_menu_item_new_with_label(label);	Redundant
 
@@ -1694,6 +1737,7 @@ GtkWidget *create_menubar(AttributeSet * Attr, stackelement menus)
 static GtkWidget *
 create_label(AttributeSet * Attr)
 {
+	GList *element;
 	GtkWidget *Label;
 	/* 
 	 ** Setting up the default values for the new label.
@@ -1702,7 +1746,7 @@ create_label(AttributeSet * Attr)
 	/*
 	 ** Creating the widget, and pushing it into the stack.
 	 */
-	Label = gtk_label_new(attributeset_get_first (Attr, ATTR_LABEL));
+	Label = gtk_label_new(attributeset_get_first(&element, Attr, ATTR_LABEL));
 	gtk_label_set_line_wrap(GTK_LABEL(Label), TRUE);
 
 	/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
@@ -1837,10 +1881,11 @@ gtkdialog_tree_store_new(gint ndatacolumn)
 static GtkTreeStore *
 create_store_from_label(AttributeSet *Attr)
 {
-	GtkTreeStore   *treestore;
-	gchar          *label;
-	list_t         *columns = NULL;
-	gint            ncolumns;
+	GList            *element;
+	GtkTreeStore     *treestore;
+	gchar            *label;
+	list_t           *columns = NULL;
+	gint              ncolumns;
 
 	PIP_DEBUG("Attributeset: %p", Attr);
 
@@ -1852,7 +1897,7 @@ create_store_from_label(AttributeSet *Attr)
 	/*
 	 * We create as much columns as much the label tag suggests.
 	 */
-	label = g_strdup(attributeset_get_first(Attr, ATTR_LABEL));
+	label = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
 	columns = linecutter(label, '|');
 	ncolumns = columns->n_lines;
 	// FIXME: swe should free some memory here
@@ -1944,12 +1989,13 @@ create_tree_view(
 		AttributeSet *Attr, 
 		GtkTreeStore *store)
 {
+	GList              *element;
 	GtkWidget          *tree_view;
 	GtkCellRenderer    *renderer;
 	GtkTreeViewColumn  *column;
 	list_t             *columns;
 	char               *headline = NULL;
-	int                n;
+	int                 n;
 	
 	PIP_DEBUG("Attr: %p store: %p", Attr, store);
 
@@ -1959,7 +2005,7 @@ create_tree_view(
 		//return NULL;
 	}
 
-	headline = g_strdup(attributeset_get_first(Attr, ATTR_LABEL));
+	headline = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
 	columns = linecutter(headline, '|');
 	
 	/*
@@ -2070,6 +2116,7 @@ create_tree(AttributeSet  *Attr,
 static GtkWidget *
 create_chooser(AttributeSet *Attr)
 {
+	GList     *element;
 	GtkWidget *chooser;
 	char      *act;
 	char      *tagattr_value;
@@ -2096,17 +2143,17 @@ create_chooser(AttributeSet *Attr)
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT) &&
 	    attributeset_is_avail(Attr, ATTR_WIDTH))
 		gtk_widget_set_usize(chooser, 
-				atoi(attributeset_get_first(Attr, ATTR_WIDTH)),
-				atoi(attributeset_get_first(Attr, ATTR_HEIGHT)));
+				atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
+				atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
 	
 	if (attributeset_is_avail(Attr, ATTR_DEFAULT))
 		gtk_file_chooser_set_current_folder((GtkFileChooser *)chooser, 
-				attributeset_get_first(Attr, ATTR_DEFAULT));
+				attributeset_get_first(&element, Attr, ATTR_DEFAULT));
 	
-	act = attributeset_get_first(Attr, ATTR_ACTION);
+	act = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (act != NULL) {
-		tagattr_value = attributeset_get_this_tagattr(
-				Attr, ATTR_ACTION, "when");
+		tagattr_value = attributeset_get_this_tagattr(&element, Attr,
+			ATTR_ACTION, "when");
 		if (tagattr_value == NULL)
 			tagattr_value = "file-activated";
 		
@@ -2114,7 +2161,7 @@ create_chooser(AttributeSet *Attr)
 				   tagattr_value,
 				   GTK_SIGNAL_FUNC
 				   (button_pressed), (gpointer) act);
-		act = attributeset_get_next(Attr, ATTR_ACTION);
+		act = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
 	//gtk_file_chooser_set_preview_widget_active(chooser, TRUE);
@@ -2132,25 +2179,26 @@ tree_row_activated_attr(GtkTreeView  *tree_view,
 		GtkTreeViewColumn    *column, 
 		AttributeSet         *Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;
 	
 	PIP_DEBUG("tree_view: %p", tree_view);
 	
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	if (command == NULL)
 		return;
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		if (signal != NULL && g_ascii_strcasecmp(signal, "row-activated") != 0)
 			goto next_command;
 		
 		execute_action(GTK_WIDGET(tree_view), command, type);
 next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 }
 
@@ -2159,25 +2207,26 @@ tree_cursor_changed(
 		GtkTreeView    *tree_view, 
 		AttributeSet   *Attr)
 {
+	GList *element;
 	gchar *signal;
 	gchar *command;
 	gchar *type;
 
 	PIP_DEBUG("tree_view: %p, Attr: %p", tree_view, Attr);
 	
-	command = attributeset_get_first(Attr, ATTR_ACTION);
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	if (command == NULL)
 		return;
 
 	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "signal");
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		if (signal == NULL || g_ascii_strcasecmp(signal, "cursor-changed") != 0)
 			goto next_command;
 		
 		execute_action(GTK_WIDGET(tree_view), command, type);
 next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 	return TRUE;
 }
@@ -2211,6 +2260,8 @@ connect_button_signals(
 		GtkButton *Button,
 		AttributeSet *Attr)
 {
+	GList *element;
+
 	PIP_DEBUG("Button: %p, Attr: %p", Button, Attr);	
 	g_assert(Button != NULL && Attr != NULL);
 	
@@ -2220,11 +2271,11 @@ connect_button_signals(
 	 */
 	if (!attributeset_is_avail(Attr, ATTR_ACTION)) {
 		attributeset_set_if_unset(Attr, ATTR_LABEL, "unnamed");
-		attributeset_insert(Attr, ATTR_ACTION, 
-				attributeset_get_first(Attr, ATTR_LABEL));
-		attributeset_get_first(Attr, ATTR_ACTION);  
-		attributeset_set_this_tagattr(Attr, ATTR_ACTION, 
-				"type", "exit");
+		attributeset_insert(Attr, ATTR_ACTION,
+			attributeset_get_first(&element, Attr, ATTR_LABEL));
+		attributeset_get_first(&element, Attr, ATTR_ACTION);
+		attributeset_set_this_tagattr(&element, Attr, ATTR_ACTION,
+			"type", "exit");
 	}
 	/*
 	 ** Here we connect GtkButton signals to signal handlers.
@@ -2273,6 +2324,7 @@ create_window(
 		AttributeSet *Attr, 
 		tag_attr   *attr)
 {
+	GList            *element;
 	gint              border_width;
 	gchar            *value;
 
@@ -2318,7 +2370,7 @@ create_window(
 	 */
 	attributeset_set_if_unset(Attr, ATTR_LABEL, PACKAGE);
 	gtk_window_set_title(GTK_WINDOW(window), 
-			attributeset_get_first(Attr, ATTR_LABEL));
+			attributeset_get_first(&element, Attr, ATTR_LABEL));
 
 	return window;
 }
@@ -2342,12 +2394,13 @@ static GtkWidget *
 create_table(AttributeSet   *Attr,
 		tag_attr   *attr)
 {
+	GList *element;
 	GtkWidget *widget;
 	
 	list_t *table_header;
 	if (attributeset_is_avail(Attr, ATTR_LABEL)) {
 		table_header =
-		linecutter(attributeset_get_first(Attr, ATTR_LABEL), '|');
+		linecutter(attributeset_get_first(&element, Attr, ATTR_LABEL), '|');
 		widget=gtk_clist_new_with_titles
 				    (table_header->n_lines,
 				     table_header->line);
@@ -2362,6 +2415,7 @@ static GtkWidget *
 create_button(AttributeSet *Attr, 
 		tag_attr   *attr)
 {
+	GList *element;
 	GtkWidget *Button = NULL;
 	GtkWidget *Icon = NULL;
 	GtkWidget *Label = NULL;
@@ -2380,9 +2434,9 @@ create_button(AttributeSet *Attr,
 	PIP_DEBUG("");
 	
 	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(Attr, ATTR_WIDTH));
+		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(Attr, ATTR_HEIGHT));
+		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
 
 	type = TYPE_NOTHING;
 	if (!attributeset_is_avail(Attr, ATTR_INPUT) &&
@@ -2398,15 +2452,15 @@ create_button(AttributeSet *Attr,
 		type = TYPE_LABPIX;
 
 	if (type == TYPE_PIX || type == TYPE_LABPIX){
-		icon_file_name = attributeset_get_first(Attr, ATTR_INPUT) + 5;
-		icon_stock_name = attributeset_get_this_tagattr(Attr, ATTR_INPUT, "stock");
+		icon_file_name = attributeset_get_first(&element, Attr, ATTR_INPUT) + 5;
+		icon_stock_name = attributeset_get_this_tagattr(&element, Attr, ATTR_INPUT, "stock");
 		if (icon_stock_name != NULL){
 			Icon = gtk_image_new_from_stock(icon_stock_name,
 					GTK_ICON_SIZE_BUTTON);
 
 #if GTK_CHECK_VERSION(2,4,0)
 		}else{
-			char *icon_name = attributeset_get_this_tagattr(Attr, ATTR_INPUT, "icon");
+			char *icon_name = attributeset_get_this_tagattr(&element, Attr, ATTR_INPUT, "icon");
 			
 			if (icon_name != NULL){
 				icon_theme = gtk_icon_theme_get_default();
@@ -2448,8 +2502,7 @@ create_button(AttributeSet *Attr,
 		case TYPE_NOTHING:
 		case TYPE_LAB:
 			Button = gtk_button_new_with_label(
-					attributeset_get_first(Attr, 
-						ATTR_LABEL));
+					attributeset_get_first(&element, Attr, ATTR_LABEL));
 			break;
 		case TYPE_PIX:
 			Button = gtk_button_new();
@@ -2485,8 +2538,8 @@ create_button(AttributeSet *Attr,
 				/* Thunor: This is the original code */
 				Box = gtk_hbox_new(FALSE, 5);
 				Button = gtk_button_new();
-					Label = gtk_label_new(attributeset_get_first
-					  (Attr, ATTR_LABEL));
+				Label = gtk_label_new(attributeset_get_first(&element,
+					Attr, ATTR_LABEL));
 				gtk_container_add(GTK_CONTAINER(Button), Box);
 				gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
 				gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
@@ -2499,8 +2552,8 @@ create_button(AttributeSet *Attr,
 					Box = gtk_hbox_new(FALSE, 5);
 				}
 				Button = gtk_button_new();
-					Label = gtk_label_new(attributeset_get_first
-					  (Attr, ATTR_LABEL));
+				Label = gtk_label_new(attributeset_get_first(&element,
+					Attr, ATTR_LABEL));
 				gtk_container_add(GTK_CONTAINER(Button), Box);
 				if (position == GTK_POS_BOTTOM || position == GTK_POS_RIGHT) {
 					gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
@@ -2522,6 +2575,7 @@ static GtkWidget *
 create_edit(AttributeSet *Attr, 
 		tag_attr   *attr)
 {
+	GList         *element;
 	GtkWidget     *text_view;
 	GtkTextBuffer *text_buffer;
 	/*
@@ -2539,8 +2593,7 @@ create_edit(AttributeSet *Attr,
  
 	if (attributeset_is_avail(Attr, ATTR_DEFAULT))
 		gtk_text_buffer_set_text(text_buffer, 
-				attributeset_get_first(Attr, ATTR_DEFAULT), 
-				-1);
+				attributeset_get_first(&element, Attr, ATTR_DEFAULT), -1);
 
 	return text_view;
 }
@@ -2598,6 +2651,7 @@ instruction_execute_push(
 		AttributeSet  *Attr,
 		tag_attr      *tag_attributes)
 {
+	GList            *element;
 	GtkWidget        *scrolled_window;	
 	GtkWidget        *OtherWidget;
 	GtkWidget        *Widget;
@@ -2630,6 +2684,13 @@ instruction_execute_push(
 		case WIDGET_TIMER:
 			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
+			break;
+
+		case WIDGET_NOTEBOOK:
+			Widget = widget_notebook_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
 			break;
 
 
@@ -2892,9 +2953,8 @@ instruction_execute_push(
 		/*
 		 **
 		 */
-		Widget =
-		    gtk_check_button_new_with_label(attributeset_get_first
-						    (Attr, ATTR_LABEL));
+		Widget = gtk_check_button_new_with_label(
+			attributeset_get_first(&element, Attr, ATTR_LABEL));
 		/*
 		 **
 		 */
@@ -2907,16 +2967,14 @@ instruction_execute_push(
 		 */
 		if (attributeset_is_avail(Attr, ATTR_ACTION)) {
 			char *act;
-			act = attributeset_get_first(Attr, ATTR_ACTION);
+			act = attributeset_get_first(&element, Attr, ATTR_ACTION);
 			while (act != NULL) {
 				gtk_signal_connect(GTK_OBJECT(Widget),
 						   "toggled",
 						   GTK_SIGNAL_FUNC
 						   (button_toggled),
 						   (gpointer) act);
-				act =
-				    attributeset_get_next(Attr,
-							  ATTR_ACTION);
+				act = attributeset_get_next(&element, Attr, ATTR_ACTION);
 			}
 		}
 
@@ -2938,15 +2996,12 @@ instruction_execute_push(
 		 */
 		if (lastradiowidget == NULL) {
 			Widget = gtk_radio_button_new_with_label(NULL,
-								 attributeset_get_first
-								 (Attr,
-								  ATTR_LABEL));
+				attributeset_get_first(&element, Attr, ATTR_LABEL));
 			lastradiowidget = Widget;
 		} else {
-			Widget =
-			    gtk_radio_button_new_with_label_from_widget
-			    (GTK_RADIO_BUTTON(lastradiowidget),
-			     attributeset_get_first(Attr, ATTR_LABEL));
+			Widget = gtk_radio_button_new_with_label_from_widget(
+				GTK_RADIO_BUTTON(lastradiowidget),
+				attributeset_get_first(&element, Attr, ATTR_LABEL));
 //        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(Widget),
 //                                      FALSE );
 		}
@@ -2964,16 +3019,14 @@ instruction_execute_push(
 		 */
 		if (attributeset_is_avail(Attr, ATTR_ACTION)) {
 			char *act;
-			act = attributeset_get_first(Attr, ATTR_ACTION);
+			act = attributeset_get_first(&element, Attr, ATTR_ACTION);
 			while (act != NULL) {
 				gtk_signal_connect(GTK_OBJECT(Widget),
 						   "toggled",
 						   GTK_SIGNAL_FUNC
 						   (button_toggled),
 						   (gpointer) act);
-				act =
-				    attributeset_get_next(Attr,
-							  ATTR_ACTION);
+				act = attributeset_get_next(&element, Attr, ATTR_ACTION);
 			}
 		}
 		
@@ -2994,7 +3047,7 @@ instruction_execute_push(
 		 */
 		if (attributeset_is_avail(Attr, ATTR_LABEL)) {
 			char *t;
-			t = attributeset_get_first(Attr, ATTR_LABEL);
+			t = attributeset_get_first(&element, Attr, ATTR_LABEL);
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(Widget), t);
 		}
 		/*
@@ -3049,35 +3102,6 @@ instruction_execute_push(
 		g_signal_connect(G_OBJECT(Widget), "select-row",
 				 G_CALLBACK(table_selection),
 				 (gpointer) Attr);
-		break;
-		
-	case WIDGET_NOTEBOOK:
-		{
-			stackelement s;
-			GtkWidget *Label;
-			list_t *lines = NULL;
-			
-			char *labels = 
-				get_tag_attribute(tag_attributes, "labels");
-			if (labels != NULL)
-				lines = linecutter(strdup(labels), '|');
-				
-			s = pop();
-			Widget = gtk_notebook_new();
-			
-			for (n = 0; n < s.nwidgets; ++n){
-				if (lines != NULL &&
-						lines->n_lines > n)
-					Label = gtk_label_new(lines->line[n]);
-				else
-					Label = gtk_label_new("Unnamed");
-				
-				gtk_notebook_append_page(GTK_NOTEBOOK(Widget), s.widgets[n], Label);
-			}
-			push_widget(Widget, Widget_Type);
-			/* Creating this widget closes any open group */
-			lastradiowidget = NULL;
-		}
 		break;
 
 	case WIDGET_VBOX:
@@ -3209,8 +3233,8 @@ instruction_execute_push(
 							   0);
 
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "");
-			Widget = gtk_frame_new(attributeset_get_first
-						  (Attr, ATTR_LABEL));
+			Widget = gtk_frame_new(attributeset_get_first(&element,
+				Attr, ATTR_LABEL));
 			gtk_container_add(GTK_CONTAINER(Widget), vbox);
 		}
 		push_widget(Widget, Widget_Type);
@@ -3282,8 +3306,8 @@ instruction_execute_push(
 	 */
 	variables_new_with_widget(Attr, tag_attributes, Widget, Widget_Type);
 
-	variables_set_attributes(attributeset_get_first
-				 (Attr, ATTR_VARIABLE), Attr);
+	variables_set_attributes(attributeset_get_first(&element, Attr,
+		ATTR_VARIABLE), Attr);
 
 	/*
 	 * This is where we set the properties and connect signals 

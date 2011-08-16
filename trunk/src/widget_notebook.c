@@ -1,5 +1,5 @@
 /*
- * widget_timer.c: 
+ * widget_notebook.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -33,24 +33,17 @@
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes, located at file bottom */
-static void widget_timer_input_by_command(variable *var, char *command);
-static void widget_timer_input_by_file(variable *var, char *filename);
-static void widget_timer_input_by_items(variable *var);
-gboolean widget_timer_timer_callback(gpointer data);
+static void widget_notebook_input_by_command(variable *var, char *command);
+static void widget_notebook_input_by_file(variable *var, char *filename);
+static void widget_notebook_input_by_items(variable *var);
 
-/* Notes:
- * This is a custom widget in that it's a GtkLabel displaying the
- * widget's variable name with a timer_id set as a piece of widget data
- * (the user is responsible for hiding it with the "visible" property).
- * The timer callback calls the widget_signal_executor with a custom
- * "tick" signal if the widget is sensitive, and then it's processed the
- * same as any other signal */
+/* Notes: */
 
 /***********************************************************************
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_timer_clear(variable *var)
+void widget_notebook_clear(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -69,30 +62,40 @@ void widget_timer_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
-GtkWidget *widget_timer_create(
+GtkWidget *widget_notebook_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
+	GtkWidget        *label;
 	GtkWidget        *widget;
+	list_t           *lines = NULL;
+	stackelement      elements;
+	gchar            *labels;
+	gchar             text[16];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	widget = gtk_label_new("");
+	widget = gtk_notebook_new();
 
-	/* I can't create the label here as a default variable name isn't
-	 * created until after widget creation.
-	 * 
-	 * I can't create the timer here as I need a pointer to its variable
-	 * and this isn't created until after widget creation.
-	 * 
-	 * I can't set the widget invisible here because gtk_widget_show_all
-	 * in automaton.c will unhide everything, so it must be managed by
-	 * the user with the "visible" tag attribute -- GTK+ will apply this
-	 * on widget realization.
-	 * 
-	 * These things are accomplished in the refresh function which is
-	 * called next */
+	if (attr) {
+		labels = get_tag_attribute(attr, "labels");
+		if (labels)
+			lines = linecutter(strdup(labels), '|');
+	}
+
+	elements = pop();
+	for (count = 0; count < elements.nwidgets; count++) {
+		if (lines && lines->n_lines > count) {
+			label = gtk_label_new(lines->line[count]);
+		} else {
+			sprintf(text, "Page %i", count + 1);
+			label = gtk_label_new(text);
+		}
+		gtk_notebook_append_page(GTK_NOTEBOOK(widget),
+			elements.widgets[count], label);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -105,7 +108,7 @@ GtkWidget *widget_timer_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_timer_envvar_all_construct(variable *var)
+gchar *widget_notebook_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -126,24 +129,21 @@ gchar *widget_timer_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_timer_envvar_construct(GtkWidget *widget)
+gchar *widget_notebook_envvar_construct(GtkWidget *widget)
 {
+	gchar             envvar[8];
 	gchar            *string;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if GTK_CHECK_VERSION(2,18,0)
-	if (gtk_widget_get_sensitive(widget))
-#else
-	if (GTK_WIDGET_SENSITIVE(widget))
+	sprintf(envvar, "%i", gtk_notebook_get_current_page(GTK_NOTEBOOK(widget)));
+	string = g_strdup(envvar);
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): string='%s'\n", __func__, string);
 #endif
-	{
-		string = g_strdup("true");
-	} else {
-		string = g_strdup("false");
-	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -156,7 +156,7 @@ gchar *widget_timer_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_timer_fileselect(
+void widget_notebook_fileselect(
 	variable *var, const char *name, const char *value)
 {
 	gchar            *var1;
@@ -176,16 +176,11 @@ void widget_timer_fileselect(
 /***********************************************************************
  * Refresh                                                             *
  ***********************************************************************/
-void widget_timer_refresh(variable *var)
+void widget_notebook_refresh(variable *var)
 {
 	GList            *element;
 	gchar            *act;
-	gchar             text[256];
-	gchar            *value;
 	gint              initialised = FALSE;
-	gint              milliseconds = FALSE;
-	guint             interval = 1;
-	guint             timer_id;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -199,48 +194,19 @@ void widget_timer_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_timer_input_by_command(var, act + 8);
+			widget_notebook_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-			widget_timer_input_by_file(var, act + 5);
+			widget_notebook_input_by_file(var, act + 5);
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_timer_input_by_items(var);
+		widget_notebook_input_by_items(var);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
-		/* Create the timer */
-		if (var->widget_tag_attr &&
-			(value = get_tag_attribute(var->widget_tag_attr, "milliseconds")) &&
-			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
-			(atoi(value) == 1))) {
-			milliseconds = TRUE;
-			interval = 1000;	/* Set default of 1000ms */
-		}
-		if (var->widget_tag_attr &&
-			(value = get_tag_attribute(var->widget_tag_attr, "interval"))) {
-			interval = atoi(value);
-		}
-		if (milliseconds) {
-			/* Precision in milliseconds */
-			timer_id = g_timeout_add(
-				interval, widget_timer_timer_callback, (gpointer)var);
-		} else {
-			/* Precision in seconds (default) */
-			timer_id = g_timeout_add_seconds(
-				interval, widget_timer_timer_callback, (gpointer)var);
-		}
-		/* Store the timer_id as a piece of widget data */
-		g_object_set_data(G_OBJECT(var->Widget), "timer_id", (gpointer)timer_id);
-		/* Set the text of the label to its variable name */
-		sprintf(text,
-			"<span fgcolor='white' bgcolor='darkred'> %s </span>",
-			attributeset_get_first(&element, var->Attributes, ATTR_VARIABLE));
-		gtk_label_set_markup(GTK_LABEL(var->Widget), text);
-
 		/* Apply directives */
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
@@ -251,7 +217,6 @@ void widget_timer_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
 				__func__);
-		/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -271,7 +236,7 @@ void widget_timer_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_timer_removeselected(variable *var)
+void widget_notebook_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -292,16 +257,42 @@ void widget_timer_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_timer_save(variable *var)
+void widget_notebook_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *outfile;
+	GList            *element;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gint              index;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+			index = gtk_notebook_get_current_page(GTK_NOTEBOOK(var->Widget));
+			fprintf(outfile, "%i", index);
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -312,16 +303,45 @@ void widget_timer_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_timer_input_by_command(variable *var, char *command)
+static void widget_notebook_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
+#endif
+
+	/* Opening pipe for reading... */
+	if (infile = widget_opencommand(command)) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			/* From the GTK+ 2 Reference Manual:
+			 * "Note that due to historical reasons, GtkNotebook refuses to switch
+			 * to a page unless the child widget is visible. Therefore, it is
+			 * recommended to show child widgets before adding them to a notebook".
+			 * 
+			 * I'm not going to get involved in showing widgets because currently
+			 * on_any_widget_realized is setting the GTK+ properties and it'll set
+			 * things prematurely, so the initial refresh won't change the page */
+			gtk_notebook_set_current_page(GTK_NOTEBOOK(var->Widget), atoi(line));
+		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			command);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -332,14 +352,40 @@ static void widget_timer_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_timer_input_by_file(variable *var, char *filename)
+static void widget_notebook_input_by_file(variable *var, char *filename)
 {
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of more chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			/* From the GTK+ 2 Reference Manual:
+			 * "Note that due to historical reasons, GtkNotebook refuses to switch
+			 * to a page unless the child widget is visible. Therefore, it is
+			 * recommended to show child widgets before adding them to a notebook".
+			 * 
+			 * I'm not going to get involved in showing widgets because currently
+			 * on_any_widget_realized is setting the GTK+ properties and it'll set
+			 * things prematurely, so the initial refresh won't change the page */
+			gtk_notebook_set_current_page(GTK_NOTEBOOK(var->Widget), atoi(line));
+		}
+		/* Close the file */
+		fclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			filename);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -350,7 +396,7 @@ static void widget_timer_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_timer_input_by_items(variable *var)
+static void widget_notebook_input_by_items(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -364,41 +410,4 @@ static void widget_timer_input_by_items(variable *var)
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
-}
-
-/***********************************************************************
- * Timer Callback                                                      *
- ***********************************************************************/
-
-gboolean widget_timer_timer_callback(gpointer data)
-{
-	GList            *element;
-	variable         *var = (variable*)data;
-
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
-
-#ifdef DEBUG_CONTENT
-	/* ATTR_VARIABLE and "timer_id" will definitely exist */
-	fprintf(stderr, "%s(): ATTR_VARIABLE=%s  timer_id=%u\n", __func__,
-		attributeset_get_first(&element, var->Attributes, ATTR_VARIABLE),
-		(guint)g_object_get_data(G_OBJECT(var->Widget), "timer_id"));
-#endif
-
-	/* Generate a custom signal if sensitive is true */
-#if GTK_CHECK_VERSION(2,18,0)
-	if (gtk_widget_get_sensitive(var->Widget))
-#else
-	if (GTK_WIDGET_SENSITIVE(var->Widget))
-#endif
-	{
-		widget_signal_executor(var->Widget, var->Attributes, "tick");
-	}
-
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
-
-	return TRUE;
 }

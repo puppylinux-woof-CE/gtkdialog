@@ -259,6 +259,7 @@ void widget_comboboxtext_fileselect(
 
 void widget_comboboxtext_refresh(variable *var)
 {
+	GList            *element;
 	GtkTreeIter       iter;
 	GtkTreeModel     *model;
 	gchar            *act;
@@ -318,14 +319,14 @@ void widget_comboboxtext_refresh(variable *var)
 	}
 
 	/* The <input> tag... */
-	act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
 			widget_comboboxtext_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
 			widget_comboboxtext_input_by_file(var, act + 5);
-		act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
@@ -367,7 +368,7 @@ void widget_comboboxtext_refresh(variable *var)
 	if (!initialised) {
 		/* Apply directives */
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
-			string = attributeset_get_first(var->Attributes, ATTR_DEFAULT);
+			string = attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT);
 			model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 			if (gtk_tree_model_get_iter_first(model, &iter)) {
 				index = 0;
@@ -506,6 +507,7 @@ void widget_comboboxtext_removeselected(variable *var)
 void widget_comboboxtext_save(variable *var)
 {
 	FILE             *outfile;
+	GList            *element;
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
 	gchar            *act;
@@ -518,13 +520,13 @@ void widget_comboboxtext_save(variable *var)
 #endif
 
 	/* Preferably we'll use the output file filename if available */
-	act = attributeset_get_first(var->Attributes, ATTR_OUTPUT);
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			filename = act + 5;
 			break;
 		}
-		act = attributeset_get_next(var->Attributes, ATTR_OUTPUT);
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
 	}
 
 #if 0
@@ -533,13 +535,13 @@ void widget_comboboxtext_save(variable *var)
 		/* The output file filename isn't available but we can use
 		 * the input file filename instead if available (it's the
 		 * same method that the existing functions use) */
-		act = attributeset_get_first(var->Attributes, ATTR_INPUT);
+		act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 		while (act) {
 			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 				filename = act + 5;
 				break;
 			}
-			act = attributeset_get_next(var->Attributes, ATTR_INPUT);
+			act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 		}
 	}
 #endif
@@ -674,16 +676,17 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 
 static void widget_comboboxtext_input_by_items(variable *var)
 {
+	GList            *element;
 	gchar            *text;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	text = attributeset_get_first(var->Attributes, ATTR_ITEM);
+	text = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
 	while (text) {
 		gtk_combo_box_append_text(GTK_COMBO_BOX(var->Widget), text);
-		text = attributeset_get_next(var->Attributes, ATTR_ITEM);
+		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 
 #ifdef DEBUG_TRANSITS

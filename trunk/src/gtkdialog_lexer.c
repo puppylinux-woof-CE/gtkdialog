@@ -434,9 +434,9 @@ static yyconst flex_int16_t yy_acclist[408] =
        34,   83,  148,  126,  148,   52,  147,  148,   18,  147,
 
       148,  125,  147,  148,   84,  147,  148,  127,  147,  148,
-       64,   62,  148,   76,   75,  148,   89,   88,  148,   26,
+       64,   62,  148,   76,   75,  148,   89,   88,  148,   25,
        24,  148,  130,  148,   63,  147,  148,   77,  147,  148,
-       90,  147,  148,   25,  147,  148,  131,  147,  148,   61,
+       90,  147,  148,   26,  147,  148,  131,  147,  148,   61,
        57,  128,  148,   93,  148,  129,  147,  148,   94,  147,
       148,   60,   96,   95,  148,  139,  138,  114,  113,  148,
        99,   98,  148,   97,  147,  148,  115,  147,  148,  100,
@@ -1685,17 +1685,17 @@ case 25:
 YY_RULE_SETUP
 #line 208 "gtkdialog_lexer.l"
 { 
-	Token="</notebook>"; 
-	return(ENOTEBOOK);
+	Token="<notebook>";
+	BEGIN(ST_TAG_ATTR);
+	return(PART_NOTEBOOK);
 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 213 "gtkdialog_lexer.l"
+#line 214 "gtkdialog_lexer.l"
 { 
-	Token="<notebook>";
-	BEGIN(ST_TAG_ATTR);
-	return(PART_NOTEBOOK);
+	Token="</notebook>"; 
+	return(ENOTEBOOK);
 }
 	YY_BREAK
 case 27:

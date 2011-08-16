@@ -99,6 +99,7 @@ variables_new_with_widget(
 		GtkWidget    *widget, 
 		int           type)
 {
+	GList *element;
 	char *name;
 	variable *var;
 	int autonamed = FALSE;
@@ -119,7 +120,7 @@ variables_new_with_widget(
 		autonamed = TRUE;
 	}
 
-	name = attributeset_get_first(Attr, ATTR_VARIABLE);
+	name = attributeset_get_first(&element, Attr, ATTR_VARIABLE);
 
 	/* 
 	 ** If the variable exists we simply returns without making a 
@@ -276,6 +277,10 @@ variables_set_value(const char *name,
 			widget_comboboxtext_fileselect(toset, name, value);
 			break;
 
+		case WIDGET_NOTEBOOK:
+			widget_notebook_fileselect(toset, name, value);
+			break;
+
 		case WIDGET_PIXMAP:
 			widget_pixmap_fileselect(toset, name, value);
 			break;
@@ -317,6 +322,10 @@ variables_save(const char *name)
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_save(var);
+			break;
+
+		case WIDGET_NOTEBOOK:
+			widget_notebook_save(var);
 			break;
 
 		case WIDGET_PIXMAP:
@@ -397,6 +406,10 @@ variables_refresh(const char *name)
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_refresh(var);
+			break;
+
+		case WIDGET_NOTEBOOK:
+			widget_notebook_refresh(var);
 			break;
 
 		case WIDGET_PIXMAP:
@@ -683,6 +696,7 @@ find_variable_by_widget(GtkWidget *widget)
 static void 
 _variables_initialize(variable *actual)
 {
+	GList *element;
 	char *socket_id;
 	char command[128];
 	int result;
@@ -702,8 +716,8 @@ _variables_initialize(variable *actual)
 
 	if (actual->Widget != NULL && actual->Type == WIDGET_GVIM) {
 		gtk_widget_show(actual->Widget);
-		socket_id = attributeset_get_first(actual->Attributes,
-						   ATTR_SOCKET);
+		socket_id = attributeset_get_first(&element, actual->Attributes,
+			ATTR_SOCKET);
 		//printf("----->%p\n", actual->Widget->window); 
 		//printf("----->%x\n", atoi(socket_id));        
 		if (socket_id != NULL) {
@@ -1081,6 +1095,10 @@ variables_clear(const char *name)
 			widget_comboboxtext_clear(toclear);
 			break;
 
+		case WIDGET_NOTEBOOK:
+			widget_notebook_clear(toclear);
+			break;
+
 		case WIDGET_PIXMAP:
 			widget_pixmap_clear(toclear);
 			break;
@@ -1175,6 +1193,10 @@ remove_selected_variable(const char *name)
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_removeselected(toclear);
+			break;
+
+		case WIDGET_NOTEBOOK:
+			widget_notebook_removeselected(toclear);
 			break;
 
 		case WIDGET_PIXMAP:
