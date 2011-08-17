@@ -1,3 +1,8 @@
+* Wed Aug 17 2011 Thunor <thunorsif@hotmail.com>
+- Added "tab-prefix", "tab-suffix" and "tab-base-index" custom tag
+  attributes to the notebook widget to control automated page labelling.
+  I've also added "tab-labels" to replace the existing "labels".
+
 * Tue Aug 16 2011 Thunor <thunorsif@hotmail.com>
 - Re-engineered a few functions within attributes.c that needed to be
   reentrant but weren't. The pointer being used to record the currently

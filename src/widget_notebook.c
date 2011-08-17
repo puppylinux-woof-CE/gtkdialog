@@ -67,32 +67,52 @@ GtkWidget *widget_notebook_create(
 {
 	GtkWidget        *label;
 	GtkWidget        *widget;
-	list_t           *lines = NULL;
+	list_t           *labels = NULL;
 	stackelement      elements;
-	gchar            *labels;
-	gchar             text[16];
+	gchar            *tab_prefix = NULL;
+	gchar            *tab_suffix = NULL;
+	gchar             text[128];
+	gchar            *value;
 	gint              count;
+	gint              tab_base_index = 1;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	/* Create the notebook widget */
 	widget = gtk_notebook_new();
 
+	/* Read the tag attributes */
 	if (attr) {
-		labels = get_tag_attribute(attr, "labels");
-		if (labels)
-			lines = linecutter(strdup(labels), '|');
+		if ((value = get_tag_attribute(attr, "tab-labels")) ||
+			(value = get_tag_attribute(attr, "tab_labels")) ||
+			(value = get_tag_attribute(attr, "labels")))	/* Deprecated */
+			labels = linecutter(strdup(value), '|');
+		if (!(tab_prefix = get_tag_attribute(attr, "tab-prefix")))
+			tab_prefix = get_tag_attribute(attr, "tab_prefix");
+		if (!(tab_suffix = get_tag_attribute(attr, "tab-suffix")))
+			tab_suffix = get_tag_attribute(attr, "tab_suffix");
+		if ((value = get_tag_attribute(attr, "tab-base-index")) ||
+			(value = get_tag_attribute(attr, "tab_base_index")))
+			tab_base_index = atoi(value);
 	}
 
 	elements = pop();
 	for (count = 0; count < elements.nwidgets; count++) {
-		if (lines && lines->n_lines > count) {
-			label = gtk_label_new(lines->line[count]);
-		} else {
-			sprintf(text, "Page %i", count + 1);
-			label = gtk_label_new(text);
-		}
+		/* Build the tab label */
+		if (labels && labels->n_lines > count)
+			sprintf(text, "%s", labels->line[count]);
+		else if (tab_prefix && tab_suffix)
+			sprintf(text, "%s%i%s", tab_prefix, count + tab_base_index, tab_suffix);
+		else if (tab_prefix)
+			sprintf(text, "%s%i", tab_prefix, count + tab_base_index);
+		else if (tab_suffix)
+			sprintf(text, "%i%s", count + tab_base_index, tab_suffix);
+		else
+			sprintf(text, "Page %i", count + tab_base_index);
+		/* Create the label and append the notebook page with label */
+		label = gtk_label_new(text);
 		gtk_notebook_append_page(GTK_NOTEBOOK(widget),
 			elements.widgets[count], label);
 	}
