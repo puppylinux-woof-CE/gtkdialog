@@ -165,8 +165,6 @@ gint window_delete_event_handler(
 stackelement _sum( stackelement a, stackelement b);
 void fileselection_made( GtkWidget *w, actioncommand *action );
 
-void button_pressed(GtkWidget *, const gchar *);
-
 int token_store(token command);
 int token_store_attr(token command, tag_attr *attributes);
 int token_store_with_argument_attr(token command, const char *argument, tag_attr *attributes);
@@ -187,5 +185,12 @@ void on_any_widget_icon_press_event(GtkWidget *widget,
 void on_any_widget_icon_release_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr);
 #endif
+
+void button_pressed_attr(GtkWidget *button, AttributeSet *Attr);
+void button_released_attr(GtkWidget *button, AttributeSet *Attr);
+void button_leaved_attr(GtkWidget *button, AttributeSet*Attr);
+void button_entered_attr(GtkWidget *button, AttributeSet *Attr);
+void button_clicked_attr(GtkWidget *button, AttributeSet *Attr);
+void button_pressed(GtkWidget *button, const gchar *str);
 
 #endif

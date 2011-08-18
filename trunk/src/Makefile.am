@@ -22,6 +22,7 @@ gtkdialog_SOURCES = \
 		    actions.c actions.h \
 		    tag_attributes.h tag_attributes.c \
 		    glade_support.c glade_support.h \
+		    widget_button.c widget_button.h \
 		    widget_comboboxtext.c widget_comboboxtext.h \
 		    widget_notebook.c widget_notebook.h \
 		    widget_pixmap.c widget_pixmap.h \

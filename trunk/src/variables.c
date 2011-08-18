@@ -22,6 +22,7 @@
 #include "gtkdialog.h"
 #include "variables.h"
 #include "widgets.h"
+#include "widget_button.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
@@ -271,27 +272,31 @@ variables_set_value(const char *name,
 	}
 
 	switch (toset->Type) {
-
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			widget_button_fileselect(toset, name, value);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_fileselect(toset, name, value);
 			break;
-
 		case WIDGET_NOTEBOOK:
 			widget_notebook_fileselect(toset, name, value);
 			break;
-
 		case WIDGET_PIXMAP:
 			widget_pixmap_fileselect(toset, name, value);
 			break;
-
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_fileselect(toset, name, value);
 			break;
-
 		case WIDGET_TIMER:
 			widget_timer_fileselect(toset, name, value);
 			break;
+
 
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toset->Widget), value);
@@ -318,27 +323,31 @@ variables_save(const char *name)
 		return (NULL);
 
 	switch (var->Type) {
-
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			widget_button_save(var);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_save(var);
 			break;
-
 		case WIDGET_NOTEBOOK:
 			widget_notebook_save(var);
 			break;
-
 		case WIDGET_PIXMAP:
 			widget_pixmap_save(var);
 			break;
-
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_save(var);
 			break;
-
 		case WIDGET_TIMER:
 			widget_timer_save(var);
 			break;
+
 
 		case WIDGET_ENTRY:
 			save_entry_to_file(var);
@@ -402,27 +411,31 @@ variables_refresh(const char *name)
 	}
 
 	switch (var->Type) {
-
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			widget_button_refresh(var);
+			break; 
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_refresh(var);
 			break;
-
 		case WIDGET_NOTEBOOK:
 			widget_notebook_refresh(var);
 			break;
-
 		case WIDGET_PIXMAP:
 			widget_pixmap_refresh(var);
 			break;
-
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_refresh(var);
 			break;
-
 		case WIDGET_TIMER:
 			widget_timer_refresh(var);
 			break;
+
 
 		case WIDGET_ENTRY:
 			widget_entry_refresh(var);
@@ -448,9 +461,6 @@ variables_refresh(const char *name)
 		case WIDGET_TREE:
 			widget_tree_refresh(var);
 			break;
-		case WIDGET_BUTTON:
-			widget_button_refresh(var);
-			break; 
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
 			widget_scale_refresh(var);
@@ -1089,27 +1099,31 @@ variables_clear(const char *name)
 	}
 
 	switch (toclear->Type) {
-
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			widget_button_clear(toclear);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_clear(toclear);
 			break;
-
 		case WIDGET_NOTEBOOK:
 			widget_notebook_clear(toclear);
 			break;
-
 		case WIDGET_PIXMAP:
 			widget_pixmap_clear(toclear);
 			break;
-
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_clear(toclear);
 			break;
-
 		case WIDGET_TIMER:
 			widget_timer_clear(toclear);
 			break;
+
 
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
@@ -1189,24 +1203,27 @@ remove_selected_variable(const char *name)
 	 * Removing the selected item or text range from the widget.
 	 */
 	switch (toclear->Type) {
-
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			widget_button_removeselected(toclear);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_removeselected(toclear);
 			break;
-
 		case WIDGET_NOTEBOOK:
 			widget_notebook_removeselected(toclear);
 			break;
-
 		case WIDGET_PIXMAP:
 			widget_pixmap_removeselected(toclear);
 			break;
-
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_removeselected(toclear);
 			break;
-
 		case WIDGET_TIMER:
 			widget_timer_removeselected(toclear);
 			break;

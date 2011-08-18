@@ -1,3 +1,7 @@
+* Thu Aug 18 2011 Thunor <thunorsif@hotmail.com>
+- Added widget_button.c/h.
+- Added "use-underline" support to buttons with a label directive.
+
 * Wed Aug 17 2011 Thunor <thunorsif@hotmail.com>
 - Added "tab-prefix", "tab-suffix" and "tab-base-index" custom tag
   attributes to the notebook widget to control automated page labelling.
