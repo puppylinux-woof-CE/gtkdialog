@@ -44,6 +44,7 @@
 #include "attributes.h"
 #include "tag_attributes.h"
 #include "widgets.h"
+#include "widget_button.h"
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
@@ -55,10 +56,6 @@
 #include "macros.h"
 
 #undef TOOLTIPS
-#define TYPE_NOTHING 0
-#define TYPE_LAB 1
-#define TYPE_PIX 2
-#define TYPE_LABPIX 3
 
 extern gboolean option_no_warning;
 extern gboolean option_centering;
@@ -853,6 +850,43 @@ void print_command(instruction command)
     case PUSH:
 	printf("push");
 	switch (Widget_Type) {
+		case WIDGET_OKBUTTON:
+			printf("(new okbutton())");
+			break;
+		case WIDGET_CANCELBUTTON:
+			printf("(new cancelbutton())");
+			break;
+		case WIDGET_HELPBUTTON:
+			printf("(new helpbutton())");
+			break;
+		case WIDGET_YESBUTTON:
+			printf("(new yesbutton())");
+			break;
+		case WIDGET_NOBUTTON:
+			printf("(new nobutton())");
+			break;
+		case WIDGET_BUTTON:
+			printf("(new button())");
+			break;
+		case WIDGET_COMBOBOXENTRY:
+			printf("(new comboboxentry())");
+			break;
+		case WIDGET_COMBOBOXTEXT:
+			printf("(new comboboxtext())");
+			break;
+		case WIDGET_NOTEBOOK:
+			printf("(new notebook(pop()))");
+			break;
+		case WIDGET_PIXMAP:
+			printf("(new pixmap())");
+			break;
+		case WIDGET_SPINBUTTON:
+			printf("(new spinbutton())");
+			break;
+		case WIDGET_TIMER:
+			printf("(new timer())");
+			break;
+
 	case WIDGET_LABEL:
 	    printf("(new text())");
 	    break;
@@ -861,9 +895,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_EDIT:
 	    printf("(new edit)");
-	    break;
-	case WIDGET_BUTTON:
-	    printf("(new button())");
 	    break;
 	case WIDGET_CHECKBOX:
 	    printf("(new checkbox())");
@@ -883,21 +914,6 @@ void print_command(instruction command)
 	case WIDGET_COMBO:
 	    printf("(new combo())");
 	    break;
-	case WIDGET_OKBUTTON:
-	    printf("(new okbutton())");
-	    break;
-	case WIDGET_CANCELBUTTON:
-	    printf("(new cancelbutton())");
-	    break;
-	case WIDGET_HELPBUTTON:
-	    printf("(new helpbutton())");
-	    break;
-	case WIDGET_NOBUTTON:
-	    printf("(new nobutton())");
-	    break;
-	case WIDGET_YESBUTTON:
-	    printf("(new yesbutton())");
-	    break;
 	case WIDGET_SCROLLEDW:
 	    printf("(new scrolledwindow(pop()))");
 	    break;
@@ -910,14 +926,8 @@ void print_command(instruction command)
 	case WIDGET_FRAME:
 	    printf("(new frame(pop()))");
 	    break;
-	case WIDGET_NOTEBOOK:
-	    printf("(new notebook(pop()))");
-	    break;
 	case WIDGET_WINDOW:
 	    printf("(new window(pop()))");
-	    break;
-	case WIDGET_PIXMAP:
-	    printf("(new pixmap())");
 	    break;
 	case WIDGET_MENUBAR:
 	    printf("(new menubar(pop()))");
@@ -946,23 +956,11 @@ void print_command(instruction command)
 	case WIDGET_VSEPARATOR:
 	    printf("(new vseparator())");
 	    break;
-	case WIDGET_COMBOBOXTEXT:
-	    printf("(new comboboxtext())");
-	    break;
-	case WIDGET_COMBOBOXENTRY:
-	    printf("(new comboboxentry())");
-	    break;
 	case WIDGET_HSCALE:
 	    printf("(new hscale())");
 	    break;
 	case WIDGET_VSCALE:
 	    printf("(new vscale())");
-	    break;
-	case WIDGET_SPINBUTTON:
-	    printf("(new spinbutton())");
-	    break;
-	case WIDGET_TIMER:
-	    printf("(new timer())");
 	    break;
 	default:
 	    printf("(Unknown Widget: %d)", Widget_Type);
@@ -1104,6 +1102,44 @@ void print_token(token Token)
 	}
 
 	switch (Widget_Type) {
+		case WIDGET_OKBUTTON:
+			printf("(OKBUTTON)");
+			break;
+		case WIDGET_CANCELBUTTON:
+			printf("(CANCELBUTTON)");
+			break;
+		case WIDGET_HELPBUTTON:
+			printf("(HELPBUTTON)");
+			break;
+		case WIDGET_YESBUTTON:
+			printf("(YESBUTTON)");
+			break;
+		case WIDGET_NOBUTTON:
+			printf("(NOBUTTON)");
+			break;
+		case WIDGET_BUTTON:
+			printf("(BUTTON)");
+			break;
+		case WIDGET_COMBOBOXENTRY:
+			printf("(COMBOBOXENTRY)");
+			break;
+		case WIDGET_COMBOBOXTEXT:
+			printf("(COMBOBOXTEXT)");
+			break;
+		case WIDGET_NOTEBOOK:
+			printf("(NOTEBOOK)");
+			break;
+		case WIDGET_PIXMAP:
+			printf("(PIXMAP)");
+			break;
+		case WIDGET_SPINBUTTON:
+			printf("(SPINBUTTON)");
+			break;
+		case WIDGET_TIMER:
+			printf("(TIMER)");
+			break;
+
+
 	case WIDGET_LABEL:
 		printf("(LABEL)");
 		break;
@@ -1112,9 +1148,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_EDIT:
 		printf("(EDIT)");
-		break;
-	case WIDGET_BUTTON:
-		printf("(BUTTON)");
 		break;
 	case WIDGET_CHECKBOX:
 		printf("(CHECKBOX)");
@@ -1134,21 +1167,6 @@ void print_token(token Token)
 	case WIDGET_COMBO:
 		printf("(COMBO)");
 		break;
-	case WIDGET_OKBUTTON:
-		printf("(OKBUTTON)");
-		break;
-	case WIDGET_CANCELBUTTON:
-		printf("(CANCELBUTTON)");
-		break;
-	case WIDGET_HELPBUTTON:
-		printf("(HELPBUTTON)");
-		break;
-	case WIDGET_NOBUTTON:
-		printf("(NOBUTTON)");
-		break;
-	case WIDGET_YESBUTTON:
-		printf("(YESBUTTON)");
-		break;
 	case WIDGET_SCROLLEDW:
 		printf("(SCROLLEDW)");
 		break;
@@ -1161,14 +1179,8 @@ void print_token(token Token)
 	case WIDGET_FRAME:
 		printf("(FRAME)");
 		break;
-	case WIDGET_NOTEBOOK:
-		printf("(NOTEBOOK)");
-		break;
 	case WIDGET_WINDOW:
 		printf("(WINDOW)");
-		break;
-	case WIDGET_PIXMAP:
-		printf("(PIXMAP)");
 		break;
 	case WIDGET_MENUBAR:
 		printf("(MENUBAR)");
@@ -1194,23 +1206,11 @@ void print_token(token Token)
 	case WIDGET_VSEPARATOR:
 		printf("(VSEPARATOR)");
 	    break;
-	case WIDGET_COMBOBOXTEXT:
-		printf("(COMBOBOXTEXT)");
-		break;
-	case WIDGET_COMBOBOXENTRY:
-		printf("(COMBOBOXENTRY)");
-		break;
 	case WIDGET_HSCALE:
 		printf("(HSCALE)");
 		break;
 	case WIDGET_VSCALE:
 		printf("(VSCALE)");
-		break;
-	case WIDGET_SPINBUTTON:
-		printf("(SPINBUTTON)");
-		break;
-	case WIDGET_TIMER:
-		printf("(TIMER)");
 		break;
 	default:
 		printf("Unknown Widget (%d)", Widget_Type);
@@ -1440,6 +1440,12 @@ put_in_the_scrolled_window(GtkWidget *widget,
 static
 GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 {
+	#define           TYPE_MENUITEM 0
+	#define           TYPE_MENUITEM_IMAGE_STOCK 1
+	#define           TYPE_MENUITEM_IMAGE_ICON 2
+	#define           TYPE_MENUITEM_IMAGE_FILE 3
+	#define           TYPE_MENUITEM_CHECK 4
+	#define           TYPE_MENUITEM_RADIO 5
 	GList            *element;
 	GtkWidget        *menu_item;
 	gchar            *icon_name, *image_name;
@@ -1453,12 +1459,6 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	gchar            *label, *stock_id, *value;
 	gint              width = -1, height = -1, is_active;
 	gint              size = 16;
-	#define           TYPE_MENUITEM 0
-	#define           TYPE_MENUITEM_IMAGE_STOCK 1
-	#define           TYPE_MENUITEM_IMAGE_ICON 2
-	#define           TYPE_MENUITEM_IMAGE_FILE 3
-	#define           TYPE_MENUITEM_CHECK 4
-	#define           TYPE_MENUITEM_RADIO 5
 	gint              menuitemtype = TYPE_MENUITEM;
 
 	PIP_DEBUG("");
@@ -2255,48 +2255,6 @@ connect_tree_signals(
 			(gpointer) Attr);
 }
 
-static void
-connect_button_signals(
-		GtkButton *Button,
-		AttributeSet *Attr)
-{
-	GList *element;
-
-	PIP_DEBUG("Button: %p, Attr: %p", Button, Attr);	
-	g_assert(Button != NULL && Attr != NULL);
-	
-	/*
-	 * If a button has no action, the action will be the exit
-	 * which is the default action.
-	 */
-	if (!attributeset_is_avail(Attr, ATTR_ACTION)) {
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "unnamed");
-		attributeset_insert(Attr, ATTR_ACTION,
-			attributeset_get_first(&element, Attr, ATTR_LABEL));
-		attributeset_get_first(&element, Attr, ATTR_ACTION);
-		attributeset_set_this_tagattr(&element, Attr, ATTR_ACTION,
-			"type", "exit");
-	}
-	/*
-	 ** Here we connect GtkButton signals to signal handlers.
-	 ** The action attribute can hold arbitrary number of actions,
-	 ** whose execution is a an important task when the button is
-	 ** pressed by the user. However, we connect the signal handlers
-	 ** only once, since the handler itself can handle each actions in
-	 ** order.
-	 */
-	gtk_signal_connect(GTK_OBJECT(Button), "clicked", GTK_SIGNAL_FUNC
-				   (button_clicked_attr), (gpointer) Attr);
-	gtk_signal_connect(GTK_OBJECT(Button), "enter", GTK_SIGNAL_FUNC
-				   (button_entered_attr), (gpointer) Attr);
-	gtk_signal_connect(GTK_OBJECT(Button), "leave", GTK_SIGNAL_FUNC
-				   (button_leaved_attr), (gpointer) Attr);
-	gtk_signal_connect(GTK_OBJECT(Button), "pressed", GTK_SIGNAL_FUNC
-				   (button_pressed_attr), (gpointer) Attr);
-	gtk_signal_connect(GTK_OBJECT(Button), "released", GTK_SIGNAL_FUNC
-				   (button_released_attr), (gpointer) Attr);
-}
-
 /*****************************************************************************
  * Window handling functions.                                                *
  *                                                                           *
@@ -2411,165 +2369,6 @@ create_table(AttributeSet   *Attr,
 	return widget;
 }
 
-static GtkWidget *
-create_button(AttributeSet *Attr, 
-		tag_attr   *attr)
-{
-	GList *element;
-	GtkWidget *Button = NULL;
-	GtkWidget *Icon = NULL;
-	GtkWidget *Label = NULL;
-	GtkWidget *Box = NULL;
-	GdkPixbuf *pixbuf = NULL;
-	GtkIconTheme *icon_theme;
-	GError *error = NULL;
-	char *icon_stock_name = NULL;
-	char *icon_file_name = NULL;
-	int type;
-	int width = -1, height = -1;
-	gchar *value;
-	gint position = -1;
-	gint size = 20;
-
-	PIP_DEBUG("");
-	
-	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
-	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
-
-	type = TYPE_NOTHING;
-	if (!attributeset_is_avail(Attr, ATTR_INPUT) &&
-		attributeset_is_avail(Attr, ATTR_LABEL))
-		type = TYPE_LAB;
-	
-	if (attributeset_is_avail(Attr, ATTR_INPUT) &&
-		!attributeset_is_avail(Attr, ATTR_LABEL))
-		type = TYPE_PIX;
-	
-	if (attributeset_is_avail(Attr, ATTR_INPUT) &&
-		attributeset_is_avail(Attr, ATTR_LABEL))
-		type = TYPE_LABPIX;
-
-	if (type == TYPE_PIX || type == TYPE_LABPIX){
-		icon_file_name = attributeset_get_first(&element, Attr, ATTR_INPUT) + 5;
-		icon_stock_name = attributeset_get_this_tagattr(&element, Attr, ATTR_INPUT, "stock");
-		if (icon_stock_name != NULL){
-			Icon = gtk_image_new_from_stock(icon_stock_name,
-					GTK_ICON_SIZE_BUTTON);
-
-#if GTK_CHECK_VERSION(2,4,0)
-		}else{
-			char *icon_name = attributeset_get_this_tagattr(&element, Attr, ATTR_INPUT, "icon");
-			
-			if (icon_name != NULL){
-				icon_theme = gtk_icon_theme_get_default();
-				/* Use the height or width dimension to override the default size */
-				if (height > -1) size = height;
-				else if (width > -1) size = width;
-				pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name,
-					size, 0, &error);
-				Icon = gtk_image_new_from_pixbuf(pixbuf);	
-				/* pixbuf is no longer required and should be unreferenced */
-				g_object_unref(pixbuf);
-			}else{
-				if (width == -1 && height == -1) {
-					/* Handle unscaled images */
-					Icon = gtk_image_new_from_file(find_pixmap(icon_file_name));
-				} else {
-					/* Handle scaled images */
-					pixbuf = gdk_pixbuf_new_from_file_at_size(
-						find_pixmap(icon_file_name), width, height, NULL);
-					if (pixbuf) {
-						Icon = gtk_image_new_from_pixbuf(pixbuf);
-						/* pixbuf is no longer required and should be unreferenced */
-						g_object_unref(pixbuf);
-					} else {
-						/* pixbuf is null (file not found) so by using this
-						* function gtk will substitute a broken image icon */
-						Icon = gtk_image_new_from_file("");
-					}
-				}
-			}
-#endif
-		}
-	}
-
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "OK");
-	attributeset_set_if_unset(Attr, ATTR_DEFAULT, "OK");
-		
-	switch (type) {
-		case TYPE_NOTHING:
-		case TYPE_LAB:
-			Button = gtk_button_new_with_label(
-					attributeset_get_first(&element, Attr, ATTR_LABEL));
-			break;
-		case TYPE_PIX:
-			Button = gtk_button_new();
-			gtk_container_add(GTK_CONTAINER(Button), Icon);
-			break;
-		case TYPE_LABPIX:
-			/* Thunor: If the GTK property "image-position" is declared
-			 * (in this case being used as a custom attribute since it'll
-			 * have no effect otherwise) then position the image relative
-			 * to the label */
-			if (attr) {
-				if (!(value = get_tag_attribute(attr, "image_position")))
-					value = get_tag_attribute(attr, "image-position");
-				if (value) {
-					if (strcasecmp(value, "bottom") == 0 ||
-						atoi(value) == GTK_POS_BOTTOM) {
-						position = GTK_POS_BOTTOM;
-					} else if (strcasecmp(value, "top") == 0 ||
-						atoi(value) == GTK_POS_TOP) {
-						position = GTK_POS_TOP;
-					} else if (strcasecmp(value, "right") == 0 ||
-						atoi(value) == GTK_POS_RIGHT) {
-						position = GTK_POS_RIGHT;
-					} else /*if (strcasecmp(value, "left") == 0 ||
-						atoi(value) == GTK_POS_LEFT) */ {
-						/* Note that atoi will return 0 for any non-integer string in
-						 * value, therefore GTK_POS_LEFT should be checked last */
-						position = GTK_POS_LEFT;
-					}
-				}
-			}
-			if (position == -1) {
-				/* Thunor: This is the original code */
-				Box = gtk_hbox_new(FALSE, 5);
-				Button = gtk_button_new();
-				Label = gtk_label_new(attributeset_get_first(&element,
-					Attr, ATTR_LABEL));
-				gtk_container_add(GTK_CONTAINER(Button), Box);
-				gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
-				gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
-			} else {
-				/* Thunor: This code has been added to enable
-				 * positioning of the image relative to the label */
-				if (position == GTK_POS_BOTTOM || position == GTK_POS_TOP) {
-					Box = gtk_vbox_new(FALSE, 5);
-				} else {
-					Box = gtk_hbox_new(FALSE, 5);
-				}
-				Button = gtk_button_new();
-				Label = gtk_label_new(attributeset_get_first(&element,
-					Attr, ATTR_LABEL));
-				gtk_container_add(GTK_CONTAINER(Button), Box);
-				if (position == GTK_POS_BOTTOM || position == GTK_POS_RIGHT) {
-					gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
-					gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
-				} else {
-					gtk_box_pack_end(GTK_BOX(Box), Label, TRUE, TRUE, 0);
-					gtk_box_pack_end(GTK_BOX(Box), Icon, TRUE, TRUE, 0);
-				}
-			}
-			break;
-	}
-
-	PIP_DEBUG("");
-	return Button;
-}
-
 
 static GtkWidget *
 create_edit(AttributeSet *Attr, 
@@ -2664,35 +2463,38 @@ instruction_execute_push(
 	Widget_Type = Token & WIDGET_TYPE;
 
 	switch (Widget_Type) {
-
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			Widget = widget_button_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
-
-		case WIDGET_PIXMAP:
-			Widget = widget_pixmap_create(Attr, tag_attributes, Widget_Type);
-			push_widget(Widget, Widget_Type);
-			break;
-
-		case WIDGET_SPINBUTTON:
-			Widget = widget_spinbutton_create(Attr, tag_attributes, Widget_Type);
-			push_widget(Widget, Widget_Type);
-			break;
-
-		case WIDGET_TIMER:
-			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);
-			push_widget(Widget, Widget_Type);
-			break;
-
 		case WIDGET_NOTEBOOK:
 			Widget = widget_notebook_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
 			break;
-
+		case WIDGET_PIXMAP:
+			Widget = widget_pixmap_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+		case WIDGET_SPINBUTTON:
+			Widget = widget_spinbutton_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+		case WIDGET_TIMER:
+			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 
 	case WIDGET_LABEL:
 		Widget = create_label(Attr);
@@ -2822,95 +2624,6 @@ instruction_execute_push(
 		push_widget(Widget, Widget_Type);
 		break;
 
-	case WIDGET_OKBUTTON:
-		Widget = gtk_button_new_from_stock(GTK_STOCK_OK);
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "OK");
-		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-		/*
-		 * The OK button is a default widget in the dialog box. FIXME:
-		 * it is not working because the widget is not in the window
-		 * yet.
-		 */
-		//GTK_WIDGET_SET_FLAGS(Widget, GTK_CAN_DEFAULT);
-		//gtk_widget_grab_default(Widget);
-
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_CANCELBUTTON:
-		Widget = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Cancel");
-		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_HELPBUTTON:
-		Widget = gtk_button_new_from_stock(GTK_STOCK_HELP);
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Help");
-		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_YESBUTTON:
-		Widget = gtk_button_new_from_stock(GTK_STOCK_YES);
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Yes");
-		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_NOBUTTON:
-		Widget = gtk_button_new_from_stock(GTK_STOCK_NO);
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "No");
-		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_BUTTON:
-		Widget = create_button(Attr, tag_attributes);
-		connect_button_signals(GTK_BUTTON(Widget), Attr);
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-		push_widget(Widget, Widget_Type);
-		break;
-		
 	case WIDGET_GVIM:
 		Widget = create_gvim(Attr);
 		push_widget(Widget, Widget_Type);
@@ -3318,6 +3031,12 @@ instruction_execute_push(
 				"realize",
 				(GCallback)on_any_widget_realized,
 				(gpointer) tag_attributes);
+
+	/* Thunor: This is in addition to the widget specific signals that
+	 * are generally connected within the widget's refresh function at
+	 * start-up. I've noticed that this function is being called within
+	 * create_window and here meaning that it's being called twice for
+	 * the window widget temp temp */
 	widget_connect_signals(Widget, Attr);
 
 	PIP_DEBUG("Variable created.");

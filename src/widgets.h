@@ -76,7 +76,7 @@ static void fill_edit_by_file(GtkWidget *widget, char *filename);
 static void fill_label_by_file(GtkWidget *widget, char *filename);
 void fill_text_by_file(GtkTextBuffer *buffer, char *filename );	/* Redundant: never implemented */
 
-void widget_button_refresh(variable *var);
+//void widget_button_refresh(variable *var);	Redundant.
 void widget_checkbox_refresh(variable *var);
 void widget_combo_refresh(variable *var);
 //void widget_comboboxtext_refresh(variable *var);	Redundant.

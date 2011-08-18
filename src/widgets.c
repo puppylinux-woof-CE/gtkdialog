@@ -36,6 +36,7 @@
 #include "gtkdialog.h"
 #include "widgets.h"
 #include "stringman.h"
+#include "widget_button.h"
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
@@ -175,32 +176,37 @@ widget_get_text_value(
 	}
 
 	switch (type) {
-
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			string = widget_button_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			string = widget_comboboxtext_envvar_construct(widget);
 			return string;
 			break;
-		
 		case WIDGET_NOTEBOOK:
 			string = widget_notebook_envvar_construct(widget);
 			return string;
 			break;
-
 		case WIDGET_PIXMAP:
 			string = widget_pixmap_envvar_construct(widget);
 			return string;
 			break;
-
 		case WIDGET_SPINBUTTON:
 			string = widget_spinbutton_envvar_construct(widget);
 			return string;
 			break;
-
 		case WIDGET_TIMER:
 			string = widget_timer_envvar_construct(widget);
 			return string;
 			break;
+
 
 #if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_CHOOSER:
@@ -1256,81 +1262,6 @@ widget_combo_refresh(variable * var)
 		gtk_widget_set_sensitive(var->Widget, FALSE);
 }
 
-void widget_button_refresh(variable *var)
-{
-	GList            *element;
-	gchar            *act;
-	GList            *btnchildren = NULL;
-	GList            *boxchildren = NULL;
-	GList            *child;
-	GdkPixbuf        *pixbuf;
-	gint              width = -1, height = -1;
-	gint              initialised = FALSE;
-
-	if (var != NULL && var->Attributes != NULL) {
-
-#ifdef DEBUG
-		g_message("%s(): entering.", __func__);
-#endif
-
-		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
-
-		if (initialised) {
-			act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-			while (act != NULL) {
-				/* input file stock = "File:", input file = "File:/path/to/file" */
-				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-					btnchildren = gtk_container_get_children(GTK_CONTAINER(var->Widget));
-					child = g_list_first(btnchildren);
-					while (child) {
-						if (GTK_IS_IMAGE(child->data)) {
-							if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-								width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
-							if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-								height = atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT));
-
-							if (width == -1 && height == -1) {
-								/* Handle unscaled images */
-								gtk_image_set_from_file(GTK_IMAGE(child->data), find_pixmap(act + 5));
-							} else {
-								/* Handle scaled images */
-								pixbuf = gdk_pixbuf_new_from_file_at_size(
-									find_pixmap(act + 5), width, height, NULL);
-								if (pixbuf) {
-									gtk_image_set_from_pixbuf(GTK_IMAGE(child->data), pixbuf);
-									/* pixbuf is no longer required and should be unreferenced */
-									g_object_unref(pixbuf);
-								} else {
-									/* pixbuf is null (file not found) so by using this
-									 * function gtk will substitute a broken image icon */
-									gtk_image_set_from_file(GTK_IMAGE(child->data), "");
-								}
-							}
-							break;
-						} else if (GTK_IS_BOX(child->data)) {
-							boxchildren = gtk_container_get_children(GTK_CONTAINER(child->data));
-							child = g_list_first(boxchildren);
-						} else {
-							child = child->next;
-						}
-					}
-					if (boxchildren) {
-						g_list_free(boxchildren);
-						boxchildren = NULL;
-					}
-					if (btnchildren) {
-						g_list_free(btnchildren);
-						btnchildren = NULL;
-					}
-				}
-				act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-			}
-		}
-	}
-}
-
 void widget_scale_refresh(variable *var)
 {
 	GList            *element;
@@ -1796,6 +1727,44 @@ char *widgets_to_str(int itype)
 {
 	char *type;
 	switch (itype) {
+		case WIDGET_OKBUTTON:
+			type = "OKBUTTON";
+			break;
+		case WIDGET_CANCELBUTTON:
+			type = "CANCELBUTTON";
+			break;
+		case WIDGET_HELPBUTTON:
+			type = "HELPBUTTON";
+			break;
+		case WIDGET_YESBUTTON:
+			type = "YESBUTTON";
+			break;
+		case WIDGET_NOBUTTON:
+			type = "NOBUTTON";
+			break;
+		case WIDGET_BUTTON:
+			type = "BUTTON";
+			break;
+		case WIDGET_COMBOBOXENTRY:
+			type = "COMBOBOXENTRY";
+			break;
+		case WIDGET_COMBOBOXTEXT:
+			type = "COMBOBOXTEXT";
+			break;
+		case WIDGET_NOTEBOOK:
+			type = "NOTEBOOK";
+			break;
+		case WIDGET_PIXMAP:
+			type = "PIXMAP";
+			break;
+		case WIDGET_SPINBUTTON:
+			type = "SPINBUTTON";
+			break;
+		case WIDGET_TIMER:
+			type = "TIMER";
+			break;
+
+
 	case WIDGET_LABEL:
 		type = "LABEL";
 		break;
@@ -1804,9 +1773,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_EDIT:
 		type = "EDIT";
-		break;
-	case WIDGET_BUTTON:
-		type = "BUTTON";
 		break;
 	case WIDGET_CHECKBOX:
 		type = "CHECKBOX";
@@ -1823,21 +1789,6 @@ char *widgets_to_str(int itype)
 	case WIDGET_COMBO:
 		type = "COMBO";
 		break;
-	case WIDGET_OKBUTTON:
-		type = "OKBUTTON";
-		break;
-	case WIDGET_CANCELBUTTON:
-		type = "CANCELBUTTON";
-		break;
-	case WIDGET_HELPBUTTON:
-		type = "HELPBUTTON";
-		break;
-	case WIDGET_NOBUTTON:
-		type = "NOBUTTON";
-		break;
-	case WIDGET_YESBUTTON:
-		type = "YESBUTTON";
-		break;
 	case WIDGET_SCROLLEDW:
 		type = "SCROLLEDW";
 		break;
@@ -1853,9 +1804,6 @@ char *widgets_to_str(int itype)
 	case WIDGET_WINDOW:
 		type = "WINDOW";
 		break;
-	case WIDGET_PIXMAP:
-		type = "PIXMAP";
-		break;
 	case WIDGET_MENUBAR:
 		type = "MENUBAR";
 		break;
@@ -1865,26 +1813,11 @@ char *widgets_to_str(int itype)
 	case WIDGET_VSEPARATOR:
 		type = "VSEPARATOR";
 	    break;
-	case WIDGET_COMBOBOXTEXT:
-		type = "COMBOBOXTEXT";
-		break;
-	case WIDGET_COMBOBOXENTRY:
-		type = "COMBOBOXENTRY";
-		break;
 	case WIDGET_HSCALE:
 		type = "HSCALE";
 		break;
 	case WIDGET_VSCALE:
 		type = "VSCALE";
-		break;
-	case WIDGET_SPINBUTTON:
-		type = "SPINBUTTON";
-		break;
-	case WIDGET_TIMER:
-		type = "TIMER";
-		break;
-	case WIDGET_NOTEBOOK:
-		type = "NOTEBOOK";
 		break;
 	default:
 		type = "THINGY";
