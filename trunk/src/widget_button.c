@@ -37,7 +37,9 @@ static void widget_button_input_by_command(variable *var, char *command);
 static void widget_button_input_by_file(variable *var, char *filename);
 static void widget_button_input_by_items(variable *var);
 
-/* Notes: */
+/* Notes:
+ * The togglebutton widget is near identical to the button widget
+ * so there's absolutely no point in maintaining another pair of files */
 
 /***********************************************************************
  * Clear                                                               *
@@ -112,6 +114,7 @@ GtkWidget *widget_button_create(
 			widget = gtk_button_new_from_stock(GTK_STOCK_NO);
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "No");
 			break;
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			/* Read declared directives */
 			if (attributeset_is_avail(Attr, ATTR_WIDTH))
@@ -189,14 +192,26 @@ GtkWidget *widget_button_create(
 					 * could exist which GTK+ will set after realization.
 					 * We'll simply drop through to create a default button */
 				case TYPE_BUTTON_LAB:
-					widget = gtk_button_new_with_label(labeldirective);
+					if (Type == WIDGET_BUTTON) {
+						widget = gtk_button_new_with_label(labeldirective);
+					} else if (Type == WIDGET_TOGGLEBUTTON) {
+						widget = gtk_toggle_button_new_with_label(labeldirective);
+					}
 					break;
 				case TYPE_BUTTON_PIX:
-					widget = gtk_button_new();
+					if (Type == WIDGET_BUTTON) {
+						widget = gtk_button_new();
+					} else if (Type == WIDGET_TOGGLEBUTTON) {
+						widget = gtk_toggle_button_new();
+					}
 					gtk_container_add(GTK_CONTAINER(widget), icon);
 					break;
 				case TYPE_BUTTON_LABPIX:
-					widget = gtk_button_new();
+					if (Type == WIDGET_BUTTON) {
+						widget = gtk_button_new();
+					} else if (Type == WIDGET_TOGGLEBUTTON) {
+						widget = gtk_toggle_button_new();
+					}
 					/* Create the label supporting mnemonics if the
 					 * GTK+ property "use-underline" is true */
 					if (attr &&
@@ -262,14 +277,25 @@ GtkWidget *widget_button_create(
 			break;
 	}
 
-	/* For this widget there is a default exit action and
-	 * this requires creating if no actions are set */
-	if (!attributeset_is_avail(Attr, ATTR_ACTION)) {
-		attributeset_insert(Attr, ATTR_ACTION,
-			attributeset_get_first(&element, Attr, ATTR_LABEL));
-		attributeset_get_first(&element, Attr, ATTR_ACTION);
-		attributeset_set_this_tagattr(&element, Attr, ATTR_ACTION,
-			"type", "exit");
+	switch (Type) {
+		case WIDGET_OKBUTTON:
+		case WIDGET_CANCELBUTTON:
+		case WIDGET_HELPBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_NOBUTTON:
+		case WIDGET_BUTTON:
+			/* For this widget there is a default exit action and
+			 * this requires creating if no actions are set */
+			if (!attributeset_is_avail(Attr, ATTR_ACTION)) {
+				attributeset_insert(Attr, ATTR_ACTION,
+					attributeset_get_first(&element, Attr, ATTR_LABEL));
+				attributeset_get_first(&element, Attr, ATTR_ACTION);
+				attributeset_set_this_tagattr(&element, Attr, ATTR_ACTION,
+					"type", "exit");
+			}
+			break;
+		case WIDGET_TOGGLEBUTTON:
+			break;
 	}
 
 #ifdef DEBUG_TRANSITS

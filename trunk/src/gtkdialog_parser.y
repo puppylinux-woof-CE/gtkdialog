@@ -149,6 +149,7 @@ start_up(void)
 %token         VSCALE PART_VSCALE EVSCALE
 %token         SPINBUTTON PART_SPINBUTTON ESPINBUTTON
 %token         TIMER PART_TIMER ETIMER
+%token         TOGGLEBUTTON PART_TOGGLEBUTTON ETOGGLEBUTTON
 
 %% 
 window
@@ -250,6 +251,7 @@ widget
   | vscale
   | spinbutton
   | timer
+  | togglebutton
   ;
 
 entry
@@ -394,61 +396,6 @@ pixmap
 	}
   ;
 
-	/* Thunor: Redundant: Replaced to support submenus *****************
-	menubar
-	  : MENUBAR EMENUBAR {
-			yyerror("Empty menubar without a single <menu> tag.");
-		}
-	  | MENUBAR menus EMENUBAR {
-			token_store(PUSH | WIDGET_MENUBAR);
-		}
-	  ;
-
-	menus
-	  : MENU EMENU {
-			yyerror("Empty menu without <menuitem> tag.");
-		}
-	  | MENU menuitems attr EMENU {
-			token_store(PUSH | WIDGET_MENU);
-		}
-	  | PART_MENU tagattr '>' menuitems attr EMENU {
-			token_store_attr(PUSH | WIDGET_MENU, $2);
-		}
-	  | menus MENU EMENU {
-			yyerror("Empty menu without <menuitem> tag.");
-		}
-	  | menus MENU menuitems attr EMENU {
-			token_store(PUSH | WIDGET_MENU);
-			token_store(SUM);
-		}
-	  | menus PART_MENU tagattr '>' menuitems attr EMENU {
-			token_store_attr(PUSH | WIDGET_MENU, $3);
-			token_store(SUM);
-		}
-	  ;
-
-	menuitems
-	  : MENUITEM attr EMENUITEM {
-			token_store(PUSH | WIDGET_MENUITEM);
-		}
-	  | PART_MENUITEM tagattr '>' attr EMENUITEM {
-				token_store_attr(PUSH | WIDGET_MENUITEM, $2);
-			}
-	  | menuitems MENUITEM attr EMENUITEM {
-			token_store(PUSH | WIDGET_MENUITEM);
-			token_store(SUM);
-		}
-	  | menuitems PART_MENUITEM tagattr '>' attr EMENUITEM {
-				token_store_attr(PUSH | WIDGET_MENUITEM, $3);
-			token_store(SUM);
-			}
-	  | menuitems MENUITEMSEPARATOR EMENUITEMSEPARATOR {
-			token_store(PUSH | WIDGET_MENUITEMSEPARATOR);
-			token_store(SUM);
-		}
-	  ;
-	*******************************************************************/
-
 	/**************************************************************
 	 * Thunor: Newly supported widgets.
 	 * Don't forget to add them to the widget list above and
@@ -587,6 +534,15 @@ timer
 	}
   | PART_TIMER tagattr '>' attr ETIMER {
 		token_store_attr(PUSH | WIDGET_TIMER, $2);
+	}
+  ;
+
+togglebutton
+  : TOGGLEBUTTON attr ETOGGLEBUTTON {
+		token_store(PUSH | WIDGET_TOGGLEBUTTON);
+	}
+  | PART_TOGGLEBUTTON tagattr '>' attr ETOGGLEBUTTON {
+		token_store_attr(PUSH | WIDGET_TOGGLEBUTTON, $2);
 	}
   ;
 

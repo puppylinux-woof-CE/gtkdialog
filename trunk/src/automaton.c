@@ -2468,6 +2468,7 @@ instruction_execute_push(
 		case WIDGET_HELPBUTTON:
 		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			Widget = widget_button_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -2495,6 +2496,7 @@ instruction_execute_push(
 			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+
 
 	case WIDGET_LABEL:
 		Widget = create_label(Attr);
@@ -2957,26 +2959,27 @@ instruction_execute_push(
 
 	case WIDGET_WINDOW:
 		{
-		stackelement s;
-		s = pop();
-		Widget = create_window(Attr, tag_attributes);
-		gtk_container_add(GTK_CONTAINER (Widget), s.widgets[0]);
-		push_widget(Widget, Widget_Type);
-		/* Thunor: Each menu created will have an accelerator group
-		 * for its menitems which will require adding to the window */
-		if (accel_groups) {
-			accel_group = g_list_first(accel_groups);
-			while (accel_group) {
-				gtk_window_add_accel_group(GTK_WINDOW(Widget),
-					GTK_ACCEL_GROUP(accel_group->data));
+			stackelement s;
+			s = pop();
+			Widget = create_window(Attr, tag_attributes);
+			gtk_container_add(GTK_CONTAINER (Widget), s.widgets[0]);
+			push_widget(Widget, Widget_Type);
+			/* Thunor: Each menu created will have an accelerator group
+			 * for its menitems which will require adding to the window */
+			if (accel_groups) {
+				accel_group = g_list_first(accel_groups);
+				while (accel_group) {
+					gtk_window_add_accel_group(GTK_WINDOW(Widget),
+						GTK_ACCEL_GROUP(accel_group->data));
 #ifdef DEBUG
-				fprintf(stderr, "%s: Adding accel_group=%p to window\n",
-					__func__, accel_group->data);
+					fprintf(stderr, "%s: Adding accel_group=%p to window\n",
+						__func__, accel_group->data);
 #endif
-				accel_group = accel_group->next;
+					accel_group = accel_group->next;
+				}
+				g_list_free(accel_groups);
+				accel_groups = NULL;
 			}
-			g_list_free(accel_groups);
-		}
 		}
 		break;
 

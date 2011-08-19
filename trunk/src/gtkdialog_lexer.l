@@ -507,6 +507,12 @@ gchar *Token;
 					  return(PART_TIMER); }
 \<\/timer\>					{ Token="</timer>"; return(ETIMER); }
 
+\<togglebutton\>			{ Token="<togglebutton>"; return(TOGGLEBUTTON); }
+\<togglebutton[ ]+			{ Token="<togglebutton>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_TOGGLEBUTTON); }
+\<\/togglebutton\>			{ Token="</togglebutton>"; return(ETOGGLEBUTTON); }
+
 
 
 

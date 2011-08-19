@@ -171,7 +171,10 @@
      ESPINBUTTON = 387,
      TIMER = 388,
      PART_TIMER = 389,
-     ETIMER = 390
+     ETIMER = 390,
+     TOGGLEBUTTON = 391,
+     PART_TOGGLEBUTTON = 392,
+     ETOGGLEBUTTON = 393
    };
 #endif
 /* Tokens.  */
@@ -308,6 +311,9 @@
 #define TIMER 388
 #define PART_TIMER 389
 #define ETIMER 390
+#define TOGGLEBUTTON 391
+#define PART_TOGGLEBUTTON 392
+#define ETOGGLEBUTTON 393
 
 
 
@@ -328,7 +334,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 332 "gtkdialog_parser.h"
+#line 338 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
