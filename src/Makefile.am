@@ -11,16 +11,16 @@ bin_PROGRAMS = gtkdialog
 gtkdialog_SOURCES = \
 		    gtkdialog.c gtkdialog.h \
 		    macros.h \
-		    printing.h printing.c \
-		    variables.h variables.c \
+		    printing.c printing.h \
+		    variables.c variables.h \
 		    gtkdialog_parser.y gtkdialog_lexer.l \
-		    stack.h stack.c \
+		    stack.c stack.h \
 		    automaton.c automaton.h \
 		    attributes.c attributes.h \
 		    stringman.c stringman.h \
 		    widgets.c widgets.h \
 		    actions.c actions.h \
-		    tag_attributes.h tag_attributes.c \
+		    tag_attributes.c tag_attributes.h \
 		    glade_support.c glade_support.h \
 		    widget_button.c widget_button.h \
 		    widget_comboboxtext.c widget_comboboxtext.h \
