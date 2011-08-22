@@ -156,42 +156,17 @@ typedef struct actioncommand {
  *                                                                       *
  *                                                                       *
  *************************************************************************/
-void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
-	const gchar *signal_name);
-
-gint window_delete_event_handler(
-		GtkWidget * widget, 
-		GtkWidget *event, 
-		gpointer data);
 stackelement _sum( stackelement a, stackelement b);
+
 void fileselection_made( GtkWidget *w, actioncommand *action );
 
 int token_store(token command);
 int token_store_attr(token command, tag_attr *attributes);
 int token_store_with_argument_attr(token command, const char *argument, tag_attr *attributes);
 int token_store_with_argument( token command, const char *argument);
-
 gboolean token_store_with_tag_attributes(token command, GList *attr);
+
 gint instruction_get_pc(void);
 void instruction_set_jump(gint from, gint where);
-
-void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr);
-void on_any_widget_activate_event(GtkWidget *widget, AttributeSet  *Attr);
-void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
-void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr);
-
-#if GTK_CHECK_VERSION(2,16,0)
-void on_any_widget_icon_press_event(GtkWidget *widget,
-	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr);
-void on_any_widget_icon_release_event(GtkWidget *widget,
-	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr);
-#endif
-
-void button_pressed_attr(GtkWidget *button, AttributeSet *Attr);
-void button_released_attr(GtkWidget *button, AttributeSet *Attr);
-void button_leaved_attr(GtkWidget *button, AttributeSet*Attr);
-void button_entered_attr(GtkWidget *button, AttributeSet *Attr);
-void button_clicked_attr(GtkWidget *button, AttributeSet *Attr);
-void button_pressed(GtkWidget *button, const gchar *str);
 
 #endif

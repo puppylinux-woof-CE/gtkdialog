@@ -30,6 +30,7 @@
 #include <glade/glade.h>
 #include "widgets.h"
 #include "glade_support.h"
+#include "signals.h"
 
 /*************************************************************************
  * Static declarations:                                                  *
@@ -55,10 +56,8 @@ on_any_button_clicked(
 {
 	gchar *prefix, *command;
 
-//	g_return_if_fail(command != NULL);	BUG redundant
 	g_return_if_fail(full_command != NULL);
 #ifdef DEBUG
-//	g_message("%s(%p, '%s')", __func__, widget, command);	BUG redundant
 	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
@@ -74,10 +73,8 @@ on_any_entry_almost_any(GtkEntry *widget,
 {
 	gchar *prefix, *command;
 
-//	g_return_if_fail(command != NULL);	BUG redundant
 	g_return_if_fail(full_command != NULL);
 #ifdef DEBUG
-//	g_message("%s(%p, '%s')", __func__, widget, command);	BUG redundant
 	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
@@ -167,10 +164,8 @@ on_any_widget_almost_any(
 {
 	gchar *prefix, *command;
 
-//	g_return_if_fail(command != NULL);	BUG redundant
 	g_return_if_fail(full_command != NULL);
 #ifdef DEBUG
-//	g_message("%s(%p, '%s')", __func__, widget, command);	BUG redundant
 	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
@@ -630,33 +625,15 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 {
 	gint              retval = 0;
 
-/*	/$	Redundant: incredibly out-of-date.
-	 $ Must be in a perfect order, since there is a class hierarchy here!
-	 $/
-	if (GTK_IS_LABEL(widget))
-		return WIDGET_LABEL;
-	else if (GTK_IS_ENTRY(widget))
-		return WIDGET_ENTRY;
-	else if (GTK_IS_TEXT_VIEW(widget))
-		return WIDGET_EDIT;
-	else if (GTK_IS_CHECK_BUTTON(widget))
-		return WIDGET_CHECKBOX;
-	else if (GTK_IS_RADIO_BUTTON(widget))
-		return WIDGET_RADIO;
-	else if (GTK_IS_PROGRESS_BAR(widget))
-		return WIDGET_PROGRESS;
-	else if (GTK_IS_WINDOW(widget))
-		return WIDGET_WINDOW;
-	else if (GTK_IS_BUTTON(widget))
-		return WIDGET_BUTTON;
-	return 0; */
-
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton--->GtkRadioButton */
 	if (GTK_IS_RADIO_BUTTON(widget))
 		retval = WIDGET_RADIO;
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton */
 	else if (GTK_IS_CHECK_BUTTON(widget))
 		retval = WIDGET_CHECKBOX;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
+	else if (GTK_IS_TOGGLE_BUTTON(widget))
+		retval = WIDGET_TOGGLEBUTTON;
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton */
 	else if (GTK_IS_BUTTON(widget))
 		retval = WIDGET_BUTTON;

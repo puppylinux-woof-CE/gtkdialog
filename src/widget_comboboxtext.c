@@ -27,6 +27,7 @@
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
+#include "signals.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
@@ -405,7 +406,6 @@ void widget_comboboxtext_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
 				__func__);
-		/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||

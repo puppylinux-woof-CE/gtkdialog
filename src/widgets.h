@@ -61,39 +61,32 @@ typedef struct _progr_descr progr_descr;
  * incredibly time consuming. Another job for another [rainy] day :) */
 static void fill_clist_by_items(AttributeSet *Attr, GtkWidget *list, int separator);
 static void fill_combo_by_items(AttributeSet *Attr, GtkWidget *combo);
-//static void fill_comboboxtext_by_items(AttributeSet *Attr, GtkWidget *comboboxtext);	Redundant.
 static void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale);
 static void fill_list_by_items(AttributeSet *Attr, GtkWidget *list);
 void fill_tree_model_by_items(GtkTreeModel *tree_model, variable *var);
 
 char *widget_get_text_value(GtkWidget *widget, int type);
 
-//static void fill_comboboxtext_by_file(GtkWidget *widget, char *filename);	Redundant.
 static void fill_scale_by_file(GtkWidget *widget, char *filename);
 static void fill_menuitem_by_file(GtkWidget *widget, char *filename);
 static void fill_entry_by_file(GtkWidget *entry, char *filename);
 static void fill_edit_by_file(GtkWidget *widget, char *filename);
 static void fill_label_by_file(GtkWidget *widget, char *filename);
-void fill_text_by_file(GtkTextBuffer *buffer, char *filename );	/* Redundant: never implemented */
 
-//void widget_button_refresh(variable *var);	Redundant.
 void widget_checkbox_refresh(variable *var);
 void widget_combo_refresh(variable *var);
-//void widget_comboboxtext_refresh(variable *var);	Redundant.
 void widget_scale_refresh(variable *var);
 void widget_menuitem_refresh(variable *var);
 int widget_edit_refresh(variable *var);
 void widget_entry_refresh(variable *var);
 int widget_label_refresh(variable *var);
 void widget_list_refresh(variable *var);
-//void widget_pixmap_refresh(variable *var);	Redundant.
 void widget_table_refresh(variable *var);
 void widget_tree_refresh(variable *var);
 
 void widget_edit_save(variable *var);
 static void save_edit_to_file(GtkWidget *widget, char *filename);
 void save_entry_to_file(variable *var);
-//void save_comboboxtext_to_file(variable *var);	Redundant.
 void save_scale_to_file(variable *var);
 void save_menuitem_to_file(variable *var);
 
@@ -101,7 +94,6 @@ FILE *widget_opencommand(const char *command);
 
 void fill_checkbox_by_command(GtkWidget *checkbox, char *command);
 void fill_clist_by_command(GtkWidget *list, int columns, char *command);
-//void fill_comboboxtext_by_command(GtkWidget *widget, char *command);	Redundant
 void fill_scale_by_command(GtkWidget *widget, char *command);
 void fill_menuitem_by_command(GtkWidget *widget, char *command);
 void fill_entry_by_command(GtkWidget *entry, char *command);
@@ -118,10 +110,5 @@ void perform_progress_bar_actions(progr_descr *descr);
 gpointer progress_bar_thread_entry(progr_descr *descr);
 void descriptor_destroy_notify(progr_descr *descr);
 void on_any_progress_bar_realized(GtkWidget *widget, AttributeSet *Attr);
-
-void register_progress_bar_callbacks(	/* Redundant: not found */
-		GtkWidget    *bar, 
-		const gchar  *input,
-		AttributeSet *Attr);
 
 #endif

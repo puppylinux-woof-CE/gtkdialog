@@ -27,6 +27,7 @@
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
+#include "signals.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
@@ -39,7 +40,8 @@ static void widget_button_input_by_items(variable *var);
 
 /* Notes:
  * The togglebutton widget is near identical to the button widget
- * so there's absolutely no point in maintaining another pair of files */
+ * so there's absolutely no point in maintaining another pair of files.
+ * In fact there are seven buttons in total that make use of this file */
 
 /***********************************************************************
  * Clear                                                               *
@@ -79,6 +81,7 @@ GtkWidget *widget_button_create(
 	GtkWidget        *icon = NULL;
 	GtkWidget        *label = NULL;
 	GtkWidget        *widget = NULL;
+	gchar            *act;
 	gchar            *file_name = NULL;
 	gchar            *icon_name = NULL;
 	gchar            *labeldirective;
@@ -94,10 +97,6 @@ GtkWidget *widget_button_create(
 #endif
 
 	switch (Type) {
-		case WIDGET_OKBUTTON:
-			widget = gtk_button_new_from_stock(GTK_STOCK_OK);
-			attributeset_set_if_unset(Attr, ATTR_LABEL, "OK");
-			break;
 		case WIDGET_CANCELBUTTON:
 			widget = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "Cancel");
@@ -106,13 +105,17 @@ GtkWidget *widget_button_create(
 			widget = gtk_button_new_from_stock(GTK_STOCK_HELP);
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "Help");
 			break;
-		case WIDGET_YESBUTTON:
-			widget = gtk_button_new_from_stock(GTK_STOCK_YES);
-			attributeset_set_if_unset(Attr, ATTR_LABEL, "Yes");
-			break;
 		case WIDGET_NOBUTTON:
 			widget = gtk_button_new_from_stock(GTK_STOCK_NO);
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "No");
+			break;
+		case WIDGET_OKBUTTON:
+			widget = gtk_button_new_from_stock(GTK_STOCK_OK);
+			attributeset_set_if_unset(Attr, ATTR_LABEL, "OK");
+			break;
+		case WIDGET_YESBUTTON:
+			widget = gtk_button_new_from_stock(GTK_STOCK_YES);
+			attributeset_set_if_unset(Attr, ATTR_LABEL, "Yes");
 			break;
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
@@ -124,15 +127,17 @@ GtkWidget *widget_button_create(
 
 			/* Discover from the directives which type of button
 			 * we are going to create */
-			if (!attributeset_is_avail(Attr, ATTR_INPUT) &&
-				attributeset_is_avail(Attr, ATTR_LABEL)) {
-				buttontype = TYPE_BUTTON_LAB;
-			} else if (attributeset_is_avail(Attr, ATTR_INPUT) &&
-				!attributeset_is_avail(Attr, ATTR_LABEL)) {
-				buttontype = TYPE_BUTTON_PIX;
-			} else if (attributeset_is_avail(Attr, ATTR_INPUT) &&
-				attributeset_is_avail(Attr, ATTR_LABEL)) {
-				buttontype = TYPE_BUTTON_LABPIX;
+			/* The <label> tag... */
+			if (attributeset_is_avail(Attr, ATTR_LABEL))
+				buttontype |= TYPE_BUTTON_LAB;
+			/* The <input> tag... */
+			act = attributeset_get_first(&element, Attr, ATTR_INPUT);
+			while (act) {
+				if (!input_is_shell_command(act)) {
+					buttontype |= TYPE_BUTTON_PIX;
+					break;
+				}
+				act = attributeset_get_next(&element, Attr, ATTR_INPUT);
 			}
 
 			/* Enforce a default label because TYPE_BUTTON and a
@@ -192,25 +197,25 @@ GtkWidget *widget_button_create(
 					 * could exist which GTK+ will set after realization.
 					 * We'll simply drop through to create a default button */
 				case TYPE_BUTTON_LAB:
-					if (Type == WIDGET_BUTTON) {
-						widget = gtk_button_new_with_label(labeldirective);
-					} else if (Type == WIDGET_TOGGLEBUTTON) {
+					if (Type == WIDGET_TOGGLEBUTTON) {
 						widget = gtk_toggle_button_new_with_label(labeldirective);
+					} else {
+						widget = gtk_button_new_with_label(labeldirective);
 					}
 					break;
 				case TYPE_BUTTON_PIX:
-					if (Type == WIDGET_BUTTON) {
-						widget = gtk_button_new();
-					} else if (Type == WIDGET_TOGGLEBUTTON) {
+					if (Type == WIDGET_TOGGLEBUTTON) {
 						widget = gtk_toggle_button_new();
+					} else {
+						widget = gtk_button_new();
 					}
 					gtk_container_add(GTK_CONTAINER(widget), icon);
 					break;
 				case TYPE_BUTTON_LABPIX:
-					if (Type == WIDGET_BUTTON) {
-						widget = gtk_button_new();
-					} else if (Type == WIDGET_TOGGLEBUTTON) {
+					if (Type == WIDGET_TOGGLEBUTTON) {
 						widget = gtk_toggle_button_new();
+					} else {
+						widget = gtk_button_new();
 					}
 					/* Create the label supporting mnemonics if the
 					 * GTK+ property "use-underline" is true */
@@ -278,11 +283,13 @@ GtkWidget *widget_button_create(
 	}
 
 	switch (Type) {
-		case WIDGET_OKBUTTON:
+		case WIDGET_TOGGLEBUTTON:
+			break;
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
 		case WIDGET_BUTTON:
 			/* For this widget there is a default exit action and
 			 * this requires creating if no actions are set */
@@ -293,8 +300,6 @@ GtkWidget *widget_button_create(
 				attributeset_set_this_tagattr(&element, Attr, ATTR_ACTION,
 					"type", "exit");
 			}
-			break;
-		case WIDGET_TOGGLEBUTTON:
 			break;
 	}
 
@@ -338,7 +343,15 @@ gchar *widget_button_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup("");
+	if (GTK_IS_TOGGLE_BUTTON(widget)) {
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+			string = g_strdup("true");
+		} else {
+			string = g_strdup("false");
+		}
+	} else {
+		string = g_strdup("");
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -375,7 +388,9 @@ void widget_button_refresh(variable *var)
 {
 	GList            *element;
 	gchar            *act;
+	gchar            *value;
 	gint              initialised = FALSE;
+	gint              is_active;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -406,9 +421,23 @@ void widget_button_refresh(variable *var)
 	/* Initialise these only once at start-up */
 	if (!initialised) {
 		/* Apply directives */
-		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
-			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
-				__func__);
+		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
+			if (var->Type == WIDGET_TOGGLEBUTTON) {
+				value = attributeset_get_first(&element, var->Attributes,
+					ATTR_DEFAULT);
+				if ((strcasecmp(value, "true") == 0) ||
+					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+					is_active = 1;
+				} else {
+					is_active = 0;
+				}
+				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(var->Widget),
+					is_active);
+			} else {
+				fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
+					__func__);
+			}
+		}
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -416,16 +445,24 @@ void widget_button_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-		g_signal_connect(G_OBJECT(var->Widget), "clicked", 
-			G_CALLBACK(button_clicked_attr),(gpointer)var->Attributes);
-		g_signal_connect(G_OBJECT(var->Widget), "enter",	/* Deprecated by "enter-notify-event" */
-			G_CALLBACK(button_entered_attr),(gpointer)var->Attributes);
-		g_signal_connect(G_OBJECT(var->Widget), "leave",	/* Deprecated by "leave-notify-event" */
-			G_CALLBACK(button_leaved_attr),(gpointer)var->Attributes);
-		g_signal_connect(G_OBJECT(var->Widget), "pressed",	/* Deprecated by "button-press-event" */
-			G_CALLBACK(button_pressed_attr),(gpointer)var->Attributes);
-		g_signal_connect(G_OBJECT(var->Widget), "released",	/* Deprecated by "button-release-event" */
-			G_CALLBACK(button_released_attr),(gpointer)var->Attributes);
+		if (var->Type == WIDGET_TOGGLEBUTTON) {
+			g_signal_connect(G_OBJECT(var->Widget), "toggled",
+				G_CALLBACK(on_any_widget_toggled_event), (gpointer)var->Attributes);
+		} else {
+			/* These are a bit old now but interfering will break something.
+			 * The newer signals are connected in the widget_connect_signals
+			 * function which is executed elsewhere for every single widget */
+			g_signal_connect(G_OBJECT(var->Widget), "clicked", 
+				G_CALLBACK(button_clicked_attr),(gpointer)var->Attributes);
+			g_signal_connect(G_OBJECT(var->Widget), "enter",	/* Deprecated by "enter-notify-event" */
+				G_CALLBACK(button_entered_attr),(gpointer)var->Attributes);
+			g_signal_connect(G_OBJECT(var->Widget), "leave",	/* Deprecated by "leave-notify-event" */
+				G_CALLBACK(button_leaved_attr),(gpointer)var->Attributes);
+			g_signal_connect(G_OBJECT(var->Widget), "pressed",	/* Deprecated by "button-press-event" */
+				G_CALLBACK(button_pressed_attr),(gpointer)var->Attributes);
+			g_signal_connect(G_OBJECT(var->Widget), "released",	/* Deprecated by "button-release-event" */
+				G_CALLBACK(button_released_attr),(gpointer)var->Attributes);
+		}
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -480,14 +517,45 @@ void widget_button_save(variable *var)
 
 static void widget_button_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count, is_active;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
+#endif
+
+	if (var->Type == WIDGET_TOGGLEBUTTON) {
+		/* Opening pipe for reading... */
+		if (infile = widget_opencommand(command)) {
+			/* Just one line */
+			if (fgets(line, 512, infile)) {
+				/* Enforce end of string in case of more chars read */
+				line[512 - 1] = 0;
+				/* Remove the trailing [CR]LFs */
+				for (count = strlen(line) - 1; count >= 0; count--)
+					if (line[count] == 13 || line[count] == 10) line[count] = 0;
+				if ((strcasecmp(line, "true") == 0) ||
+					(strcasecmp(line, "yes") == 0) || (atoi(line) == 1)) {
+					is_active = 1;
+				} else {
+					is_active = 0;
+				}
+				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(var->Widget), is_active);
+			}
+			/* Close the file */
+			pclose(infile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+				command);
+		}
+	} else {
+		fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

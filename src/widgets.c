@@ -42,6 +42,7 @@
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
 #include "widget_timer.h"
+#include "signals.h"
 
 #undef DEBUG
 #undef WARNING
@@ -176,11 +177,12 @@ widget_get_text_value(
 	}
 
 	switch (type) {
-		case WIDGET_OKBUTTON:
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			string = widget_button_envvar_construct(widget);
 			return string;
@@ -898,13 +900,11 @@ widget_entry_refresh(variable *var)
 				gtk_entry_set_text(GTK_ENTRY(var->Widget),
 				attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT));
 			/* Apply the sensitive directive if available */
-			/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
 				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
 				gtk_widget_set_sensitive(var->Widget, FALSE);
-			/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "password"))	Redundant */
 			if (attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "password"))
 				gtk_entry_set_visibility(GTK_ENTRY(var->Widget), FALSE);
 			/* Apply the width and height directives if available */
@@ -950,8 +950,6 @@ void widget_checkbox_refresh(variable * var)
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
-	/* if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -986,8 +984,6 @@ void widget_list_refresh(variable * var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		fill_list_by_items(var->Attributes, var->Widget);
 
-	/* if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -1233,8 +1229,6 @@ widget_table_refresh(variable * var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		fill_clist_by_items(var->Attributes, var->Widget, '|');
 
-	/* if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -1253,8 +1247,6 @@ widget_combo_refresh(variable * var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		fill_combo_by_items(var->Attributes, var->Widget);
 
-	/* if (attributeset_cmp_left
-	    (var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -1304,8 +1296,6 @@ void widget_scale_refresh(variable *var)
 				gtk_range_set_value(GTK_RANGE(var->Widget),
 					atof(attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT)));
 			/* Apply the sensitive directive if available */
-			/* if (attributeset_cmp_left
-				(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -1389,7 +1379,6 @@ void widget_menuitem_refresh(variable *var)
 		/* Initialise these only once at start-up */
 		if (!initialised) {
 			/* Apply the sensitive directive if available */
-			/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -1459,22 +1448,6 @@ widget_opencommand(
 	
 	return infile;
 }
-
-
-//void fill_text_by_file( GtkTextBuffer *buffer, char *filename ){
-//  #ifdef DEBUG
-//    fprintf( stderr, "%s(): file: '%s'\n", __func__, filename );
-//    fflush( stderr );
-//  #endif 
-  //text=gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
-//  printf("%s(): buffer is at %p.\n", __func__, buffer );
-//   if( text==NULL ){
-//     fprintf( stderr, "%s(): buffer is NULL\n", __func__);
-//     fflush(stderr);
-//   }
-   //gtk_text_buffer_insert_at_cursor( text, filename, -1 );
-//}/*fill_text_by_file*/
-
 
 void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 {
@@ -1727,20 +1700,20 @@ char *widgets_to_str(int itype)
 {
 	char *type;
 	switch (itype) {
-		case WIDGET_OKBUTTON:
-			type = "OKBUTTON";
-			break;
 		case WIDGET_CANCELBUTTON:
 			type = "CANCELBUTTON";
 			break;
 		case WIDGET_HELPBUTTON:
 			type = "HELPBUTTON";
 			break;
-		case WIDGET_YESBUTTON:
-			type = "YESBUTTON";
-			break;
 		case WIDGET_NOBUTTON:
 			type = "NOBUTTON";
+			break;
+		case WIDGET_OKBUTTON:
+			type = "OKBUTTON";
+			break;
+		case WIDGET_YESBUTTON:
+			type = "YESBUTTON";
 			break;
 		case WIDGET_BUTTON:
 			type = "BUTTON";
@@ -1762,6 +1735,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_TIMER:
 			type = "TIMER";
+			break;
+		case WIDGET_TOGGLEBUTTON:
+			type = "TOGGLEBUTTON";
 			break;
 
 

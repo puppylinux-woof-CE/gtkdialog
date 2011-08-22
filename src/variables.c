@@ -272,11 +272,12 @@ variables_set_value(const char *name,
 	}
 
 	switch (toset->Type) {
-		case WIDGET_OKBUTTON:
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_fileselect(toset, name, value);
 			break;
@@ -323,11 +324,12 @@ variables_save(const char *name)
 		return (NULL);
 
 	switch (var->Type) {
-		case WIDGET_OKBUTTON:
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_save(var);
 			break;
@@ -411,11 +413,12 @@ variables_refresh(const char *name)
 	}
 
 	switch (var->Type) {
-		case WIDGET_OKBUTTON:
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_refresh(var);
 			break; 
@@ -748,7 +751,6 @@ _variables_export(variable *actual)
 {
 	gchar            *value;
 	GList            *itemlist;
-//	size_t            length;	Redundant
 	gint              n;
 	gint              column;
 	gchar            *tmp;
@@ -1099,11 +1101,12 @@ variables_clear(const char *name)
 	}
 
 	switch (toclear->Type) {
-		case WIDGET_OKBUTTON:
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_clear(toclear);
 			break;
@@ -1170,7 +1173,6 @@ remove_selected_variable(const char *name)
 	GtkTreeSelection *selection;
 	GtkTreeModel     *model;
 	GtkTreeIter       iter;
-//	GList            *empty = NULL;	Redundant
 	variable         *toclear;
 	gint              selectionmode;
 	GList            *selectedrows, *row;
@@ -1203,11 +1205,12 @@ remove_selected_variable(const char *name)
 	 * Removing the selected item or text range from the widget.
 	 */
 	switch (toclear->Type) {
-		case WIDGET_OKBUTTON:
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
+		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_removeselected(toclear);
 			break;
