@@ -15,7 +15,7 @@ export MAIN_DIALOG='
     <entry>
       <default>Text in the entry</default>
       <variable>ENTRY</variable>
-      <visible>disabled</visible>
+      <sensitive>false</sensitive>
     </entry>
     <checkbox>
       <label>I want an OK button NOW!</label>

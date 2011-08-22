@@ -17,6 +17,7 @@ gtkdialog_SOURCES = \
 		    stack.c stack.h \
 		    automaton.c automaton.h \
 		    attributes.c attributes.h \
+		    signals.c signals.h \
 		    stringman.c stringman.h \
 		    widgets.c widgets.h \
 		    actions.c actions.h \

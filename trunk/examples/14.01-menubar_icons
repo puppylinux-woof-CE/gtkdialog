@@ -12,7 +12,7 @@ export MAIN_DIALOG='
       <menuitem stock="gtk-save">
         <action>echo You selected the save menu item.</action>
       </menuitem>
-      <separator></separator>
+      <menuitemseparator></menuitemseparator>
       <menuitem stock="gtk-quit">
         <action>echo You selected the quit menu item</action>
         <action type="exit">exit by menu</action>

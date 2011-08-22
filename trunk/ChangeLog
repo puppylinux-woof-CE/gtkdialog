@@ -1,3 +1,20 @@
+* Mon Aug 22 2011 Thunor <thunorsif@hotmail.com>
+- New widget: <togglebutton>.
+- Purged almost all of the code marked redundant.
+- Added widget_template.c/h which I've been using for a while now.
+
+* Sun Aug 21 2011 Thunor <thunorsif@hotmail.com>
+- Fixed invisible-char in 02.01-entry_attributes as it is a guint not a
+  gchar (it worked before because the guint code was bugged).
+- Updated a few examples by replacing deprecated directives.
+
+* Sat Aug 20 2011 Thunor <thunorsif@hotmail.com>
+- Added signals.c/h.
+
+* Fri Aug 19 2011 Thunor <thunorsif@hotmail.com>
+- Started to implement the togglebutton widget (create works so far).
+- Fixed a bug when freeing accel_groups: it needed to be set to NULL.
+
 * Thu Aug 18 2011 Thunor <thunorsif@hotmail.com>
 - Added widget_button.c/h.
 - Added "use-underline" support to buttons with a label directive.

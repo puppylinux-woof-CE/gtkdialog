@@ -35,7 +35,7 @@ export MAIN_DIALOG='
     <text>
       <label>invisible_char:</label>
     </text>
-    <entry invisible_char="x" visibility="false">
+    <entry invisible_char="120" visibility="false">
       <default>Default value</default>
       <variable>ENTRY4</variable>
     </entry>

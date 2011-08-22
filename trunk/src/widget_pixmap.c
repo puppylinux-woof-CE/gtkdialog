@@ -248,7 +248,6 @@ void widget_pixmap_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
 				__func__);
-		/* if (attributeset_cmp_left(var->Attributes, ATTR_VISIBLE, "disabled"))	Redundant */
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||

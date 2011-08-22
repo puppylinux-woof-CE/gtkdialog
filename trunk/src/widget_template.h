@@ -1,7 +1,8 @@
 /*
- * tag_attributes.h:
+ * widget_template.h: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  LÃ¡szlÃ³ Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +19,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef TAG_ATTRIBUTES_H
-#define TAG_ATTRIBUTES_H
+#ifndef WIDGET_TEMPLATE_H
+#define WIDGET_TEMPLATE_H
 
-#include <gtk/gtk.h>
-#include "attributes.h"
-#include "gtkdialog.h"
-
-typedef struct tag_attribute {
-	gchar    *name;
-	gchar    *sval;
-	gint      ival;
-	gdouble   dval;
-	gfloat    fval;
-	gboolean  bval;
-} tag_attribute;
-
-
-GList *tag_attributeset_append(GList *list, gchar *name, gchar *value);
-gint widget_set_tag_attributes(GtkWidget *widget, tag_attr *attr);
+/* Function prototypes */
+void widget_template_clear(variable *var);
+GtkWidget *widget_template_create(
+	AttributeSet *Attr, tag_attr *attr, gint Type);
+gchar *widget_template_envvar_all_construct(variable *var);
+gchar *widget_template_envvar_construct(GtkWidget *widget);
+void widget_template_fileselect(
+	variable *var, const char *name, const char *value);
+void widget_template_refresh(variable *var);
+void widget_template_removeselected(variable *var);
+void widget_template_save(variable *var);
 
 #endif

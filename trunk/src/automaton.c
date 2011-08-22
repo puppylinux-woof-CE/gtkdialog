@@ -50,6 +50,7 @@
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
 #include "widget_timer.h"
+#include "signals.h"
 
 #undef DEBUG
 #undef WARNING
@@ -88,320 +89,6 @@ instruction_execute_push(token Token,
 		AttributeSet *Attr, 
 		tag_attr *tag_attributes);
 
-
-/*****************************************************************************
- * GtkWidget handling functions.                                             *
- *                                                                           *
- *****************************************************************************/
-static void
-on_any_widget_realized(
-		GtkWidget *widget, 
-		tag_attr  *tag_attributes)
-{
-#ifdef DEBUG
-	fprintf(stderr, "%s(): widget=%p  tag_attributes=%p\n", __func__,
-		widget, tag_attributes);
-#endif
-	widget_set_tag_attributes(widget, tag_attributes);
-}
-
-void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
-	const gchar *signal_name)
-{
-	GList            *element;
-	gchar            *command, *type, *signal;
-	gint              execute, is_active;
-
-#ifdef LOTS_OF_MESSAGES
-	PIP_DEBUG("Executing signal '%s' on widget %p.", signal_name, widget);
-#endif
-
-	g_return_if_fail(GTK_IS_WIDGET(widget));
-
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	while (command) {
-		execute = FALSE;
-
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-
-		if (signal &&
-			g_ascii_strcasecmp(signal, signal_name) == 0) {
-			/************************************************************************
-			 * Thunor: This manages <action signal="type"> i.e the specified signal *
-			 ************************************************************************/
-
-#ifdef DEBUG
-			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
-				__func__, command, type, signal, signal_name);
-#endif
-
-			/* Some widgets support conditional function execution on certain signals */
-			if (strncasecmp(command, "if true ", 8) == 0) {
-				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* There's a class hierarchy to be aware of here */
-					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-						command += 8;
-						if (is_active) execute = TRUE;
-					}
-				}
-			} else if (strncasecmp(command, "if false ", 9) == 0) {
-				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* There's a class hierarchy to be aware of here */
-					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-						command += 9;
-						if (!is_active) execute = TRUE;
-					}
-				}
-			} else {
-				execute = TRUE;
-			}
-		} else if (signal == NULL) {
-			/************************************************************************
-			 * Thunor: This manages <action> i.e. the default widget signal         *
-			 ************************************************************************/
-
-#ifdef DEBUG
-			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
-				__func__, command, type, signal, signal_name);
-#endif
-
-			/* There's a class hierarchy to be aware of here */
-			if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* Checkbox menuitems support conditional function execution */
-					is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-					if (strncasecmp(command, "if true ", 8) == 0) {
-						command += 8;
-						if (is_active) execute = TRUE;
-					} else if (strncasecmp(command, "if false ", 9) == 0) {
-						command += 9;
-						if (!is_active) execute = TRUE;
-					} else {
-						execute = TRUE;
-					}
-				}
-			} else if (GTK_IS_MENU_ITEM(widget)) {
-				if (strcasecmp(signal_name, "activate") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_SPIN_BUTTON(widget)) {
-				if (strcasecmp(signal_name, "value-changed") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_ENTRY(widget) || GTK_IS_COMBO_BOX(widget)) {
-				if (strcasecmp(signal_name, "changed") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_SCALE(widget)) {
-				if (strcasecmp(signal_name, "value-changed") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_LABEL(widget)) {
-				/* A GtkLabel that ticks is a timer */
-				if (strcasecmp(signal_name, "tick") == 0)
-					execute = TRUE;
-			}
-		}
-		if (execute) execute_action(widget, command, type);
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-}
-
-static gboolean
-on_any_widget_button_pressed(
-		GtkWidget      *widget,
-                GdkEventButton *event,
-                AttributeSet   *Attr) 
-{
-	gchar *button = g_strdup_printf("%d", event->button);
-	g_setenv("BUTTON", button, TRUE);
-	
-	widget_signal_executor(widget, Attr, "button-press-event");
-	
-	g_unsetenv("BUTTON");
-	g_free(button);
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_button_released(
-		GtkWidget      *widget,
-                GdkEventButton *event,
-                AttributeSet   *Attr) 
-{
-	gchar *button = g_strdup_printf("%d", event->button);
-	g_setenv("BUTTON", button, TRUE);
-	
-	widget_signal_executor(widget, Attr, "button-release-event");
-	
-	g_unsetenv("BUTTON");
-	g_free(button);
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_configure_event(
-		GtkWidget         *widget, 
-		GdkEventConfigure *event,
-                AttributeSet      *Attr) 
-{
-	widget_signal_executor(widget, Attr, "configure-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_delete_event(
-		GtkWidget     *widget, 
-		GdkEvent      *event, 
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "delete-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_destroy_event(GtkWidget *widget, 
-		GdkEvent  *event, 
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "destroy-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_enter_notify_event(
-		GtkWidget        *widget, 
-		GdkEventCrossing *event, 
-                AttributeSet     *Attr) 
-{
-	widget_signal_executor(widget, Attr, "enter-notify-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_leave_notify_event(
-		GtkWidget        *widget, 
-		GdkEventCrossing *event, 
-                AttributeSet     *Attr) 
-{
-	widget_signal_executor(widget, Attr, "leave-notify-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_focus_in_event(
-		GtkWidget     *widget, 
-		GdkEventFocus *event, 
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "focus-in-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_focus_out_event(
-		GtkWidget     *widget, 
-		GdkEventFocus *event, 
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "focus-out-event");
-	return FALSE;
-}
-
-static void
-on_any_widget_hide(
-		GtkWidget *widget, 
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "hide");
-}
-
-static gboolean
-on_any_widget_key_press_event(
-		GtkWidget   *widget, 
-		GdkEventKey *event,
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "key-press-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_key_release_event(
-		GtkWidget   *widget, 
-		GdkEventKey *event,
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "key-release-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_map_event(
-		GtkWidget *widget,
-		GdkEvent  *event,
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "map-event");
-	return FALSE;
-}
-
-static gboolean
-on_any_widget_unmap_event(
-		GtkWidget *widget, 
-		GdkEvent  *event, 
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "unmap-event");
-	return FALSE;
-}
-
-static void
-on_any_widget_show(
-		GtkWidget     *widget, 
-                AttributeSet  *Attr) 
-{
-	widget_signal_executor(widget, Attr, "show");
-}
-
-void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
-{
-	widget_signal_executor(widget, Attr, "changed");
-}
-
-void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
-{
-	widget_signal_executor(widget, Attr, "activate");
-}
-
-void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
-{
-	widget_signal_executor(widget, Attr, "value-changed");
-}
-
-void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr)
-{
-	widget_signal_executor(widget, Attr, "toggled");
-}
-
-#if GTK_CHECK_VERSION(2,16,0)
-void on_any_widget_icon_press_event(GtkWidget *widget,
-	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
-{
-	if (pos == GTK_ENTRY_ICON_PRIMARY)
-		widget_signal_executor(widget, Attr, "primary-icon-press");
-	else
-		widget_signal_executor(widget, Attr, "secondary-icon-press");
-}
-
-void on_any_widget_icon_release_event(GtkWidget *widget,
-	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
-{
-	if (pos == GTK_ENTRY_ICON_PRIMARY)
-		widget_signal_executor(widget, Attr, "primary-icon-release");
-	else
-		widget_signal_executor(widget, Attr, "secondary-icon-release");
-}
-#endif
 
 static gboolean
 widget_connect_signals(
@@ -489,41 +176,6 @@ table_selection(GtkWidget      *clist,
 	}
 	return;
 	
-}
-
-
-/*void 	Redundant
-entry_inserted(GtkWidget * entry, gpointer str)
-{
-	button_pressed(entry, str);
-}*/
-
-void button_toggled(GtkToggleButton * button, gpointer str)
-{
-	/*
-	 ** First we check for "if true" and "if false" prefixes.
-	 */
-	if (strncasecmp(str, "if true ", 8) == 0) {
-		if (gtk_toggle_button_get_active
-		    (GTK_TOGGLE_BUTTON(button)))
-			button_pressed((GtkWidget *) button,
-				       &((char *) str)[8]);
-		return;
-	}
-	if (strncasecmp(str, "if false ", 9) == 0) {
-		if (!gtk_toggle_button_get_active
-		    (GTK_TOGGLE_BUTTON(button)))
-			button_pressed((GtkWidget *) button,
-				       &((char *) str)[9]);
-		return;
-	}
-
-	/*
-	 ** Otherwise we just call the function we used to call when a
-	 ** button is pressed.
-	 */
-	button_pressed((GtkWidget *) button, str);
-	return;
 }
 
 void list_selection(GtkWidget * list, gpointer Attr)
@@ -636,199 +288,6 @@ execute_action(GtkWidget *widget,
 	return TRUE;
 }
 
-/*
- * Callback functions for buttons.
- *
- */
-void 
-button_pressed_attr(
-		GtkWidget     *button,
-		AttributeSet  *Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;
-
-	PIP_DEBUG("Button: %p.", button);
-	
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	if (command == NULL){
-		return;
-	}
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-		if (signal == NULL || 
-				g_ascii_strcasecmp(signal, "pressed") != 0)
-			goto next_command;
-		
-		execute_action(button, command, type);
-next_command:   
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-}
-
-
-void button_released_attr(
-		GtkWidget     *button,
-		AttributeSet  *Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;
-	
-	PIP_DEBUG("bitton: %p", button);
-	
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	if (command == NULL){
-		return;
-	}
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-		if (signal == NULL || g_ascii_strcasecmp(signal, "released") != 0)
-			goto next_command;
-		
-		execute_action(button, command, type);
-next_command:   
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-}
-
-
-void 
-button_leaved_attr(GtkWidget     *button,
-		   AttributeSet  *Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;
-
-	PIP_DEBUG("button: %p.", button);
-	
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-		if (signal == NULL || g_ascii_strcasecmp(signal, "leave") != 0)
-			goto next_command;
-		
-		execute_action(button, command, type);
-next_command:   
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-}
-
-
-void 
-button_entered_attr(
-		GtkWidget     *button,
-		AttributeSet  *Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;
-	
-	PIP_DEBUG("Start.");
-	
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	if (command == NULL){
-		return;
-	}
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-		if (signal == NULL || g_ascii_strcasecmp(signal, "enter") != 0)
-			goto next_command;
-		
-		execute_action(button, command, type);
-next_command:   
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-}
-
-void 
-button_clicked_attr(
-		GtkWidget     *button,
-		AttributeSet  *Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;
-	
-	PIP_DEBUG("button: %p, Attr: %p", button, Attr);
-	
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	if (command == NULL){
-		if (!option_no_warning)
-			g_warning("%s(): Button without action.", __func__);
-		return;
-	}
-
-	while (command != NULL){
-
-#ifdef DEBUG
-		GList *attr;
-		Attribute *data;
-		attr = g_list_first(Attr->attr[ATTR_ACTION]);
-		while (attr) {
-			data = attr->data;
-			printf("%s: BEFORE: element=%p attr->data->text='%s'\n",
-				__func__, element, data->text);
-			attr = g_list_next(attr);
-		}
-#endif
-
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-		if (signal != NULL && g_ascii_strcasecmp(signal, "clicked") != 0)
-			goto next_command;
-		
-		execute_action(button, command, type);
-
-#ifdef DEBUG
-		attr = g_list_first(Attr->attr[ATTR_ACTION]);
-		while (attr) {
-			data = attr->data;
-			printf("%s:  AFTER: element=%p attr->data->text='%s'\n",
-				__func__, element, data->text);
-			attr = g_list_next(attr);
-		}
-#endif
-
-next_command:   
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-
-#ifdef DEBUG
-		printf("%s: element=%p\n", __func__, element);
-#endif
-	}
-}
-		
-
-/*
-** This function is called when a button is pressed. The first
-** argument is a pointer to the window, the second is the command
-** string.
-*/
-void 
-button_pressed(GtkWidget *button, 
-		const gchar *str)
-{
-	PIP_DEBUG("");
-	execute_action(GTK_WIDGET(button), str, NULL);
-	return;
-}
-
 
 void print_command(instruction command)
 {
@@ -850,20 +309,20 @@ void print_command(instruction command)
     case PUSH:
 	printf("push");
 	switch (Widget_Type) {
-		case WIDGET_OKBUTTON:
-			printf("(new okbutton())");
-			break;
 		case WIDGET_CANCELBUTTON:
 			printf("(new cancelbutton())");
 			break;
 		case WIDGET_HELPBUTTON:
 			printf("(new helpbutton())");
 			break;
-		case WIDGET_YESBUTTON:
-			printf("(new yesbutton())");
-			break;
 		case WIDGET_NOBUTTON:
 			printf("(new nobutton())");
+			break;
+		case WIDGET_OKBUTTON:
+			printf("(new okbutton())");
+			break;
+		case WIDGET_YESBUTTON:
+			printf("(new yesbutton())");
 			break;
 		case WIDGET_BUTTON:
 			printf("(new button())");
@@ -885,6 +344,9 @@ void print_command(instruction command)
 			break;
 		case WIDGET_TIMER:
 			printf("(new timer())");
+			break;
+		case WIDGET_TOGGLEBUTTON:
+			printf("(new togglebutton())");
 			break;
 
 	case WIDGET_LABEL:
@@ -1102,20 +564,20 @@ void print_token(token Token)
 	}
 
 	switch (Widget_Type) {
-		case WIDGET_OKBUTTON:
-			printf("(OKBUTTON)");
-			break;
 		case WIDGET_CANCELBUTTON:
 			printf("(CANCELBUTTON)");
 			break;
 		case WIDGET_HELPBUTTON:
 			printf("(HELPBUTTON)");
 			break;
-		case WIDGET_YESBUTTON:
-			printf("(YESBUTTON)");
-			break;
 		case WIDGET_NOBUTTON:
 			printf("(NOBUTTON)");
+			break;
+		case WIDGET_OKBUTTON:
+			printf("(OKBUTTON)");
+			break;
+		case WIDGET_YESBUTTON:
+			printf("(YESBUTTON)");
 			break;
 		case WIDGET_BUTTON:
 			printf("(BUTTON)");
@@ -1137,6 +599,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_TIMER:
 			printf("(TIMER)");
+			break;
+		case WIDGET_TOGGLEBUTTON:
+			printf("(TOGGLEBUTTON)");
 			break;
 
 
@@ -1342,35 +807,6 @@ instruction_execute(instruction command)
 	PIP_DEBUG("Instruction executed.");
 	return 0;
 }
-
-/*static void	Redundant: Duplication of code inside widget_signal_executor
-menu_callback(
-		GtkWidget *menu_item, 
-		AttributeSet *Attr)
-{
-	gchar *command;
-	gchar *type;
-	
-	PIP_DEBUG("Starting.");
-
-	command = attributeset_get_first(Attr, ATTR_ACTION);
-	if (command == NULL){
-		if (!option_no_warning)
-			g_warning("%s(): Menu item without action.", __func__);
-		return;
-	}
-	
-	
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(Attr, ATTR_ACTION, "type");
-		if (type == NULL)
-			type = "";
-		
-		execute_action(menu_item, command, type);
-next_command:   
-		command = attributeset_get_next(Attr, ATTR_ACTION);
-	}
-} */
 
 /*
  * Puts the widget into a scolled window. This function is similar to the
@@ -1701,8 +1137,6 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu");
 	label = attributeset_get_first(&element, Attr, ATTR_LABEL);
 
-//	root_menu = gtk_menu_item_new_with_label(label);	Redundant
-
 	/* Thunor: A menu widget is in fact a menuitem widget with a submenu
 	 * so it'll be created just like any other menuitem widget. It's
 	 * possible to create image, checkbox or radiobutton menu widgets but
@@ -1710,10 +1144,6 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 	 * closes any open radiobutton group so that makes that pointless */
 	root_menu = create_menuitem(Attr, attr);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(root_menu), menu);
-
-	/* Apply the visible directive if available	Redundant
-	if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))
-		gtk_widget_set_sensitive(root_menu, FALSE); */
 
 	return root_menu;
 }
@@ -1749,7 +1179,6 @@ create_label(AttributeSet * Attr)
 	Label = gtk_label_new(attributeset_get_first(&element, Attr, ATTR_LABEL));
 	gtk_label_set_line_wrap(GTK_LABEL(Label), TRUE);
 
-	/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
 	if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
 		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
@@ -2259,24 +1688,6 @@ connect_tree_signals(
  * Window handling functions.                                                *
  *                                                                           *
  *****************************************************************************/
-gboolean
-window_delete_event_handler(
-		GtkWidget *widget, 
-		GtkWidget *event, 
-		gpointer data)
-{
-	PIP_DEBUG("widget: %p", widget);
-
-	variables_drop_by_parent(NULL, widget);
-		
-	if (variables_count_widgets() == 0) {
-		gtk_main_quit();
-		printf("EXIT=\"abort\"\n");
-		exit(EXIT_SUCCESS);
-	}
-	return FALSE;
-}
-
 static GtkWidget *
 create_window(
 		AttributeSet *Attr, 
@@ -2383,7 +1794,6 @@ create_edit(AttributeSet *Attr,
 	text_view = gtk_text_view_new();
 	text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
 
-	/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
 	if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
 		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
@@ -2463,11 +1873,11 @@ instruction_execute_push(
 	Widget_Type = Token & WIDGET_TYPE;
 
 	switch (Widget_Type) {
-		case WIDGET_OKBUTTON:
 		case WIDGET_CANCELBUTTON:
 		case WIDGET_HELPBUTTON:
-		case WIDGET_YESBUTTON:
 		case WIDGET_NOBUTTON:
+		case WIDGET_OKBUTTON:
+		case WIDGET_YESBUTTON:
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			Widget = widget_button_create(Attr, tag_attributes, Widget_Type);
@@ -2509,68 +1919,6 @@ instruction_execute_push(
 		 */
 		Widget = gtk_entry_new();
 		push_widget(Widget, Widget_Type);
-
-/* Thunor: This is bugged: it doesn't allow having a default <action>
- * and an <action signal="changed"> activated at the same time.
- * Also it's connecting to entry_inserted() which fakes a button press! Why?
- * I've moved everything to the refresh function and I've used the normal
- * code to connect the signals. I'll leave this code here for a while to
- * make sure I haven't upset something and then purge it all later on */
-
-/*		if (attributeset_is_avail(Attr, ATTR_DEFAULT))	Redundant
-			gtk_entry_set_text(GTK_ENTRY(Widget),
-					   attributeset_get_first(Attr,
-								  ATTR_DEFAULT));
-
-		if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "password"))
-			gtk_entry_set_visibility(GTK_ENTRY(Widget), FALSE);
-
-		if (attributeset_is_avail(Attr, ATTR_HEIGHT) &&
-		    attributeset_is_avail(Attr, ATTR_WIDTH))
-			gtk_widget_set_usize(Widget,
-					     atoi(attributeset_get_first
-						  (Attr, ATTR_WIDTH)),
-					     atoi(attributeset_get_first
-						  (Attr, ATTR_HEIGHT))); */
-		/*
-		 * If this entry has an action which we didn't specify with a
-		 * signal name we execute when the text changes.
-		 */
-/*		if (attributeset_is_avail(Attr, ATTR_ACTION)) {	Redundant
-			char  *act;
-			gchar *signal;
-
-			act = attributeset_get_first(Attr, ATTR_ACTION);
-			signal = attributeset_get_this_tagattr(Attr, 
-					ATTR_ACTION, "signal");
-			while (act != NULL) {
-				if (signal == 0)
-					gtk_signal_connect(GTK_OBJECT(Widget),
-							   "changed",
-							   GTK_SIGNAL_FUNC
-							   (entry_inserted),
-							   (gpointer) act);
-					act =
-					    attributeset_get_next(Attr,
-								  ATTR_ACTION);
-					signal = attributeset_get_this_tagattr(
-							Attr, 
-							ATTR_ACTION, "signal");
-			}
-		}
-		
-		//entry_set_attributes(Tag_Attributes, Widget);
-
-#if 0
-	attribute_value = get_tag_attribute(Tag_Attributes, "max_length=");
-	if (attribute_value != NULL){
-		g_object_set(G_OBJECT(Widget),
-				"max-length",
-				atoi(attribute_value),
-				NULL);
-	}
-#endif
- */
 		break;
 
 	case WIDGET_CHOOSER:
@@ -2616,7 +1964,6 @@ instruction_execute_push(
 		//Widget = gtk_combo_box_new();
 		Widget = gtk_combo_new();
 
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
 		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
@@ -2693,7 +2040,6 @@ instruction_execute_push(
 			}
 		}
 
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
 		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
@@ -2747,7 +2093,6 @@ instruction_execute_push(
 		
 		push_widget(Widget, Widget_Type);
 
-		/* if (attributeset_cmp_left(Attr, ATTR_VISIBLE, "disabled"))	Redundant */
 		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||

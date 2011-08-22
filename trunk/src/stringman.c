@@ -355,39 +355,8 @@ command_get_prefix(const gchar *string,
 char *
 find_pixmap(char *filename)
 {
-/*	Thunor: Redundant.
-	char tmp[128];
-	static char *line = NULL;
-	static int length = 0;
-	FILE *locate;
-*/
-
 	if (access(filename, R_OK) == 0)
 		return filename;
-
-/*	Thunor: Redundant.
-	snprintf(tmp, 127, "/usr/share/icons/Bluecurve/16x16/stock/%s",
-			filename);
-	tmp[127] = '\0';
-	if (access(tmp, R_OK) == 0)
-		return strdup(tmp);
-
-
-	snprintf(tmp, 127, "locate /%s", filename);
-	tmp[127] = '\0';
-
-	locate = popen(tmp, "r");
-	if (!locate)
-		return "";
-
-	while (getline(&line, &length, locate) != -1) {
-		line[strlen(line) - 1] = '\0';
-		if (access(line, R_OK) == 0) {
-			pclose(locate);
-			return line;
-		}
-	}
-*/
 
 	return "";	/* Thunor: added as missing */
 }
