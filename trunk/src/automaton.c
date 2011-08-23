@@ -1026,9 +1026,15 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 			else if (width > -1) size = width;
 			pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
 				size, 0, &error);
-			image = gtk_image_new_from_pixbuf(pixbuf);
-			/* pixbuf is no longer required and should be unreferenced */
-			g_object_unref(pixbuf);
+			if (pixbuf) {
+				image = gtk_image_new_from_pixbuf(pixbuf);
+				/* pixbuf is no longer required and should be unreferenced */
+				g_object_unref(pixbuf);
+			} else {
+				/* pixbuf is null (file not found) so by using this
+				 * function gtk will substitute a broken image icon */
+				image = gtk_image_new_from_file("");
+			}
 			/* Create the GtkImageMenuItem using an image from the theme */
 			menu_item = gtk_image_menu_item_new_with_label(label);
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);

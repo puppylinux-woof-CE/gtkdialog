@@ -106,9 +106,15 @@ GtkWidget *widget_pixmap_create(
 				else if (width > -1) size = width;
 				pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
 					size, 0, &error);
-				widget = gtk_image_new_from_pixbuf(pixbuf);
-				/* pixbuf is no longer required and should be unreferenced */
-				g_object_unref(pixbuf);
+				if (pixbuf) {
+					widget = gtk_image_new_from_pixbuf(pixbuf);
+					/* pixbuf is no longer required and should be unreferenced */
+					g_object_unref(pixbuf);
+				} else {
+					/* pixbuf is null (file not found) so by using this
+					 * function gtk will substitute a broken image icon */
+					widget = gtk_image_new_from_file("");
+				}
 				break;	/* Only one image is required */
 			}
 			if (strlen(act) > 5) {

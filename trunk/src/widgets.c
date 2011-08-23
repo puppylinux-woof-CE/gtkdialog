@@ -854,6 +854,9 @@ void save_menuitem_to_file(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 			is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(var->Widget));
+			/* Thunor: I'd like to change this at some point to make it
+			 * consistent with the togglebutton widget which saves
+			 * "true" or "false" so I'll mark it temp temp */
 			fprintf(outfile, "%i", is_active);
 			fclose(outfile);
 		} else {
