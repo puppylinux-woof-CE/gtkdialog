@@ -125,20 +125,9 @@ GtkWidget *widget_button_create(
 			if (attributeset_is_avail(Attr, ATTR_HEIGHT))
 				height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
 
-			/* Discover from the directives which type of button
-			 * we are going to create */
-			/* The <label> tag... */
+			/* Is this button going to contain a label? */
 			if (attributeset_is_avail(Attr, ATTR_LABEL))
 				buttontype |= TYPE_BUTTON_LAB;
-			/* The <input> tag... */
-			act = attributeset_get_first(&element, Attr, ATTR_INPUT);
-			while (act) {
-				if (!input_is_shell_command(act)) {
-					buttontype |= TYPE_BUTTON_PIX;
-					break;
-				}
-				act = attributeset_get_next(&element, Attr, ATTR_INPUT);
-			}
 
 			/* Enforce a default label because TYPE_BUTTON and a
 			 * default exit action will be created requiring it */
@@ -146,48 +135,65 @@ GtkWidget *widget_button_create(
 				attributeset_set_if_unset(Attr, ATTR_LABEL, "OK");
 			labeldirective = attributeset_get_first(&element, Attr, ATTR_LABEL);
 
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): buttontype=%i labeldirective=%s\n",
-				__func__, buttontype, labeldirective);
-#endif
-
-			/* If the button is to contain an image then load it now */
-			if (buttontype == TYPE_BUTTON_PIX || buttontype == TYPE_BUTTON_LABPIX) {
-				file_name = attributeset_get_first(&element, Attr, ATTR_INPUT) + 5;
-				icon_name = attributeset_get_this_tagattr(&element, Attr, ATTR_INPUT, "icon");
-				stock_name = attributeset_get_this_tagattr(&element, Attr, ATTR_INPUT, "stock");
-				if (stock_name != NULL) {
-					icon = gtk_image_new_from_stock(stock_name, GTK_ICON_SIZE_BUTTON);
-				} else if (icon_name != NULL) {
-					icon_theme = gtk_icon_theme_get_default();
-					/* Use the height or width dimension to override the default size */
-					if (height > -1) size = height;
-					else if (width > -1) size = width;
-					pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name,
-						size, 0, &error);
-					icon = gtk_image_new_from_pixbuf(pixbuf);	
-					/* pixbuf is no longer required and should be unreferenced */
-					g_object_unref(pixbuf);
-				} else {
-					if (width == -1 && height == -1) {
-						/* Handle unscaled images */
-						icon = gtk_image_new_from_file(find_pixmap(file_name));
-					} else {
-						/* Handle scaled images */
-						pixbuf = gdk_pixbuf_new_from_file_at_size(
-							find_pixmap(file_name), width, height, NULL);
+			/* Is this button going to contain an image? */
+			act = attributeset_get_first(&element, Attr, ATTR_INPUT);
+			while (act) {
+				if (!input_is_shell_command(act)) {
+					buttontype |= TYPE_BUTTON_PIX;
+					/* Load the image now */
+					file_name = act + 5;
+					icon_name = attributeset_get_this_tagattr(&element,
+						Attr, ATTR_INPUT, "icon");
+					stock_name = attributeset_get_this_tagattr(&element,
+						Attr, ATTR_INPUT, "stock");
+					if (stock_name != NULL) {
+						icon = gtk_image_new_from_stock(stock_name,
+							GTK_ICON_SIZE_BUTTON);
+					} else if (icon_name != NULL) {
+						icon_theme = gtk_icon_theme_get_default();
+						/* Use the height or width dimension to override
+						 * the default size */
+						if (height > -1) size = height;
+						else if (width > -1) size = width;
+						pixbuf = gtk_icon_theme_load_icon(icon_theme,
+							icon_name, size, 0, &error);
 						if (pixbuf) {
-							icon = gtk_image_new_from_pixbuf(pixbuf);
+							icon = gtk_image_new_from_pixbuf(pixbuf);	
 							/* pixbuf is no longer required and should be unreferenced */
 							g_object_unref(pixbuf);
 						} else {
 							/* pixbuf is null (file not found) so by using this
-							* function gtk will substitute a broken image icon */
+							 * function gtk will substitute a broken image icon */
 							icon = gtk_image_new_from_file("");
 						}
+					} else {
+						if (width == -1 && height == -1) {
+							/* Handle unscaled images */
+							icon = gtk_image_new_from_file(find_pixmap(file_name));
+						} else {
+							/* Handle scaled images */
+							pixbuf = gdk_pixbuf_new_from_file_at_size(
+								find_pixmap(file_name), width, height, NULL);
+							if (pixbuf) {
+								icon = gtk_image_new_from_pixbuf(pixbuf);
+								/* pixbuf is no longer required and should be unreferenced */
+								g_object_unref(pixbuf);
+							} else {
+								/* pixbuf is null (file not found) so by using this
+								* function gtk will substitute a broken image icon */
+								icon = gtk_image_new_from_file("");
+							}
+						}
 					}
+					break;	/* Only one image is required */
 				}
+				act = attributeset_get_next(&element, Attr, ATTR_INPUT);
 			}
+
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): buttontype=%i labeldirective=%s\n",
+				__func__, buttontype, labeldirective);
+#endif
 
 			/* Create the button */
 			switch (buttontype) {
@@ -497,14 +503,46 @@ void widget_button_removeselected(variable *var)
 
 void widget_button_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *outfile;
+	GList            *element;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gint              is_active;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
+	if (var->Type == WIDGET_TOGGLEBUTTON) {
+		/* We'll use the output file filename if available */
+		act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
+		while (act) {
+			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+				filename = act + 5;
+				break;
+			}
+			act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
+		}
+
+		/* If we have a valid filename then open it and dump the
+		 * widget's data to it */
+		if (filename) {
+			if ((outfile = fopen(filename, "w"))) {
+				is_active = gtk_toggle_button_get_active(
+					GTK_TOGGLE_BUTTON(var->Widget));
+				if (is_active) fprintf(outfile, "%s", "true");
+				else fprintf(outfile, "%s", "false");
+				fclose(outfile);
+			} else {
+				fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+					__func__, filename);
+			}
+		} else {
+			fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
+		}
+	} else {
+		fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

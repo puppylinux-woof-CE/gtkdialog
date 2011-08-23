@@ -1,3 +1,10 @@
+* Tue Aug 23 2011 Thunor <thunorsif@hotmail.com>
+- Modified icon from theme code so that a gtk-missing-image is shown
+  when an image isn't found, similar to the image from file code.
+- Tweaked the button image loading code to better accommodate the
+  togglebutton's <input> directive.
+- Added support for the save action function to the togglebutton widget.
+
 * Mon Aug 22 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <togglebutton>.
 - Purged almost all of the code marked redundant.
