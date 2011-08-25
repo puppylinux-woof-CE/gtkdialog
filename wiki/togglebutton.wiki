@@ -47,7 +47,7 @@ Some of these may have tag attribute equivalents.
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Perform function on signal || ^[4]^_function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
@@ -75,6 +75,8 @@ The following general functions can be performed by any widget capable of emitti
 2. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
 
 3. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+
+4. This widget supports conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
 
 This widget was introduced in version 0.7.21.
 ----
