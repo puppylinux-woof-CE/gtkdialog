@@ -45,9 +45,9 @@ Some of these may have tag attribute equivalents.
 || input file^[3]^ || Data input source || Filename || || 0.7.21 ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
 || action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action || Perform function on default signal || _function_:_parameter_^[4]^ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_^[4]^ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || output file || Data output target || Filename || || 0.7.21 ||
 
@@ -79,4 +79,6 @@ The following general functions can be performed by any widget capable of emitti
 2. Theme icons default to 16 and do not scale or refresh (the height or width directives can be used to request a size).
 
 3. The input file directive is used exclusively by the checkbox and radiobutton menuitem widgets since the "image-name" custom tag attribute would contain any image filename.
+
+4. The checkbox and radiobutton menuitem widgets support conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
 ----
