@@ -30,7 +30,7 @@ The following custom tag attributes are available:
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || 0.7.21 ||
 || fs-filters || fileselect function pattern file filters || _pattern0_{{{|}}}_pattern1_{{{|}}}... || 0.7.21 ||
-|| fs-filters-mime || fileselect function mime-type file filters || _mime/type0_{{{|}}}_mime/type1_{{{|}}}... || 0.7.21 ||
+|| fs-filters-mime || fileselect function mime-type file filters || _mime-type0_{{{|}}}_mime-type1_{{{|}}}... || 0.7.21 ||
 || fs-folder || fileselect function current folder || || 0.7.21 ||
 || fs-title || fileselect function dialog title || || 0.7.21 ||
 
