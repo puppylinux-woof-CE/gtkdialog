@@ -26,7 +26,11 @@ See the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.object
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
-|| accept || fileselect function file type || {{{filename}}}, {{{savefilename}}}, {{{directory}}} or {{{newdirectory}}} || ||
+|| fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || 0.7.21 ||
+|| fs-filters || fileselect function pattern file filters || _pattern0_{{{|}}}_pattern1_{{{|}}}... || 0.7.21 ||
+|| fs-filters-mime || fileselect function mime-type file filters || _mime/type0_{{{|}}}_mime/type1_{{{|}}}... || 0.7.21 ||
+|| fs-folder || fileselect function current folder || || 0.7.21 ||
+|| fs-title || fileselect function dialog title || || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
