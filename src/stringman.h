@@ -57,6 +57,7 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 #endif
 
 list_t *linecutter(char *str, int fs );
+void list_t_free(list_t *ptr);
 char *find_pixmap( char *filename );
 tag_attr *new_tag_attributeset(char *name, char *value);
 tag_attr *add_tag_attribute(tag_attr *attr, char *name, char *value);
