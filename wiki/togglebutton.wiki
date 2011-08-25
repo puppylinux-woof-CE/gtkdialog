@@ -45,7 +45,7 @@ Some of these may have tag attribute equivalents.
 || input file || Data input source || Image filename || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action || Perform function on default signal || ^[4]^_function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || ^[4]^_function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
