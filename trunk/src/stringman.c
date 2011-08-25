@@ -361,8 +361,13 @@ find_pixmap(char *filename)
 	return "";	/* Thunor: added as missing */
 }
 
-/*
- *  Cutting the line to substrings with the given field separator.
+
+/* Thunor: This function does not destroy the original string, rather it
+ * makes duplicates of it stored within the list_t struct which possibly
+ * requires freeing with list_t_free depending on who is going to own
+ * the individual strings.
+ * 
+ * Cutting the line to substrings with the given field separator.
  */
 list_t *linecutter(char *str, int fs)
 {
@@ -395,6 +400,23 @@ list_t *linecutter(char *str, int fs)
 				*(parts->line[n] + q)= '\0';
 	}
 	return parts;
+}
+
+/* Thunor: The linecutter function above is allocating memory for the
+ * returned list_t structure but nowhere within the project have I seen
+ * these structures being freed, so I've created a function to do it */
+
+void list_t_free(list_t *ptr)
+{
+	gint count;
+
+	if (ptr != NULL) {
+		for (count = 0; count < ptr->n_lines; count++)
+			g_free(ptr->line[count]);
+		g_free(ptr->line);
+		g_free(ptr);
+		ptr = NULL;
+	}
 }
 
 /*

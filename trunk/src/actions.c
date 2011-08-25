@@ -161,70 +161,164 @@ int action_savewidget(GtkWidget * widget, char *string)
 ** the selected file name.
 */
 #if GTK_CHECK_VERSION(2,4,0)
-int 
-action_fileselect(GtkWidget *widget, 
-		char *string)
+int action_fileselect(GtkWidget *widget, char *string)
 {
+	list_t                 *mime_types = NULL;
+	list_t                 *patterns = NULL;
+	variable               *var = NULL;
 	GList                  *element;
+	GtkFileChooserAction    action = GTK_FILE_CHOOSER_ACTION_OPEN;
+	GtkFileFilter          *filter;
 	GtkWidget              *chooser;
+	gchar                  *filename = NULL;
+	gchar                  *title = "Gtkdialog";
+	gchar                  *value;
+	gint                    count;
 	gint                    response;
-	gchar                  *filename;
-	gchar                  *title = NULL;
-	variable               *var = variables_get_by_name(string);
-	GtkFileChooserAction    action;
-	gchar                  *tmp;
 
-	/*
-	 * The title of the chooser dialog.
-	 */
-	if (var != NULL && attributeset_is_avail(var->Attributes, ATTR_LABEL))
-		title = attributeset_get_first(&element, var->Attributes, ATTR_LABEL);
-	if (title == NULL)
-		title = "Gtkdialog";
-	/*
-	 * What type of filenames are accepted?
-	 */
-	tmp = g_object_get_data(G_OBJECT(var->Widget), "accept");
-	if (tmp != NULL) {
-		if (g_ascii_strcasecmp(tmp, "filename") == 0)
-			action = GTK_FILE_CHOOSER_ACTION_OPEN;
-		else if(g_ascii_strcasecmp(tmp, "savefilename") == 0)
-			action = GTK_FILE_CHOOSER_ACTION_SAVE;
-		else if(g_ascii_strcasecmp(tmp, "directory") == 0)
-			action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
-		else if(g_ascii_strcasecmp(tmp, "newdirectory") == 0)
-			action = GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER;
-		else 
-			action = GTK_FILE_CHOOSER_ACTION_OPEN;
-	} else {
-		action = GTK_FILE_CHOOSER_ACTION_OPEN;
-	}
-		
-	/*
-	 ** We create a new chooser dialog.
-	 */
-	chooser = gtk_file_chooser_dialog_new(title, NULL, action, 
+#ifdef DEBUG
+	fprintf(stderr, "%s(): string='%s'\n", __func__, string);
+#endif
+
+	if (var = variables_get_by_name(string)) {
+
+		/* Set the title of the chooser dialog to the label directive
+		 * of the target widget if available (this was the original
+		 * behaviour that although used in the 16.00-fileselect example
+		 * it is undocumented so possibly few people have realised this) */
+		if (attributeset_is_avail(var->Attributes, ATTR_LABEL)) {
+			title = attributeset_get_first(&element, var->Attributes, ATTR_LABEL);
+#ifdef DEBUG
+			fprintf(stderr, "%s(): title='%s' from label directive\n",
+				__func__, title);
+#endif
+		}
+
+		if (var->widget_tag_attr) {
+			/* Set title if present */
+			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-title")) ||
+				(value = get_tag_attribute(var->widget_tag_attr, "fs_title"))) {
+				title = value;
+#ifdef DEBUG
+				fprintf(stderr, "%s(): title='%s' from tag attribute\n",
+					__func__, title);
+#endif
+			}
+			/* Set file chooser action if present */
+			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-action")) ||
+				(value = get_tag_attribute(var->widget_tag_attr, "fs_action")) ||
+				(value = get_tag_attribute(var->widget_tag_attr, "accept"))) {	/* Deprecated */				
+				if ((strcasecmp(value, "file") == 0) ||
+					(strcasecmp(value, "filename") == 0)) {			/* Deprecated */
+					action = GTK_FILE_CHOOSER_ACTION_OPEN;
+				} else if ((strcasecmp(value, "newfile") == 0) ||
+					(strcasecmp(value, "savefilename") == 0)) {		/* Deprecated */
+					action = GTK_FILE_CHOOSER_ACTION_SAVE;
+				} else if ((strcasecmp(value, "folder") == 0) ||
+					(strcasecmp(value, "directory") == 0)) {		/* Deprecated */
+					action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
+				} else if ((strcasecmp(value, "newfolder") == 0) ||
+					(strcasecmp(value, "newdirectory") == 0)) {		/* Deprecated */
+					action = GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER;
+				}
+#ifdef DEBUG
+				fprintf(stderr, "%s(): action=%i\n", __func__, action);
+#endif
+			}
+		}
+
+		/* Create the file chooser dialog */
+		chooser = gtk_file_chooser_dialog_new(title, NULL, action,
 			GTK_STOCK_OK, GTK_RESPONSE_OK,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			NULL);
-	response = gtk_dialog_run(GTK_DIALOG(chooser));
-	/*
-	 * If the user pressed the OK button we set the target 
-	 * widget.
-	 */
-	switch (response) {
-		case GTK_RESPONSE_CANCEL:
-			/* Nothing to do */
-			break;
-		case GTK_RESPONSE_OK:
-			filename = gtk_file_chooser_get_filename(
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+
+		/* Set current folder if present */
+		if (var->widget_tag_attr &&
+			((value = get_tag_attribute(var->widget_tag_attr, "fs-folder")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "fs_folder")))) {
+			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), value);
+#ifdef DEBUG
+			fprintf(stderr, "%s(): current folder='%s'\n", __func__, value);
+#endif
+		}
+
+		/* Add file filters */
+		if (var->widget_tag_attr) {
+			/* Filters of type pattern */
+			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-filters")) ||
+				(value = get_tag_attribute(var->widget_tag_attr, "fs_filters"))) {
+				patterns = linecutter(g_strdup(value), '|');
+				for (count = 0; count < patterns->n_lines; count++) {
+					filter = gtk_file_filter_new();
+					gtk_file_filter_set_name(filter, patterns->line[count]);
+					gtk_file_filter_add_pattern(filter, patterns->line[count]);
+					gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(chooser), filter);
+#ifdef DEBUG
+					fprintf(stderr, "%s(): patterns->line[count]='%s'\n",
+						__func__, patterns->line[count]);
+#endif
+				}
+			}
+			/* Filters of type mime */
+			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-filters-mime")) ||
+				(value = get_tag_attribute(var->widget_tag_attr, "fs_filters_mime"))) {
+				mime_types = linecutter(g_strdup(value), '|');
+				for (count = 0; count < mime_types->n_lines; count++) {
+					filter = gtk_file_filter_new();
+					gtk_file_filter_set_name(filter, mime_types->line[count]);
+					gtk_file_filter_add_mime_type(filter, mime_types->line[count]);
+					gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(chooser), filter);
+#ifdef DEBUG
+					fprintf(stderr, "%s(): mime_types->line[count]='%s'\n",
+						__func__, mime_types->line[count]);
+#endif
+				}
+			}
+		}
+
+		/* Add an "All files" "*" filter which will become the
+		 * default if no user filters were added above */
+		filter = gtk_file_filter_new();
+		gtk_file_filter_set_name(filter, "All files");
+		gtk_file_filter_add_pattern(filter, "*");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(chooser), filter);
+
+		/* Run the file chooser dialog and get the response.
+		 * Note that accept="newdirectory" (fs-action="newfolder")
+		 * currently crashes the file chooser dialog if nothing is
+		 * selected or created which is mentioned in the example */
+		response = gtk_dialog_run(GTK_DIALOG(chooser));
+
+#ifdef DEBUG
+		fprintf(stderr, "%s(): response=%i\n", __func__, response);
+#endif
+
+		/* If the user pressed the OK button we set the target widget */
+		switch (response) {
+			case GTK_RESPONSE_CANCEL:
+				/* Nothing to do */
+				break;
+			case GTK_RESPONSE_OK:
+				filename = gtk_file_chooser_get_filename(
 					GTK_FILE_CHOOSER(chooser));
-			variables_set_value(string, filename);
-			g_free(filename);
-			break;
+#ifdef DEBUG
+				fprintf(stderr, "%s(): filename=%s\n", __func__, filename);
+#endif
+				if (filename) {
+					variables_set_value(string, filename);
+					g_free(filename);
+				}
+				break;
+		}
+
+		/* Free linecutter memory */
+		if (patterns) list_t_free(patterns);
+		if (mime_types) list_t_free(mime_types);
+
+		/* Destroy the file chooser dialog */
+		gtk_widget_destroy(chooser);
 	}
-	/* We are ready. */
-	gtk_widget_destroy(chooser);
+
 	return 0;
 }
 
