@@ -1,0 +1,80 @@
+#summary togglebutton widget reference
+
+= togglebutton widget =
+A [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html GtkToggleButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] or [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox]
+----
+
+== Definition ==
+{{{
+<togglebutton tag_attr="value"...>
+	<label>text</label>
+	<default>state</default>
+	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
+	<input>command</input>
+	<input file icon="image"></input>
+	<input file stock="gtk-image"></input>
+	<input file>filename</input>
+	<sensitive>state</sensitive>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+</togglebutton>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton.object-hierarchy GtkToggleButton] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+|| *Name* || *Description* || *Value* || *Since* ||
+|| image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || ||
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| label || Button text || || || ||
+|| default || Initial state || {{{true}}} or {{{false}}} || || ||
+|| variable || Shell variable name || || || ||
+|| height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
+|| width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
+|| input || Data input source || Shell command || || ||
+|| input file icon="_image_"^[2]^ || GTK theme icon name || || || ||
+|| input file stock="_gtk-image_"^[3]^ || GTK stock icon id || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
+|| input file || Data input source || Image filename || || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+
+== Signals ==
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton-toggled toggled]", emitted when the state is changed.
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton.signals GtkToggleButton] widget and ancestor class signals.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
+
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK+ property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
+
+2. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
+
+3. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+
+This widget was introduced in version 0.7.21.
+----
