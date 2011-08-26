@@ -7,6 +7,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://de
 == Definition ==
 {{{
 <menuitem tag_attr="value"...>
+	<label>text</label>
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
@@ -38,6 +39,7 @@ The following custom tag attributes are available:
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| label || Widget text || || || ||
 || variable || Shell variable name || || || ||
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||

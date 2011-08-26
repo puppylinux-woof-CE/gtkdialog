@@ -32,7 +32,7 @@ The following custom tag attributes are available:
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| label || Button text || || || ||
+|| label || Widget text || || || ||
 || variable || Shell variable name || || || ||
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
