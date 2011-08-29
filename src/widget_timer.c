@@ -242,6 +242,9 @@ void widget_timer_refresh(variable *var)
 		gtk_label_set_markup(GTK_LABEL(var->Widget), text);
 
 		/* Apply directives */
+		if (attributeset_is_avail(var->Attributes, ATTR_LABEL))
+			fprintf(stderr, "%s(): <label> not implemented for this widget.\n",
+				__func__);
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
 				__func__);
@@ -333,6 +336,8 @@ static void widget_timer_input_by_command(variable *var, char *command)
 
 static void widget_timer_input_by_file(variable *var, char *filename)
 {
+	gchar            *var1;
+	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

@@ -1,3 +1,8 @@
+* Mon Aug 29 2011 Thunor <thunorsif@hotmail.com>
+- New widget: <statusbar>.
+- Modified save_menuitem_to_file to save "true" or "false" to make it
+  consistent with the togglebutton widget.
+
 * Thu Aug 25 2011 Thunor <thunorsif@hotmail.com>
 - Overhauled the fileselect action function which includes file filters.
 - Added a list_t_free() function to free list_t structs if required.

@@ -150,6 +150,7 @@ start_up(void)
 %token         SPINBUTTON PART_SPINBUTTON ESPINBUTTON
 %token         TIMER PART_TIMER ETIMER
 %token         TOGGLEBUTTON PART_TOGGLEBUTTON ETOGGLEBUTTON
+%token         STATUSBAR PART_STATUSBAR ESTATUSBAR
 
 %% 
 window
@@ -252,6 +253,7 @@ widget
   | spinbutton
   | timer
   | togglebutton
+  | statusbar
   ;
 
 entry
@@ -543,6 +545,15 @@ togglebutton
 	}
   | PART_TOGGLEBUTTON tagattr '>' attr ETOGGLEBUTTON {
 		token_store_attr(PUSH | WIDGET_TOGGLEBUTTON, $2);
+	}
+  ;
+
+statusbar
+  : STATUSBAR attr ESTATUSBAR {
+		token_store(PUSH | WIDGET_STATUSBAR);
+	}
+  | PART_STATUSBAR tagattr '>' attr ESTATUSBAR {
+		token_store_attr(PUSH | WIDGET_STATUSBAR, $2);
 	}
   ;
 

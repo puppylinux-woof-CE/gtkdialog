@@ -228,6 +228,9 @@ void widget_notebook_refresh(variable *var)
 	/* Initialise these only once at start-up */
 	if (!initialised) {
 		/* Apply directives */
+		if (attributeset_is_avail(var->Attributes, ATTR_LABEL))
+			fprintf(stderr, "%s(): <label> not implemented for this widget.\n",
+				__func__);
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
 				__func__);
@@ -341,7 +344,7 @@ static void widget_notebook_input_by_command(variable *var, char *command)
 	if (infile = widget_opencommand(command)) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of more chars read */
+			/* Enforce end of string in case of max chars read */
 			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
@@ -385,7 +388,7 @@ static void widget_notebook_input_by_file(variable *var, char *filename)
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of more chars read */
+			/* Enforce end of string in case of max chars read */
 			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)

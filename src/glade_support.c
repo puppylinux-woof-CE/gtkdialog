@@ -662,6 +662,9 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 /* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkCombo */
 	else if (GTK_IS_COMBO(widget))
 		retval = WIDGET_COMBO;
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkStatusbar */
+	else if (GTK_IS_STATUSBAR(widget))
+		retval = WIDGET_STATUSBAR;
 /* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox */
 	else if (GTK_IS_HBOX(widget))
 		retval = WIDGET_HBOX;

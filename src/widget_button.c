@@ -96,6 +96,27 @@ GtkWidget *widget_button_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#ifdef DEBUG_CONTENT
+	GtkIconInfo *info = NULL;
+	gchar **path = NULL;
+	gint count;
+	static gint init = TRUE;
+	gint n_elements;
+
+	if (init) {
+		init = FALSE;
+		icon_theme = gtk_icon_theme_get_default();
+		gtk_icon_theme_get_search_path(icon_theme, &path, &n_elements);
+		for (count = 0; count < n_elements; count++)
+			fprintf(stderr, "%s(): path='%s'\n", __func__, path[count]);
+		if (path) g_strfreev(path);
+		info = gtk_icon_theme_lookup_icon(icon_theme, "gnumeric", 16, 0 );
+		fprintf(stderr, "%s(): gnumeric filename='%s'\n", __func__,
+			gtk_icon_info_get_filename(info));
+		if (info) gtk_icon_info_free(info);
+	}
+#endif
+
 	switch (Type) {
 		case WIDGET_CANCELBUTTON:
 			widget = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
@@ -162,6 +183,10 @@ GtkWidget *widget_button_create(
 							/* pixbuf is no longer required and should be unreferenced */
 							g_object_unref(pixbuf);
 						} else {
+#ifdef DEBUG_CONTENT
+							fprintf(stderr, "%s(): error='%s'\n", __func__,
+								error->message);
+#endif
 							/* pixbuf is null (file not found) so by using this
 							 * function gtk will substitute a broken image icon */
 							icon = gtk_image_new_from_file("");
@@ -572,7 +597,7 @@ static void widget_button_input_by_command(variable *var, char *command)
 		if (infile = widget_opencommand(command)) {
 			/* Just one line */
 			if (fgets(line, 512, infile)) {
-				/* Enforce end of string in case of more chars read */
+				/* Enforce end of string in case of max chars read */
 				line[512 - 1] = 0;
 				/* Remove the trailing [CR]LFs */
 				for (count = strlen(line) - 1; count >= 0; count--)

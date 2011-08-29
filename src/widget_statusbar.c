@@ -1,5 +1,5 @@
 /*
- * widget_pixmap.c: 
+ * widget_statusbar.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -26,15 +26,23 @@
 #include "gtkdialog.h"
 #include "attributes.h"
 #include "automaton.h"
+#include "widgets.h"
+#include "signals.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
+#define MESSAGE_LENGTH_MAX 512
 
 /* Local function prototypes, located at file bottom */
-static void widget_pixmap_input_by_command(variable *var, char *command);
-static void widget_pixmap_input_by_file(variable *var, char *filename);
-static void widget_pixmap_input_by_items(variable *var);
+static void widget_statusbar_input_by_command(variable *var, char *command);
+static void widget_statusbar_input_by_file(variable *var, char *filename);
+static void widget_statusbar_input_by_items(variable *var);
+static void widget_statusbar_update(variable *var, gchar *text);
+
+/* Local variables */
+gchar current_message[MESSAGE_LENGTH_MAX];
+guint context_id;
 
 /* Notes: */
 
@@ -42,16 +50,14 @@ static void widget_pixmap_input_by_items(variable *var);
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_pixmap_clear(variable *var)
+void widget_statusbar_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
+	widget_statusbar_update(var, "");
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -61,86 +67,33 @@ void widget_pixmap_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
-GtkWidget *widget_pixmap_create(
+GtkWidget *widget_statusbar_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
-	GError           *error = NULL;
-	GList            *element;
-	GtkIconTheme     *icon_theme;
 	GtkWidget        *widget;
-	GdkPixbuf        *pixbuf;
-	gchar            *act;
-	gchar            *file_name;
-	gchar            *icon_name = NULL;
-	gchar            *stock_name = NULL;
-	gint              width = -1, height = -1;
-	gint              size = 32;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
-	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
+	widget = gtk_statusbar_new();
 
-	/* The <input> tag... */
-	act = attributeset_get_first(&element, Attr, ATTR_INPUT);
-	while (act) {
+	/* A context ID is required to push and pop the messages */
+	context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(widget),
+		"General");
+
 #ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): act=%s\n", __func__, act);
+	fprintf(stderr, "%s(): context_id=%i\n", __func__, context_id);
 #endif
-		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0) {
-			if ((stock_name = attributeset_get_this_tagattr(&element,
-				Attr, ATTR_INPUT, "stock")) != NULL) {
-				widget = gtk_image_new_from_stock(stock_name, GTK_ICON_SIZE_DND);
-				break;	/* Only one image is required */
-			}
-			if ((icon_name = attributeset_get_this_tagattr(&element,
-				Attr, ATTR_INPUT, "icon")) != NULL) {
-				icon_theme = gtk_icon_theme_get_default();
-				/* Use the height or width dimension to override the default size */
-				if (height > -1) size = height;
-				else if (width > -1) size = width;
-				pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
-					size, 0, &error);
-				if (pixbuf) {
-					widget = gtk_image_new_from_pixbuf(pixbuf);
-					/* pixbuf is no longer required and should be unreferenced */
-					g_object_unref(pixbuf);
-				} else {
-					/* pixbuf is null (file not found) so by using this
-					 * function gtk will substitute a broken image icon */
-					widget = gtk_image_new_from_file("");
-				}
-				break;	/* Only one image is required */
-			}
-			if (strlen(act) > 5) {
-				file_name = act + 5;
-				if (width == -1 && height == -1) {
-					/* Handle unscaled images */
-					widget = gtk_image_new_from_file(find_pixmap(file_name));
-				} else {
-					/* Handle scaled images */
-					pixbuf = gdk_pixbuf_new_from_file_at_size(
-						find_pixmap(file_name), width, height, NULL);
-					if (pixbuf) {
-						widget = gtk_image_new_from_pixbuf(pixbuf);
-						/* pixbuf is no longer required and should be unreferenced */
-						g_object_unref(pixbuf);
-					} else {
-						/* pixbuf is null (file not found) so by using this
-						 * function gtk will substitute a broken image icon */
-						widget = gtk_image_new_from_file("");
-					}
-				}
-				break;	/* Only one image is required */
-			}
-		}
-		act = attributeset_get_next(&element, Attr, ATTR_INPUT);
-	}
+
+	/* Push an initial empty message and from hereon in, everytime a
+	 * new message is set we will first pop the existing message and
+	 * then push the new one */
+	gtk_statusbar_push(GTK_STATUSBAR(widget), context_id, "");
+
+	/* Record the current message because otherwise it'll have to be
+	 * dug out from the label inside the box that is the statusbar */
+	strcpy(current_message, "");
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -153,7 +106,7 @@ GtkWidget *widget_pixmap_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_pixmap_envvar_all_construct(variable *var)
+gchar *widget_statusbar_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -174,7 +127,7 @@ gchar *widget_pixmap_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_pixmap_envvar_construct(GtkWidget *widget)
+gchar *widget_statusbar_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
@@ -182,7 +135,7 @@ gchar *widget_pixmap_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup("");
+	string = g_strdup(current_message);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -195,17 +148,19 @@ gchar *widget_pixmap_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_pixmap_fileselect(
+void widget_statusbar_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): name=%s value=%s\n", __func__, name, value);
+#endif
+
+	widget_statusbar_update(var, (gchar*)value);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -215,10 +170,11 @@ void widget_pixmap_fileselect(
 /***********************************************************************
  * Refresh                                                             *
  ***********************************************************************/
-void widget_pixmap_refresh(variable *var)
+void widget_statusbar_refresh(variable *var)
 {
 	GList            *element;
 	gchar            *act;
+	gchar            *text;
 	gint              initialised = FALSE;
 
 #ifdef DEBUG_TRANSITS
@@ -233,29 +189,35 @@ void widget_pixmap_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_pixmap_input_by_command(var, act + 8);
+			widget_statusbar_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			/* Don't refresh images on the first call otherwise they
-			 * get created and then immediately refreshed at start-up */
-			if (initialised)
-				widget_pixmap_input_by_file(var, act + 5);
-		}
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
+			widget_statusbar_input_by_file(var, act + 5);
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_pixmap_input_by_items(var);
+		widget_statusbar_input_by_items(var);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
 		/* Apply directives */
-		if (attributeset_is_avail(var->Attributes, ATTR_LABEL))
-			fprintf(stderr, "%s(): <label> not implemented for this widget.\n",
+		if (attributeset_is_avail(var->Attributes, ATTR_LABEL)) {
+			gtk_statusbar_pop(GTK_STATUSBAR(var->Widget), context_id);
+			text = attributeset_get_first(&element, var->Attributes, ATTR_LABEL);
+			widget_statusbar_update(var, text);
+		}
+		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
+			gtk_statusbar_pop(GTK_STATUSBAR(var->Widget), context_id);
+			text = attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT);
+			widget_statusbar_update(var, text);
+		}
+		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
+			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
 				__func__);
-		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
-			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
+		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
 				__func__);
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
@@ -276,7 +238,7 @@ void widget_pixmap_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_pixmap_removeselected(variable *var)
+void widget_statusbar_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -297,16 +259,40 @@ void widget_pixmap_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_pixmap_save(variable *var)
+void widget_statusbar_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *outfile;
+	GList            *element;
+	gchar            *act;
+	gchar            *filename = NULL;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+			fprintf(outfile, "%s", current_message);
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -317,16 +303,37 @@ void widget_pixmap_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_pixmap_input_by_command(variable *var, char *command)
+static void widget_statusbar_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[MESSAGE_LENGTH_MAX];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
+#endif
+
+	/* Opening pipe for reading... */
+	if (infile = widget_opencommand(command)) {
+		/* Just one line */
+		if (fgets(line, MESSAGE_LENGTH_MAX, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[MESSAGE_LENGTH_MAX - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			widget_statusbar_update(var, line);
+		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			command);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -337,37 +344,31 @@ static void widget_pixmap_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_pixmap_input_by_file(variable *var, char *filename)
+static void widget_statusbar_input_by_file(variable *var, char *filename)
 {
-	GdkPixbuf        *pixbuf;
-	GList            *element;
-	gint              width = -1, height = -1;
+	FILE             *infile;
+	gchar             line[MESSAGE_LENGTH_MAX];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
-	if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT));
-
-	if (width == -1 && height == -1) {
-		/* Handle unscaled images */
-		gtk_image_set_from_file(GTK_IMAGE(var->Widget), find_pixmap(filename));
-	} else {
-		/* Handle scaled images */
-		pixbuf = gdk_pixbuf_new_from_file_at_size(
-			find_pixmap(filename), width, height, NULL);
-		if (pixbuf) {
-			gtk_image_set_from_pixbuf(GTK_IMAGE(var->Widget), pixbuf);
-			/* pixbuf is no longer required and should be unreferenced */
-			g_object_unref(pixbuf);
-		} else {
-			/* pixbuf is null (file not found) so by using this
-			 * function gtk will substitute a broken image icon */
-			gtk_image_set_from_file(GTK_IMAGE(var->Widget), "");
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if (fgets(line, MESSAGE_LENGTH_MAX, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[MESSAGE_LENGTH_MAX - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			widget_statusbar_update(var, line);
 		}
+		/* Close the file */
+		fclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			filename);
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -379,7 +380,7 @@ static void widget_pixmap_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_pixmap_input_by_items(variable *var)
+static void widget_statusbar_input_by_items(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -389,6 +390,26 @@ static void widget_pixmap_input_by_items(variable *var)
 #endif
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ * Update                                                              *
+ ***********************************************************************/
+
+static void widget_statusbar_update(variable *var, gchar *text)
+{
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	gtk_statusbar_pop(GTK_STATUSBAR(var->Widget), context_id);
+	gtk_statusbar_push(GTK_STATUSBAR(var->Widget), context_id, text);
+	strcpy(current_message, text);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

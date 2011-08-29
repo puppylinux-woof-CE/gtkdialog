@@ -49,6 +49,7 @@
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
+#include "widget_statusbar.h"
 #include "widget_timer.h"
 #include "signals.h"
 
@@ -342,6 +343,9 @@ void print_command(instruction command)
 		case WIDGET_SPINBUTTON:
 			printf("(new spinbutton())");
 			break;
+		case WIDGET_STATUSBAR:
+			printf("(new statusbar())");
+			break;
 		case WIDGET_TIMER:
 			printf("(new timer())");
 			break;
@@ -596,6 +600,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_SPINBUTTON:
 			printf("(SPINBUTTON)");
+			break;
+		case WIDGET_STATUSBAR:
+			printf("(STATUSBAR)");
 			break;
 		case WIDGET_TIMER:
 			printf("(TIMER)");
@@ -1906,6 +1913,10 @@ instruction_execute_push(
 			break;
 		case WIDGET_SPINBUTTON:
 			Widget = widget_spinbutton_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+		case WIDGET_STATUSBAR:
+			Widget = widget_statusbar_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
 		case WIDGET_TIMER:
