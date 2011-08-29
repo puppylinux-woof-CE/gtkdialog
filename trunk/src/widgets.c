@@ -41,6 +41,7 @@
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
+#include "widget_statusbar.h"
 #include "widget_timer.h"
 #include "signals.h"
 
@@ -202,6 +203,10 @@ widget_get_text_value(
 			break;
 		case WIDGET_SPINBUTTON:
 			string = widget_spinbutton_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_STATUSBAR:
+			string = widget_statusbar_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_TIMER:
@@ -526,7 +531,7 @@ void fill_scale_by_file(GtkWidget *widget, char *filename)
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
 		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of more chars read */
+			/* Enforce end of string in case of max chars read */
 			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
@@ -552,7 +557,7 @@ void fill_menuitem_by_file(GtkWidget *widget, char *filename)
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
 		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of more chars read */
+			/* Enforce end of string in case of max chars read */
 			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
@@ -584,7 +589,7 @@ void fill_entry_by_file(GtkWidget *widget, char *filename)
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
 		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of more chars read */
+			/* Enforce end of string in case of max chars read */
 			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
@@ -854,10 +859,8 @@ void save_menuitem_to_file(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 			is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(var->Widget));
-			/* Thunor: I'd like to change this at some point to make it
-			 * consistent with the togglebutton widget which saves
-			 * "true" or "false" so I'll mark it temp temp */
-			fprintf(outfile, "%i", is_active);
+			if (is_active) fprintf(outfile, "%s", "true");
+			else fprintf(outfile, "%s", "false");
 			fclose(outfile);
 		} else {
 			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
@@ -1649,7 +1652,7 @@ void fill_scale_by_command(GtkWidget *widget, char *command)
 	if (infile = widget_opencommand(command)) {
 		/* Just one line */
 		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of more chars read */
+			/* Enforce end of string in case of max chars read */
 			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
@@ -1679,7 +1682,7 @@ void fill_menuitem_by_command(GtkWidget *widget, char *command)
 	if (infile = widget_opencommand(command)) {
 		/* Just one line */
 		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of more chars read */
+			/* Enforce end of string in case of max chars read */
 			line[512 - 1] = 0;
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
@@ -1735,6 +1738,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_SPINBUTTON:
 			type = "SPINBUTTON";
+			break;
+		case WIDGET_STATUSBAR:
+			type = "STATUSBAR";
 			break;
 		case WIDGET_TIMER:
 			type = "TIMER";

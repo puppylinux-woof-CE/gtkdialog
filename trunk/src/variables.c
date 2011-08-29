@@ -26,6 +26,7 @@
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
+#include "widget_statusbar.h"
 #include "widget_timer.h"
 
 extern gboolean option_no_warning;
@@ -294,6 +295,9 @@ variables_set_value(const char *name,
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_fileselect(toset, name, value);
 			break;
+		case WIDGET_STATUSBAR:
+			widget_statusbar_fileselect(toset, name, value);
+			break;
 		case WIDGET_TIMER:
 			widget_timer_fileselect(toset, name, value);
 			break;
@@ -345,6 +349,9 @@ variables_save(const char *name)
 			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_save(var);
+			break;
+		case WIDGET_STATUSBAR:
+			widget_statusbar_save(var);
 			break;
 		case WIDGET_TIMER:
 			widget_timer_save(var);
@@ -434,6 +441,9 @@ variables_refresh(const char *name)
 			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_refresh(var);
+			break;
+		case WIDGET_STATUSBAR:
+			widget_statusbar_refresh(var);
 			break;
 		case WIDGET_TIMER:
 			widget_timer_refresh(var);
@@ -1123,6 +1133,9 @@ variables_clear(const char *name)
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_clear(toclear);
 			break;
+		case WIDGET_STATUSBAR:
+			widget_statusbar_clear(toclear);
+			break;
 		case WIDGET_TIMER:
 			widget_timer_clear(toclear);
 			break;
@@ -1226,6 +1239,9 @@ remove_selected_variable(const char *name)
 			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_removeselected(toclear);
+			break;
+		case WIDGET_STATUSBAR:
+			widget_statusbar_removeselected(toclear);
 			break;
 		case WIDGET_TIMER:
 			widget_timer_removeselected(toclear);

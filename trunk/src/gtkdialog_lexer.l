@@ -513,6 +513,12 @@ gchar *Token;
 					  return(PART_TOGGLEBUTTON); }
 \<\/togglebutton\>			{ Token="</togglebutton>"; return(ETOGGLEBUTTON); }
 
+\<statusbar\>				{ Token="<statusbar>"; return(STATUSBAR); }
+\<statusbar[ ]+				{ Token="<statusbar>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_STATUSBAR); }
+\<\/statusbar\>				{ Token="</statusbar>"; return(ESTATUSBAR); }
+
 
 
 

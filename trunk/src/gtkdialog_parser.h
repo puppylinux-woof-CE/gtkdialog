@@ -174,7 +174,10 @@
      ETIMER = 390,
      TOGGLEBUTTON = 391,
      PART_TOGGLEBUTTON = 392,
-     ETOGGLEBUTTON = 393
+     ETOGGLEBUTTON = 393,
+     STATUSBAR = 394,
+     PART_STATUSBAR = 395,
+     ESTATUSBAR = 396
    };
 #endif
 /* Tokens.  */
@@ -314,6 +317,9 @@
 #define TOGGLEBUTTON 391
 #define PART_TOGGLEBUTTON 392
 #define ETOGGLEBUTTON 393
+#define STATUSBAR 394
+#define PART_STATUSBAR 395
+#define ESTATUSBAR 396
 
 
 
@@ -334,7 +340,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 338 "gtkdialog_parser.h"
+#line 344 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
