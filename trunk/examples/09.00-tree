@@ -2,10 +2,6 @@
 
 GTKDIALOG=gtkdialog
 
-# Thunor: This example is partially broken: the top two trees use the
-# list.sh script that doesn't appear to be returning the right data,
-# but the last tree is fine.
-
 #
 # stock_column
 # icon_column

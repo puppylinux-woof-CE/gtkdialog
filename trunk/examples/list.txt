@@ -1,0 +1,5 @@
+gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
+gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi
+gtk-harddisk | Hard Disk     | /harddisk/ | ak.ps
+gtk-network  | Network Drive | /network/  | ak.pdf
+gtk-delete   | Trash         | /trash/    | 
