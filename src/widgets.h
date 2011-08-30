@@ -102,7 +102,7 @@ void fill_list_by_command(GtkWidget *list, char *command);
 void fill_table_by_command(GtkWidget *list, char *command);
 static void fill_tree_view_by_command(GtkWidget *tree_view,
 	GtkTreeModel *tree_model, const gchar *command, gint stock_column,
-	gint icon_column);
+	gint icon_column, gint command_or_file);
 
 char *widgets_to_str(int itype);
 

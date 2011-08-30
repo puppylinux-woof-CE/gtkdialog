@@ -1,3 +1,8 @@
+* Tue Aug 30 2011 Thunor <thunorsif@hotmail.com>
+- Fixed the tree widget's <input file> directive.
+- Fixed examples 09.01-tree_attributes, 09.01-tree_items and
+  09.02-tree_default_pixmaps and added list.txt.
+
 * Mon Aug 29 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <statusbar>.
 - Modified save_menuitem_to_file to save "true" or "false" to make it

@@ -1090,7 +1090,8 @@ fill_tree_view_by_command(
 		GtkTreeModel  *tree_model, 
 		const gchar   *command, 
 		gint           stock_column, 
-		gint           icon_column)
+		gint           icon_column,
+		gint           command_or_file)
 {
 	FILE      *infile;
 	char        oneline[512];
@@ -1103,7 +1104,12 @@ fill_tree_view_by_command(
 
 	PIP_DEBUG("tree_view: %p, command: '%s'", tree_view, command);
 
-	infile = widget_opencommand(command);
+	if (command_or_file) {
+		infile = widget_opencommand(command);
+	} else {
+		infile = fopen(command, "r");
+	}
+
 	if (infile == NULL) {
 		g_warning("%s(): command %s, %m", __func__, command);
 		return;
@@ -1161,7 +1167,11 @@ fill_tree_view_by_command(
 		g_strfreev(columns);
 	}
 
-	pclose(infile);
+	if (command_or_file) {
+		pclose(infile);
+	} else {
+		fclose(infile);
+	}
 }
 
 void 
@@ -1193,17 +1203,44 @@ widget_tree_refresh(variable *var)
 		gint           stock_column = -1;
 		gint           icon_column = -1;
 
-		tmp = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_INPUT, "stock_column");
+		tmp = attributeset_get_this_tagattr(&element, var->Attributes,
+			ATTR_INPUT, "stock_column");
 		if (tmp != NULL)
 			stock_column = atoi(tmp);
-		tmp = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_INPUT, "icon_column");
+		tmp = attributeset_get_this_tagattr(&element, var->Attributes,
+			ATTR_INPUT, "icon_column");
 		if (tmp != NULL)
 			icon_column = atoi(tmp);
 
-		if (input_is_shell_command(act))
-			fill_tree_view_by_command(var->Widget, tree_model, act + 8, stock_column, icon_column);
-		else
-			fill_tree_view_by_command(var->Widget, tree_model, act, stock_column, icon_column);
+		/* input file stock = "File:", input file = "File:/path/to/file" */
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+#ifdef DEBUG
+			printf("%s(): 1: command='%s'\n", __func__, act);
+#endif
+			fill_tree_view_by_command(var->Widget, tree_model, act + 5,
+				stock_column, icon_column, FALSE);
+		} else if (input_is_shell_command(act)) {
+#ifdef DEBUG
+			printf("%s(): 2: command='%s'\n", __func__, act);
+#endif
+			fill_tree_view_by_command(var->Widget, tree_model, act + 8,
+				stock_column, icon_column, TRUE);
+		} else {
+#ifdef DEBUG
+			printf("%s(): 3: command='%s'\n", __func__, act);
+#endif
+			/* Thunor: These are shell commands without the "Command:",
+			 * but why is it missing? token_store_with_argument_attr()
+			 * manages that. Whoever wrote the widget_tree_refresh()
+			 * function knew this which is why an else clause exists here.
+			 * 
+			 * I think I've found the answer but I'm not going to mess
+			 * about with it right now. It looks as though input isn't
+			 * set-up properly in the parser which might uncover other
+			 * issues when corrected so I'll mark it temp temp */
+			fill_tree_view_by_command(var->Widget, tree_model, act,
+				stock_column, icon_column, TRUE);
+		}
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 	/*

@@ -2,33 +2,31 @@
 
 GTKDIALOG=gtkdialog
 
-# Thunor: Input from a file has not been implemented for this widget.
-
 export MAIN_DIALOG='
 <vbox>
   <frame With Rules, Without Headers>
     <tree rules_hint="true" headers_visible="false">
-      <input file>list.txt</input>
+      <input file stock_column="0">list.txt</input>
       <label>Device                        | Directory | File</label>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
       <item stock="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-      <height>100</height><width>400</width>
+      <height>250</height><width>400</width>
       <variable>TREE</variable>
     </tree>
   </frame>
   <frame Hover Mode>
     <tree hover_expand="true" hover_selection="true">
-      <input file>list.txt</input>
+      <input file stock_column="0">list.txt</input>
       <label>Device                        | Directory | File</label>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
       <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
       <item stock="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-      <height>100</height><width>400</width>
+      <height>250</height><width>400</width>
       <variable>TREE</variable>
     </tree>
   </frame>
