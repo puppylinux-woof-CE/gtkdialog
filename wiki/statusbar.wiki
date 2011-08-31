@@ -43,7 +43,7 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 
 == Signals ==
-There is no default signal for this widget and the only supported signal I've found it to emit is the "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show]" signal.
+There is no default signal for this widget.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html#GtkStatusbar.signals GtkStatusbar] widget and ancestor class signals.
 
