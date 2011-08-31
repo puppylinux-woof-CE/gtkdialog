@@ -1,7 +1,7 @@
 #summary statusbar widget reference
 
 = statusbar widget =
-A [http://developer.gnome.org/gtk/2.24/GtkStatusBar.html GtkStatusBar]
+A [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html GtkStatusbar]
 ----
 
 == Definition ==
@@ -20,7 +20,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkStatusBar.html GtkStatusBar]
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
-See the [http://developer.gnome.org/gtk/2.24/GtkStatusBar.html#GtkStatusBar.object-hierarchy GtkStatusBar] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html#GtkStatusbar.object-hierarchy GtkStatusbar] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
@@ -43,9 +43,9 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 
 == Signals ==
-There is no default signal for this widget.
+There is no default signal for this widget and the only supported signal I've found it to emit is the "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show]" signal.
 
-See also the [http://developer.gnome.org/gtk/2.24/GtkStatusBar.html#GtkStatusBar.signals GtkStatusBar] widget and ancestor class signals.
+See also the [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html#GtkStatusbar.signals GtkStatusbar] widget and ancestor class signals.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
