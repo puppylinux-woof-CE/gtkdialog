@@ -1,28 +1,26 @@
-#summary comboboxentry widget reference
+#summary statusbar widget reference
 
-= comboboxentry widget =
-A [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html GtkComboBoxEntry]
+= statusbar widget =
+A [http://developer.gnome.org/gtk/2.24/GtkStatusBar.html GtkStatusBar]
 ----
 
 == Definition ==
 {{{
-<comboboxentry tag_attr="value"...>
+<statusbar tag_attr="value"...>
+	<label>text</label>
 	<default>text</default>
 	<variable>varname</variable>
 	<input>command</input>
 	<input file>filename</input>
 	<sensitive>state</sensitive>
-	<action>activity</action>...
 	<action signal="type">activity</action>...
-	<action type="function">parameter</action>...
-	<item>data</item>...
 	<output file>filename</output>
-</comboboxentry>
+</statusbar>
 }}}
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
-See the [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html#GtkComboBoxEntry.object-hierarchy GtkComboBoxEntry] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkStatusBar.html#GtkStatusBar.object-hierarchy GtkStatusBar] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
@@ -35,25 +33,19 @@ The following custom tag attributes are available:
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| default || Initial selection or entry text if unmatched || Text || || ||
+|| label || Initial text || || || ||
+|| default || Initial text || || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
-|| action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| item || Input data || || || ||
-|| output file || Data output target || Filename || || ||
 
 == Signals ==
-The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox-changed changed]", emitted when the active item is changed and when typing into the entry.
+There is no default signal for this widget.
 
-The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activate]" signal is emitted when the user activates the entry with the Enter key.
-
-See also the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.signals GtkComboBox] widget and ancestor class signals.
+See also the [http://developer.gnome.org/gtk/2.24/GtkStatusBar.html#GtkStatusBar.signals GtkStatusBar] widget and ancestor class signals.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
@@ -61,10 +53,9 @@ The following functions can be performed upon this widget by any widget capable 
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
-|| save^[1]^ || Save widget data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || ||
 || fileselect || Launch file selection dialog || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
-|| removeselected || Remove selected widget data || Shell variable name || ||
 
 The following general functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
@@ -74,7 +65,5 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-1. The save function will write the entry text to the output file if it is unique and non-null.
-
 This widget was introduced in version 0.7.21.
 ----
