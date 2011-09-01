@@ -1,5 +1,6 @@
 * Thu Sep 1 2011 Thunor <thunorsif@hotmail.com>
 - Reorganised the examples folder into subfolders.
+- Updated Makefile.am and configure.in.
 
 * Tue Aug 30 2011 Thunor <thunorsif@hotmail.com>
 - Fixed the tree widget's <input file> directive.
