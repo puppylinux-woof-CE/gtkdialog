@@ -4,6 +4,16 @@ GTKDIALOG=gtkdialog
 
 # Thunor: Input from a file has not been implemented for this widget.
 
+TMPDIR=/tmp/gtkdialog/examples/notebook
+mkdir -p "$TMPDIR"
+cat <<EOF > "$TMPDIR"/list.txt
+gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
+gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi
+gtk-harddisk | Hard Disk     | /harddisk/ | ak.ps
+gtk-network  | Network Drive | /network/  | ak.pdf
+gtk-delete   | Trash         | /trash/    | 
+EOF
+
 export MAIN_DIALOG='
 <vbox>
   <notebook labels="Checkbox|Radiobutton|Tree">
@@ -31,7 +41,7 @@ export MAIN_DIALOG='
       </radiobutton>
     </vbox>
     <tree>
-      <input file>list.txt</input>
+      <input file>'"$TMPDIR"'/list.txt</input>
       <label>First</label>
       <item stock="gtk-floppy">This is a floppy</item>
       <item stock="gtk-cdrom">This is a CD-ROM</item>

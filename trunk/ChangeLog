@@ -1,3 +1,6 @@
+* Thu Sep 1 2011 Thunor <thunorsif@hotmail.com>
+- Reorganised the examples folder into subfolders.
+
 * Tue Aug 30 2011 Thunor <thunorsif@hotmail.com>
 - Fixed the tree widget's <input file> directive.
 - Fixed examples 09.01-tree_attributes, 09.01-tree_items and

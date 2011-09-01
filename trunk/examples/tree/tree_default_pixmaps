@@ -8,10 +8,20 @@ GTKDIALOG=gtkdialog
 #   o icon or icon_name
 #
 
+TMPDIR=/tmp/gtkdialog/examples/tree
+mkdir -p "$TMPDIR"
+cat <<EOF > "$TMPDIR"/list.txt
+gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
+gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi
+gtk-harddisk | Hard Disk     | /harddisk/ | ak.ps
+gtk-network  | Network Drive | /network/  | ak.pdf
+gtk-delete   | Trash         | /trash/    | 
+EOF
+
 export MAIN_DIALOG='
 <vbox>
   <tree stock="gtk-apply">
-    <input file stock_column="0">list.txt</input>
+    <input file stock_column="0">'"$TMPDIR"'/list.txt</input>
     <label>Device                        | Directory | File</label>
     <item>Floppy Disk | /floppy/  | ak.tex</item>
     <item>Floppy Disk | /floppy/  | ak.dvi</item>
@@ -22,7 +32,7 @@ export MAIN_DIALOG='
     <variable>TREE1</variable>
   </tree>
   <tree icon_name="xarchive">
-    <input file stock_column="0">list.txt</input>
+    <input file stock_column="0">'"$TMPDIR"'/list.txt</input>
     <label>Device                        | Directory | File</label>
     <item>Floppy Disk | /floppy/  | ak.tex</item>
     <item>Floppy Disk | /floppy/  | ak.dvi</item>
