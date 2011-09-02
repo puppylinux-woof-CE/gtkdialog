@@ -22,7 +22,7 @@ funccboCreate() {
 		echo '<combobox case-sensitive="true" value-in-list="true">'
 	fi
 	echo '<variable>cboComboBox'$1'</variable>
-			<visible>enabled</visible>
+			<sensitive>enabled</sensitive>
 			<item>cboComboBox'$1'</item>'
 	if [ $1 = 0 ]; then
 		echo '<item>tag attributes none</item>'
@@ -50,7 +50,7 @@ funccboEntryCreate() {
 		echo '<comboboxentry fs-action="file" focus-on-click="false">'
 	fi
 	echo '<variable>cboComboBoxEntry'$1'</variable>
-			<visible>enabled</visible>
+			<sensitive>enabled</sensitive>
 			<item>cboComboBoxEntry'$1'</item>
 			<item>tag attribute fs-action="file"</item>'
 	if [ $1 = 1 ]; then

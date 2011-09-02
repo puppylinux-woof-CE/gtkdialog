@@ -31,6 +31,8 @@
 - Added examples/vscale/vscale_advanced.
 - Added examples/vseparator/vseparator_advanced.
 - Removed the bashism "function " from a few existing examples.
+- Replaced a couple of <visible> with <sensitive> in examples.
+- Added examples/menuitemseparator/menuitemseparator_advanced.
 
 * Thu Sep 1 2011 Thunor <thunorsif@hotmail.com>
 - Reorganised the examples folder into subfolders.
