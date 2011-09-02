@@ -1,0 +1,89 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcbtnCreate() {
+	echo '<button>
+			<input file stock="'$2'"></input>
+			<action>echo "'"$4"' spb'$1'"</action>
+			<action type="'"$3"'">spb'$1'</action>
+		</button>'
+}
+
+funcspbCreate() {
+	echo '<variable>spb'$1'</variable>
+			<sensitive>true</sensitive>
+			<output file>'"$TMPDIR"'/outputfile</output>
+			<action>echo "spb'$1' action for default signal triggered"</action>
+			<action signal="value-changed">echo "spb'$1' changed to $spb'$1'"</action>
+			<action signal="changed">echo "spb'$1' typing within the entry detected"</action>
+			<action signal="activate">echo "spb'$1' Enter key-press detected"</action>
+			<action signal="primary-icon-press">echo "spb'$1' primary icon press detected"</action>
+			<action signal="primary-icon-release">echo "spb'$1' primary icon release detected"</action>
+			<action signal="secondary-icon-press">echo "spb'$1' secondary icon press detected"</action>
+			<action signal="secondary-icon-release">echo "spb'$1' secondary icon release detected"</action>
+		</spinbutton>'
+}
+
+if [ ! -f "$TMPDIR"/inputfile ]; then echo "0.9881" > "$TMPDIR"/inputfile; fi
+
+export MAIN_DIALOG='
+<window title="SpinButton Advanced" resizable="false">
+	<vbox>
+		<frame spinbutton widget>
+			<hbox border-width="20" spacing="20">
+				<vbox>
+					<spinbutton update-policy="1" wrap="true">
+						<default>20</default>
+						<input>echo 4</input>
+						'"$(funcspbCreate 0)"'
+					<hbox>
+						'"$(funcbtnCreate 0 gtk-no disable Disabling)"'
+						'"$(funcbtnCreate 0 gtk-yes enable Enabling)"'
+						'"$(funcbtnCreate 0 gtk-refresh refresh Reloading)"'
+						'"$(funcbtnCreate 0 gtk-save save Saving)"'
+					</hbox>
+					<hseparator></hseparator>
+					<spinbutton block-function-signals="true" digits="4"
+						range-min="0" range-max="1" range-step="0.01"
+						tooltip-text="block-function-signals='"'true'"'">
+						<input file>'"$TMPDIR"'/inputfile</input>
+						'"$(funcspbCreate 1)"'
+					<hbox>
+						'"$(funcbtnCreate 1 gtk-no disable Disabling)"'
+						'"$(funcbtnCreate 1 gtk-yes enable Enabling)"'
+						'"$(funcbtnCreate 1 gtk-refresh refresh Reloading)"'
+						'"$(funcbtnCreate 1 gtk-save save Saving)"'
+					</hbox>
+				</vbox>
+				<vseparator></vseparator>
+				<vbox width-request="100">
+					<spinbutton range-value="44" editable="false">
+						'"$(funcspbCreate 2)"'
+					<hseparator></hseparator>
+					<spinbutton range-value="33" xalign="1" primary-icon-name="gnumeric"
+						primary-icon-tooltip-markup="<span fgcolor='"'darkred'"'><b>primary-icon</b></span>-<i>tooltip</i>-<u>markup</u>">
+						'"$(funcspbCreate 3)"'
+					<hseparator></hseparator>
+					<spinbutton range-value="56" secondary-icon-stock="gtk-about"
+						secondary-icon-tooltip-markup="<span fgcolor='"'darkblue'"'><b>secondary-icon</b></span>-<i>tooltip</i>-<u>markup</u>">
+						'"$(funcspbCreate 4)"'
+					<hseparator></hseparator>
+					<spinbutton range-min="0" range-max="255" range-step="8" range-value="123"
+						xalign="0.5" max-length="3" progress-fraction="0.6">
+						'"$(funcspbCreate 5)"'
+				</vbox>
+			</hbox>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

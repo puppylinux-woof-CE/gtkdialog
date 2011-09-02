@@ -1,9 +1,9 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
-
 # Thunor: This example is broken: input from a command has not been
 # implemented for this widget and it's now old and deprecated.
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>

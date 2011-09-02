@@ -1,9 +1,9 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
-
 # Thunor: This won't work on *nix as the "insert/append" function has
 # only been written for G_OS_WIN32 -- I don't know why that is.
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>

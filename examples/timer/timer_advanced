@@ -1,0 +1,97 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcpixCreate() {
+	for f in 0 1 2 3; do
+		echo '<pixmap>
+				<variable>pix'$1$f'</variable>
+				<input file>'"$TMPDIR"'/pix'$f'.svg</input>
+			</pixmap>'
+	done
+}
+
+funcbtnCreate() {
+	echo '<button>
+			<input file stock="'$1'"></input>
+			<action>'$2':tmr0</action>
+			<action>'$2':tmr1</action>
+			<action>'$2':tmr2</action>
+			<action>'$2':tmr3</action>
+		</button>'
+}
+
+functmrCreate() {
+	echo '<variable>tmr'$1'</variable>
+			<action>funcpixRandomise</action>
+			<action>refresh:pix'$1'0</action>
+			<action>refresh:pix'$1'1</action>
+			<action>refresh:pix'$1'2</action>
+			<action>refresh:pix'$1'3</action>
+		</timer>'
+}
+
+funcimageCreate() {
+	local -a colours=("a00000" "00a000" "0000a0" "ffffff")
+	echo '
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<rect x="0" y="0" height="64" width="64" fill="#'${colours[$1]}'"/>
+</svg>' > "$TMPDIR"/image$1.svg
+}; export -f funcimageCreate
+
+funcpixRandomise() {
+	local rand=
+	for f in 0 1 2 3; do
+		rand=$(($RANDOM % 4))
+		ln -sf "$TMPDIR"/image$rand.svg "$TMPDIR"/pix$f.svg
+	done
+}; export -f funcpixRandomise
+
+if [ ! -f "$TMPDIR"/image0.svg ]; then funcimageCreate 0; fi
+if [ ! -f "$TMPDIR"/image1.svg ]; then funcimageCreate 1; fi
+if [ ! -f "$TMPDIR"/image2.svg ]; then funcimageCreate 2; fi
+if [ ! -f "$TMPDIR"/image3.svg ]; then funcimageCreate 3; fi
+
+funcpixRandomise
+
+export MAIN_DIALOG='
+<window title="Timer Advanced" resizable="false">
+	<vbox>
+		<frame timer widget>
+			<vbox border-width="20">
+				<hbox>
+					<timer>
+						'"$(functmrCreate 0)"'
+					'"$(funcpixCreate 0)"'
+				</hbox>
+				<hbox>
+					<timer interval="2">
+						'"$(functmrCreate 1)"'
+					'"$(funcpixCreate 1)"'
+				</hbox>
+				<hbox>
+					<timer milliseconds="true" visible="false">
+						'"$(functmrCreate 2)"'
+					'"$(funcpixCreate 2)"'
+				</hbox>
+				<hbox>
+					<timer milliseconds="true" interval="500" visible="false">
+						'"$(functmrCreate 3)"'
+					'"$(funcpixCreate 3)"'
+				</hbox>
+			</vbox>
+		</frame>
+		<hbox>
+			'"$(funcbtnCreate gtk-no disable)"'
+			'"$(funcbtnCreate gtk-yes enable)"'
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

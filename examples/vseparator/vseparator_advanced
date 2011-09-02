@@ -1,0 +1,47 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funchspCreate() {
+	for ((f = 0; f < $1; f++)); do
+		echo '<hseparator width-request="'$2'"></hseparator>'
+	done
+}
+
+funcvspCreate() {
+	for ((f = 0; f < $1; f++)); do
+		echo '<vseparator height-request="'$2'"></vseparator>'
+	done
+}
+
+export MAIN_DIALOG='
+<window title="VSeparator Advanced" resizable="false">
+	<vbox>
+		<frame hseparator and vseparator widgets>
+			<hbox>
+				<hbox>
+					'"$(funcvspCreate 30 200)"'
+				</hbox>
+				<vbox>
+					'"$(funchspCreate 34 400)"'
+				</vbox>
+			</hbox>
+			<hbox>
+				<vbox>
+					'"$(funchspCreate 34 400)"'
+				</vbox>
+				<hbox>
+					'"$(funcvspCreate 30 200)"'
+				</hbox>
+			</hbox>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG
+

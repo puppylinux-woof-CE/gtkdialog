@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-function progress() {
+progress() {
   for i in $(seq 0 10 100); do 
     echo $i
     [ "$i" -le 30 ] && echo "Start..."
@@ -13,7 +13,7 @@ function progress() {
   echo ready
 }; export -f progress
 
-function progress_fast() {
+progress_fast() {
   for i in $(seq 0 1 10000); do 
     echo $((i/100))
     [ "$i" -le 3000 ] && echo "Start..."

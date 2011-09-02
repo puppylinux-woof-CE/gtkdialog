@@ -1,0 +1,63 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+cp true.svg false.svg "$TMPDIR"/
+ln -sf "$TMPDIR"/true.svg "$TMPDIR"/tgb0.svg
+ln -sf "$TMPDIR"/false.svg "$TMPDIR"/tgb1.svg
+
+export MAIN_DIALOG='
+<window title="ToggleButton Advanced" resizable="false" border-width="0">
+	<vbox>
+		<menubar>
+			<menu use-underline="true">
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<action>exit:Quit</action>
+				</menuitem>
+				<label>"_File"</label>
+				<variable>mnuFile</variable>
+				<sensitive>false</sensitive>
+			</menu>
+		</menubar>
+		<vbox border-width="20" spacing="20">
+			<hbox>
+				<togglebutton>
+					<default>true</default>
+					<label>Toggle</label>
+					<variable>tgb0</variable>
+					<input file>'"$TMPDIR"'/tgb0.svg</input>
+					<action>ln -sf '"$TMPDIR"'/$tgb0.svg '"$TMPDIR"'/tgb0.svg</action>
+					<action>refresh:tgb0</action>
+					<action>save:tgb0</action>
+					<action>refresh:ent0</action>
+					<output file>'"$TMPDIR"'/outputfile</output>
+				</togglebutton>
+				<entry>
+					<default>true</default>
+					<variable>ent0</variable>
+					<input>echo $tgb0</input>
+				</entry>
+			</hbox>
+			<hseparator></hseparator>
+			<hbox homogeneous="true">
+				<togglebutton>
+					<variable>tgb1</variable>
+					<height>128</height>
+					<width>128</width>
+					<input file>'"$TMPDIR"'/tgb1.svg</input>
+					<action>ln -sf '"$TMPDIR"'/$tgb1.svg '"$TMPDIR"'/tgb1.svg</action>
+					<action>refresh:tgb1</action>
+					<action>if true enable:mnuFile</action>
+					<action>if false disable:mnuFile</action>
+				</togglebutton>
+			</hbox>
+		</vbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

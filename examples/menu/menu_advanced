@@ -1,0 +1,103 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcmuiCreate() {
+	echo '<variable>'$1'</variable>'
+	if [ $2 = 1 ]; then echo '<label>"'"$3"'"</label>'; fi
+	echo '<action>echo "'"$1 ($3) action for default signal triggered"'"</action>'
+	if [ ${1:0:3} = "mnu" ]; then echo '</menu>'; else echo '</menuitem>'; fi
+}
+
+funcimageCreate() {
+	local -a colours=("d0d0d0" "a0a0a0" "707070" "404040" "f0d0d0" "c0a0a0" "907070" "604040"
+		"d0f0d0" "a0c0a0" "709070" "406040" "d0d0f0" "a0a0c0" "707090" "404060")
+	echo '
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<rect x="0" y="0" height="16" width="16" fill="#000000"/>
+	<rect x="1" y="1" height="14" width="14" fill="#ffffff"/>
+	<rect x="8" y="8" height="6" width="6" fill="#'${colours[$(($1 * 4 + 0))]}'"/>
+	<rect x="2" y="8" height="6" width="6" fill="#'${colours[$(($1 * 4 + 1))]}'"/>
+	<rect x="2" y="2" height="6" width="6" fill="#'${colours[$(($1 * 4 + 2))]}'"/>
+	<rect x="8" y="2" height="6" width="6" fill="#'${colours[$(($1 * 4 + 3))]}'"/>
+	<rect x="9" y="9" height="2" width="2" fill="#ffffff"/>
+	<rect x="11" y="9" height="2" width="2" fill="#'${colours[$(($1 * 4 + 1))]}'"/>
+	<rect x="11" y="11" height="2" width="2" fill="#'${colours[$(($1 * 4 + 2))]}'"/>
+	<rect x="9" y="11" height="2" width="2" fill="#'${colours[$(($1 * 4 + 3))]}'"/>
+</svg>' > "$TMPDIR"/image.svg
+}; export -f funcimageCreate
+
+funcimageCreate 1
+
+echo -n > "$TMPDIR"/inoutfile
+
+export MAIN_DIALOG='
+<window title="Menu Advanced" resizable="false" width-request="360" height-request="240" border-width="0">
+	<vbox spacing="0">
+		<menubar>
+			<menu label="_File" use-underline="true">
+				<menuitem stock-id="gtk-new" accel-key="0x4e" accel-mods="4">
+					<action>clear</action>
+					'"$(funcmuiCreate mui00.00 0 "New")"'
+				<menuitemseparator></menuitemseparator>
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<action>exit:Quit</action>
+					'"$(funcmuiCreate mui00.01 0 "Quit")"'
+				'"$(funcmuiCreate mnu00 0 "File")"'
+			<menu use-underline="true">
+				<menuitem stock-id="gtk-network"
+					tooltip-text="Stock image gtk-network">
+					'"$(funcmuiCreate mui01.00 0 "Stock Image")"'
+				<menuitem icon-name="gnumeric" use-underline="true"
+					tooltip-markup="<span fgcolor='"'darkred'"'><b>Theme</b></span> <i>image</i> gnumeric">
+					'"$(funcmuiCreate mui01.01 1 "_Theme Image")"'
+				<menuitem icon-name="gnumeric" use-underline="true">
+					<width>32</width>
+					'"$(funcmuiCreate mui01.02 1 "_Theme Image Size 32")"'
+				<menuitem image-name="'"$TMPDIR"'/image.svg" use-underline="true"
+					tooltip-markup="<span fgcolor='"'darkgreen'"'><i>File</i></span> <b>image</b> image.svg">
+					'"$(funcmuiCreate mui01.03 1 "_File Image")"'
+				<menuitem image-name="'"$TMPDIR"'/image.svg" use-underline="true">
+					<width>64</width>
+					'"$(funcmuiCreate mui01.04 1 "File Image _Scaled 64")"'
+				'"$(funcmuiCreate mnu01 1 "_Image")"'
+			<menu label="_Checkbox" use-underline="true">
+				<menuitem checkbox="true" use-underline="true" accel-key="0x31" accel-mods="4">
+					<action>if true enable:mui00.01</action>
+					<action>if false disable:mui00.01</action>
+					'"$(funcmuiCreate mui02.00 1 "Enable _Quit")"'
+				<menuitem checkbox="yes" use-underline="true" accel-key="0x32" accel-mods="4">
+					<action>if true enable:mnu01</action>
+					<action>if false disable:mnu01</action>
+					'"$(funcmuiCreate mui02.01 1 "Enable _Image")"'
+				<menuitem checkbox="yes" use-underline="true" accel-key="0x33" accel-mods="4">
+					<action>if true enable:mnu03.00</action>
+					<action>if false disable:mnu03.00</action>
+					'"$(funcmuiCreate mui02.02 1 "Enable _Color")"'
+				'"$(funcmuiCreate mnu02 0 "Checkbox")"'
+			<menu use-underline="true">
+				<menu use-stock="true" label="gtk-select-color">
+					<menuitem radiobutton="true" use-underline="true" accel-key="0xffbf" accel-mods="0">
+						<action>if true funcimageCreate 1</action>
+						<action>refresh:mui01.04</action>
+						'"$(funcmuiCreate mui03.00.00 1 "File Image Scaled _Red")"'
+					<menuitem radiobutton="false" use-underline="true" accel-key="0xffc0" accel-mods="0">
+						<action>if true funcimageCreate 2</action>
+						<action>refresh:mui01.04</action>
+						'"$(funcmuiCreate mui03.00.01 1 "File Image Scaled _Green")"'
+					<menuitem radiobutton="no" use-underline="true" accel-key="0xffc1" accel-mods="">
+						<action>if true funcimageCreate 3</action>
+						<action>refresh:mui01.04</action>
+						'"$(funcmuiCreate mui03.00.02 1 "File Image Scaled _Blue")"'
+					'"$(funcmuiCreate mnu03.00 0 "Select Colour")"'
+				'"$(funcmuiCreate mnu03 1 "_Radiobutton")"'
+		</menubar>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

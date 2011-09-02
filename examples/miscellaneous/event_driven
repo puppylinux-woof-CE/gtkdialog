@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-function print_this() {
+print_this() {
   echo "print: $1"
 }; export -f print_this
 

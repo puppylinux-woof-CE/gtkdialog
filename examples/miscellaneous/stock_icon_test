@@ -1,0 +1,85 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+window_width=800
+icon_names=(echo $(<icon_names.txt))
+type=stock
+
+mnuCreate() {
+	for ((x = 0; x < 7; x++)); do
+		echo '<menu label="Menu'$x'" width-request="'$(($window_width/7+1))'">'
+		for ((y = 0; y < 15; y++)); do
+			i=$((x*15*2+y*2+1))
+			echo '<menuitem '$type'="'${icon_names[$i]}'">
+					<label>""</label>
+				</menuitem>'
+		done
+		echo '</menu>'
+	done
+}
+
+pixCreate() {
+	for ((x = 0; x < 7; x++)); do
+		echo '<vbox spacing="0" scrollable="true">'
+		for ((y = 0; y < 15; y++)); do
+			i=$((x*15*2+y*2+1))
+			echo '<pixmap>
+					<input file '$type'="'${icon_names[$i]}'"></input>
+				</pixmap>'
+		done
+		echo '</vbox>'
+	done
+}
+
+btnCreate() {
+	for ((x = 0; x < 7; x++)); do
+		echo '<vbox spacing="0" scrollable="true">'
+		for ((y = 0; y < 15; y++)); do
+			i=$((x*15*2+y*2+1))
+			echo '<button>
+					<input file '$type'="'${icon_names[$i]}'"></input>
+				</button>'
+		done
+		echo '</vbox>'
+	done
+}
+
+treCreate() {
+	for ((x = 0; x < 3; x++)); do
+		echo '<tree>
+				<label>Name|GTK+</label>'
+		for ((y = 0; y < 35; y++)); do
+			i=$((x*35*2+y*2+1))
+			echo '<item '$type'="'${icon_names[$i]}'">"'${icon_names[$i]}'|'
+			if [ ${icon_names[$(($i+1))]} != 0 ]; then
+				echo ${icon_names[$(($i+1))]}
+			fi
+			echo '"</item>'
+		done
+		echo '</tree>'
+	done
+}
+
+export MAIN_DIALOG='
+<window title="Stock Icon Test" width-request="'$window_width'"
+	border-width="0" resizable="false">
+	<vbox spacing="0">
+		<menubar>
+			'"$(mnuCreate)"'
+		</menubar>
+		<hbox spacing="0" height-request="200">
+			'"$(pixCreate)"'
+		</hbox>
+		<hbox spacing="0" height-request="200">
+			'"$(btnCreate)"'
+		</hbox>
+		<hbox spacing="0" height-request="200">
+			'"$(treCreate)"'
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG 

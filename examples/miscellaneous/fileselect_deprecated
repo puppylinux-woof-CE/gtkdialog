@@ -1,9 +1,9 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
-
 # Thunor: The FILE_BROWSE_NEWDIRECTORY example crashes if a directory
 # name isn't supplied.
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>

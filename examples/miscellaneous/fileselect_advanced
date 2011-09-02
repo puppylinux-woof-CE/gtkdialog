@@ -1,0 +1,71 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funcbtnCreate() {
+	echo '<button>
+			<input file stock="gtk-'$2'"></input>
+			<action>fileselect:ent'$1'</action>
+		</button>'
+}
+
+export MAIN_DIALOG='
+<window title="Fileselect Advanced" resizable="false" width-request="500">
+	<vbox>
+		<vbox border-width="20" spacing="10">
+			<hbox>
+				<text label="All defaults" width-request="80"></text>
+				<entry>
+					<variable>ent0</variable>
+				</entry>
+				'"$(funcbtnCreate 0 new)"'
+			</hbox>
+			<hseparator></hseparator>
+			<hbox>
+				<text label="file" width-request="80"></text>
+				<entry fs-action="file" fs-folder="/usr/share/doc"
+					fs-filters="*.txt|*.html"
+					fs-title="Select an existing file">
+					<variable>ent1</variable>
+				</entry>
+				'"$(funcbtnCreate 1 new)"'
+			</hbox>
+			<hseparator></hseparator>
+			<hbox>
+				<text label="newfile" width-request="80"></text>
+				<entry fs-action="newfile" fs-folder="'$HOME'"
+					fs-filters-mime="text/plain|text/html"
+					fs-title="Select an existing file or type in a new filename">
+					<variable>ent2</variable>
+				</entry>
+				'"$(funcbtnCreate 2 new)"'
+			</hbox>
+			<hseparator></hseparator>
+			<hbox>
+				<text label="folder" width-request="80"></text>
+				<entry fs-title="Select an existing folder" fs-action="folder">
+					<variable>ent3</variable>
+				</entry>
+				'"$(funcbtnCreate 3 open)"'
+			</hbox>
+			<hseparator></hseparator>
+			<hbox>
+				<text label="newfolder" width-request="80"></text>
+				<entry fs-action="newfolder"
+					fs-title="Select an existing folder or type in a new folder name">
+					<default>This fileselect action type is temperamental</default>
+					<variable>ent4</variable>
+				</entry>
+				'"$(funcbtnCreate 4 open)"'
+			</hbox>
+		</vbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

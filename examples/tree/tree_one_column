@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-function list() {
+list() {
   ls -lha | grep ^d | awk '{print "dir_o|" $8}'
   ls -lha | grep ^- | awk '{print "gexec|" $8}'
 }; export -f list

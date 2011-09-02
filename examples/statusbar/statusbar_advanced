@@ -1,0 +1,51 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcbtnCreate() {
+	echo '<button image-position="'$2'">
+			<label>"'"$3"'"</label>
+			<input file stock="'$4'"></input>
+			<action>echo "'"$5"' '$1'"</action>
+			<action type="'"$3"'">'$1'</action>
+		</button>'
+}
+
+echo "This message originates from an input file" > "$TMPDIR"/inputfile
+
+export MAIN_DIALOG='
+<window title="StatusBar Advanced" resizable="false" border-width="0">
+	<vbox spacing="0">
+		<menubar>
+			<menu label="_File" use-underline="true">
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<action>exit:Quit</action>
+				</menuitem>
+			</menu>
+		</menubar>
+		<hbox border-width="20" spacing="10">
+			'"$(funcbtnCreate stb0 2 Disable gtk-no Disabling)"'
+			'"$(funcbtnCreate stb0 2 Enable gtk-yes Enabling)"'
+			'"$(funcbtnCreate stb0 2 Clear gtk-clear Clearing)"'
+			'"$(funcbtnCreate stb0 2 Refresh gtk-refresh Refreshing)"'
+			'"$(funcbtnCreate stb0 2 Save gtk-save Saving)"'
+			'"$(funcbtnCreate stb0 2 Fileselect gtk-new "Inserting into")"'
+		</hbox>
+		<statusbar has-resize-grip="false">
+			<label>This message originates from the label directive</label>
+			<default>This message originates from the default directive</default>
+			<variable>stb0</variable>
+			<input>echo This message originates from an input command</input>
+			<input file>'"$TMPDIR"'/inputfile</input>
+			<sensitive>true</sensitive>
+			<output file>'"$TMPDIR"'/outputfile</output>
+		</statusbar>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

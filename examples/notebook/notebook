@@ -2,10 +2,9 @@
 
 GTKDIALOG=gtkdialog
 
-# Thunor: Input from a file has not been implemented for this widget.
-
-TMPDIR=/tmp/gtkdialog/examples/notebook
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
+
 cat <<EOF > "$TMPDIR"/list.txt
 gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
 gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi
