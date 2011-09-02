@@ -1,10 +1,10 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
-
 # Thunor: I'm not sure that this example is doing what was originally intended.
 # The label isn't resizing with the window (Gtkdialog's support for resizing
 # requires attention) and both "fill" and "expand" default to true anyway.
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>

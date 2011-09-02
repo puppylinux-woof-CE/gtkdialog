@@ -1,8 +1,8 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
-
 # Thunor: I'm not sure that this example is doing what was originally intended.
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>

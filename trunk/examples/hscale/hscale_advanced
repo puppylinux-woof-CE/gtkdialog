@@ -1,0 +1,103 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcbtnCreate() {
+	echo '<button image-position="'$3'">
+			<label>"'"$2"'"</label>
+			<input file stock="'$4'"></input>
+			<action>echo "'"$5"' '$1'"</action>
+			<action type="'"$6"'">'$1'</action>
+		</button>'
+}
+
+funcscaType0Create() {
+	echo '<'$2'scale width-request="'$3'" height-request="'$4'" range-value="4">
+			<variable>'$1'</variable>
+			<action>echo "'$1' changed to $'$1'"</action>
+		</'$2'scale>
+		<'$2'separator></'$2'separator>'
+}
+
+funcscaType1Create() {
+	echo '<'$2'scale width-request="'$3'" height-request="'$4'"
+			range-min="0" range-max="1" range-step="0.1"
+			value-pos="3" digits="2" inverted="true">
+			<default>0.20</default>
+			<variable>'$1'</variable>
+			<action>echo "'$1' changed to $'$1'"</action>
+			<item>"0.25 | '$5'"</item>
+			<item>"0.5  | '$6'"</item>
+			<item>"0.75 | '$7'"</item>
+		</'$2'scale>
+		<'$2'separator></'$2'separator>'
+}
+
+funcscaType2Create() {
+	echo '<'$2'scale width-request="'$3'" height-request="'$4'"
+			range-min="0" range-max="255" range-step="8" value-pos="1"
+			block-function-signals="true">
+			<variable>'$1'</variable>
+			<input>echo 18</input>
+			<action>echo "'$1' changed to $'$1'"</action>
+			<item>"64 |'$5'|<span fgcolor='"'white'"' bgcolor='"'darkred'"'> 64 </span>"</item>
+			<item>"128|'$6'|<span fgcolor='"'white'"' bgcolor='"'darkgreen'"'> 128 </span>"</item>
+			<item>"192|'$7'|<span fgcolor='"'white'"' bgcolor='"'darkblue'"'> 192 </span>"</item>
+			<output file>'"$TMPDIR"'/outputfile</output>
+		</'$2'scale>
+		<'$2'box homogeneous="true">
+			'"$(funcbtnCreate $1 Disable $8 gtk-no Disabling disable)"'
+			'"$(funcbtnCreate $1 Enable $8 gtk-yes Enabling enable)"'
+			'"$(funcbtnCreate $1 Refresh $8 gtk-refresh Reloading refresh)"'
+			'"$(funcbtnCreate $1 Save $8 gtk-save Saving save)"'
+		</'$2'box>
+		<'$2'separator></'$2'separator>'
+}
+
+funcscaType3Create() {
+	echo '<'$2'scale width-request="'$3'" height-request="'$4'"
+			range-min="0" range-max="123" range-step="1"
+			draw-value="false" show-fill-level="true" fill-level="56"
+			restrict-to-fill-level="true" update-policy="1">
+			<variable>'$1'</variable>
+			<input file>'"$TMPDIR"'/inputfile</input>
+			<action signal="value_changed">echo "'$1' changed to $'$1'"</action>
+			<output file>'"$TMPDIR"'/outputfile</output>
+		</'$2'scale>
+		<'$2'box homogeneous="true">
+			'"$(funcbtnCreate $1 Disable $5 gtk-no Disabling disable)"'
+			'"$(funcbtnCreate $1 Enable $5 gtk-yes Enabling enable)"'
+			'"$(funcbtnCreate $1 Refresh $5 gtk-refresh Reloading refresh)"'
+			'"$(funcbtnCreate $1 Save $5 gtk-save Saving save)"'
+		</'$2'box>'
+}
+
+if [ ! -f "$TMPDIR"/inputfile ]; then
+	echo "44" > "$TMPDIR"/inputfile
+fi
+
+export MAIN_DIALOG='
+<window title="HScale Advanced" resizable="false">
+	<vbox>
+		<hbox>
+			<frame hscale widget>
+				<vbox>
+					'"$(funcscaType0Create hscHScale0 h 420 80)"'
+					'"$(funcscaType1Create hscHScale1 h 420 80 2 2 2)"'
+					'"$(funcscaType2Create hscHScale2 h 420 -1 3 2 3 0)"'
+					'"$(funcscaType3Create hscHScale3 h 420 80 0)"'
+				</vbox>
+			</frame>
+		</hbox>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

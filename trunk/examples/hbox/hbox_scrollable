@@ -1,0 +1,49 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funcentCreate() {
+	for ((f = $1; f < $2; f++)); do
+		echo '<entry editable="false"><default>"'$f'"</default></entry>'
+	done
+}
+
+export MAIN_DIALOG='
+<window title="HBox Scrollable" resizable="false">
+	<vbox>
+		<frame hbox widget scrolled window functionality>
+			<hbox>
+				<hbox width-request="200" height-request="200">
+					<hbox scrollable="true">
+						'"$(funcentCreate 0 10)"'
+					</hbox>
+				</hbox>
+				<hbox width-request="400" height-request="200">
+					<hbox scrollable="true" width-request="500">
+						'"$(funcentCreate 0 10)"'
+					</hbox>
+				</hbox>
+			</hbox>
+			<hbox>
+				<hbox width-request="400" height-request="200">
+					<hbox scrollable="true" height-request="500">
+						'"$(funcentCreate 0 10)"'
+					</hbox>
+				</hbox>
+				<hbox width-request="200" height-request="200">
+					<hbox scrollable="true" width-request="500" height-request="500">
+						'"$(funcentCreate 0 10)"'
+					</hbox>
+				</hbox>
+			</hbox>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG
+

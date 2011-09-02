@@ -1,0 +1,143 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcbtnCreate() {
+	echo '<button>
+			<label>"'"$2"'"</label>
+			<action>echo "'"$3"' cboComboBox'$1'"</action>
+			<action type="'"$4"'">cboComboBox'$1'</action>
+		</button>'
+}
+
+funccboCreate() {
+	if [ $1 = 0 ]; then
+		echo '<combobox>'
+	elif [ $1 = 1 ]; then
+		echo '<combobox allow-empty="false" value-in-list="true">'
+	elif [ $1 = 2 ]; then
+		echo '<combobox case-sensitive="true" value-in-list="true">'
+	fi
+	echo '<variable>cboComboBox'$1'</variable>
+			<visible>enabled</visible>
+			<item>cboComboBox'$1'</item>'
+	if [ $1 = 0 ]; then
+		echo '<item>tag attributes none</item>'
+	elif [ $1 = 1 ]; then
+		echo '<item>tag attribute allow-empty="false"</item>
+			<item>tag attribute value-in-list="true"</item>'
+	elif [ $1 = 2 ]; then
+		echo '<item>tag attribute case-sensitive="true"</item>
+			<item>tag attribute value-in-list="true"</item>'
+	fi
+	echo '</combobox>
+		<hbox homogeneous="true">
+			'"$(funcbtnCreate $1 Clear Clearing clear)"'
+			'"$(funcbtnCreate $1 Refresh Reloading refresh)"'
+		</hbox>'
+	if [ $1 -lt 2 ]; then echo '<hseparator></hseparator>'; fi
+}
+
+funccboEntryCreate() {
+	if [ $1 = 0 ]; then
+		echo '<comboboxentry fs-action="file">'
+	elif [ $1 = 1 ]; then
+		echo '<comboboxentry fs-action="file" active="4" button-sensitivity="1">'
+	elif [ $1 = 2 ]; then
+		echo '<comboboxentry fs-action="file" focus-on-click="false">'
+	fi
+	echo '<variable>cboComboBoxEntry'$1'</variable>
+			<visible>enabled</visible>
+			<item>cboComboBoxEntry'$1'</item>
+			<item>tag attribute fs-action="file"</item>'
+	if [ $1 = 1 ]; then
+		echo '<item>tag attribute active="4"</item>
+			<item>tag attribute button-sensitivity="1"</item>'
+	elif [ $1 = 2 ]; then
+		echo '<item>tag attribute focus-on-click="false"</item>'
+	fi
+	if [ $1 -gt 0 ]; then
+		echo '<item>This is the default directive text but the active index will override it if declared</item>
+			<default>This is the default directive text but the active index will override it if declared</default>'
+	fi
+	echo '<input>echo "This came from a shell command"</input>
+			<input file>'"$TMPDIR"'/inputfile</input>
+			<output file>'"$TMPDIR"'/outputfile</output>
+			<action signal="changed">echo "cboComboBoxEntry'$1' changed to $cboComboBoxEntry'$1'"</action>
+			<action>echo "cboComboBoxEntry'$1' action for default signal triggered"</action>
+			<action type="command">echo "cboComboBoxEntry'$1' action type for default signal triggered"</action>
+			<action signal="activate">echo "cboComboBoxEntry'$1' Enter key-press detected"</action>
+		</comboboxentry>
+		<hbox homogeneous="true">
+			'"$(funcbtnCreate Entry$1 Clear Clearing clear)"'
+			'"$(funcbtnCreate Entry$1 Delete Deleting removeselected)"'
+			'"$(funcbtnCreate Entry$1 Refresh Reloading refresh)"'
+			'"$(funcbtnCreate Entry$1 Save Saving save)"'
+		</hbox>
+		<hbox homogeneous="true">
+			'"$(funcbtnCreate Entry$1 Disable Disabling disable)"'
+			'"$(funcbtnCreate Entry$1 Enable Enabling enable)"'
+			'"$(funcbtnCreate Entry$1 Fileselect """Inserting into""" fileselect)"'
+		</hbox>'
+	if [ $1 -lt 2 ]; then echo '<hseparator></hseparator>'; fi
+}
+
+if [ ! -f "$TMPDIR"/inputfile ]; then
+	echo "This came from an input file" > "$TMPDIR"/inputfile
+fi
+
+if [ ! -f "$TMPDIR"/inoutfile ]; then
+	echo "cboComboBoxEntry3" > "$TMPDIR"/inoutfile
+fi
+
+export MAIN_DIALOG='
+<window title="ComboBoxEntry Advanced" resizable="false">
+	<vbox>
+		<hbox>
+			<vbox>
+				<frame combobox widget (deprecated)>
+					'"$(funccboCreate 0)"'
+					'"$(funccboCreate 1)"'
+					'"$(funccboCreate 2)"'
+				</frame>
+			</vbox>
+			<vbox>
+				<frame comboboxentry widget>
+					'"$(funccboEntryCreate 0)"'
+					'"$(funccboEntryCreate 1)"'
+					'"$(funccboEntryCreate 2)"'
+				</frame>
+				<frame Practical example>
+					<text width-request="300">
+						<label>Type something, press the Enter key, repeat...</label>
+					</text>
+					<comboboxentry has-focus="true">
+						<variable>cboComboBoxEntry3</variable>
+						<default>Type something here...</default>
+						<input file>'"$TMPDIR"'/inoutfile</input>
+						<output file>'"$TMPDIR"'/inoutfile</output>
+						<action signal="activate">save:cboComboBoxEntry3</action>
+						<action signal="activate">refresh:cboComboBoxEntry3</action>
+					</comboboxentry>
+					<button>
+						<label>Delete</label>
+						<action>removeselected:cboComboBoxEntry3</action>
+						<action>save:cboComboBoxEntry3</action>
+						<action>refresh:cboComboBoxEntry3</action>
+					</button>
+				</frame>
+			</vbox>
+		</hbox>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG
+

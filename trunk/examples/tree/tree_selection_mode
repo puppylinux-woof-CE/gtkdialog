@@ -1,0 +1,64 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcfiletreCreate() {
+	echo -n > "$TMPDIR"/$1
+	for ((f = 0; f < $2; f++)); do
+		echo "#$f This is selection mode \"$3\"" >> "$TMPDIR"/$1
+	done
+}
+
+functreCreate() {
+	echo '<tree selection-mode="'$2'">
+			<variable>'$1'</variable>
+			<label>Items</label>
+			<width>300</width><height>200</height>
+			<input>cat '"$TMPDIR"'/file'$1'</input>
+		</tree>
+		<hbox homogeneous="true">
+			<button>
+				<label>"    Delete    "</label>
+				<action>echo "Deleting $'$1'"</action>
+				<action type="removeselected">'$1'</action>
+			</button>
+			<button>
+				<label>"    Reload    "</label>
+				<action>echo Reloading file'$1'</action>
+				<action type="refresh">'$1'</action>
+			</button>
+		</hbox>'
+}
+
+funcfiletreCreate filetreNone 3 none
+funcfiletreCreate filetreSingle 3 single
+funcfiletreCreate filetreBrowse 3 browse
+funcfiletreCreate filetreMultiple 16 multiple
+
+export MAIN_DIALOG='
+<window title="Tree Selection Mode" resizable="false">
+	<vbox>
+		<frame tree widget selection modes>
+			<hbox>
+				<vbox>
+					'"$(functreCreate treNone 0)"'
+					'"$(functreCreate treSingle 1)"'
+				</vbox>
+				<vbox>
+					'"$(functreCreate treBrowse 2)"'
+					'"$(functreCreate treMultiple 3)"'
+				</vbox>
+			</hbox>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action> 
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

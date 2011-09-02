@@ -1,11 +1,11 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
-
 #
 # Some action types are still missing. See execute_action() for more 
 # information.
 #
+
+GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>

@@ -1,15 +1,16 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
-
 #
 # The <tree> tag can hold the following attributes for using as a default icon:
 #   o stock or stock_id
 #   o icon or icon_name
 #
 
-TMPDIR=/tmp/gtkdialog/examples/tree
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
+
 cat <<EOF > "$TMPDIR"/list.txt
 gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
 gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi

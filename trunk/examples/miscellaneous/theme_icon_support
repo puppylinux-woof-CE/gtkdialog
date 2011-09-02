@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# NOTE: This example uses image names that hopefully represent physical
+# files that exist on your computer (minus their paths and extensions),
+# but if you experience missing images then replace them with something
+# located within your /usr/share/icons or /usr/share/pixmaps folders.
+
+GTKDIALOG=gtkdialog
+
+export MAIN_DIALOG='
+<window title="Theme Icon Support" resizable="false" border-width="0">
+	<vbox spacing="0">
+		<menubar>
+			<menu label="_File" use-underline="true">
+				<menuitem stock="gtk-quit" accel-key="0x51" accel-mods="4">
+					<action>exit:Quit</action>
+				</menuitem>
+			</menu>
+			<menu label="_Image" use-underline="true">
+				<menuitem icon="gimp">
+					<label>gimp - Size 16 (Default)</label>
+				</menuitem>
+				<menuitem icon="glade-3">
+					<label>glade-3 - Size 32</label>
+					<width>32</width>
+				</menuitem>
+				<menuitem icon="gnome-mplayer">
+					<label>gnome-mplayer - Size 64</label>
+					<width>64</width>
+				</menuitem>
+			</menu>
+		</menubar>
+		<vbox border-width="20">
+			<pixmap tooltip-text="gnumeric - Size 256">
+				<width>256</width>
+				<input file icon="gnumeric"></input>
+			</pixmap>
+			<button image-position="2">
+				<label>extension - Size 48</label>
+				<width>48</width>
+				<input file icon="extension"></input>
+				<action>""</action>
+			</button>
+		</vbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

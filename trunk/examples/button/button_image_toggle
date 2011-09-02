@@ -1,0 +1,51 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+cp no.svg yes.svg "$TMPDIR"/
+
+funcImageToggle() {
+	if [ $(<"$TMPDIR"/TOGGLE) = 1 ]; then
+		ln -sf "$TMPDIR"/no.svg "$TMPDIR"/toggle.svg
+		echo 0 > "$TMPDIR"/TOGGLE
+	else
+		ln -sf "$TMPDIR"/yes.svg "$TMPDIR"/toggle.svg
+		echo 1 > "$TMPDIR"/TOGGLE
+	fi
+}; export -f funcImageToggle
+
+if [ ! -f "$TMPDIR"/TOGGLE ]; then echo 0 > "$TMPDIR"/TOGGLE; funcImageToggle; fi
+
+export MAIN_DIALOG='
+<window title="Button Image Toggle" resizable="false">
+	<vbox>
+		<hbox border-width="30" spacing="60">
+			<button>
+				<variable>TOGGLEME</variable>
+				<input file>'"$TMPDIR"'/toggle.svg</input>
+				<label>"Toggle Me!"</label>
+				<action>funcImageToggle</action>
+				<action type="refresh">TOGGLEME</action>
+				<action type="refresh">TOGGLEMETOO</action>
+			</button>
+			<button tooltip-text="Toggle me too!">
+				<variable>TOGGLEMETOO</variable>
+				<input file>'"$TMPDIR"'/toggle.svg</input>
+				<action>funcImageToggle</action>
+				<action signal="clicked">refresh:TOGGLEMETOO</action>
+				<action signal="clicked">refresh:TOGGLEME</action>
+			</button>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

@@ -1,0 +1,134 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcnbkCreate() {
+	for f in 0 1 2 3 4; do
+		echo '<vbox border-width="20">
+				<hbox border-width="70">
+					<text label="This is page '$f'"></text>
+				</hbox>'
+		if [ $1 -lt 2 ]; then echo '<hbox homogeneous="true">'; fi
+		if [ $1 -eq 0 ]; then
+			echo '<button use-stock="true" label="gtk-go-back">'
+			if [ $f -eq 0 ]; then
+				echo '<sensitive>false</sensitive>'
+			else
+				echo '<action>echo '$(($f - 1))' > '"$TMPDIR"'/inputfile</action>
+					<action>refresh:nbk'$1'</action>'
+			fi
+			echo '</button>
+				<button use-stock="true" label="gtk-go-forward">'
+			if [ $f -eq 4 ]; then
+				echo '<sensitive>false</sensitive>'
+			else
+				echo '<action>echo '$(($f + 1))' > '"$TMPDIR"'/inputfile</action>
+					<action>refresh:nbk'$1'</action>'
+			fi
+		elif [ $1 -eq 1 ]; then
+			echo '<button use-stock="true" label="gtk-refresh">
+					<action>refresh:nbk'$1'</action>'
+		fi
+		if [ $1 -lt 2 ]; then
+			echo '</button>
+				</hbox>'
+		fi
+		echo '</vbox>'
+	done
+	echo '<variable>nbk'$1'</variable>'
+	if [ $1 -eq 0 -o $1 -eq 2 ]; then
+		echo '<input file>'"$TMPDIR"'/inputfile</input>'
+	elif [ $1 -eq 1 ]; then
+		echo '<input>echo $(($RANDOM % 4))</input>'
+	elif [ $1 -eq 3 ]; then
+		echo '<input>"if [ $(<'"$TMPDIR"'/inputfile) -eq 4 ]; then echo 0 > '"$TMPDIR"'/inputfile
+			else echo $(($(<'"$TMPDIR"'/inputfile) + 1)) > '"$TMPDIR"'/inputfile; fi
+			echo $(<'"$TMPDIR"'/inputfile)"</input>'
+	fi
+}
+
+funcnbkMainCreate() {
+	for f in 0 1 2 3; do
+		echo '<vbox>
+				<vbox homogeneous="true" height-request="300">
+					<hbox homogeneous="true" width-request="500">'
+		if [ $f -eq 0 ]; then
+			echo '<notebook>
+					'"$(funcnbkCreate $f)"'
+				</notebook>'
+		elif [ $f -eq 1 ]; then
+			echo '<notebook tab-labels="One|Two|Three|Four|Five"
+					page="04" tab-vborder="12" tab-pos="0">
+					'"$(funcnbkCreate $f)"'
+				</notebook>'
+		elif [ $f -eq 2 ]; then
+			echo '<vbox>
+					<hscale range-min="0" range-max="4" value-pos="0">
+						<variable>hsc0</variable>
+						<action>save:hsc0</action>
+						<action>refresh:nbk'$f'</action>
+						<output file>'"$TMPDIR"'/inputfile</output>
+					</hscale>
+					<notebook show-tabs="false">
+						'"$(funcnbkCreate $f)"'
+					</notebook>
+				</vbox>'
+		elif [ $f -eq 3 ]; then
+			echo '<vbox>
+					<timer visible="false">
+						<action>refresh:nbk'$f'</action>
+					</timer>
+					<notebook show-tabs="false" show-border="false">
+						'"$(funcnbkCreate $f)"'
+					</notebook>
+				</vbox>'
+		fi
+		echo '</hbox>
+			</vbox>
+			<hseparator></hseparator>
+			<hbox>
+				<button use-stock="true" label="gtk-go-back">'
+		if [ $f -eq 0 ]; then
+			echo '<sensitive>false</sensitive>
+					<action>""</action>'
+		else
+			echo '<action>echo '$(($f - 1))' > '"$TMPDIR"'/inputfile</action>
+					<action>refresh:nbkMain</action>'
+		fi
+		echo '</button>
+				<button use-stock="true" label="gtk-go-forward">'
+		if [ $f -eq 3 ]; then
+			echo '<sensitive>false</sensitive>
+					<action>""</action>'
+		else
+			echo '<action>echo '$(($f + 1))' > '"$TMPDIR"'/inputfile</action>
+					<action>refresh:nbkMain</action>'
+		fi
+		echo '</button>
+				<button ok></button>
+			</hbox>
+		</vbox>'
+	done
+}
+
+echo 0 > "$TMPDIR"/inputfile
+
+export MAIN_DIALOG='
+<window title="Notebook Advanced" resizable="false">
+	<vbox>
+		<notebook show-tabs="false" show-border="false">
+			'"$(funcnbkMainCreate)"'
+			<variable>nbkMain</variable>
+			<input file>'"$TMPDIR"'/inputfile</input>
+		</notebook>
+    </vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+# Uncomment the following line to dump MAIN_DIALOG to a file:
+# ifs=$IFS; IFS=; echo $MAIN_DIALOG > nbkNotebook.txt; IFS=$ifs
+
+$GTKDIALOG --program=MAIN_DIALOG

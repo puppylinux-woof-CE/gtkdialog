@@ -1,3 +1,37 @@
+* Fri Sep 2 2011 Thunor <thunorsif@hotmail.com>
+- Added examples/button/COPYING-elementary-icons.
+- Added examples/button/button_image_position.
+- Added examples/button/button_image_toggle.
+- Added examples/button/no.svg.
+- Added examples/button/yes.svg.
+- Added examples/comboboxentry/comboboxentry_advanced.
+- Added examples/comboboxtext/comboboxtext_advanced.
+- Added examples/entry/entry_advanced.
+- Added examples/hbox/hbox_scrollable.
+- Added examples/hscale/hscale_advanced.
+- Added examples/hseparator/hseparator_advanced.
+- Added examples/menu/menu_advanced.
+- Added examples/menubar/menubar_advanced.
+- Added examples/menuitem/menuitem_advanced.
+- Added examples/miscellaneous/fileselect_advanced.
+- Renamed examples/miscellaneous/fileselect to fileselect_deprecated.
+- Added examples/miscellaneous/icon_names.txt.
+- Added examples/miscellaneous/stock_icon_test.
+- Added examples/miscellaneous/theme_icon_support.
+- Added examples/notebook/notebook_advanced.
+- Added examples/spinbutton/spinbutton_advanced.
+- Added examples/statusbar/statusbar_advanced.
+- Added examples/timer/timer_advanced.
+- Added examples/togglebutton/COPYING-elementary-icons.
+- Added examples/togglebutton/false.svg.
+- Added examples/togglebutton/togglebutton_advanced.
+- Added examples/togglebutton/true.svg.
+- Added examples/tree/tree_selection_mode.
+- Added examples/vbox/vbox_scrollable.
+- Added examples/vscale/vscale_advanced.
+- Added examples/vseparator/vseparator_advanced.
+- Removed the bashism "function " from a few existing examples.
+
 * Thu Sep 1 2011 Thunor <thunorsif@hotmail.com>
 - Reorganised the examples folder into subfolders.
 - Updated Makefile.am and configure.in.
