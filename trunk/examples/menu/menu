@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog
 IMAGEFILE="$(find /usr/share/pixmaps -maxdepth 1 -type f | head -1)"
 
 export MAIN_DIALOG='
-<window title="Menu" resizable="false" width-request="320" height-request="240"  border-width="0">
+<window title="Menu" resizable="false" width-request="360" height-request="240"  border-width="0">
 	<vbox spacing="0">
 		<menubar>
 			<menu use-underline="true">

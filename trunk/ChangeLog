@@ -1,5 +1,6 @@
 * Sat Sep 3 2011 Thunor <thunorsif@hotmail.com>
-- Renamed examples/menu/menu_advanced to menu and simplified it.
+- Created new menu, menubar and menuitemseparator examples so that now
+  all of the menu related examples are unique.
 
 * Fri Sep 2 2011 Thunor <thunorsif@hotmail.com>
 - Added examples/button/COPYING-elementary-icons.

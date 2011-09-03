@@ -2,48 +2,47 @@
 
 GTKDIALOG=gtkdialog
 
+IMAGEFILE=( $(find /usr/share/icons -maxdepth 1 -type f | head -3) )
+
 export MAIN_DIALOG='
-<vbox>
-  <menubar>
-    <menu>
-      <menuitem stock="gtk-open">
-        <action>echo You selected the open menu item.</action>
-      </menuitem>
-      <menuitem stock="gtk-save">
-        <action>echo You selected the open menu item.</action>
-      </menuitem>
-      <menuitemseparator></menuitemseparator>
-      <menuitem stock="gtk-quit">
-        <action>echo You selected the quit menu item</action>
-        <action type="exit">exit by menu</action>
-      </menuitem>
-      <label>File</label>
-    </menu>
-    <menu>
-      <menuitem stock="gtk-copy">
-        <action>echo You selected the copy menuitem.</action>
-      </menuitem>
-      <menuitem stock="gtk-cut">
-        <action>echo You selected the cut menuitem.</action>
-      </menuitem>
-      <menuitem stock="gtk-paste">
-        <action>echo You selected the paste menuitem.</action>
-      </menuitem>
-      <label>Edit</label>
-    </menu>
-    <menu>
-      <menuitem>
-        <label>A menu item</label>
-        <action>echo You selected the custom menu item.</action>
-      </menuitem>
-      <label>Item</label>
-    </menu>
-  </menubar>
-  <hbox>
-    <button cancel></button>
-    <button ok></button>
-  </hbox>
-</vbox>
+<window title="MenuBar" resizable="false" width-request="360" height-request="240"  border-width="0">
+	<vbox spacing="0">
+		<menubar>
+			<menu label="_Stock Images" use-underline="true">
+				<menuitem stock-id="gtk-about"></menuitem>
+				<menuitem stock-id="gtk-add"></menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<action>exit:Quit</action>
+				</menuitem>
+			</menu>
+			<menu use-underline="true">
+				<menuitem icon-name="abiword" label="AbiWord"></menuitem>
+				<menuitem icon-name="gnumeric" label="Gnumeric 32px">
+					<height>32</height>
+				</menuitem>
+				<menuitem icon-name="gimp" label="_Gimp 48px" use-underline="true">
+					<height>48</height>
+				</menuitem>
+				<label>"_Theme Images"</label>
+			</menu>
+			<menu use-underline="true">
+				<menuitem image-name="'"${IMAGEFILE[0]}"'" label="Original Size"></menuitem>
+				<menuitem image-name="'"${IMAGEFILE[1]}"'">
+					<label>32px</label>
+					<height>32</height>
+					<width>32</width>
+				</menuitem>
+				<menuitem image-name="'"${IMAGEFILE[2]}"'" label="48px">
+					<height>48</height>
+					<width>48</width>
+				</menuitem>
+				<label>"_File Images"</label>
+			</menu>
+		</menubar>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
 '
 
 $GTKDIALOG --program=MAIN_DIALOG
