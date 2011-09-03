@@ -1,3 +1,6 @@
+* Sat Sep 3 2011 Thunor <thunorsif@hotmail.com>
+- Renamed examples/menu/menu_advanced to menu and simplified it.
+
 * Fri Sep 2 2011 Thunor <thunorsif@hotmail.com>
 - Added examples/button/COPYING-elementary-icons.
 - Added examples/button/button_image_position.

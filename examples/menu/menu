@@ -1,0 +1,34 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+IMAGEFILE="$(find /usr/share/pixmaps -maxdepth 1 -type f | head -1)"
+
+export MAIN_DIALOG='
+<window title="Menu" resizable="false" width-request="320" height-request="240"  border-width="0">
+	<vbox spacing="0">
+		<menubar>
+			<menu use-underline="true">
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<action>exit:Quit</action>
+				</menuitem>
+				<label>"_File"</label>
+			</menu>
+			<menu label="_Other" use-underline="true">
+				<menuitem stock-id="gtk-home" label="Stock Icon"></menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menu image-name="'"$IMAGEFILE"'" label="Image from File">
+					<menu icon-name="gimp" label="Theme Icon">
+						<menuitem label="Label Only"></menuitem>
+					</menu>
+					<height>16</height>
+					<width>16</width>
+				</menu>
+			</menu>
+		</menubar>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG
