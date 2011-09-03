@@ -42,10 +42,12 @@ export MAIN_DIALOG='
 				<menuitem stock-id="gtk-new" accel-key="0x4e" accel-mods="4">
 					<action>clear</action>
 					'"$(funcmuiCreate mui00.00 0 "New")"'
+				<menuitem stock-id="gtk-new" label="New (with _Template)">
+					'"$(funcmuiCreate mui00.01 0 "New (with _Template)")"'
 				<menuitemseparator></menuitemseparator>
 				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
 					<action>exit:Quit</action>
-					'"$(funcmuiCreate mui00.01 0 "Quit")"'
+					'"$(funcmuiCreate mui00.02 0 "Quit")"'
 				'"$(funcmuiCreate mnu00 0 "File")"'
 			<menu use-underline="true">
 				<menuitem stock-id="gtk-network"
@@ -54,7 +56,7 @@ export MAIN_DIALOG='
 				<menuitem icon-name="gnumeric" use-underline="true"
 					tooltip-markup="<span fgcolor='"'darkred'"'><b>Theme</b></span> <i>image</i> gnumeric">
 					'"$(funcmuiCreate mui01.01 1 "_Theme Image")"'
-				<menuitem icon-name="gnumeric" use-underline="true">
+				<menuitem icon-name="gimp" use-underline="true">
 					<width>32</width>
 					'"$(funcmuiCreate mui01.02 1 "_Theme Image Size 32")"'
 				<menuitem image-name="'"$TMPDIR"'/image.svg" use-underline="true"
@@ -66,8 +68,8 @@ export MAIN_DIALOG='
 				'"$(funcmuiCreate mnu01 1 "_Image")"'
 			<menu label="_Checkbox" use-underline="true">
 				<menuitem checkbox="true" use-underline="true" accel-key="0x31" accel-mods="4">
-					<action>if true enable:mui00.01</action>
-					<action>if false disable:mui00.01</action>
+					<action>if true enable:mui00.02</action>
+					<action>if false disable:mui00.02</action>
 					'"$(funcmuiCreate mui02.00 1 "Enable _Quit")"'
 				<menuitem checkbox="yes" use-underline="true" accel-key="0x32" accel-mods="4">
 					<action>if true enable:mnu01</action>
