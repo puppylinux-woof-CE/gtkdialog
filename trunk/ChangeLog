@@ -1,3 +1,6 @@
+* Sun Sep 4 2011 Thunor <thunorsif@hotmail.com>
+- Updated Makefile.am for the new examples.
+
 * Sat Sep 3 2011 Thunor <thunorsif@hotmail.com>
 - Created new menu, menubar and menuitemseparator examples so that now
   all of the menu related examples are unique.
