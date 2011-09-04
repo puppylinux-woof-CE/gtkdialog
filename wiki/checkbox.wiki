@@ -30,7 +30,7 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || label || Initial text || || || ||
-|| default || Initial state || || || ||
+|| default || Initial state || {{{true}}} or {{{false}}} || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
