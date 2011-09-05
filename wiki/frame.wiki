@@ -1,6 +1,6 @@
 #summary frame widget reference
 
-= vbox widget =
+= frame widget =
 A [http://developer.gnome.org/gtk/2.24/GtkFrame.html GtkFrame] containing a [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox]
 ----
 
