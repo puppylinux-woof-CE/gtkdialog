@@ -1,7 +1,7 @@
-#summary checkbox widget reference
+#summary radiobutton widget reference
 
-= checkbox widget =
-A [http://developer.gnome.org/gtk/2.24/GtkCheckButton.html GtkCheckButton]
+= radiobutton widget =
+A [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html GtkRadioButton]
 ----
 
 == Definition ==
@@ -10,7 +10,6 @@ A [http://developer.gnome.org/gtk/2.24/GtkCheckButton.html GtkCheckButton]
 	<label>text</label>
 	<default>state</default>
 	<variable>varname</variable>
-	<input>command</input>
 	<sensitive>state</sensitive>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
@@ -20,11 +19,10 @@ A [http://developer.gnome.org/gtk/2.24/GtkCheckButton.html GtkCheckButton]
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
-See the [http://developer.gnome.org/gtk/2.24/GtkCheckButton.html#GtkCheckButton.object-hierarchy GtkCheckButton] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html#GtkRadioButton.object-hierarchy GtkRadioButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-|| *Name* || *Description* || *Value* || *Since* ||
-|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+None.
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -32,7 +30,6 @@ Some of these may have tag attribute equivalents.
 || label || Initial text || || || ||
 || default || Initial state || {{{true}}} or {{{false}}} || || ||
 || variable || Shell variable name || || || ||
-|| input || Data input source || Shell command || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_^[1]^ || || ||
@@ -43,15 +40,13 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton-toggled toggled]", emitted when the state is changed.
 
-See also the [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton.signals GtkToggleButton] widget and ancestor class signals.
+See also the [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html#GtkRadioButton.signals GtkRadioButton] widget and ancestor class signals.
 
 == Functions ==
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
-|| refresh || Reload input data || Shell variable name || ||
-|| clear || Remove all widget data || Shell variable name || ||
 
 The following general functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
