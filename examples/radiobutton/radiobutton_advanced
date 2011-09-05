@@ -1,0 +1,77 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funcbtnCreate() {
+	echo '<button image-position="'$2'">
+			<label>"'"$3"'"</label>
+			<input file stock="'$4'"></input>
+			<action>echo "'"$5"' '$1'"</action>
+			<action type="'"$3"'">'$1'</action>
+		</button>'
+}
+
+funcrdoCreate() {
+	echo '<label>'"$2"'</label>
+			<variable>'$1'</variable>
+			<action>echo '$1' changed to $'$1'</action>
+		</radiobutton>'
+}
+
+export MAIN_DIALOG='
+<window title="RadioButton Advanced" resizable="false">
+	<vbox border-width="15" spacing="10">
+		<text>
+			<label>"Groups of radiobutton widgets are bound by containers
+i.e. the notebook, vbox, hbox and frame widgets."</label>
+		</text>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<radiobutton>
+				<action>if true enable:btnCancel</action>
+				'"$(funcrdoCreate rdo00 "Enable the Cancel button")"'
+			<radiobutton>
+				<action>if true disable:btnCancel</action>
+				'"$(funcrdoCreate rdo01 "Disable the Cancel button")"'
+		</hbox>
+		<hbox homogeneous="true">
+			'"$(funcbtnCreate rdo00 0 Disable gtk-no Disabling)"'
+			'"$(funcbtnCreate rdo00 0 Enable gtk-yes Enabling)"'
+			'"$(funcbtnCreate rdo01 0 Disable gtk-no Disabling)"'
+			'"$(funcbtnCreate rdo01 0 Enable gtk-yes Enabling)"'
+		</hbox>
+		<frame>
+			<radiobutton>
+				<action>if true enable:btnOK</action>
+				'"$(funcrdoCreate rdo10 "Enable the OK button")"'
+			<radiobutton active="true">
+				<action>if true disable:btnOK</action>
+				'"$(funcrdoCreate rdo11 "Disable the OK button (initially active=\"true\")")"'
+ 		</frame>
+		<hbox spacing="20">
+			<vbox>
+				<radiobutton draw-indicator="false">
+					'"$(funcrdoCreate rdo20 "draw-indicator=\"false\"")"'
+				<radiobutton draw-indicator="false">
+					<default>true</default>
+					'"$(funcrdoCreate rdo21 "default directive contains \"true\"")"'
+			</vbox>
+			<vseparator></vseparator>
+			<vbox>
+				<radiobutton>
+					'"$(funcrdoCreate rdo30 "Some label")"'
+				<radiobutton inconsistent="true">
+					'"$(funcrdoCreate rdo31 "inconsistent=\"true\"")"'
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button cancel><variable>btnCancel</variable></button>
+			<button ok><variable>btnOK</variable></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG
