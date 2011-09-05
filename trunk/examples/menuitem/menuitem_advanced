@@ -41,60 +41,60 @@ export MAIN_DIALOG='
 			<menu label="_File" use-underline="true">
 				<menuitem stock-id="gtk-new" accel-key="0x4e" accel-mods="4">
 					<action>clear</action>
-					'"$(funcmuiCreate mui00.00 0 "New")"'
+					'"$(funcmuiCreate mui00_00 0 "New")"'
 				<menuitem stock-id="gtk-new" label="New (with _Template)">
-					'"$(funcmuiCreate mui00.01 0 "New (with _Template)")"'
+					'"$(funcmuiCreate mui00_01 0 "New (with _Template)")"'
 				<menuitemseparator></menuitemseparator>
 				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
 					<action>exit:Quit</action>
-					'"$(funcmuiCreate mui00.02 0 "Quit")"'
+					'"$(funcmuiCreate mui00_02 0 "Quit")"'
 				'"$(funcmuiCreate mnu00 0 "File")"'
 			<menu use-underline="true">
 				<menuitem stock-id="gtk-network"
 					tooltip-text="Stock image gtk-network">
-					'"$(funcmuiCreate mui01.00 0 "Stock Image")"'
+					'"$(funcmuiCreate mui01_00 0 "Stock Image")"'
 				<menuitem icon-name="gnumeric" use-underline="true"
 					tooltip-markup="<span fgcolor='"'darkred'"'><b>Theme</b></span> <i>image</i> gnumeric">
-					'"$(funcmuiCreate mui01.01 1 "_Theme Image")"'
+					'"$(funcmuiCreate mui01_01 1 "_Theme Image")"'
 				<menuitem icon-name="gimp" use-underline="true">
 					<width>32</width>
-					'"$(funcmuiCreate mui01.02 1 "_Theme Image Size 32")"'
+					'"$(funcmuiCreate mui01_02 1 "_Theme Image Size 32")"'
 				<menuitem image-name="'"$TMPDIR"'/image.svg" use-underline="true"
 					tooltip-markup="<span fgcolor='"'darkgreen'"'><i>File</i></span> <b>image</b> image.svg">
-					'"$(funcmuiCreate mui01.03 1 "_File Image")"'
+					'"$(funcmuiCreate mui01_03 1 "_File Image")"'
 				<menuitem image-name="'"$TMPDIR"'/image.svg" use-underline="true">
 					<width>64</width>
-					'"$(funcmuiCreate mui01.04 1 "File Image _Scaled 64")"'
+					'"$(funcmuiCreate mui01_04 1 "File Image _Scaled 64")"'
 				'"$(funcmuiCreate mnu01 1 "_Image")"'
 			<menu label="_Checkbox" use-underline="true">
 				<menuitem checkbox="true" use-underline="true" accel-key="0x31" accel-mods="4">
-					<action>if true enable:mui00.02</action>
-					<action>if false disable:mui00.02</action>
-					'"$(funcmuiCreate mui02.00 1 "Enable _Quit")"'
+					<action>if true enable:mui00_02</action>
+					<action>if false disable:mui00_02</action>
+					'"$(funcmuiCreate mui02_00 1 "Enable _Quit")"'
 				<menuitem checkbox="yes" use-underline="true" accel-key="0x32" accel-mods="4">
 					<action>if true enable:mnu01</action>
 					<action>if false disable:mnu01</action>
-					'"$(funcmuiCreate mui02.01 1 "Enable _Image")"'
+					'"$(funcmuiCreate mui02_01 1 "Enable _Image")"'
 				<menuitem checkbox="yes" use-underline="true" accel-key="0x33" accel-mods="4">
-					<action>if true enable:mnu03.00</action>
-					<action>if false disable:mnu03.00</action>
-					'"$(funcmuiCreate mui02.02 1 "Enable _Color")"'
+					<action>if true enable:mnu03_00</action>
+					<action>if false disable:mnu03_00</action>
+					'"$(funcmuiCreate mui02_02 1 "Enable _Color")"'
 				'"$(funcmuiCreate mnu02 0 "Checkbox")"'
 			<menu use-underline="true">
 				<menu use-stock="true" label="gtk-select-color">
 					<menuitem radiobutton="true" use-underline="true" accel-key="0xffbf" accel-mods="0">
 						<action>if true funcimageCreate 1</action>
-						<action>refresh:mui01.04</action>
-						'"$(funcmuiCreate mui03.00.00 1 "File Image Scaled _Red")"'
+						<action>refresh:mui01_04</action>
+						'"$(funcmuiCreate mui03_00_00 1 "File Image Scaled _Red")"'
 					<menuitem radiobutton="false" use-underline="true" accel-key="0xffc0" accel-mods="0">
 						<action>if true funcimageCreate 2</action>
-						<action>refresh:mui01.04</action>
-						'"$(funcmuiCreate mui03.00.01 1 "File Image Scaled _Green")"'
+						<action>refresh:mui01_04</action>
+						'"$(funcmuiCreate mui03_00_01 1 "File Image Scaled _Green")"'
 					<menuitem radiobutton="no" use-underline="true" accel-key="0xffc1" accel-mods="">
 						<action>if true funcimageCreate 3</action>
-						<action>refresh:mui01.04</action>
-						'"$(funcmuiCreate mui03.00.02 1 "File Image Scaled _Blue")"'
-					'"$(funcmuiCreate mnu03.00 0 "Select Colour")"'
+						<action>refresh:mui01_04</action>
+						'"$(funcmuiCreate mui03_00_02 1 "File Image Scaled _Blue")"'
+					'"$(funcmuiCreate mnu03_00 0 "Select Colour")"'
 				'"$(funcmuiCreate mnu03 1 "_Radiobutton")"'
 		</menubar>
 	</vbox>
