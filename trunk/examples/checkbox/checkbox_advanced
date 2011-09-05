@@ -13,8 +13,9 @@ funcbtnCreate() {
 
 funcchkCreate() {
 	echo '<label>'"$2"'</label>
-		<variable>'$1'</variable>
-		<action>echo '$1' changed to $'$1'</action>'
+			<variable>'$1'</variable>
+			<action>echo '$1' changed to $'$1'</action>
+		</checkbox>'
 }
 
 export MAIN_DIALOG='
@@ -30,11 +31,10 @@ export MAIN_DIALOG='
 		</menubar>
 		<vbox border-width="20" spacing="10">
 			<checkbox>
-				'"$(funcchkCreate chk0 "Enable/disable the File menu")"'
 				<input>echo true</input>
 				<action>if true enable:mnuFile</action>
 				<action>if false disable:mnuFile</action>
-			</checkbox>
+				'"$(funcchkCreate chk0 "Enable/disable the File menu")"'
 			<hbox homogeneous="true">
 				'"$(funcbtnCreate chk0 2 Disable gtk-no Disabling)"'
 				'"$(funcbtnCreate chk0 2 Enable gtk-yes Enabling)"'
@@ -43,11 +43,10 @@ export MAIN_DIALOG='
 			</hbox>
 			<hseparator></hseparator>
 			<checkbox block-function-signals="true">
-				'"$(funcchkCreate chk1 "Enable/disable the File menu (block-function-signals=\"true\")")"'
 				<input>echo true</input>
 				<action>if true enable:mnuFile</action>
 				<action>if false disable:mnuFile</action>
-			</checkbox>
+				'"$(funcchkCreate chk1 "Enable/disable the File menu (block-function-signals=\"true\")")"'
 			<hbox homogeneous="true">
 				'"$(funcbtnCreate chk1 2 Disable gtk-no Disabling)"'
 				'"$(funcbtnCreate chk1 2 Enable gtk-yes Enabling)"'
@@ -57,22 +56,18 @@ export MAIN_DIALOG='
 			<hseparator></hseparator>
 			<hbox homogeneous="true">
 				<checkbox active="false">
-					'"$(funcchkCreate chk2 "active (initially false)")"'
-				</checkbox>
+					'"$(funcchkCreate chk2 "Initially active=\"false\"")"'
 				<vseparator></vseparator>
 				<checkbox active="true">
-					'"$(funcchkCreate chk3 "active (initially true)")"'
-				</checkbox>
+					'"$(funcchkCreate chk3 "Initially active=\"true\"")"'
 			</hbox>
 			<hseparator></hseparator>
 			<hbox homogeneous="true">
 				<checkbox draw-indicator="false">
 					'"$(funcchkCreate chk4 "draw-indicator=\"false\"")"'
-				</checkbox>
 				<vseparator></vseparator>
 				<checkbox inconsistent="true">
 					'"$(funcchkCreate chk5 "inconsistent=\"true\"")"'
-				</checkbox>
 			</hbox>
 		</vbox>
 	</vbox>
@@ -81,4 +76,3 @@ export MAIN_DIALOG='
 '
 
 $GTKDIALOG --program=MAIN_DIALOG
-#84 #90

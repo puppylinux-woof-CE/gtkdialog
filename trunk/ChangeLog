@@ -1,3 +1,7 @@
+* Mon Sep 5 2011 Thunor <thunorsif@hotmail.com>
+- Tweaked and shrunk the recently added checkbox_advanced example.
+- Added examples/radiobutton/radiobutton_advanced.
+
 * Sun Sep 4 2011 Thunor <thunorsif@hotmail.com>
 - Updated Makefile.am for the new examples.
 
