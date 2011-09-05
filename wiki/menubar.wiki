@@ -1,0 +1,32 @@
+#summary menubar widget reference
+
+= menubar widget =
+A [http://developer.gnome.org/gtk/2.24/GtkMenuBar.html GtkMenuBar]
+----
+
+== Definition ==
+{{{
+<menubar>
+	menu...
+</menubar>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+None.
+
+The following custom tag attributes are available:
+None.
+
+== Directives ==
+None.
+
+== Signals ==
+None.
+
+== Functions ==
+None.
+
+== Notes ==
+None.
+----
