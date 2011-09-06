@@ -23,8 +23,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkTextView.html GtkTextView] packed insi
 See the [http://developer.gnome.org/gtk/2.24/GtkTextView.html#GtkTextView.object-hierarchy GtkTextView] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-|| *Name* || *Description* || *Value* || *Since* ||
-|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+None.
 
 == Directives ==
 Some of these may have tag attribute equivalents.
