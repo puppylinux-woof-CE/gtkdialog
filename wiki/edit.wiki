@@ -1,0 +1,71 @@
+#summary edit widget reference
+
+= edit widget =
+A [http://developer.gnome.org/gtk/2.24/GtkTextView.html GtkTextView] packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+----
+
+== Definition ==
+{{{
+<edit tag_attr="value"...>
+	<default>state</default>
+	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
+	<input file>filename</input>
+	<sensitive>state</sensitive>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+	<output file>filename</output>
+</edit>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkTextView.html#GtkTextView.object-hierarchy GtkTextView] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+|| *Name* || *Description* || *Value* || *Since* ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| default || Initial text || || || ||
+|| variable || Shell variable name || || || ||
+|| height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
+|| width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
+|| input file || Data input source || Filename || || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_^[4]^ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_^[4]^ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+|| output file || Data output target || Filename || || ||
+
+== Signals ==
+The default signal is ?
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkTextView.html#GtkTextView.signals GtkTextView] widget and ancestor class signals.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || ||
+|| clear || Remove all widget data || Shell variable name || ||
+|| removeselected || Remove selected widget data || Shell variable name || ||
+
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.
+----
