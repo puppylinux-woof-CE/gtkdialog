@@ -90,8 +90,11 @@ fill_clist_by_items(AttributeSet *Attr,
 		return;
 	
 	while (text != NULL){
-		sliced = linecutter(text, separator);
+		/* sliced = linecutter(text, separator);	Redundant: Bug */
+		sliced = linecutter(g_strdup(text), separator);
 		gtk_clist_append(GTK_CLIST(list), sliced->line);
+		/* Free linecutter memory */
+		list_t_free(sliced);
 next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
 	}
 
@@ -1249,8 +1252,11 @@ widget_tree_refresh(variable *var)
 	fill_tree_model_by_items(tree_model, var);
 }
 
-
-
+/* Thunor: Using fill_clist_by_items leaves the top row selected but
+ * fill_table_by_command doesn't. I can't change this behaviour because
+ * it could break an existing application somewhere. I did notice that
+ * there exists a function fill_clist_by_command which does select the
+ * top row but this function isn't being used anywhere */
 
 void 
 widget_table_refresh(variable * var)

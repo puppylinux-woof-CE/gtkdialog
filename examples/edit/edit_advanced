@@ -33,7 +33,7 @@ echo > "$TMPDIR"/inoutfile
 export MAIN_DIALOG='
 <window title="Edit Advanced" resizable="false">
 	<vbox border-width="5" spacing="10">
-		<hbox border-width="0" spacing="10">
+		<hbox spacing="10">
 			<edit accepts-tab="false" wrap-mode="0">
 				<action signal="show">echo "wrap-mode=\"0\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "accepts-tab=\"false\"" >> '"$TMPDIR"'/inoutfile</action>
@@ -52,7 +52,7 @@ export MAIN_DIALOG='
 				'"$(funcediCreate edi03 $ediWidth $ediHeight 1 0)"'
 		</hbox>
 		<hseparator></hseparator>
-		<hbox border-width="0" spacing="10">
+		<hbox spacing="10">
 			<edit justification="0" wrap-mode="1">
 				<action signal="show">echo "wrap-mode=\"1\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "justification=\"0\"" >> '"$TMPDIR"'/inoutfile</action>
@@ -71,7 +71,7 @@ export MAIN_DIALOG='
 				'"$(funcediCreate edi07 $ediWidth $ediHeight 1 0)"'
 		</hbox>
 		<hseparator></hseparator>
-		<hbox border-width="0" spacing="10">
+		<hbox spacing="10">
 			<edit left-margin="'$gap'" wrap-mode="2">
 				<action signal="show">echo "wrap-mode=\"2\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "left-margin=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
@@ -90,7 +90,7 @@ export MAIN_DIALOG='
 				'"$(funcediCreate edi11 $ediWidth $ediHeight 1 0)"'
 		</hbox>
 		<hseparator></hseparator>
-		<hbox border-width="0" spacing="10">
+		<hbox spacing="10">
 			<edit pixels-below-lines="'$gap'" wrap-mode="3">
 				<action signal="show">echo "wrap-mode=\"3\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "pixels-below-lines=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
@@ -104,13 +104,13 @@ export MAIN_DIALOG='
 				'"$(funcediCreate edi14 $ediWidth $ediHeight 0 0)"'
 		</hbox>
 		<hseparator></hseparator>
-		<hbox border-width="0" spacing="10">
+		<hbox spacing="10">
 			<edit>
 				<action signal="show">echo "Type something here and press some buttons." > '"$TMPDIR"'/inoutfile</action>
 				<output file>'"$TMPDIR"'/inoutfile</output>
 				'"$(funcediCreate edi15 $ediWidth $ediHeight 1 0)"'
 		</hbox>
-		<hbox border-width="0" spacing="32">
+		<hbox spacing="32">
 			'"$(funcbtnCreate edi15 0 Disable gtk-no Disabling)"'
 			'"$(funcbtnCreate edi15 0 Enable gtk-yes Enabling)"'
 			'"$(funcbtnCreate edi15 0 Clear gtk-clear Clearing)"'
