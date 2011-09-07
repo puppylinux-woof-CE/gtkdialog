@@ -265,6 +265,37 @@ void button_toggled(GtkToggleButton *button, gpointer str)
  *                                                                     *
  ***********************************************************************/
 
+void list_selection(GtkWidget *list, gpointer Attr)
+{
+	GList *element;
+	gchar *signal;
+	gchar *command;
+	gchar *type;
+
+	if (Attr == NULL)
+		return;
+
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
+
+	/* Thunor: This code does not support <action signal="type">.
+	 * This callback is connected to the "selection-changed" signal,
+	 * therefore if there exists an action directive specifying a
+	 * particular signal then that will be executed as well.
+	 * 
+	 * This widget was in fact deprecated in GTK+ 2.0 anyway */
+	while (command != NULL){
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		execute_action(list, command, type);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
+	}
+
+	return;
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 {
 #ifdef DEBUG_TRANSITS
@@ -696,6 +727,42 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+void table_selection(GtkWidget *clist, gint row, gint column,
+	GdkEventButton *event, gpointer Attr)
+{
+	GList *element;
+	gchar *signal;
+	gchar *command;
+	gchar *type;
+
+	if (Attr == NULL)
+		return;
+
+	variables_set_row_column(
+		attributeset_get_first(&element, Attr, ATTR_VARIABLE),
+		row, column);
+
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
+
+	/* Thunor: This code does not support <action signal="type">.
+	 * This callback is connected to the "select-row" signal,
+	 * therefore if there exists an action directive specifying a
+	 * particular signal then that will be executed as well.
+	 * 
+	 * This widget was in fact deprecated in GTK+ 2.0 anyway */
+	while (command != NULL){
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		execute_action(clist, command, type);
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
+	}
+
+	return;
 }
 
 /***********************************************************************

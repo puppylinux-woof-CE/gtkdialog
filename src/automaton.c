@@ -149,56 +149,6 @@ widget_connect_signals(
 	return TRUE;
 }
 
-void 
-table_selection(GtkWidget      *clist, 
-		gint            row, 
-		gint            column, 
-		GdkEventButton *event, 
-		gpointer        Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;	
-	
-	if (Attr == NULL)
-		return;
-    
-	variables_set_row_column(
-		attributeset_get_first(&element, Attr, ATTR_VARIABLE),
-		row, column);
-
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		execute_action(clist, command, type);
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-	return;
-	
-}
-
-void list_selection(GtkWidget * list, gpointer Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;	
-	
-	if (Attr == NULL)
-		return;
-
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		execute_action(list, command, type);
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-	return;
-}
-
 int 
 execute_action(GtkWidget *widget, 
 		const char *command, 
