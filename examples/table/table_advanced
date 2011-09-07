@@ -61,21 +61,6 @@ export MAIN_DIALOG='
 							echo $(<'"$TMPDIR"'/inputfile)
 							IFS=$ifs"</input>
 					<action>echo "tbl1 \"$tbl1\" selected"</action>
-
-			<action signal="button-press-event">echo button-press_event</action>
-			<action signal="button-release-event">echo button-release-event</action>
-			<action signal="configure-event">echo configure-event</action>
-			<action signal="enter-notify-event">echo enter-notify-event</action>
-			<action signal="leave-notify-event">echo leave-notify-event</action>
-			<action signal="focus-in-event">echo focus-in-event</action>
-			<action signal="focus-out-event">echo focus-out-event</action>
-			<action signal="key-press-event">echo key-press-event</action>
-			<action signal="key-release-event">echo key-release-event</action>
-			<action signal="hide">echo hide</action>
-			<action signal="show">echo show</action>
-			<action signal="map-event">echo map-event</action>
-			<action signal="unmap-event">echo unmap-event</action>
-
 				</table>
 				<hbox>
 					'"$(funcbtnCreate tbl1 2 Disable gtk-no Disabling)"'
