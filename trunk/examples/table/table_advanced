@@ -1,0 +1,98 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+tblWidth=320; tblHeight=300
+
+funcbtnCreate() {
+	echo '<button image-position="'$2'">
+			<label>"'"$3"'"</label>
+			<input file stock="'$4'"></input>
+			<action>echo "'"$5"' '$1'"</action>
+			<action type="'"$3"'">'$1'</action>
+		</button>'
+}
+
+funcinputfileCreate() {
+	echo "$RANDOM|$RANDOM|$RANDOM|$RANDOM" > "$TMPDIR"/inputfile
+	for f in 1 2 3 4 5 6 7 8 9; do
+		echo "$RANDOM|$RANDOM|$RANDOM|$RANDOM" >> "$TMPDIR"/inputfile
+	done
+}; export -f funcinputfileCreate
+
+export MAIN_DIALOG='
+<window title="Table Advanced" resizable="false">
+	<vbox border-width="5" spacing="10">
+		<hbox spacing="10">
+			<vbox spacing="10">
+				<text label="Input via the <item> directive"></text>
+				<table>
+					<variable>tbl0</variable>
+					<label>Column 0  |Column 1  |Column 2  |Column 3  </label>
+					<height>'$tblHeight'</height>
+					<width>'$tblWidth'</width>
+					'$(for f in 1 2 3 4 5 6 7 8 9 10; do
+						echo "<item>$RANDOM|$RANDOM|$RANDOM|$RANDOM</item>"
+					done)'
+					<action>echo "tbl0 \"$tbl0\" selected"</action>
+				</table>
+				<hbox>
+					'"$(funcbtnCreate tbl0 2 Disable gtk-no Disabling)"'
+					'"$(funcbtnCreate tbl0 2 Enable gtk-yes Enabling)"'
+					'"$(funcbtnCreate tbl0 2 Clear gtk-clear Clearing)"'
+					'"$(funcbtnCreate tbl0 2 Removeselected gtk-delete Deleting)"'
+					'"$(funcbtnCreate tbl0 2 Refresh gtk-refresh Refreshing)"'
+				</hbox>
+			</vbox>
+			<vseparator></vseparator>
+			<vbox spacing="10">
+				<text label="Input via the <input> directive"></text>
+				<table>
+					<variable>tbl1</variable>
+					<label>Column 0  |Column 1  |Column 2  |Column 3  </label>
+					<height>'$tblHeight'</height>
+					<width>'$tblWidth'</width>
+					<input>"funcinputfileCreate
+							ifs=$IFS
+							IFS=
+							echo $(<'"$TMPDIR"'/inputfile)
+							IFS=$ifs"</input>
+					<action>echo "tbl1 \"$tbl1\" selected"</action>
+
+			<action signal="button-press-event">echo button-press_event</action>
+			<action signal="button-release-event">echo button-release-event</action>
+			<action signal="configure-event">echo configure-event</action>
+			<action signal="enter-notify-event">echo enter-notify-event</action>
+			<action signal="leave-notify-event">echo leave-notify-event</action>
+			<action signal="focus-in-event">echo focus-in-event</action>
+			<action signal="focus-out-event">echo focus-out-event</action>
+			<action signal="key-press-event">echo key-press-event</action>
+			<action signal="key-release-event">echo key-release-event</action>
+			<action signal="hide">echo hide</action>
+			<action signal="show">echo show</action>
+			<action signal="map-event">echo map-event</action>
+			<action signal="unmap-event">echo unmap-event</action>
+
+				</table>
+				<hbox>
+					'"$(funcbtnCreate tbl1 2 Disable gtk-no Disabling)"'
+					'"$(funcbtnCreate tbl1 2 Enable gtk-yes Enabling)"'
+					'"$(funcbtnCreate tbl1 2 Clear gtk-clear Clearing)"'
+					'"$(funcbtnCreate tbl1 2 Removeselected gtk-delete Deleting)"'
+					'"$(funcbtnCreate tbl1 2 Refresh gtk-refresh Refreshing)"'
+				</hbox>
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

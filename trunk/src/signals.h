@@ -30,6 +30,8 @@ void button_pressed_attr(GtkWidget *button, AttributeSet *Attr);
 void button_released_attr(GtkWidget *button, AttributeSet *Attr);
 void button_toggled(GtkToggleButton *button, gpointer str);
 
+void list_selection(GtkWidget *list, gpointer Attr);
+
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet  *Attr);
 gboolean on_any_widget_button_pressed(GtkWidget *widget,
 	GdkEventButton *event, AttributeSet *Attr);
@@ -69,6 +71,10 @@ void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr);
 gboolean on_any_widget_unmap_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr);
 void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
+
+void table_selection(GtkWidget *clist, gint row, gint column,
+	GdkEventButton *event, gpointer Attr);
+
 gint window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data);
 void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
