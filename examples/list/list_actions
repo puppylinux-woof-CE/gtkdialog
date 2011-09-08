@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# Thunor: This example is broken: the action appears to be the cause.
-
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
