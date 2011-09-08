@@ -66,6 +66,16 @@ fill_list_by_items(AttributeSet *Attr,
 	
 	while (text != NULL) {
 		item = gtk_list_item_new_with_label(text);
+		/* Thunor: 2001-09-08: Refreshing items should work the same way
+		 * as refreshing data from a command but there is an instruction
+		 * missing here and it is this:
+		 * 
+		 * gtk_widget_show(item);
+		 * 
+		 * The problem is that if I add it then it could uncover errors
+		 * in people's applications or there may exist applications that
+		 * are designed around the fact that cleared items won't reappear
+		 * but data from a command will. Therefore I'm not fixing it */
 		gtk_object_set_user_data(GTK_OBJECT(item), (gpointer) text);
 		gtk_container_add(GTK_CONTAINER(list), item);
 next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
