@@ -3,6 +3,7 @@
 - Found a bug in fill_list_by_items that doesn't show the newly reloaded
   items on a refresh. Unfortunately this is the type of bug that some
   existing appications might've been designed around so I'm leaving it.
+- Added examples/list/list_advanced.
 
 * Wed Sep 7 2011 Thunor <thunorsif@hotmail.com>
 - Fixed a bug in fill_clist_by_items whereby the item string was being
