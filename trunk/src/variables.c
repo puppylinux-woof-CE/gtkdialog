@@ -813,17 +813,23 @@ _variables_export(variable *actual)
 				itemlist = GTK_LIST(actual->Widget)->children;
 				n = 0;
 				while (itemlist != NULL) {
+					/* Thunor: Well, here's the bug that was making the
+					 * list widget hang: I think it was assumed that the
+					 * continue instruction was being placed inside the
+					 * nonexistent 'if' block.	Redundant: Bug
 					if (itemlist->data == NULL) 
 						itemlist = itemlist->next;
-						continue;
-					text = gtk_object_get_user_data(itemlist->data);
-					if (n == 0)
-						tmp = g_strconcat(line, "'", text, "'", NULL);
-					else
-						tmp = g_strconcat(line, " '", text, "'", NULL);
-					g_free(line);
-					line = tmp;
-					++n;
+						continue; */
+					if (itemlist->data != NULL) {
+						text = gtk_object_get_user_data(itemlist->data);
+						if (n == 0)
+							tmp = g_strconcat(line, "'", text, "'", NULL);
+						else
+							tmp = g_strconcat(line, " '", text, "'", NULL);
+						g_free(line);
+						line = tmp;
+						++n;
+					}
 					itemlist = itemlist->next;
 				}
 				putenv(line);
