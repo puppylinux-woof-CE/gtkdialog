@@ -1,0 +1,97 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+lstWidth=170; lstHeight=200
+
+funcbtnCreate() {
+	echo '<button image-position="'$2'">
+			<input file stock="'$4'"></input>
+			<action>echo "'"$5"' '$1'"</action>
+			<action type="'"$3"'">'$1'</action>
+		</button>'
+}
+
+funcinputfileCreate() {
+	echo "$RANDOM" > "$TMPDIR"/inputfile
+	for f in 1 2 3 4 5 6 7 8 9; do
+		echo "$RANDOM" >> "$TMPDIR"/inputfile
+	done
+}; export -f funcinputfileCreate
+
+funclstCreate() {
+	echo '<variable>'$1'</variable>
+		<height>'$lstHeight'</height>
+		<width>'$lstWidth'</width>
+		<action>echo "'$1' \"$'$1'\" selected"</action>'
+	if [ $1 = "lst0" ]; then
+		for f in 1 2 3 4 5 6 7 8 9 10; do
+			echo "<item>$RANDOM</item>"
+		done
+	else
+		echo '<input>"funcinputfileCreate
+			ifs=$IFS
+			IFS=
+			echo $(<'"$TMPDIR"'/inputfile)
+			IFS=$ifs"</input>'
+	fi
+	echo '</list>
+		<hbox>
+			'"$(funcbtnCreate $1 2 Disable gtk-no Disabling)"'
+			'"$(funcbtnCreate $1 2 Enable gtk-yes Enabling)"'
+			'"$(funcbtnCreate $1 2 Clear gtk-clear Clearing)"'
+			'"$(funcbtnCreate $1 2 Removeselected gtk-delete Deleting)"'
+			'"$(funcbtnCreate $1 2 Refresh gtk-refresh Refreshing)"'
+		</hbox>'
+}
+
+export MAIN_DIALOG='
+<window title="List Advanced" resizable="false">
+	<vbox border-width="5" spacing="10">
+		<text width-request="550" label="'"Items should reload when refreshed but a bug is currently preventing them from showing.
+Unfortunately fixing this could break existing applications that are either syntactically
+incorrect or designed to accommodate this quirk, so I'm going to have to leave it.
+
+The default selection-mode is 1 (GTK_SELECTION_SINGLE) and another useful and
+supported mode is 2 (GTK_SELECTION_BROWSE). The code to support mode 3
+(GTK_SELECTION_MULTIPLE) has not been written.
+
+Although plenty of GtkWidget signals are connected-up for this widget, the code does
+not differentiate between <action> and <action signal='type'> directives and so when
+a default signal is emitted it will erroneously execute all <action*> directives.
+
+GTK+ deprecated this widget in GTK+ 2.0 in favour of the GtkTreeView (Gtkdialog's
+<tree>) widget, therefore it would not be economical to develop this any further."'"></text>
+		<hseparator></hseparator>
+		<hbox spacing="10">
+			<vbox spacing="10">
+				<text label="Input via <item>"></text>
+				<list>
+					'"$(funclstCreate lst0)"'
+			</vbox>
+			<vseparator></vseparator>
+			<vbox spacing="10">
+				<text label="Input via <input>"></text>
+				<list>
+					'"$(funclstCreate lst1)"'
+			</vbox>
+			<vseparator></vseparator>
+			<vbox spacing="10">
+				<text><label>selection-mode="2"</label></text>
+				<list selection-mode="2">
+					'"$(funclstCreate lst2)"'
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

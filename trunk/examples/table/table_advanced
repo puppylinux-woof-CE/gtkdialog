@@ -26,6 +26,13 @@ funcinputfileCreate() {
 export MAIN_DIALOG='
 <window title="Table Advanced" resizable="false">
 	<vbox border-width="5" spacing="10">
+		<text width-request="680" label="'"Although plenty of GtkWidget signals are connected-up for this widget, the code does not differentiate between
+<action> and <action signal='type'> directives and so when a default signal is emitted it will erroneously
+execute all <action*> directives.
+
+GTK+ deprecated this widget in GTK+ 2.0 in favour of the GtkTreeView (Gtkdialog's <tree>) widget, therefore
+it would not be economical to develop this any further."'"></text>
+		<hseparator></hseparator>
 		<hbox spacing="10">
 			<vbox spacing="10">
 				<text label="Input via the <item> directive"></text>
