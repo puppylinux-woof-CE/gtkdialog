@@ -51,6 +51,7 @@
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
 #include "widget_timer.h"
+#include "widget_tree.h"
 #include "signals.h"
 
 #undef DEBUG
@@ -302,6 +303,11 @@ void print_command(instruction command)
 		case WIDGET_TOGGLEBUTTON:
 			printf("(new togglebutton())");
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			printf("(new tree())");
+			break;
+#endif
 
 	case WIDGET_LABEL:
 	    printf("(new text())");
@@ -359,9 +365,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_GVIM:
 	    printf("(new gvim())");
-	    break;
-	case WIDGET_TREE:
-	    printf("(new tree())");
 	    break;
 	case WIDGET_CHOOSER:
 	    printf("(new chooser())");
@@ -560,6 +563,11 @@ void print_token(token Token)
 		case WIDGET_TOGGLEBUTTON:
 			printf("(TOGGLEBUTTON)");
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			printf("(TREE)");
+			break;
+#endif
 
 
 	case WIDGET_LABEL:
@@ -615,9 +623,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_GVIM:
 		printf("(GVIM)");
-		break;
-	case WIDGET_TREE:
-		printf("(TREE)");
 		break;
 	case WIDGET_CHOOSER:
 		printf("(CHOOSER)");
@@ -1230,280 +1235,6 @@ create_gvim(AttributeSet * Attr)
 	return fake;
 }
 
-
-/******************************************************************************
- * Handling TreeView widgets. The model always has the following columns:     *
- *   0) "pixbuf"     GdkPixbuf                                                *
- *   1) "icon-name"  gchararray                                               *
- *   2) "stock-id"   gchararray                                               *
- *                                                                            *
- * We create the TreeStore in the following function:                         *
- *   gtkdialog_tree_store_new                                                 *
- * We create the TreeView in:                                                 *
- *   create_tree_view                                                         *
- *                                                                            *
- *                                                                            *
- ******************************************************************************/
-static GtkTreeStore *
-gtkdialog_tree_store_new(gint ndatacolumn)
-{
-	GtkTreeStore *tree_store;
-	GType        *types;
-	gint          n;
-	
-	PIP_DEBUG("ndatacolumn: %d", ndatacolumn);
-
-	types = g_new(GType, ndatacolumn + FirstDataColumn);
-	types[ColumnPixbuf]   = G_TYPE_POINTER;
-	types[ColumnIconName] = G_TYPE_STRING;
-	types[ColumnStockId]  = G_TYPE_STRING;
-
-	for (n = FirstDataColumn; n < ndatacolumn + FirstDataColumn; ++n) {
-		types[n] = G_TYPE_STRING;
-	}
-	
-	tree_store = gtk_tree_store_newv(ndatacolumn + FirstDataColumn, types);
-	return tree_store;
-}
-
-
-/*
- * Creating tree store from <label></label> tags.
- */
-static GtkTreeStore *
-create_store_from_label(AttributeSet *Attr)
-{
-	GList            *element;
-	GtkTreeStore     *treestore;
-	gchar            *label;
-	list_t           *columns = NULL;
-	gint              ncolumns;
-
-	PIP_DEBUG("Attributeset: %p", Attr);
-
-	if (!attributeset_is_avail(Attr, ATTR_LABEL)) {
-		//g_warning("%s(): TreeView with no label.", __func__);
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Column0");
-		//return NULL;
-	}
-	/*
-	 * We create as much columns as much the label tag suggests.
-	 */
-	label = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
-	columns = linecutter(label, '|');
-	ncolumns = columns->n_lines;
-	// FIXME: swe should free some memory here
-
-	treestore = gtkdialog_tree_store_new(ncolumns);
-
-	return treestore;
-}
-
-
-#if GTK_CHECK_VERSION(2,4,0)
-void 
-pixmap_column_cell_layout_function(
-		GtkCellLayout    *cell_layout, 
-		GtkCellRenderer  *cell, 
-		GtkTreeModel     *tree_model, 
-		GtkTreeIter      *iter, 
-		GtkTreeView      *treeview)
-{
-	gchar *stock_id;
-	gchar *icon_name;
-
-	gtk_tree_model_get(tree_model, iter,
-			ColumnStockId,  &stock_id,
-			ColumnIconName, &icon_name,
-			-1);
-
-	if (stock_id != NULL) {
-		PIP_DEBUG("This row has a stock_id: '%s'", stock_id);
-		g_object_set(G_OBJECT(cell), 
-			"stock-id", stock_id,
-			NULL);
-		return;
-	}
-
-	if (icon_name != NULL) {
-		PIP_DEBUG("This row has a icon_name: '%s'", icon_name);
-		g_object_set(G_OBJECT(cell), 
-			"icon-name", icon_name,
-			NULL);
-		return;
-	}
-
-	stock_id = g_object_get_data(G_OBJECT(treeview), "stock");
-	if (stock_id != NULL) {
-		PIP_DEBUG("This row has a default icon stock_id(stock): '%s'",
-				stock_id);
-		g_object_set(G_OBJECT(cell), 
-			"stock-id", stock_id,
-			NULL);
-		return;
-	}
-	
-	stock_id = g_object_get_data(G_OBJECT(treeview), "stock_id");
-	if (stock_id != NULL) {
-		PIP_DEBUG("This row has a default icon stock_id(stock_id): '%s'",
-				stock_id);
-		g_object_set(G_OBJECT(cell), 
-			"stock-id", stock_id,
-			NULL);
-		return;
-	}
-
-	stock_id = g_object_get_data(G_OBJECT(treeview), "icon");
-	if (stock_id != NULL) {
-		PIP_DEBUG("This row has a default icon_name(icon): '%s'",
-				stock_id);
-		g_object_set(G_OBJECT(cell), 
-			"icon-name", stock_id,
-			NULL);
-		return;
-	}
-	
-	stock_id = g_object_get_data(G_OBJECT(treeview), "icon_name");
-	if (stock_id != NULL) {
-		PIP_DEBUG("This row has a default icon_name(icon_name): '%s'",
-				stock_id);
-		g_object_set(G_OBJECT(cell), 
-			"icon-name", stock_id,
-			NULL);
-		return;
-	}
-
-	PIP_DEBUG("We have no icon at all.");
-}
-
-static GtkWidget *
-create_tree_view(
-		AttributeSet *Attr, 
-		GtkTreeStore *store)
-{
-	GList              *element;
-	GtkWidget          *tree_view;
-	GtkCellRenderer    *renderer;
-	GtkTreeViewColumn  *column;
-	list_t             *columns;
-	char               *headline = NULL;
-	int                 n;
-	
-	PIP_DEBUG("Attr: %p store: %p", Attr, store);
-
-	if (!attributeset_is_avail(Attr, ATTR_LABEL)) {
-		//g_warning("%s(): TreeView with no label.", __func__);
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Column0");
-		//return NULL;
-	}
-
-	headline = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
-	columns = linecutter(headline, '|');
-	
-	/*
-	 * We create the TreeView here.
-	 */
-	tree_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL (store));
-	/*
-	 * The first column will hold two cell renderer. One for the pixmap with
-	 * a complex cell data function and one text renderer with the first
-	 * real data column given by the user.
-	 */
-	column = gtk_tree_view_column_new();
-	gtk_tree_view_column_set_title(column, columns->line[0]);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
-	gtk_tree_view_column_set_sort_column_id(column, FirstDataColumn);
-	
-	renderer = gtk_cell_renderer_pixbuf_new();
-	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(column), 
-		renderer,
-		(GtkCellLayoutDataFunc )pixmap_column_cell_layout_function,
-		tree_view, 
-		NULL);
-
-	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute(column, renderer, "text",
-			FirstDataColumn);
-	/*
-	 * Now creating the other columns holding text style data from the 
-	 * user.
-	 */
-	for (n = 1; n < columns->n_lines; ++n){
-		column = gtk_tree_view_column_new();
-		gtk_tree_view_column_set_title(column, columns->line[n]);	
-		gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
-		gtk_tree_view_column_set_sort_column_id(column, 
-				n + FirstDataColumn);
-		
-		renderer = gtk_cell_renderer_text_new ();
-		gtk_tree_view_column_pack_start(column, renderer, TRUE);
-		gtk_tree_view_column_add_attribute(column, renderer, 
-				"text", n + FirstDataColumn);
-	}
-	return tree_view;
-}
-
-/*
- * This is the main function where we create the tree view.  
- */
-static GtkWidget *
-create_tree(AttributeSet  *Attr, 
-		tag_attr  *attr)
-{
-	GtkWidget          *tree;
-	GtkTreeStore       *store;
-	GtkTreeSelection   *selection;
-	gchar              *value;	
-
-	PIP_DEBUG("Attr: %p, attr: %p", Attr, attr);
-
-	if (!attributeset_is_avail(Attr, ATTR_LABEL)) {
-		g_warning("%s(): A TreeView with no label.", __func__);
-		return NULL;
-	}
-
-	/*
-	 * Creating the store to hold the data and the tree view to
-	 * represent it.
-	 */
-	store = create_store_from_label(Attr);
-	tree = create_tree_view(Attr, store);
-
-	/* Thunor: Now we deal with setting the selection mode. The default
-	 * is GTK_SELECTION_SINGLE so we'll leave that alone and only set a
-	 * different mode if the user requests it */
-	if (attr) {
-		if (!(value = get_tag_attribute(attr, "selection_mode")))
-			value = get_tag_attribute(attr, "selection-mode");
-		if (value) {
-			/* Get a pointer to the selection object and set the requested mode */
-			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-			if (strcasecmp(value, "multiple") == 0 ||
-				atoi(value) == GTK_SELECTION_MULTIPLE) {
-				gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
-			} else if (strcasecmp(value, "browse") == 0 ||
-				atoi(value) == GTK_SELECTION_BROWSE) {
-				gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
-			} else if (strcasecmp(value, "single") == 0 ||
-				atoi(value) == GTK_SELECTION_SINGLE) {
-				gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
-			} else /* if (strcasecmp(value, "none") == 0 ||
-				atoi(value) == GTK_SELECTION_NONE) */ {
-				/* Note that atoi will return 0 for any non-integer string in
-				 * value, therefore GTK_SELECTION_NONE should be checked last */
-				gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
-			}
-		}
-	}
-
-	return tree;
-}
-
-
-#endif
-
 #if GTK_CHECK_VERSION(2,4,0)
 static GtkWidget *
 create_chooser(AttributeSet *Attr)
@@ -1560,92 +1291,6 @@ create_chooser(AttributeSet *Attr)
 	return chooser;
 }
 #endif
-
-/******************************************************************************
- * GtkTreeView signal handlers.                                               *
- *                                                                            *
- ******************************************************************************/
-void        
-tree_row_activated_attr(GtkTreeView  *tree_view, 
-		GtkTreePath          *path, 
-		GtkTreeViewColumn    *column, 
-		AttributeSet         *Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;
-	
-	PIP_DEBUG("tree_view: %p", tree_view);
-	
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	if (command == NULL)
-		return;
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-		if (signal != NULL && g_ascii_strcasecmp(signal, "row-activated") != 0)
-			goto next_command;
-		
-		execute_action(GTK_WIDGET(tree_view), command, type);
-next_command:   
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-}
-
-gboolean    
-tree_cursor_changed(
-		GtkTreeView    *tree_view, 
-		AttributeSet   *Attr)
-{
-	GList *element;
-	gchar *signal;
-	gchar *command;
-	gchar *type;
-
-	PIP_DEBUG("tree_view: %p, Attr: %p", tree_view, Attr);
-	
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	if (command == NULL)
-		return;
-
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
-		if (signal == NULL || g_ascii_strcasecmp(signal, "cursor-changed") != 0)
-			goto next_command;
-		
-		execute_action(GTK_WIDGET(tree_view), command, type);
-next_command:   
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-	return TRUE;
-}
-
-/**
- *
- * Connects the signals of the GtkTreeView to the signal handlers.
- */
-static void
-connect_tree_signals(
-		GtkTreeView *tree_view,
-		AttributeSet *Attr)
-{
-	PIP_DEBUG("tree_view: %p, Attr: %p", tree_view, Attr);
-
-	g_assert(tree_view != NULL && Attr != NULL);
-	/*
-	 ** Here we connect GtkTreeView signals to signal handlers.
-	 */
-	gtk_signal_connect(GTK_OBJECT(tree_view), "row-activated", 
-			GTK_SIGNAL_FUNC (tree_row_activated_attr), 
-			(gpointer) Attr);
-	
-	gtk_signal_connect(GTK_OBJECT(tree_view), "cursor-changed", 
-			GTK_SIGNAL_FUNC (tree_cursor_changed), 
-			(gpointer) Attr);
-}
 
 /*****************************************************************************
  * Window handling functions.                                                *
@@ -1873,6 +1518,13 @@ instruction_execute_push(
 			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			Widget = widget_tree_create(Attr, tag_attributes, Widget_Type);
+			scrolled_window = put_in_the_scrolled_window(Widget, Attr, tag_attributes);
+			push_widget(scrolled_window, WIDGET_SCROLLEDW);
+			break;
+#endif
 
 
 	case WIDGET_LABEL:
@@ -1894,18 +1546,6 @@ instruction_execute_push(
 		push_widget(Widget, Widget_Type);
 #else
 		yyerror_simple("Chooser widget is not supported by"
-				"this version of GTK+, you need at"
-				"least GTK+ 2.4.0\n");
-#endif
-		break;
-	case WIDGET_TREE:
-#if GTK_CHECK_VERSION(2,4,0)
-		Widget = create_tree(Attr, tag_attributes);
-		connect_tree_signals(GTK_TREE_VIEW(Widget), Attr);
-		scrolled_window = put_in_the_scrolled_window(Widget, Attr, tag_attributes);
-		push_widget(scrolled_window, WIDGET_SCROLLEDW);
-#else
-		yyerror_simple("Tree widget is not supported by"
 				"this version of GTK+, you need at"
 				"least GTK+ 2.4.0\n");
 #endif

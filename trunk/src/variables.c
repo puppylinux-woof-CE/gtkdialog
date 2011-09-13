@@ -28,6 +28,7 @@
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
 #include "widget_timer.h"
+#include "widget_tree.h"
 
 extern gboolean option_no_warning;
 
@@ -301,7 +302,11 @@ variables_set_value(const char *name,
 		case WIDGET_TIMER:
 			widget_timer_fileselect(toset, name, value);
 			break;
-
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			widget_tree_fileselect(toset, name, value);
+			break;
+#endif
 
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toset->Widget), value);
@@ -356,6 +361,11 @@ variables_save(const char *name)
 		case WIDGET_TIMER:
 			widget_timer_save(var);
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			widget_tree_save(var);
+			break;
+#endif
 
 
 		case WIDGET_ENTRY:
@@ -448,6 +458,11 @@ variables_refresh(const char *name)
 		case WIDGET_TIMER:
 			widget_timer_refresh(var);
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			widget_tree_refresh(var);
+			break;
+#endif
 
 
 		case WIDGET_ENTRY:
@@ -470,9 +485,6 @@ variables_refresh(const char *name)
 			break;
 		case WIDGET_CHECKBOX:
 			widget_checkbox_refresh(var);
-			break;
-		case WIDGET_TREE:
-			widget_tree_refresh(var);
 			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
@@ -762,10 +774,7 @@ _variables_export(variable *actual)
 	gchar            *value;
 	GList            *itemlist;
 	gint              n;
-	gint              column;
 	gchar            *tmp;
-	GtkTreeModel     *model;
-	GtkTreeIter       iter;
 	gchar            *text;
 	gchar            *line;
 
@@ -835,39 +844,12 @@ _variables_export(variable *actual)
 				putenv(line);
 				break;
 
+#if GTK_CHECK_VERSION(2,4,0)
 			case WIDGET_TREE:
-				model = gtk_tree_view_get_model(GTK_TREE_VIEW(actual->Widget));
-				gtk_tree_model_get_iter_first(model, &iter);
-				/*
-				 * Which column should we exportvariable *variables_get_by_name( const char *name );
-				 */
-				tmp = g_object_get_data(G_OBJECT(actual->Widget), "exported_column");
-				if (tmp != 0)
-					column = atoi(tmp) + FirstDataColumn;
-				else
-					column = FirstDataColumn;
-
-				line = g_strdup_printf("%s_ALL=\"", actual->Name);
-				n = 0;
-				while (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
-					gtk_tree_model_get(model, &iter, column, &text, -1);
-					if (n == 0)
-						tmp = g_strconcat(line, "'", text, "'", NULL);
-					else
-						tmp = g_strconcat(line, " '", text, "'", NULL);
-
-					g_free(line);
-					line = tmp;
-					g_free(text);
-
-					if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter))
-						break;
-					++n;
-				}
-				tmp = g_strconcat(line, "\"\n", NULL);
-				g_free(line); line = NULL;
+				tmp = widget_tree_envvar_all_construct(actual);
 				putenv(tmp);
 				break;
+#endif
 
 			case WIDGET_COMBOBOXENTRY:
 			case WIDGET_COMBOBOXTEXT:
@@ -904,12 +886,7 @@ print_variables(variable * actual)
 	gchar            *value;
 	GList            *itemlist;
 	gint              n;
-	gint              column;
 	gchar            *tmp;
-	GtkTreeModel     *model;
-	GtkTreeIter       iter;
-	gchar            *text;
-	gchar            *line;
 
 	if (actual == NULL)
 		actual = root;
@@ -960,43 +937,13 @@ next_item:
 				printf("\"\n");
 				break;
 
+#if GTK_CHECK_VERSION(2,4,0)
 			case WIDGET_TREE:
-				model = gtk_tree_view_get_model(
-						GTK_TREE_VIEW(actual->Widget));
-				gtk_tree_model_get_iter_first(model, &iter);
-				/*
-				 * Which column should we print?
-				 */
-				tmp = g_object_get_data(G_OBJECT(actual->Widget), "exported_column");
-				if (tmp != 0) {
-					column = atoi(tmp) + FirstDataColumn;
-					//g_message("%s: Exported column: %d", __func__, column);
-					//g_message("%s: FirstDataColumn: %d", __func__, FirstDataColumn);
-				} else {
-					column = FirstDataColumn;
-				}
-
-				line = g_strdup_printf("%s_ALL=\"", actual->Name);
-				n = 0;
-				while (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
-					gtk_tree_model_get(model, &iter, column, &text, -1);
-					if (n == 0)
-						tmp = g_strconcat(line, "'", text, "'", NULL);
-					else
-						tmp = g_strconcat(line, " '", text, "'", NULL);
-					g_free(line);
-					line = tmp;
-					g_free(text);
-									
-					if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter))
-						break;
-					++n;
-				}
-				tmp = g_strconcat(line, "\"\n", NULL);
+				tmp = widget_tree_envvar_all_construct(actual);
 				g_printf("%s", tmp);
-				g_free(line);
 				g_free(tmp);
 				break;
+#endif
 
 			case WIDGET_COMBOBOXENTRY:
 			case WIDGET_COMBOBOXTEXT:
@@ -1064,13 +1011,13 @@ append_fromto_variable(const char *from,
 					gtk_text_view_get_buffer(GTK_TEXT_VIEW(var_to->Widget)), 
 					value, g_utf8_strlen(value, -1));
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_TREE:
 			model = gtk_tree_view_get_model(GTK_TREE_VIEW(var_to->Widget));
 			gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL); 
-			gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
-					1, value,
-					-1);
+			gtk_tree_store_set(GTK_TREE_STORE(model), &iter, 1, value, -1);
 			break;
+#endif
 
 #if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_CHOOSER:
@@ -1145,6 +1092,11 @@ variables_clear(const char *name)
 		case WIDGET_TIMER:
 			widget_timer_clear(toclear);
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			widget_tree_clear(toclear);
+			break;
+#endif
 
 
 		case WIDGET_ENTRY:
@@ -1189,13 +1141,7 @@ variables_clear(const char *name)
 int 
 remove_selected_variable(const char *name)
 {
-	GtkTreeSelection *selection;
-	GtkTreeModel     *model;
-	GtkTreeIter       iter;
 	variable         *toclear;
-	gint              selectionmode;
-	GList            *selectedrows, *row;
-	GList            *rowreferences = NULL;
 	gchar            *string;
 
 	g_assert(name != NULL);
@@ -1252,6 +1198,11 @@ remove_selected_variable(const char *name)
 		case WIDGET_TIMER:
 			widget_timer_removeselected(toclear);
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			widget_tree_removeselected(toclear);
+			break;
+#endif
 
 
 		case WIDGET_ENTRY:
@@ -1274,59 +1225,6 @@ remove_selected_variable(const char *name)
 		case WIDGET_EDIT:
 			gtk_text_buffer_delete_selection(gtk_text_view_get_buffer(GTK_TEXT_VIEW(toclear->Widget)), 
 					FALSE, TRUE);
-			break;
-			
-		case WIDGET_TREE:
-			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(toclear->Widget));
-			selectionmode = gtk_tree_selection_get_mode(selection);
-			if (selectionmode == GTK_SELECTION_NONE) {
-				/* Nothing to do */
-			} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
-				/* Thunor: New code to delete multiple selected rows.
-				 * http://scentric.net/tutorial/sec-treemodel-rowref.html
-				 * is a good place to learn about paths and row references.
-				 * This is based on the code I added to widget_get_text_value.
-				 * We get the list of selected rows as normal but we can't
-				 * iterate through it and delete them one by one because the
-				 * paths to the rows change, but we can convert those paths
-				 * to GtkTreeRowReferences which we'll store in another list.
-				 * GtkTreeRowReferences watch for row changes and maintain
-				 * themselves so we can delete them one by one without
-				 * worrying about the others becoming out-of-date. */
-				if (gtk_tree_selection_count_selected_rows(selection)) {
-					selectedrows = gtk_tree_selection_get_selected_rows(selection, &model);
-					row = selectedrows;
-					while (row) {
-						rowreferences = g_list_append(rowreferences,
-							gtk_tree_row_reference_new(model, (GtkTreePath*)(row->data)));
-						row = row->next;
-					}
-					/* The GtkTreePaths and the GList should be freed now */
-					g_list_foreach(selectedrows, (GFunc)gtk_tree_path_free, NULL);
-					g_list_free(selectedrows);
-					row = rowreferences;
-					while (row) {
-						if (gtk_tree_model_get_iter(model, &iter,
-							gtk_tree_row_reference_get_path((GtkTreeRowReference*)row->data)))
-							gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
-						row = row->next;
-					}
-					/* The GList should be freed now */
-					g_list_free(rowreferences);
-				}
-			} else {
-				/* Thunor: Below is the original code that handles the
-				 * default GTK_SELECTION_SINGLE mode and it's quite happy
-				 * dealing with GTK_SELECTION_BROWSE too.
-				 * 
-				 * It didn't check that something is actually selected
-				 * but since gtk_tree_selection_get_selected returns
-				 * true if something is then making a simple modification
-				 * seemed to be the sensible thing to do. Now there's no
-				 * Gtk-CRITICAL message appearing in the terminal */
-				if (gtk_tree_selection_get_selected(selection, &model, &iter))
-					gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
-			}
 			break;
 
 		default:

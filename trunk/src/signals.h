@@ -75,6 +75,10 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 void table_selection(GtkWidget *clist, gint row, gint column,
 	GdkEventButton *event, gpointer Attr);
 
+void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
+	GtkTreeViewColumn *column, AttributeSet *Attr);
+gboolean tree_cursor_changed(GtkTreeView *tree_view, AttributeSet *Attr);
+
 gint window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data);
 void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,

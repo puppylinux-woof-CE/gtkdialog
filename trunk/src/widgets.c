@@ -43,6 +43,7 @@
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
 #include "widget_timer.h"
+#include "widget_tree.h"
 #include "signals.h"
 
 #undef DEBUG
@@ -170,16 +171,12 @@ widget_get_text_value(
 		GtkWidget *widget, 
 		int type)
 {
-	GtkTreeSelection *selection;
-	GtkTreeModel     *model;
-	GtkTreeIter       iter;
-	GtkTreePath      *path;
 	GtkTextBuffer    *text_buffer;
 	GtkTextIter       start, end;		
-	GList            *item, *selectedrows, *row;
-	gchar            *string, *tmp, *line;
+	GList            *item;
+	gchar            *string;
 	gchar             value[32];
-	gint              n, selectionmode, initialrow, column, digits;
+	gint              digits;
 	gdouble           val;
 
 #ifdef DEBUG
@@ -226,6 +223,12 @@ widget_get_text_value(
 			string = widget_timer_envvar_construct(widget);
 			return string;
 			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			string = widget_tree_envvar_construct(widget);
+			return string;
+			break;
+#endif
 
 
 #if GTK_CHECK_VERSION(2,4,0)
@@ -278,106 +281,6 @@ widget_get_text_value(
 			gtk_text_buffer_get_start_iter(text_buffer, &start);
 			gtk_text_buffer_get_end_iter(text_buffer, &end);
 			return gtk_text_buffer_get_text(text_buffer, &start, &end, TRUE);
-			break;
-			
-		case WIDGET_TREE:
-			/*
-			 * Searching the selected row.
-			 */
-			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
-			selectionmode = gtk_tree_selection_get_mode(selection);
-#ifdef DEBUG
-			fprintf(stderr, "%s: widget=%p selectionmode=%i\n", __func__,
-				widget, selectionmode);
-			fprintf(stderr, "%s: widget=%p selected row count=%i\n", __func__,
-				widget, gtk_tree_selection_count_selected_rows(selection));
-#endif
-			if (selectionmode == GTK_SELECTION_NONE) {
-				return g_strdup("");	/* Nothing is selected */
-			} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
-				/* Thunor: New code to return data from multiple selected rows.
-				 * I need to document how it works (for my benefit at least)
-				 * and what the user should expect to get from it:
-				 * If gtk_tree_selection_count_selected_rows returns 0
-				 * then we simply return a new empty string, otherwise
-				 * gtk_tree_selection_get_selected_rows gives us a GList of
-				 * GtkTreePaths (with a documented empty definition!). Then
-				 * gtk_tree_model_get_iter will convert the mysterious
-				 * GtkTreePath to a usable GtkTreeIter and then
-				 * gtk_tree_model_get reads the data from the column.
-				 * The cast GTK_TREE_PATH threw up an undefined reference
-				 * warning so I used (GtkTreePath*) instead */
-
-				/* Which column should we print? */
-				tmp = g_object_get_data(G_OBJECT(widget), "exported_column");
-				if (tmp) {
-					column = atoi(tmp) + FirstDataColumn;
-				} else {
-					column = FirstDataColumn;
-				}
-
-				line = g_strdup("");
-				if (gtk_tree_selection_count_selected_rows(selection)) {
-					selectedrows = gtk_tree_selection_get_selected_rows(selection, &model);
-					initialrow = TRUE;
-					row = selectedrows;
-					while (row) {
-						path = (GtkTreePath*)(row->data);
-						gtk_tree_model_get_iter(model, &iter, path);
-						gtk_tree_model_get(model, &iter, column, &string, -1);
-						if (initialrow) {
-							//tmp = g_strconcat(line, "'", string, "'", NULL);
-							tmp = g_strconcat(line, string, NULL);
-							initialrow = FALSE;
-						} else {
-							//tmp = g_strconcat(line, " '", string, "'", NULL);
-							tmp = g_strconcat(line, "\n", string, NULL);
-						}
-						g_free(line);
-						line = tmp;
-						g_free(string);
-						row = row->next;
-					}
-					/* The GtkTreePaths and the GList should be freed now */
-					g_list_foreach(selectedrows, (GFunc)gtk_tree_path_free, NULL);
-					g_list_free(selectedrows);
-				}
-#ifdef DEBUG
-				fprintf(stderr, "%s: line=%s\n", __func__, line);
-#endif
-				return line;
-			} else {
-				/* Thunor: Below is the original code that handles the
-				 * default GTK_SELECTION_SINGLE mode and it's quite happy
-				 * dealing with GTK_SELECTION_BROWSE too.
-				 * 
-				 * Regarding gtk_tree_store_iter_is_valid, GTK+ 2 docs state
-				 * "WARNING: This function is slow. Only use it for debugging
-				 * and/or testing purposes.". In fact there's no need to use
-				 * it as gtk_tree_selection_get_selected returns true if there
-				 * is a selected node. The docs also state "iter may be NULL if
-				 * you just want to test if selection has any selected nodes".
-				 * Anyway, I'll just note it for now as it's only dealing with
-				 * either none or one row and I don't want to break anything ;) */
-				 gtk_tree_selection_get_selected(selection, &model, &iter);
-				 if (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)){
-					/*
-					 * Let's find the first column storing text type data.
-					 */
-					tmp = g_object_get_data(G_OBJECT(widget), "exported_column");
-					if (tmp != 0)
-						n = atoi(tmp) + FirstDataColumn;
-					else
-						n = FirstDataColumn;
-					/*
-					 * Returning the text from the selected row.
-					 */
-					gtk_tree_model_get(model, &iter, n, &string, -1);
-					return string;
-				}else{
-					return g_strdup("");
-				}	
-			}
 			break;
 			
 		case WIDGET_VSCALE:
@@ -1012,256 +915,6 @@ void widget_list_refresh(variable * var)
 	gtk_widget_queue_draw(var->Widget);
 }
 
-/******************************************************************************
- * Handling TreeView widgets. The model always has the following columns:     *
- *   0) "pixbuf"     GdkPixbuf                                                *
- *   1) "icon-name"  gchararray                                               *
- *   2) "stock-id"   gchararray                                               *
- *                                                                            *
- * We create the TreeStore in the following function:                         *
- *   gtkdialog_tree_store_new                                                 *
- * We create the TreeView in:                                                 *
- *   create_tree_view                                                         *
- *                                                                            *
- *                                                                            *
- ******************************************************************************/
-void
-fill_tree_model_by_items(
-	GtkTreeModel  *tree_model,
-	variable      *var)
-{
-	GList        *element;
-	gchar        *act;
-	gchar       **columns;
-	gint          n, ncolumns;
-	GType         coltype;
-	GtkTreeIter   iter;
-	gchar        *stock_name;
-	gchar        *tagattr;
-
-	PIP_DEBUG("tree_model: %p var: %p", tree_model, var);
-	
-	ncolumns = gtk_tree_model_get_n_columns(tree_model) - FirstDataColumn;
-	
-	act = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
-	while (act != NULL) {
-		gtk_tree_store_append(GTK_TREE_STORE(tree_model), &iter, NULL);
-		
-		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "stock");
-		if (tagattr != NULL)
-			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
-					ColumnStockId, tagattr,
-					-1);
-
-		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "stock_id");
-		if (tagattr != NULL)
-			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
-					ColumnStockId, tagattr,
-					-1);
-		
-		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "icon");
-		if (tagattr != NULL)
-			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
-					ColumnIconName, tagattr,
-					-1);
-		
-		tagattr = attributeset_get_this_tagattr(&element, var->Attributes, ATTR_ITEM, "icon_name");
-		if (tagattr != NULL)
-			gtk_tree_store_set(GTK_TREE_STORE(tree_model), &iter,
-					ColumnIconName, tagattr,
-					-1);
-
-		columns = g_strsplit(act, "|", 128);
-		for (n = 0; columns[n] != NULL; ++n) {
-			if (n >= ncolumns)
-				break;
-			g_strstrip(columns[n]);
-			coltype = gtk_tree_model_get_column_type(tree_model, n + FirstDataColumn);
-			
-			switch (coltype) {
-				case G_TYPE_STRING:
-					gtk_tree_store_set(
-						GTK_TREE_STORE(tree_model),
-						&iter,
-						n + FirstDataColumn, columns[n],
-						-1);
-					break;
-				default:
-					g_warning("%s(): Unhandled column type", __func__);
-			}
-		}
-		g_strfreev(columns);
-
-next_item:
-		act = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
-	}
-}
-
-static void
-fill_tree_view_by_command(
-		GtkWidget     *tree_view, 
-		GtkTreeModel  *tree_model, 
-		const gchar   *command, 
-		gint           stock_column, 
-		gint           icon_column,
-		gint           command_or_file)
-{
-	FILE      *infile;
-	char        oneline[512];
-	gchar     **columns;
-	gint        n, ncolumns;
-	GType       coltype;
-	GtkTreeIter iter;
-	gint        hiddencolumns;
-
-
-	PIP_DEBUG("tree_view: %p, command: '%s'", tree_view, command);
-
-	if (command_or_file) {
-		infile = widget_opencommand(command);
-	} else {
-		infile = fopen(command, "r");
-	}
-
-	if (infile == NULL) {
-		g_warning("%s(): command %s, %m", __func__, command);
-		return;
-	}
-
-	
-	ncolumns = gtk_tree_model_get_n_columns(tree_model) - FirstDataColumn;
-	while (fgets(oneline, 512, infile) != NULL) {
-		PIP_DEBUG("Line from pipe: '%s'", oneline);
-
-		hiddencolumns = 0;
-		g_strstrip(oneline);
-		columns = g_strsplit(oneline, "|", 128);
-		gtk_tree_store_append(GTK_TREE_STORE(tree_model), &iter, NULL);
-		for (n = 0; columns[n] != NULL; ++n) {
-			if (n - hiddencolumns >= ncolumns)
-				break;
-			g_strstrip(columns[n]);
-			if (n == stock_column) {
-				PIP_DEBUG("Stock: '%s'", columns[n]);
-				gtk_tree_store_set(
-					GTK_TREE_STORE(tree_model), &iter,
-					ColumnStockId, columns[n],
-						-1);
-				++hiddencolumns;
-				continue;
-			}
-			
-			if (n == icon_column) {
-				PIP_DEBUG("Icon: '%s'", columns[n]);
-				gtk_tree_store_set(
-					GTK_TREE_STORE(tree_model), &iter,
-					ColumnIconName, columns[n],
-						-1);
-				++hiddencolumns;
-				continue;
-			}
-
-			coltype = gtk_tree_model_get_column_type(
-					tree_model, n + FirstDataColumn - 
-					hiddencolumns);
-			switch (coltype) {
-				case G_TYPE_STRING:
-					gtk_tree_store_set(
-						GTK_TREE_STORE(tree_model),
-						&iter,
-						n + FirstDataColumn - 
-						hiddencolumns, columns[n],
-						-1);
-					break;
-				default:
-					PIP_DEBUG("Unhandled column type.");
-			}
-		}
-		g_strfreev(columns);
-	}
-
-	if (command_or_file) {
-		pclose(infile);
-	} else {
-		fclose(infile);
-	}
-}
-
-void 
-widget_tree_refresh(variable *var)
-{
-	GList        *element;
-	gchar        *act;
-	GtkTreeModel *tree_model;
-	
-	if (var == NULL || var->Attributes == NULL)
-		return;
-
-	PIP_DEBUG("Refreshing variable %p.", var);
-
-	g_return_if_fail(GTK_IS_TREE_VIEW(var->Widget));
-	tree_model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
-	g_return_if_fail(GTK_IS_TREE_STORE(tree_model));
-	/*
-	 * We drop all the lines here.
-	 */
-	gtk_tree_store_clear(GTK_TREE_STORE(tree_model));
-	/*
-	 * If the widget has an input tag (command, file, stc.) we load the
-	 * lines from there.
-	 */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		gchar         *tmp;
-		gint           stock_column = -1;
-		gint           icon_column = -1;
-
-		tmp = attributeset_get_this_tagattr(&element, var->Attributes,
-			ATTR_INPUT, "stock_column");
-		if (tmp != NULL)
-			stock_column = atoi(tmp);
-		tmp = attributeset_get_this_tagattr(&element, var->Attributes,
-			ATTR_INPUT, "icon_column");
-		if (tmp != NULL)
-			icon_column = atoi(tmp);
-
-		/* input file stock = "File:", input file = "File:/path/to/file" */
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-#ifdef DEBUG
-			printf("%s(): 1: command='%s'\n", __func__, act);
-#endif
-			fill_tree_view_by_command(var->Widget, tree_model, act + 5,
-				stock_column, icon_column, FALSE);
-		} else if (input_is_shell_command(act)) {
-#ifdef DEBUG
-			printf("%s(): 2: command='%s'\n", __func__, act);
-#endif
-			fill_tree_view_by_command(var->Widget, tree_model, act + 8,
-				stock_column, icon_column, TRUE);
-		} else {
-#ifdef DEBUG
-			printf("%s(): 3: command='%s'\n", __func__, act);
-#endif
-			/* Thunor: These are shell commands without the "Command:",
-			 * but why is it missing? token_store_with_argument_attr()
-			 * manages that. Whoever wrote the widget_tree_refresh()
-			 * function knew this which is why an else clause exists here.
-			 * 
-			 * I think I've found the answer but I'm not going to mess
-			 * about with it right now. It looks as though input isn't
-			 * set-up properly in the parser which might uncover other
-			 * issues when corrected so I'll mark it temp temp */
-			fill_tree_view_by_command(var->Widget, tree_model, act,
-				stock_column, icon_column, TRUE);
-		}
-		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-	}
-	/*
-	 * If there are items, we load them too.
-	 */
-	fill_tree_model_by_items(tree_model, var);
-}
-
 /* Thunor: Using fill_clist_by_items leaves the top row selected but
  * fill_table_by_command doesn't. I can't change this behaviour because
  * it could break an existing application somewhere. I did notice that
@@ -1801,7 +1454,11 @@ char *widgets_to_str(int itype)
 		case WIDGET_TOGGLEBUTTON:
 			type = "TOGGLEBUTTON";
 			break;
-
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			type = "TREE";
+			break;
+#endif
 
 	case WIDGET_LABEL:
 		type = "LABEL";
