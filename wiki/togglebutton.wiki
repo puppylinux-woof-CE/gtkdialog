@@ -42,7 +42,7 @@ Some of these may have tag attribute equivalents.
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Image filename || || ||
 || input file icon="_image_"^[2]^ || GTK theme icon name || || || ||
-|| input file stock="_gtk-image_"^[3]^ || GTK stock icon id || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
+|| input file stock="_gtk-image_"^[3]^ || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_^[4]^ || || ||
