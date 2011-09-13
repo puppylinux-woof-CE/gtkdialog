@@ -10,9 +10,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage]
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
+	<input file>filename</input>
 	<input file icon="image"></input>
 	<input file stock="gtk-image"></input>
-	<input file>filename</input>
 	<sensitive>state</sensitive>
 </pixmap>
 }}}
@@ -30,9 +30,9 @@ Some of these may have tag attribute equivalents.
 || variable || Shell variable name || || || ||
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
+|| input file || Data input source || Image filename || (0) || ||
 || input file icon="_image_"^[1]^ || GTK theme icon name  || || (0) || 0.7.21 ||
 || input file stock="_gtk-image_"^[2]^ || GTK stock icon id || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || (0) || ||
-|| input file || Data input source || Image filename || (0) || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
 
 == Signals ==

@@ -1,0 +1,90 @@
+#summary tree widget reference
+
+= tree widget =
+A [http://developer.gnome.org/gtk/2.24/GtkTreeView.html GtkTreeView] packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+----
+
+== Definition ==
+{{{
+<tree tag_attr="value"...>
+	<label>text</label>
+	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
+	<input>command</input>...
+	<input icon-column="index">command</input>...
+	<input stock-column="index">command</input>...
+	<input file>filename</input>...
+	<input file icon-column="index">filename</input>...
+	<input file stock-column="index">filename</input>...
+	<sensitive>state</sensitive>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+	<item>data</item>...
+	<item icon-name="image">data</item>...
+	<item stock-id="gtk-image">data</item>...
+	<output file>filename</output>
+</tree>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView.object-hierarchy GtkTreeView] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+|| *Name* || *Description* || *Value* || *Since* ||
+|| exported-column || The column to export data from || An integer >= {{{0}}} || ||
+|| selection-mode || Selection method || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (none, single, browse, multiple) || 0.7.21 ||
+|| icon-name || Default GTK theme icon name for all rows || || ||
+|| stock-id || Default GTK stock icon id for all rows || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || ||
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| label || Column header labels || _label0_ {{{|}}} _label1_ {{{|}}} ... || 0 || ||
+|| variable || Shell variable name || || || ||
+|| height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
+|| width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
+|| input || Data input source || Shell command || || ||
+|| input icon-column="_index_" || Data input source || Shell command || || ||
+|| input stock-column="_index_" || Data input source || Shell command || || ||
+|| input file || Data input source || Filename || || ||
+|| input file icon-column="_index_" || Data input source || Filename || || ||
+|| input file stock-column="_index_" || Data input source || Filename || || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+|| item || Input data || || || ||
+|| item icon-name="_image_" || Input data || || || ||
+|| item stock-id="_gtk-image_" || Input data || || || ||
+|| output file || Data output target || Filename || || 0.7.21 ||
+
+== Signals ==
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView-row-activated row-activated]", emitted when the user double-clicks a row and also when a row is selected and one of the keys Space, Shift+Space, Return or Enter is pressed.
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView.signals GtkTreeView] widget and ancestor class signals.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
+|| clear || Remove all widget data || Shell variable name || 0.7.21 ||
+|| removeselected || Remove selected widget data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || 0.7.21 ||
+
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+1. This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.
+----
