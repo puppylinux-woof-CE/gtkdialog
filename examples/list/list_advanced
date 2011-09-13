@@ -8,10 +8,10 @@ mkdir -p "$TMPDIR"
 lstWidth=170; lstHeight=200
 
 funcbtnCreate() {
-	echo '<button image-position="'$2'">
-			<input file stock="'$4'"></input>
-			<action>echo "'"$5"' '$1'"</action>
-			<action type="'"$3"'">'$1'</action>
+	echo '<button>
+			<input file stock="'$3'"></input>
+			<action>echo "'"$4"' '$1'"</action>
+			<action type="'"$2"'">'$1'</action>
 		</button>'
 }
 
@@ -40,11 +40,11 @@ funclstCreate() {
 	fi
 	echo '</list>
 		<hbox>
-			'"$(funcbtnCreate $1 2 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate $1 2 Enable gtk-yes Enabling)"'
-			'"$(funcbtnCreate $1 2 Clear gtk-clear Clearing)"'
-			'"$(funcbtnCreate $1 2 Removeselected gtk-delete Deleting)"'
-			'"$(funcbtnCreate $1 2 Refresh gtk-refresh Refreshing)"'
+			'"$(funcbtnCreate $1 Disable gtk-no Disabling)"'
+			'"$(funcbtnCreate $1 Enable gtk-yes Enabling)"'
+			'"$(funcbtnCreate $1 Clear gtk-clear Clearing)"'
+			'"$(funcbtnCreate $1 Removeselected gtk-delete Deleting)"'
+			'"$(funcbtnCreate $1 Refresh gtk-refresh Refreshing)"'
 		</hbox>'
 }
 

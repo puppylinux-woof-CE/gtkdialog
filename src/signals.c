@@ -35,7 +35,13 @@
 /* Notes:
  * I'm not quite convinced about these button_* callbacks at the moment
  * as they are/were old code and only appear to be duplicating code within
- * the widget_signal_executor anyway, so I'll mark them temp temp */
+ * the widget_signal_executor anyway, so I'll mark them temp temp
+ * 
+ * list_selection and table_selection are equally as dodgy.
+ * 
+ * tree_row_activated_attr and tree_cursor_changed too.
+ * 
+ *  */
 
 /***********************************************************************
  *                                                                     *
@@ -268,14 +274,15 @@ void button_toggled(GtkToggleButton *button, gpointer str)
 void list_selection(GtkWidget *list, gpointer Attr)
 {
 	GList *element;
-	gchar *signal;
 	gchar *command;
+	gchar *signal;
 	gchar *type;
 
-	if (Attr == NULL)
-		return;
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
 
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
+	if (Attr == NULL) return;
 
 	/* Thunor: This code does not support <action signal="type">.
 	 * This callback is connected to the "selection-changed" signal,
@@ -283,13 +290,17 @@ void list_selection(GtkWidget *list, gpointer Attr)
 	 * particular signal then that will be executed as well.
 	 * 
 	 * This widget was in fact deprecated in GTK+ 2.0 anyway */
+
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL){
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		execute_action(list, command, type);
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
-	return;
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
 }
 
 /***********************************************************************
@@ -737,18 +748,19 @@ void table_selection(GtkWidget *clist, gint row, gint column,
 	GdkEventButton *event, gpointer Attr)
 {
 	GList *element;
-	gchar *signal;
 	gchar *command;
+	gchar *signal;
 	gchar *type;
 
-	if (Attr == NULL)
-		return;
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	if (Attr == NULL) return;
 
 	variables_set_row_column(
 		attributeset_get_first(&element, Attr, ATTR_VARIABLE),
 		row, column);
-
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 
 	/* Thunor: This code does not support <action signal="type">.
 	 * This callback is connected to the "select-row" signal,
@@ -756,13 +768,84 @@ void table_selection(GtkWidget *clist, gint row, gint column,
 	 * particular signal then that will be executed as well.
 	 * 
 	 * This widget was in fact deprecated in GTK+ 2.0 anyway */
+
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL){
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		execute_action(clist, command, type);
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
-	return;
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
+	GtkTreeViewColumn *column, AttributeSet *Attr)
+{
+	GList *element;
+	gchar *command;
+	gchar *signal;
+	gchar *type;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
+	while (command != NULL){
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
+		if (signal != NULL && g_ascii_strcasecmp(signal, "row-activated") != 0)
+			goto next_command;
+		
+		execute_action(GTK_WIDGET(tree_view), command, type);
+next_command:   
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
+	}
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+gboolean tree_cursor_changed(GtkTreeView *tree_view, AttributeSet *Attr)
+{
+	GList *element;
+	gchar *command;
+	gchar *signal;
+	gchar *type;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
+	while (command != NULL){
+		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
+		if (signal == NULL || g_ascii_strcasecmp(signal, "cursor-changed") != 0)
+			goto next_command;
+		
+		execute_action(GTK_WIDGET(tree_view), command, type);
+next_command:   
+		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
+	}
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return TRUE;
 }
 
 /***********************************************************************

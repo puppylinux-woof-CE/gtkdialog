@@ -63,7 +63,6 @@ static void fill_clist_by_items(AttributeSet *Attr, GtkWidget *list, int separat
 static void fill_combo_by_items(AttributeSet *Attr, GtkWidget *combo);
 static void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale);
 static void fill_list_by_items(AttributeSet *Attr, GtkWidget *list);
-void fill_tree_model_by_items(GtkTreeModel *tree_model, variable *var);
 
 char *widget_get_text_value(GtkWidget *widget, int type);
 
@@ -82,7 +81,6 @@ void widget_entry_refresh(variable *var);
 int widget_label_refresh(variable *var);
 void widget_list_refresh(variable *var);
 void widget_table_refresh(variable *var);
-void widget_tree_refresh(variable *var);
 
 void widget_edit_save(variable *var);
 static void save_edit_to_file(GtkWidget *widget, char *filename);
@@ -100,9 +98,6 @@ void fill_entry_by_command(GtkWidget *entry, char *command);
 void fill_label_by_command(GtkWidget *label, char *command);
 void fill_list_by_command(GtkWidget *list, char *command);
 void fill_table_by_command(GtkWidget *list, char *command);
-static void fill_tree_view_by_command(GtkWidget *tree_view,
-	GtkTreeModel *tree_model, const gchar *command, gint stock_column,
-	gint icon_column, gint command_or_file);
 
 char *widgets_to_str(int itype);
 
