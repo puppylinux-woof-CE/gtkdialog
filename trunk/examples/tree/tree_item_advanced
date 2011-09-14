@@ -1,0 +1,119 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+treWidth=320; treHeight=200
+
+funcbtnCreate() {
+	echo '<button>
+			<input file stock="'$3'"></input>
+			<action>echo "'"$4"' '$1'"</action>
+			<action type="'"$2"'">'$1'</action>
+		</button>'
+}
+
+funcitemsCreate() {
+	local -a stockids=("gtk-about" "gtk-add" "gtk-apply" "gtk-bold" "gtk-cancel"
+		"gtk-cdrom" "gtk-clear" "gtk-close" "gtk-color-picker" "gtk-convert")
+	local -a iconnames=("abiword" "geany" "gimp" "gnumeric" "inkscape" "midori"
+		"scribus" "top" "viewnior" "xarchive")
+
+	for f in 0 1 2 3 4 5 6 7 8 9; do
+		if [ $1 = 1 ]; then
+			echo -n '<item stock-id="'${stockids[$f]}'">'
+		elif [ $1 = 2 ]; then
+			echo -n '<item icon-name="'${iconnames[$f]}'">'
+		else echo -n '<item>'
+		fi
+		echo -n "$RANDOM|$RANDOM|$RANDOM|$RANDOM"
+		echo '</item>'
+	done
+}
+
+functreCreate() {
+	echo '<label>Column 0|Column 1|Column 2|Column 3</label>
+			<variable>'$1'</variable>
+			<width>'$treWidth'</width>
+			<height>'$treHeight'</height>
+			<action>echo "'$1'=$'$1' action for default signal triggered"</action>
+			<action signal="row-activated">echo "'$1'=$'$1' row-activated signal detected"</action>
+			<action signal="cursor-changed">echo "'$1'=$'$1' cursor-changed signal detected"</action>
+		</tree>
+		<hbox homogeneous="true">
+			'"$(funcbtnCreate $1 Disable gtk-no Disabling)"'
+			'"$(funcbtnCreate $1 Enable gtk-yes Enabling)"'
+			'"$(funcbtnCreate $1 Clear gtk-clear Clearing)"'
+			'"$(funcbtnCreate $1 Removeselected gtk-delete Deleting)"'
+			'"$(funcbtnCreate $1 Refresh gtk-refresh Refreshing)"'
+		</hbox>'
+}
+
+export MAIN_DIALOG='
+<window title="Tree Item Advanced" resizable="false">
+	<vbox>
+		<hbox>
+			<vbox>
+				<text justify="2">
+					<label>"'"<item> (text only)
+selection-mode='0' (none)
+
+exported-column='0' (default)"'"</label>
+				</text>
+				<tree selection-mode="0">
+					'"$(funcitemsCreate 0)"'
+					'"$(functreCreate tre0)"'
+			</vbox>
+			<vseparator></vseparator>
+			<vbox>
+				<text justify="2">
+					<label>"'"<item> (text and stock icons)
+selection-mode='1' (single - default)
+headers-visible='false'
+exported-column='1'"'"</label>
+				</text>
+				<tree exported-column="1" headers-visible="false">
+					'"$(funcitemsCreate 1)"'
+					'"$(functreCreate tre1)"'
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox>
+			<vbox>
+				<text justify="2">
+					<label>"'"<item> (text and theme icons)
+selection-mode='2' (browse)
+headers-clickable='false'
+exported-column='2'"'"</label>
+				</text>
+				<tree selection-mode="2" exported-column="2" headers-clickable="false">
+					'"$(funcitemsCreate 2)"'
+					'"$(functreCreate tre2)"'
+			</vbox>
+			<vseparator></vseparator>
+			<vbox>
+				<text justify="2">
+					<label>"'"<item> (default stock icon)
+selection-mode='3' (multiple)
+rules-hint='true'
+exported-column='3'"'"</label>
+				</text>
+				<tree stock-id="gtk-edit" selection-mode="3" exported-column="3" rules-hint="true">
+					'"$(funcitemsCreate 0)"'
+					'"$(functreCreate tre3)"'
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+# Uncomment the following line to dump MAIN_DIALOG to a file:
+# ifs=$IFS; IFS=; echo $MAIN_DIALOG > "$TMPDIR"/MAIN_DIALOG.txt; IFS=$ifs
+
+$GTKDIALOG --program=MAIN_DIALOG

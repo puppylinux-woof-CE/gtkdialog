@@ -1,3 +1,8 @@
+* Wed Sep 14 2011 Thunor <thunorsif@hotmail.com>
+- Added examples/tree/tree_item_advanced.
+- Added examples/tree/tree_input_advanced.
+- Added examples/tree/tree_input_file_advanced.
+  
 * Tue Sep 13 2011 Thunor <thunorsif@hotmail.com>
 - Fixed the tree widget's problematic pixmap rendering when including
   rows from multiple sources with different icon settings.
