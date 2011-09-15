@@ -29,7 +29,7 @@ Some of these may have tag attribute equivalents.
 || label || Initial text || || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
-|| input file || Data input source || Image filename || || ||
+|| input file || Data input source || Filename || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
@@ -54,5 +54,5 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
-None.
+Line wrapping is enabled by default for this widget which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkLabel.html#GtkLabel--wrap wrap]" tag attribute.
 ----
