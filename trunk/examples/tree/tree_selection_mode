@@ -13,20 +13,18 @@ funcfiletreCreate() {
 }
 
 functreCreate() {
-	echo '<tree selection-mode="'$2'">
+	echo '<tree selection-mode="'$2'" stock-id="'$3'">
 			<variable>'$1'</variable>
 			<label>Items</label>
 			<width>300</width><height>200</height>
 			<input>cat '"$TMPDIR"'/file'$1'</input>
 		</tree>
 		<hbox homogeneous="true">
-			<button>
-				<label>"    Delete    "</label>
+			<button use-stock="true" label="gtk-delete">
 				<action>echo "Deleting $'$1'"</action>
 				<action type="removeselected">'$1'</action>
 			</button>
-			<button>
-				<label>"    Reload    "</label>
+			<button use-stock="true" label="gtk-refresh">
 				<action>echo Reloading file'$1'</action>
 				<action type="refresh">'$1'</action>
 			</button>
@@ -45,11 +43,14 @@ export MAIN_DIALOG='
 			<hbox>
 				<vbox>
 					'"$(functreCreate treNone 0)"'
-					'"$(functreCreate treSingle 1)"'
+					<hseparator></hseparator>
+					'"$(functreCreate treSingle 1 gtk-file)"'
 				</vbox>
+				<vseparator></vseparator>
 				<vbox>
-					'"$(functreCreate treBrowse 2)"'
-					'"$(functreCreate treMultiple 3)"'
+					'"$(functreCreate treBrowse 2 gtk-justify-center)"'
+					<hseparator></hseparator>
+					'"$(functreCreate treMultiple 3 gtk-copy)"'
 				</vbox>
 			</hbox>
 		</frame>

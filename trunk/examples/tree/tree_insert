@@ -8,10 +8,10 @@ GTKDIALOG=gtkdialog
 export MAIN_DIALOG='
 <vbox>
   <frame Insert and Remove>
-    <tree rules_hint="true" headers_visible="false">
+    <tree rules-hint="true" headers-visible="false">
       <label>This label is invisible but required</label>
-      <height>100</height><width>400</width>
-      <variable>TREE</variable>
+      <width>400</width><height>100</height>
+      <variable>TREE1</variable>
     </tree>
     <hbox>
       <entry>

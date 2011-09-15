@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog
 export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
-cat <<EOF > "$TMPDIR"/list.txt
+cat <<EOF > "$TMPDIR"/inputfile
 gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
 gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi
 gtk-harddisk | Hard Disk     | /harddisk/ | ak.ps
@@ -16,33 +16,32 @@ EOF
 export MAIN_DIALOG='
 <vbox>
   <frame With Rules, Without Headers>
-    <tree rules_hint="true" headers_visible="false">
-      <input file stock_column="0">'"$TMPDIR"'/list.txt</input>
-      <label>Device                        | Directory | File</label>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
-      <item stock="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-      <height>250</height><width>400</width>
-      <variable>TREE</variable>
+    <tree rules-hint="true" headers-visible="false">
+      <variable>TREE1</variable>
+      <width>400</width><height>260</height>
+      <label>Device                           | Directory | File</label>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
+      <item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+      <input file stock-column="0">'"$TMPDIR"'/inputfile</input>
     </tree>
   </frame>
   <frame Hover Mode>
-    <tree hover_expand="true" hover_selection="true">
-      <input file stock_column="0">'"$TMPDIR"'/list.txt</input>
-      <label>Device                        | Directory | File</label>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
-      <item stock="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
-      <item stock="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-      <height>250</height><width>400</width>
-      <variable>TREE</variable>
+    <tree hover-expand="true" hover-selection="true">
+      <variable>TREE2</variable>
+      <width>400</width><height>260</height>
+      <label>Device                           | Directory | File</label>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
+      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
+      <item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+      <input file stock-column="0">'"$TMPDIR"'/inputfile</input>
     </tree>
   </frame>
-  <hbox>
-    <button cancel></button>
+  <hbox homogeneous="true">
     <button ok></button>
   </hbox>
 </vbox>
