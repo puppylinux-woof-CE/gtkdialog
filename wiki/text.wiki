@@ -12,9 +12,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel]
 	<input>command</input>
 	<input file>filename</input>
 	<sensitive>state</sensitive>
-	<action>activity</action>...
 	<action signal="type">activity</action>...
-	<action type="function">parameter</action>...
 </text>
 }}}
 "..." denotes acceptance of multiples of the same thing.
@@ -33,11 +31,8 @@ Some of these may have tag attribute equivalents.
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Image filename || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
-|| action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
 There is no default signal for this widget.
