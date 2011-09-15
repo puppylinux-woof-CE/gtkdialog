@@ -59,8 +59,8 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data || _column0data_ {{{|}}} _column1data_ {{{|}}} ... || || ||
-|| item icon-name="_image_" || Input data || _column0_ {{{|}}} _column1_ {{{|}}} ... || || ||
-|| item stock-id="_gtk-image_" || Input data || _column0_ {{{|}}} _column1_ {{{|}}} ... || || ||
+|| item icon-name="_image_" || Input data || _column0data_ {{{|}}} _column1data_  {{{|}}} ... || || ||
+|| item stock-id="_gtk-image_" || Input data || _column0data_ {{{|}}} _column1data_  {{{|}}} ... || || ||
 
 == Signals ==
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView-row-activated row-activated]", emitted when the user double-clicks a row and also when a row is selected and one of the keys Space, Shift+Space, Return or Enter is pressed.
