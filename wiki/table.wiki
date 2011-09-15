@@ -38,7 +38,7 @@ Some of these may have tag attribute equivalents.
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| item || Input data || || || ||
+|| item || Input data || _column0_ {{{|}}} _column1_ {{{|}}} ... || || ||
 
 == Signals ==
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkCList.html#GtkCList-select-row select-row]", emitted when the user selects a row in the list.
