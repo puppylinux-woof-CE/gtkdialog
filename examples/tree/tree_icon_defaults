@@ -1,0 +1,56 @@
+#!/bin/sh
+
+#
+# The <tree> tag can hold the following attributes for using as a default icon:
+#   o stock or stock-id
+#   o icon or icon-name
+#
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+cat <<EOF > "$TMPDIR"/inputfile
+gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
+gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi
+gtk-harddisk | Hard Disk     | /harddisk/ | ak.ps
+gtk-network  | Network Drive | /network/  | ak.pdf
+gtk-delete   | Trash         | /trash/    | 
+EOF
+
+export MAIN_DIALOG='
+<vbox>
+  <text label="Default stock icon is gtk-apply"></text>
+  <tree stock-id="gtk-apply">
+    <variable>TREE1</variable>
+    <width>400</width><height>250</height>
+    <label>Device                        | Directory | File</label>
+    <item>Floppy Disk | /floppy/  | ak.tex</item>
+    <item>Floppy Disk | /floppy/  | ak.dvi</item>
+    <item icon-name="scribus">Floppy Disk | /floppy/  | ak.ps</item>
+    <item icon-name="top">Floppy Disk | /floppy/  | ak.pdf</item>
+    <item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+    <input file stock-column="0">'"$TMPDIR"'/inputfile</input>
+  </tree>
+  <hseparator></hseparator>
+  <text label="Default theme icon is gimp"></text>
+  <tree icon-name="gimp">
+    <variable>TREE2</variable>
+    <width>400</width><height>250</height>
+    <label>Device                        | Directory | File</label>
+    <item>Floppy Disk | /floppy/  | ak.tex</item>
+    <item>Floppy Disk | /floppy/  | ak.dvi</item>
+    <item icon-name="abiword">Floppy Disk | /floppy/  | ak.ps</item>
+    <item icon-name="geany">Floppy Disk | /floppy/  | ak.pdf</item>
+    <item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+    <input file stock-column="0">'"$TMPDIR"'/inputfile</input>
+  </tree>
+  <hseparator></hseparator>
+  <hbox homogeneous="true">
+    <button ok></button>
+  </hbox>
+</vbox>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG 

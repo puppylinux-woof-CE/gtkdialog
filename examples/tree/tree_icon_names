@@ -5,28 +5,27 @@ GTKDIALOG=gtkdialog
 export MAIN_DIALOG='
 <vbox>
   <frame Icon name examples>
-    <tree rules_hint="true" exported_column="0">
-      <height>400</height><width>250</width>
-      <label>Icon Names</label>
-      <item icon="gimp">gimp</item>
-      <item icon="gnumeric">gnumeric</item>
-      <item icon="geany">geany</item>
-      <item icon="glade-3">glade-3</item>
-      <item icon="uget-icon">uget-icon</item>
-      <item icon="viewnior">viewnior</item>
-      <item icon="xarchive">xarchive</item>
-      <item icon="scribus">scribus</item>
-      <item icon="inkscape">inkscape</item>
-      <item icon="html">html</item>
-      <item icon="gz">gz</item>
-      <item icon="top">top</item>
-      <item icon="midori">midori</item>
-      <item icon="adblock">adblock</item>
-      <item icon="abiword">abiword</item>
+    <tree rules-hint="true">
+      <width>250</width><height>400</height>
+      <label>Icon Name</label>
+      <item icon-name="gimp">gimp</item>
+      <item icon-name="gnumeric">gnumeric</item>
+      <item icon-name="geany">geany</item>
+      <item icon-name="glade-3">glade-3</item>
+      <item icon-name="uget-icon">uget-icon</item>
+      <item icon-name="viewnior">viewnior</item>
+      <item icon-name="xarchive">xarchive</item>
+      <item icon-name="scribus">scribus</item>
+      <item icon-name="inkscape">inkscape</item>
+      <item icon-name="html">html</item>
+      <item icon-name="gz">gz</item>
+      <item icon-name="top">top</item>
+      <item icon-name="midori">midori</item>
+      <item icon-name="adblock">adblock</item>
+      <item icon-name="abiword">abiword</item>
     </tree>
   </frame>
-  <hbox>
-    <button cancel></button>
+  <hbox homogeneous="true">
     <button ok></button>
   </hbox>
 </vbox>
