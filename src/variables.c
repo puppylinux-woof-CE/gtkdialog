@@ -27,6 +27,7 @@
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
 
@@ -299,6 +300,9 @@ variables_set_value(const char *name,
 		case WIDGET_STATUSBAR:
 			widget_statusbar_fileselect(toset, name, value);
 			break;
+		case WIDGET_TEXT:
+			widget_text_fileselect(toset, name, value);
+			break;
 		case WIDGET_TIMER:
 			widget_timer_fileselect(toset, name, value);
 			break;
@@ -357,6 +361,9 @@ variables_save(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_save(var);
+			break;
+		case WIDGET_TEXT:
+			widget_text_save(var);
 			break;
 		case WIDGET_TIMER:
 			widget_timer_save(var);
@@ -455,6 +462,9 @@ variables_refresh(const char *name)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_refresh(var);
 			break;
+		case WIDGET_TEXT:
+			widget_text_refresh(var);
+			break;
 		case WIDGET_TIMER:
 			widget_timer_refresh(var);
 			break;
@@ -479,9 +489,6 @@ variables_refresh(const char *name)
 			break;
 		case WIDGET_EDIT:
 			widget_edit_refresh(var);
-			break;
-		case WIDGET_LABEL:
-			widget_label_refresh(var);
 			break;
 		case WIDGET_CHECKBOX:
 			widget_checkbox_refresh(var);
@@ -1089,6 +1096,9 @@ variables_clear(const char *name)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_clear(toclear);
 			break;
+		case WIDGET_TEXT:
+			widget_text_clear(toclear);
+			break;
 		case WIDGET_TIMER:
 			widget_timer_clear(toclear);
 			break;
@@ -1194,6 +1204,9 @@ remove_selected_variable(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_removeselected(toclear);
+			break;
+		case WIDGET_TEXT:
+			widget_text_removeselected(toclear);
 			break;
 		case WIDGET_TIMER:
 			widget_timer_removeselected(toclear);

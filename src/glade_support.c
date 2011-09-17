@@ -706,7 +706,7 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 		retval = WIDGET_PIXMAP;
 /* GtkWidget--->GtkMisc--->GtkLabel */
 	else if (GTK_IS_LABEL(widget))
-		retval = WIDGET_LABEL;
+		retval = WIDGET_TEXT;
 /* GtkWidget--->GtkProgress--->GtkProgressBar */
 	else if (GTK_IS_PROGRESS_BAR(widget))
 		retval = WIDGET_PROGRESS;

@@ -37,13 +37,6 @@
 #include "variables.h"
 #include "automaton.h"
 
-typedef enum {
-	ColumnPixbuf,
-	ColumnIconName,
-	ColumnStockId,
-	FirstDataColumn
-} treecolumns;
-
 struct _progr_descr {
 	GtkWidget    *widget;
 	gdouble       fraction;
@@ -70,7 +63,6 @@ static void fill_scale_by_file(GtkWidget *widget, char *filename);
 static void fill_menuitem_by_file(GtkWidget *widget, char *filename);
 static void fill_entry_by_file(GtkWidget *entry, char *filename);
 static void fill_edit_by_file(GtkWidget *widget, char *filename);
-static void fill_label_by_file(GtkWidget *widget, char *filename);
 
 void widget_checkbox_refresh(variable *var);
 void widget_combo_refresh(variable *var);
@@ -78,7 +70,6 @@ void widget_scale_refresh(variable *var);
 void widget_menuitem_refresh(variable *var);
 int widget_edit_refresh(variable *var);
 void widget_entry_refresh(variable *var);
-int widget_label_refresh(variable *var);
 void widget_list_refresh(variable *var);
 void widget_table_refresh(variable *var);
 
@@ -95,7 +86,6 @@ void fill_clist_by_command(GtkWidget *list, int columns, char *command);
 void fill_scale_by_command(GtkWidget *widget, char *command);
 void fill_menuitem_by_command(GtkWidget *widget, char *command);
 void fill_entry_by_command(GtkWidget *entry, char *command);
-void fill_label_by_command(GtkWidget *label, char *command);
 void fill_list_by_command(GtkWidget *list, char *command);
 void fill_table_by_command(GtkWidget *list, char *command);
 

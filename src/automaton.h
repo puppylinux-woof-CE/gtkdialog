@@ -50,7 +50,7 @@ typedef struct actioncommand {
 /*                                   -- Type of widget      */
 /*                                 xxxxxxxx                 */
 #define WIDGET_TYPE              0x00FF0000
-#define WIDGET_LABEL             0x00010000
+#define WIDGET_TEXT              0x00010000
 #define WIDGET_ENTRY             0x00020000
 #define WIDGET_EDIT              0x00030000
 #define WIDGET_BUTTON            0x00040000

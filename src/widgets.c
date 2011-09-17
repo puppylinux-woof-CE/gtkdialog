@@ -42,6 +42,7 @@
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
 #include "signals.h"
@@ -219,6 +220,10 @@ widget_get_text_value(
 			string = widget_statusbar_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_TEXT:
+			string = widget_text_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_TIMER:
 			string = widget_timer_envvar_construct(widget);
 			return string;
@@ -368,37 +373,6 @@ widget_get_text_value(
 }
 
 static
-void fill_label_by_file(GtkWidget * widget, char *filename)
-{
-	struct stat st;
-	char *filebuffer;
-	int infile, result;
-
-	if (stat(filename, &st) != 0) {
-		if (!option_no_warning)
-			g_warning("%s(): Couldn't stat '%s'.", 
-					__func__, filename);
-		return;
-	}
-
-	filebuffer = g_malloc(st.st_size + 1);
-	infile = open(filename, O_RDONLY);
-	if (infile == -1) {
-		if (!option_no_warning)
-			g_warning("%s(): Couldn't open '%s' for reading.", 
-					__func__, filename);
-		return;
-	}
-
-	result = read(infile, filebuffer, st.st_size);
-	filebuffer[st.st_size] = '\0';
-	close(infile);
-
-	gtk_label_set_text(GTK_LABEL(widget), filebuffer);
-	return;
-}
-
-static
 void fill_edit_by_file(GtkWidget * widget, char *filename)
 {
 	struct stat st;
@@ -520,27 +494,6 @@ void fill_entry_by_file(GtkWidget *widget, char *filename)
 				__func__, filename);
 	}
 
-}
-
-int widget_label_refresh(variable * var)
-{
-	GList *element;
-	char *act;
-
-	if (var == NULL || var->Attributes == NULL)
-		return FALSE;
-
-	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		if (strncasecmp(act, "file:", 5) == 0)
-			fill_label_by_file(var->Widget, act + 5);
-		if (input_is_shell_command(act))
-			fill_label_by_command(var->Widget, act + 8);
-next_item:
-		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-	}
-
-	return 0;
 }
 
 int widget_edit_refresh(variable * var)
@@ -1191,38 +1144,6 @@ void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 }
 
 void 
-fill_label_by_command(GtkWidget *label, 
-		char *command)
-{
-	FILE *infile;
-	char oneline[512];
-	gchar *error_msg;
-	GString *text = g_string_sized_new(512);
-
-#ifdef DEBUG
-	g_message("%s(): command: '%s'", __func__, command);
-#endif
-
-	infile = widget_opencommand(command);
-	if (infile == NULL) {
-		g_warning("%s(): command %s, %m\n", __func__, command);
-		error_msg = g_strdup_printf("Unable to start command: %s", 
-				command);
-		gtk_label_set_text(GTK_LABEL(label), error_msg);
-		g_free(error_msg);
-		return;
-	}
-
-	while (fgets(oneline, 512, infile) != NULL) 
-		g_string_append(text, oneline);
-
-ready_reading:
-	gtk_label_set_text(GTK_LABEL(label), text->str);
-	g_string_free(text, TRUE);
-	pclose(infile);
-}
-
-void 
 fill_list_by_command(GtkWidget * list, 
 		char *command)
 {
@@ -1448,6 +1369,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_STATUSBAR:
 			type = "STATUSBAR";
 			break;
+		case WIDGET_TEXT:
+			type = "TEXT";
+			break;
 		case WIDGET_TIMER:
 			type = "TIMER";
 			break;
@@ -1460,9 +1384,7 @@ char *widgets_to_str(int itype)
 			break;
 #endif
 
-	case WIDGET_LABEL:
-		type = "LABEL";
-		break;
+
 	case WIDGET_ENTRY:
 		type = "ENTRY";
 		break;
