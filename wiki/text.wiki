@@ -45,6 +45,8 @@ The following functions can be performed upon this widget by any widget capable 
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
+|| fileselect || Launch file selection dialog || Shell variable name || ||
+|| clear || Remove all widget data || Shell variable name || ||
 
 The following general functions can be performed by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
