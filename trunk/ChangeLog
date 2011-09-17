@@ -1,3 +1,7 @@
+* Sat Sep 17 2011 Thunor <thunorsif@hotmail.com>
+- Added widget_text.c/h and added clear, fileselect and envvar support.
+- Added examples/text/text_advanced and updated the other examples.
+
 * Thu Sep 15 2011 Thunor <thunorsif@hotmail.com>
 - Tidied-up all of the tree widget examples.
 

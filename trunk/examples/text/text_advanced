@@ -1,0 +1,71 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funcbtnCreate() {
+	echo '<button>
+			<label>'$2'</label>
+			<input file stock="'$3'"></input>
+			<action>echo "'"$4"' '$1'"</action>
+			<action type="'"$2"'">'$1'</action>
+		</button>'
+}
+
+export MAIN_DIALOG='
+<window title="Text Advanced" resizable="false">
+	<vbox>
+		<vbox border-width="10" spacing="10">
+			<text use-markup="true">
+				<label>"<span fgcolor='"'black'"' bgcolor='"'white'"'> Text from file inside a scrollable vbox </span>"</label>
+			</text>
+			<vbox scrollable="true" width="600" height="300">
+				<text wrap="false" xalign="0">
+					<variable>txt0</variable>
+					<label>This is a static text.</label>
+					<input file>'$0'</input>
+				</text>
+			</vbox>
+			<hbox homogeneous="true">
+				'"$(funcbtnCreate txt0 Disable gtk-no Disabling)"'
+				'"$(funcbtnCreate txt0 Enable gtk-yes Enabling)"'
+				'"$(funcbtnCreate txt0 Clear gtk-clear Clearing)"'
+				'"$(funcbtnCreate txt0 Fileselect gtk-file "Inserting into")"'
+				'"$(funcbtnCreate txt0 Refresh gtk-refresh Refreshing)"'
+			</hbox>
+			<hseparator></hseparator>
+			<text use-markup="true">
+				<label>"<span fgcolor='"'black'"' bgcolor='"'white'"'> Text from command (xalign='"'0'"') </span>"</label>
+			</text>
+			<text wrap="false" xalign="0" selectable="true">
+				<variable>txt1</variable>
+				<label>This text will be overwritten with the data from the command.</label>
+				<input>date</input>
+			</text>
+			<hseparator></hseparator>
+			<text use-markup="true">
+				<label>"<span fgcolor='"'black'"' bgcolor='"'white'"'> Text from command (xalign='"'0.5'"' - default) </span>"</label>
+			</text>
+			<text wrap="false" xalign="0.5" selectable="true">
+				<variable>txt2</variable>
+				<label>This text will be overwritten with the data from the command.</label>
+				<input>sh --version</input>
+			</text>
+			<hseparator></hseparator>
+			<text use-markup="true">
+				<label>"<span fgcolor='"'black'"' bgcolor='"'white'"'> Text from command (xalign='"'1'"') </span>"</label>
+			</text>
+			<text wrap="false" xalign="1" selectable="true">
+				<variable>txt3</variable>
+				<label>This text will be overwritten with the data from the command.</label>
+				<input>uname -srvo</input>
+			</text>
+		</vbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-ok" has-focus="true"></button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

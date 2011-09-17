@@ -305,10 +305,10 @@ chooser
 
 text
   : TEXT attr ETEXT {
-		token_store(PUSH | WIDGET_LABEL); 
+		token_store(PUSH | WIDGET_TEXT); 
 	} 
   | PART_TEXT tagattr '>' attr ETEXT {
-                token_store_attr(PUSH | WIDGET_LABEL, $2);
+                token_store_attr(PUSH | WIDGET_TEXT, $2);
 	}
   | TEXT attr TEXT  {yyerror("</text> expected instead of <text>.");}
   ;

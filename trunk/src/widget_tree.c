@@ -49,6 +49,13 @@ static void widget_tree_pixmap_column_cell_layout_function(
 	GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeView *treeview);
 
 /* Local variables */
+typedef enum {
+	ColumnPixbuf,
+	ColumnIconName,
+	ColumnStockId,
+	FirstDataColumn
+} treecolumns;
+
 gchar *icon_name;
 gchar *stock_id;
 gint icon_column;

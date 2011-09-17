@@ -4,12 +4,15 @@ GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <vbox>
-  <text>
-    <label>This is a static text.</label>
-  </text>
-  <hbox>
+  <vbox border-width="30">
+    <text>
+      <label>This is static text which will automatically wrap by default at some point.</label>
+      <action signal="show">echo "The show signal was emitted - the only signal supported"</action>
+    </text>
+  </vbox>
+  <hseparator></hseparator>
+  <hbox homogeneous="true">
     <button ok></button>
-    <button cancel></button>
   </hbox>
 </vbox>
 '

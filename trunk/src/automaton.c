@@ -50,6 +50,7 @@
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
 #include "signals.h"
@@ -297,6 +298,9 @@ void print_command(instruction command)
 		case WIDGET_STATUSBAR:
 			printf("(new statusbar())");
 			break;
+		case WIDGET_TEXT:
+			printf("(new text())");
+			break;
 		case WIDGET_TIMER:
 			printf("(new timer())");
 			break;
@@ -309,9 +313,6 @@ void print_command(instruction command)
 			break;
 #endif
 
-	case WIDGET_LABEL:
-	    printf("(new text())");
-	    break;
 	case WIDGET_ENTRY:
 	    printf("(new entry())");
 	    break;
@@ -557,6 +558,9 @@ void print_token(token Token)
 		case WIDGET_STATUSBAR:
 			printf("(STATUSBAR)");
 			break;
+		case WIDGET_TEXT:
+			printf("(TEXT)");
+			break;
 		case WIDGET_TIMER:
 			printf("(TIMER)");
 			break;
@@ -570,9 +574,6 @@ void print_token(token Token)
 #endif
 
 
-	case WIDGET_LABEL:
-		printf("(LABEL)");
-		break;
 	case WIDGET_ENTRY:
 		printf("(ENTRY)");
 		break;
@@ -1132,30 +1133,6 @@ GtkWidget *create_menubar(AttributeSet * Attr, stackelement menus)
 	return menu_bar;
 }
 
-static GtkWidget *
-create_label(AttributeSet * Attr)
-{
-	GList *element;
-	GtkWidget *Label;
-	/* 
-	 ** Setting up the default values for the new label.
-	 */
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "(unnamed label)");
-	/*
-	 ** Creating the widget, and pushing it into the stack.
-	 */
-	Label = gtk_label_new(attributeset_get_first(&element, Attr, ATTR_LABEL));
-	gtk_label_set_line_wrap(GTK_LABEL(Label), TRUE);
-
-	if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-		gtk_widget_set_sensitive(Label, FALSE);
-
-	return Label;
-}
-
 static
 gboolean widget_moved(GtkWidget *widget,
                       GdkEvent *event,
@@ -1514,6 +1491,10 @@ instruction_execute_push(
 			Widget = widget_statusbar_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_TEXT:
+			Widget = widget_text_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_TIMER:
 			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1526,11 +1507,6 @@ instruction_execute_push(
 			break;
 #endif
 
-
-	case WIDGET_LABEL:
-		Widget = create_label(Attr);
-		push_widget(Widget, Widget_Type);
-		break;
 
 	case WIDGET_ENTRY:
 		/*

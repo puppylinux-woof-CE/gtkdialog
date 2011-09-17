@@ -29,6 +29,7 @@ gtkdialog_SOURCES = \
 		    widget_pixmap.c widget_pixmap.h \
 		    widget_spinbutton.c widget_spinbutton.h \
 		    widget_statusbar.c widget_statusbar.h \
+		    widget_text.c widget_text.h \
 		    widget_timer.c widget_timer.h \
 		    widget_tree.c widget_tree.h
 

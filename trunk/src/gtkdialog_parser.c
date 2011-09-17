@@ -3123,7 +3123,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 307 "gtkdialog_parser.y"
     {
-		token_store(PUSH | WIDGET_LABEL); 
+		token_store(PUSH | WIDGET_TEXT); 
 	}
     break;
 
@@ -3132,7 +3132,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 310 "gtkdialog_parser.y"
     {
-                token_store_attr(PUSH | WIDGET_LABEL, (yyvsp[(2) - (5)].nvval));
+                token_store_attr(PUSH | WIDGET_TEXT, (yyvsp[(2) - (5)].nvval));
 	}
     break;
 
