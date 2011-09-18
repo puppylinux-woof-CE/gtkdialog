@@ -1,0 +1,73 @@
+#summary menu widget reference
+
+= menu widget =
+A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html GtkImageMenuItem] with a submenu.
+----
+
+== Definition ==
+{{{
+<menu tag_attr="value"...>
+	menu...
+	menuitem...
+	<label>text</label>
+	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
+	<input>command</input>
+	<sensitive>state</sensitive>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+</menu>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+|| *Name* || *Description* || *Value* || *Since* ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| icon-name^[1]^ || GTK theme icon name ||  || 0.7.21 ||
+|| stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || 0.7.21 ||
+|| image-name || Image filename ||  || 0.7.21 ||
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| label || Initial text || || || ||
+|| variable || Shell variable name || || || ||
+|| height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
+|| width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
+|| input || Data input source || Shell command || || 0.7.21 ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+
+== Signals ==
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem] widget and ancestor class signals.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || 0.7.21 ||
+
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+1. Theme icons default to 16 and do not scale or refresh (the height or width directives can be used to request a size).
+
+This widget must be the child of a [menubar] widget or another menu widget.
+----
