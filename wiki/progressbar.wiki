@@ -1,0 +1,53 @@
+#summary progressbar widget reference
+
+= progressbar widget =
+A [http://developer.gnome.org/gtk/2.24/GtkProgressBar.html GtkProgressBar]
+----
+
+== Definition ==
+{{{
+<progressbar tag_attr="value"...>
+	<label>text</label>
+	<variable>varname</variable>
+	<input>command</input>
+	<action>activity</action>...
+	<action type="function">parameter</action>...
+</progressbar>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkProgressBar.html#GtkProgressBar.object-hierarchy GtkProgressBar] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+None.
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| label || Initial text || || || ||
+|| variable || Shell variable name || || || ||
+|| input || Data input source || Shell command || || ||
+|| action || Execute command when input data reaches 100 || Shell command || || ||
+|| action || Perform function when input data reaches 100 || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function when input data reaches 100 || _parameter_ || || ||
+
+== Signals ==
+None.
+
+All action directives will be executed when the input data reaches 100.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+None.
+
+The following general functions can be performed by this widget when the input data reaches 100:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+None.
+----
