@@ -1,0 +1,66 @@
+#summary colorbutton widget reference
+
+= colorbutton widget =
+A [http://developer.gnome.org/gtk/2.24/GtkColorButton.html GtkColorButton]
+----
+
+== Definition ==
+{{{
+<colorbutton tag_attr="value"...>
+	<default>data</default>
+	<variable>varname</variable>
+	<input>command</input>
+	<input file>filename</input>
+	<sensitive>state</sensitive>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+	<output file>filename</output>
+</colorbutton>
+}}}
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+See the [http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView.object-hierarchy GtkTreeView] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+None.
+
+== Directives ==
+Some of these may have tag attribute equivalents.
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| default || Initial data || _#rrggbb_ {{{|}}} _alpha_ || || ||
+|| variable || Shell variable name || || || ||
+|| input || Data input source || Shell command || || ||
+|| input file || Data input source || Filename || || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+|| output file || Data output target || Filename || || ||
+
+== Signals ==
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton-color-set color-set]", emitted when the user selects a colour.
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton.signals GtkColorButton] widget and ancestor class signals.
+
+== Functions ==
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || ||
+
+The following general functions can be performed by any widget capable of emitting signals:
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+
+== Notes ==
+This widget was introduced in version 0.7.21.
+----
