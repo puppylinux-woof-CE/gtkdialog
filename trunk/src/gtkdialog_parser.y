@@ -151,6 +151,7 @@ start_up(void)
 %token         TIMER PART_TIMER ETIMER
 %token         TOGGLEBUTTON PART_TOGGLEBUTTON ETOGGLEBUTTON
 %token         STATUSBAR PART_STATUSBAR ESTATUSBAR
+%token         COLORBUTTON PART_COLORBUTTON ECOLORBUTTON
 
 %% 
 window
@@ -254,6 +255,7 @@ widget
   | timer
   | togglebutton
   | statusbar
+  | colorbutton
   ;
 
 entry
@@ -554,6 +556,15 @@ statusbar
 	}
   | PART_STATUSBAR tagattr '>' attr ESTATUSBAR {
 		token_store_attr(PUSH | WIDGET_STATUSBAR, $2);
+	}
+  ;
+
+colorbutton
+  : COLORBUTTON attr ECOLORBUTTON {
+		token_store(PUSH | WIDGET_COLORBUTTON);
+	}
+  | PART_COLORBUTTON tagattr '>' attr ECOLORBUTTON {
+		token_store_attr(PUSH | WIDGET_COLORBUTTON, $2);
 	}
   ;
 

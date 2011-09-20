@@ -5,7 +5,7 @@ EXTRA_DIST = \
 	install.iss pango.modules pango.aliases gdk-pixbuf.loaders \
 	examples/button/* \
 	examples/checkbox/* \
-	examples/chooser/* \
+	examples/colorbutton/* \
 	examples/combobox/* \
 	examples/comboboxentry/* \
 	examples/comboboxtext/* \

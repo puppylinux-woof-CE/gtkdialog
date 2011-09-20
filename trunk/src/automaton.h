@@ -89,6 +89,7 @@ typedef struct actioncommand {
 #define WIDGET_TIMER             0x00AB0000
 #define WIDGET_TOGGLEBUTTON      0x00AC0000
 #define WIDGET_STATUSBAR         0x00AD0000
+#define WIDGET_COLORBUTTON       0x00AE0000
 
 /*
  * Imperative stuff.

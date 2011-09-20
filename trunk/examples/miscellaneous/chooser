@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Thunor: This widget is very limited in comparision to the fileselect
+# action function so I can't recommend using it. It doesn't support any
+# mode other than the default GTK_FILE_CHOOSER_ACTION_OPEN (file open)
+# and as a result there's no access to a directory creation button and
+# neither is there support for file filters.
+#
+# This widget was never documented and so this example fully explores
+# its capabilities. Interestingly it supports a unique feature not used
+# anywhere else within the project whereby instead of having a hardcoded
+# selection of signals that the application developer chooses to connect
+# to using <action signal="type">, the signal is instead specified by
+# the application developer using <action when="type">.
+
+GTKDIALOG=gtkdialog
+
+export MAIN_DIALOG='
+<window title="Chooser Widget Example" resizable="false">
+	<vbox border-width="10">
+		<chooser>
+			<variable>CHOOSER</variable>
+			<default>/usr/share/doc</default>
+			<width>600</width>
+			<height>400</height>
+			<action when="confirm-overwrite">echo confirm-overwrite</action>
+			<action when="current-folder-changed">echo current-folder-changed</action>
+			<action when="file-activated">echo file-activated</action>
+			<action when="selection-changed">echo selection-changed</action>
+			<action when="update-preview">echo update-preview</action>
+		</chooser>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+$GTKDIALOG --program=MAIN_DIALOG

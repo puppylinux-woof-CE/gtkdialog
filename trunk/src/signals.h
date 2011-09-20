@@ -38,6 +38,7 @@ gboolean on_any_widget_button_pressed(GtkWidget *widget,
 gboolean on_any_widget_button_released(GtkWidget *widget,
 	GdkEventButton *event, AttributeSet *Attr);
 void on_any_widget_changed_event(GtkWidget *widget, AttributeSet  *Attr);
+void on_any_widget_color_set_event(GtkWidget *widget, AttributeSet *Attr);
 gboolean on_any_widget_configure_event(GtkWidget *widget,
 	GdkEventConfigure *event, AttributeSet *Attr);
 gboolean on_any_widget_delete_event(GtkWidget *widget, GdkEvent *event,

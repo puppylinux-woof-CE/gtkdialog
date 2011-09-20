@@ -10,6 +10,8 @@ This manual documents version @value{VERSION} of the Gtkdialog utility.
 
 Copyright @copyright{} 2003-2007 Laszlo Pere. 
 
+WARNING: This documentation is very incomplete and has not been updated
+since at least 2007 although it is still informative for beginners.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this

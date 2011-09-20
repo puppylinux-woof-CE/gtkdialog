@@ -519,6 +519,12 @@ gchar *Token;
 					  return(PART_STATUSBAR); }
 \<\/statusbar\>				{ Token="</statusbar>"; return(ESTATUSBAR); }
 
+\<colorbutton\>				{ Token="<colorbutton>"; return(COLORBUTTON); }
+\<colorbutton[ ]+			{ Token="<colorbutton>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_COLORBUTTON); }
+\<\/colorbutton\>			{ Token="</colorbutton>"; return(ECOLORBUTTON); }
+
 
 
 

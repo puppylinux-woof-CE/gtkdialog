@@ -45,6 +45,7 @@
 #include "tag_attributes.h"
 #include "widgets.h"
 #include "widget_button.h"
+#include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
@@ -279,6 +280,9 @@ void print_command(instruction command)
 			break;
 		case WIDGET_BUTTON:
 			printf("(new button())");
+			break;
+		case WIDGET_COLORBUTTON:
+			printf("(new colorbutton())");
 			break;
 		case WIDGET_COMBOBOXENTRY:
 			printf("(new comboboxentry())");
@@ -539,6 +543,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_BUTTON:
 			printf("(BUTTON)");
+			break;
+		case WIDGET_COLORBUTTON:
+			printf("(COLORBUTTON)");
 			break;
 		case WIDGET_COMBOBOXENTRY:
 			printf("(COMBOBOXENTRY)");
@@ -1468,6 +1475,10 @@ instruction_execute_push(
 			Widget = widget_button_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_COLORBUTTON:
+			Widget = widget_colorbutton_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
@@ -1517,6 +1528,9 @@ instruction_execute_push(
 		break;
 
 	case WIDGET_CHOOSER:
+		/* Thunor: This widget is incredibly lacking in comparison to
+		 * the fileselect action function and really needs a newer
+		 * alternative (is anyone actually using this?) */
 #if GTK_CHECK_VERSION(2,4,0)
 		Widget = create_chooser(Attr);
 		push_widget(Widget, Widget_Type);

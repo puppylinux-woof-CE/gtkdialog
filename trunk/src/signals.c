@@ -391,6 +391,23 @@ void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
+void on_any_widget_color_set_event(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "color-set");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 gboolean on_any_widget_configure_event(GtkWidget *widget,
 	GdkEventConfigure *event, AttributeSet *Attr)
 {
@@ -986,6 +1003,9 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			} else if (GTK_IS_LABEL(widget)) {
 				/* A GtkLabel that ticks is a timer */
 				if (strcasecmp(signal_name, "tick") == 0)
+					execute = TRUE;
+			} else if (GTK_IS_COLOR_BUTTON(widget)) {
+				if (strcasecmp(signal_name, "color-set") == 0)
 					execute = TRUE;
 			} else if (GTK_IS_TOGGLE_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "toggled") == 0) {

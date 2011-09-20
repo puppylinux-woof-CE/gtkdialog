@@ -1,3 +1,7 @@
+* Tue Sep 20 2011 Thunor <thunorsif@hotmail.com>
+- New widget: <colorbutton>.
+- Added examples/colorbutton/colorbutton_advanced.
+
 * Sat Sep 17 2011 Thunor <thunorsif@hotmail.com>
 - Added widget_text.c/h and added clear, fileselect and envvar support.
 - Added examples/text/text_advanced and updated the other examples.
@@ -9,7 +13,7 @@
 - Added examples/tree/tree_item_advanced.
 - Added examples/tree/tree_input_advanced.
 - Added examples/tree/tree_input_file_advanced.
-  
+
 * Tue Sep 13 2011 Thunor <thunorsif@hotmail.com>
 - Fixed the tree widget's problematic pixmap rendering when including
   rows from multiple sources with different icon settings.

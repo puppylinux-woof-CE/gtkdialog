@@ -37,6 +37,7 @@
 #include "widgets.h"
 #include "stringman.h"
 #include "widget_button.h"
+#include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
@@ -197,6 +198,10 @@ widget_get_text_value(
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			string = widget_button_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_COLORBUTTON:
+			string = widget_colorbutton_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_COMBOBOXENTRY:
@@ -1350,6 +1355,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_BUTTON:
 			type = "BUTTON";
+			break;
+		case WIDGET_COLORBUTTON:
+			type = "COLORBUTTON";
 			break;
 		case WIDGET_COMBOBOXENTRY:
 			type = "COMBOBOXENTRY";
