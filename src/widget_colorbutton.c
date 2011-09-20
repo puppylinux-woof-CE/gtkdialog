@@ -120,25 +120,25 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 
 #ifdef DEBUG_CONTENT
 	fprintf(stderr, "%s(): color.red  =#%04x  rgb=%02x\n", __func__,
-		color.red, (color.red + (257 / 2)) / 257);
+		color.red, (color.red + 257 / 2) / 257);
 	fprintf(stderr, "%s(): color.green=#%04x  rgb=%02x\n", __func__,
-		color.green, (color.green + (257 / 2)) / 257);
+		color.green, (color.green + 257 / 2) / 257);
 	fprintf(stderr, "%s(): color.blue =#%04x  rgb=%02x\n", __func__,
-		color.blue, (color.blue + (257 / 2)) / 257);
+		color.blue, (color.blue + 257 / 2) / 257);
 #endif
 
 	if (gtk_color_button_get_use_alpha(GTK_COLOR_BUTTON(widget))) {
 		sprintf(envvar, "#%02x%02x%02x|%u",
-			(color.red + (257 / 2)) / 257,
-			(color.green + (257 / 2)) / 257,
-			(color.blue + (257 / 2)) / 257,
+			(color.red + 257 / 2) / 257,
+			(color.green + 257 / 2) / 257,
+			(color.blue + 257 / 2) / 257,
 			gtk_color_button_get_alpha(GTK_COLOR_BUTTON(widget)));
 
 	} else {
 		sprintf(envvar, "#%02x%02x%02x",
-			(color.red + (257 / 2)) / 257,
-			(color.green + (257 / 2)) / 257,
-			(color.blue + (257 / 2)) / 257);
+			(color.red + 257 / 2) / 257,
+			(color.green + 257 / 2) / 257,
+			(color.blue + 257 / 2) / 257);
 	}
 
 	string = g_strdup(envvar);
@@ -318,16 +318,16 @@ void widget_colorbutton_save(variable *var)
 			gtk_color_button_get_color(GTK_COLOR_BUTTON(var->Widget), &color);
 			if (gtk_color_button_get_use_alpha(GTK_COLOR_BUTTON(var->Widget))) {
 				fprintf(outfile, "#%02x%02x%02x|%u",
-					(color.red + (257 / 2)) / 257,
-					(color.green + (257 / 2)) / 257,
-					(color.blue + (257 / 2)) / 257,
+					(color.red + 257 / 2) / 257,
+					(color.green + 257 / 2) / 257,
+					(color.blue + 257 / 2) / 257,
 					gtk_color_button_get_alpha(GTK_COLOR_BUTTON(var->Widget)));
 
 			} else {
 				fprintf(outfile, "#%02x%02x%02x",
-					(color.red + (257 / 2)) / 257,
-					(color.green + (257 / 2)) / 257,
-					(color.blue + (257 / 2)) / 257);
+					(color.red + 257 / 2) / 257,
+					(color.green + 257 / 2) / 257,
+					(color.blue + 257 / 2) / 257);
 			}
 			/* Close the file */
 			fclose(outfile);
