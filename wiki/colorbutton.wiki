@@ -21,7 +21,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkColorButton.html GtkColorButton]
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
-See the [http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView.object-hierarchy GtkTreeView] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton.object-hierarchy GtkColorButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 None.
@@ -29,7 +29,7 @@ None.
 == Directives ==
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| default || Initial data || _#rrggbb_ {{{|}}} _alpha_ || || ||
+|| default || Initial data || _#rrggbb_ {{{|}}} _alpha_^[1]^ || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || ||
@@ -62,5 +62,7 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
+1. Setting the "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton--use-alpha use-alpha]" tag attribute to true will enable alpha selection. Alpha can be passed in following the _#rrggbb_ value separated by a '{{{|}}}' character, or via the "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton--alpha alpha]" tag attribute. Although the colour selection dialog displays alpha as an 8bit 0-255 value, GTK+ and Gtkdialog manage it as a 16bit 0-65535 value and therefore it'll require converting between the two formats. To convert from 8bit to 16bit use {{{alpha * 257}}} and from 16bit to 8bit use {{{(alpha + 257 / 2) / 257}}}.
+
 This widget was introduced in version 0.7.21.
 ----
