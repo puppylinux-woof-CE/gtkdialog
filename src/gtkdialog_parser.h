@@ -177,7 +177,10 @@
      ETOGGLEBUTTON = 393,
      STATUSBAR = 394,
      PART_STATUSBAR = 395,
-     ESTATUSBAR = 396
+     ESTATUSBAR = 396,
+     COLORBUTTON = 397,
+     PART_COLORBUTTON = 398,
+     ECOLORBUTTON = 399
    };
 #endif
 /* Tokens.  */
@@ -320,6 +323,9 @@
 #define STATUSBAR 394
 #define PART_STATUSBAR 395
 #define ESTATUSBAR 396
+#define COLORBUTTON 397
+#define PART_COLORBUTTON 398
+#define ECOLORBUTTON 399
 
 
 
@@ -340,7 +346,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 344 "gtkdialog_parser.h"
+#line 350 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

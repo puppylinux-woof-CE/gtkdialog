@@ -23,6 +23,7 @@
 #include "variables.h"
 #include "widgets.h"
 #include "widget_button.h"
+#include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
 #include "widget_spinbutton.h"
@@ -284,6 +285,9 @@ variables_set_value(const char *name,
 		case WIDGET_BUTTON:
 			widget_button_fileselect(toset, name, value);
 			break;
+		case WIDGET_COLORBUTTON:
+			widget_colorbutton_fileselect(toset, name, value);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_fileselect(toset, name, value);
@@ -345,6 +349,9 @@ variables_save(const char *name)
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_save(var);
+			break;
+		case WIDGET_COLORBUTTON:
+			widget_colorbutton_save(var);
 			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
@@ -445,7 +452,10 @@ variables_refresh(const char *name)
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_refresh(var);
-			break; 
+			break;
+		case WIDGET_COLORBUTTON:
+			widget_colorbutton_refresh(var);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_refresh(var);
@@ -1080,6 +1090,9 @@ variables_clear(const char *name)
 		case WIDGET_BUTTON:
 			widget_button_clear(toclear);
 			break;
+		case WIDGET_COLORBUTTON:
+			widget_colorbutton_clear(toclear);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_clear(toclear);
@@ -1188,6 +1201,9 @@ remove_selected_variable(const char *name)
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_removeselected(toclear);
+			break;
+		case WIDGET_COLORBUTTON:
+			widget_colorbutton_removeselected(toclear);
 			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:

@@ -631,6 +631,9 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton */
 	else if (GTK_IS_CHECK_BUTTON(widget))
 		retval = WIDGET_CHECKBOX;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkColorButton */
+	else if (GTK_IS_COLOR_BUTTON(widget))
+		retval = WIDGET_COLORBUTTON;
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
 	else if (GTK_IS_TOGGLE_BUTTON(widget))
 		retval = WIDGET_TOGGLEBUTTON;
