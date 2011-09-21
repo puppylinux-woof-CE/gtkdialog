@@ -1783,10 +1783,18 @@ instruction_execute_push(
 				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
 			}
 
-			for (n = 0; n < s.nwidgets; ++n) {
-				gtk_box_pack_start(GTK_BOX(Widget), s.widgets[n],
-					TRUE, TRUE, 0);
-			}
+			for (n = 0; n < s.nwidgets; ++n)
+				if (s.widgettypes[n] == WIDGET_EDIT ||
+				    s.widgettypes[n] == WIDGET_FRAME ||
+				    s.widgettypes[n] == WIDGET_SCROLLEDW)
+					gtk_box_pack_start(GTK_BOX(Widget),
+							   s.widgets[n],
+							   TRUE, TRUE, 0);
+				else
+					gtk_box_pack_start(GTK_BOX(Widget),
+							   s.widgets[n],
+							   FALSE, FALSE,
+							   0);
 
 			/* Thunor: If the custom attribute "scrollable" is true
 			 * then place the vbox inside a GtkScrolledWindow */
@@ -1821,9 +1829,24 @@ instruction_execute_push(
 				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
 			}
 
-			for (n = s.nwidgets - 1; n >= 0; --n) {
-				gtk_box_pack_end(GTK_BOX(Widget), s.widgets[n],
-					TRUE, TRUE, 0);
+			for (n = s.nwidgets - 1; n >= 0; --n)
+				if (s.widgettypes[n] == WIDGET_EDIT ||
+				    s.widgettypes[n] == WIDGET_FRAME ||
+				    s.widgettypes[n] == WIDGET_SCROLLEDW ||
+				    s.widgettypes[n] == WIDGET_ENTRY)
+					gtk_box_pack_end(GTK_BOX(Widget),
+							 s.widgets[n],
+							 TRUE, TRUE, 0);
+				else {
+					/*
+					 * I can't make it work... I mean to set the expand and fill
+					 * from the dialog description.
+					 */ 
+					gtk_box_pack_end(GTK_BOX(Widget),
+							 s.widgets[n],
+							 FALSE, // Expand
+							 FALSE, // Fill
+							 0);
 				}
 
 			/* Thunor: If the custom attribute "scrollable" is true
@@ -1853,10 +1876,18 @@ instruction_execute_push(
 			vbox = gtk_vbox_new(FALSE, 5);
 			gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 
-			for (n = 0; n < s.nwidgets; ++n) {
-				gtk_box_pack_start(GTK_BOX(vbox), s.widgets[n],
-					TRUE, TRUE, 0);
-			}
+			for (n = 0; n < s.nwidgets; ++n)
+				if (s.widgettypes[n] == WIDGET_EDIT ||
+				    s.widgettypes[n] == WIDGET_FRAME ||
+				    s.widgettypes[n] == WIDGET_SCROLLEDW)
+					gtk_box_pack_start(GTK_BOX(vbox),
+							   s.widgets[n],
+							   TRUE, TRUE, 0);
+				else
+					gtk_box_pack_start(GTK_BOX(vbox),
+							   s.widgets[n],
+							   FALSE, FALSE,
+							   0);
 
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "");
 			Widget = gtk_frame_new(attributeset_get_first(&element,
