@@ -1,3 +1,8 @@
+* Wed Sep 21 2011 Thunor <thunorsif@hotmail.com>
+- Fixed the longstanding issue with expand and fill being FALSE when
+  packing widgets into boxes. A message said that the original author
+  couldn't get it to work, but I can't see anything wrong with it.
+
 * Tue Sep 20 2011 Thunor <thunorsif@hotmail.com>
 - New widget: <colorbutton>.
 - Added examples/colorbutton/colorbutton_advanced.
