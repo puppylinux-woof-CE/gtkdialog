@@ -60,6 +60,8 @@ gchar *option_ignored = NULL;
 gchar *option_include_file = NULL;
 gchar *option_event_file = NULL;
 gchar *option_geometry = NULL;
+gchar *option_space_expand = NULL;
+gchar *option_space_fill = NULL;
 gboolean option_input_stdin = FALSE;
 gboolean option_no_warning = FALSE;
 gboolean option_print_ir = FALSE;
@@ -107,6 +109,20 @@ get_geometry(const char *argument)
 	
 	PIP_WARNING("Unknown geometry form.");
 	return FALSE;
+}
+
+static void
+get_space_value(const char *argument, gint *targetvar)
+{
+	if ((strcasecmp(argument, "true") == 0) ||
+		(strcasecmp(argument, "yes") == 0) ||
+		(strcasecmp(argument, "1") == 0)) {
+		*targetvar = TRUE;
+	} else if ((strcasecmp(argument, "false") == 0) ||
+		(strcasecmp(argument, "no") == 0) ||
+		(strcasecmp(argument, "0") == 0)) {
+		*targetvar = FALSE;
+	}
 }
 
 /*
@@ -187,6 +203,16 @@ gtkdialog_init(
 		"print-ir", '\0', 
 		0, G_OPTION_ARG_NONE, &option_print_ir, 
 		"Print the internal representation and exit.", NULL
+	},
+	{ 
+		"space-expand", '\0', 
+		0, G_OPTION_ARG_STRING, &option_space_expand, 
+		"The \"expand\" state for packing all widgets.", "state"
+	},
+	{ 
+		"space-fill", '\0', 
+		0, G_OPTION_ARG_STRING, &option_space_fill, 
+		"The \"fill\" state for packing all widgets.", "state"
 	},
 	{
 		NULL
@@ -451,7 +477,16 @@ main(int argc, char *argv[])
 	
 	if (option_geometry != NULL) 
 		get_geometry(option_geometry);
-	
+
+	/* Thunor: I've added these to control/override the widget
+	 * packing expand and fill states at the project level */
+	project_space_expand = -1;
+	if (option_space_expand)
+		get_space_value(option_space_expand, &project_space_expand);
+	project_space_fill = -1;
+	if (option_space_fill)
+		get_space_value(option_space_fill, &project_space_fill);
+
 	if (option_input_stdin) {
 		get_program_from_stdin();
 		goto gtkdialog_initialized;
@@ -498,7 +533,7 @@ main(int argc, char *argv[])
 #else
 		get_program_from_variable("MAIN_DIALOG");
 #endif
-	
+
 gtkdialog_initialized:
 	gtk_init(&argc, &argv);
 	

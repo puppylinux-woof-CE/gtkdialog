@@ -1,3 +1,23 @@
+* Thu Sep 22 2011 Thunor <thunorsif@hotmail.com>
+- Added command line option --space-expand to set the widget packing
+  expand state at the project level.
+- Added command line option --space-fill to set the widget packing
+  fill state at the project level.
+- Added the "space-expand" custom tag attribute for the h/vbox widgets
+  to set the widget packing expand state at the container level.
+- Added the "space-fill" custom tag attribute for the h/vbox widgets
+  to set the widget packing fill state at the container level.
+- Added the "space-expand" custom tag attribute for all other widgets
+  to set the widget packing expand state at the widget level.
+- Added the "space-fill" custom tag attribute for all other widgets
+  to set the widget packing fill state at the widget level.
+- By default the original quirky widget packing method is used.
+  Project level --space-expand/fill override the original method.
+  Container level "space-expand/fill" override the project level method
+  and the original method.
+  Widget level "space-expand/fill" override the container level method,
+  the project level method and the original method.
+
 * Wed Sep 21 2011 Thunor <thunorsif@hotmail.com>
 - Fixed the longstanding issue with expand and fill being FALSE when
   packing widgets into boxes. A message said that the original author

@@ -41,6 +41,11 @@
 #define GTKD_FUNCTION_SIGNALS_RESET (function_signals_block = FALSE)
 gint function_signals_block;
 
+/* Thunor: Used to control/override the widget packing expand and fill
+ * states at the project level */
+gint project_space_expand;
+gint project_space_fill;
+
 void reset_program_source(void);
 gint set_program_source(gchar *name);
 void set_program_name(gchar *name);
