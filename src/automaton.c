@@ -1456,9 +1456,12 @@ instruction_execute_push(
 	GtkWidget        *scrolled_window;	
 	GtkWidget        *OtherWidget;
 	GtkWidget        *Widget;
+	variable         *var;
 	gint              Widget_Type, n, border_width;
 	gchar            *value;
 	GList            *accel_group = NULL;
+	gint              original_expand, original_fill;
+	gint              space_expand, space_fill;
 
 	PIP_DEBUG("token: %d", Token);
 	
@@ -1783,18 +1786,72 @@ instruction_execute_push(
 				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
 			}
 
-			for (n = 0; n < s.nwidgets; ++n)
+			/* Calculate values for expand and fill at the container level */
+			space_expand = project_space_expand;
+			if (tag_attributes &&
+				((value = get_tag_attribute(tag_attributes, "space-expand")) ||
+				(value = get_tag_attribute(tag_attributes, "space_expand")))) {
+				if ((strcasecmp(value, "true") == 0) ||
+					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+					space_expand = TRUE;
+				} else {
+					space_expand = FALSE;
+				}
+			}
+			space_fill = project_space_fill;
+			if (tag_attributes &&
+				((value = get_tag_attribute(tag_attributes, "space-fill")) ||
+				(value = get_tag_attribute(tag_attributes, "space_fill")))) {
+				if ((strcasecmp(value, "true") == 0) ||
+					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+					space_fill = TRUE;
+				} else {
+					space_fill = FALSE;
+				}
+			}
+
+			/* Pack the widgets into the container */
+			for (n = 0; n < s.nwidgets; ++n) {
+
+				var = find_variable_by_widget(s.widgets[n]);
+				/* Calculate values for expand and fill at the widget level */
+				if (var && var->widget_tag_attr &&
+					((value = get_tag_attribute(var->widget_tag_attr, "space-expand")) ||
+					(value = get_tag_attribute(var->widget_tag_attr, "space_expand")))) {
+					if ((strcasecmp(value, "true") == 0) ||
+						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+						space_expand = TRUE;
+					} else {
+						space_expand = FALSE;
+					}
+				}
+				if (var && var->widget_tag_attr &&
+					((value = get_tag_attribute(var->widget_tag_attr, "space-fill")) ||
+					(value = get_tag_attribute(var->widget_tag_attr, "space_fill")))) {
+					if ((strcasecmp(value, "true") == 0) ||
+						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+						space_fill = TRUE;
+					} else {
+						space_fill = FALSE;
+					}
+				}
+
 				if (s.widgettypes[n] == WIDGET_EDIT ||
 				    s.widgettypes[n] == WIDGET_FRAME ||
-				    s.widgettypes[n] == WIDGET_SCROLLEDW)
-					gtk_box_pack_start(GTK_BOX(Widget),
-							   s.widgets[n],
-							   TRUE, TRUE, 0);
-				else
-					gtk_box_pack_start(GTK_BOX(Widget),
-							   s.widgets[n],
-							   FALSE, FALSE,
-							   0);
+				    s.widgettypes[n] == WIDGET_SCROLLEDW) {
+					original_expand = original_fill = TRUE;
+				} else {
+					original_expand = original_fill = FALSE;
+				}
+				if (space_expand != -1) original_expand = space_expand;
+				if (space_fill != -1) original_fill = space_fill;
+#ifdef DEBUG
+				fprintf(stderr, "%s(): vbox expand=%i fill=%i\n", __func__,
+					original_expand, original_fill);
+#endif
+				gtk_box_pack_start(GTK_BOX(Widget), s.widgets[n],
+					original_expand, original_fill, 0);
+			}
 
 			/* Thunor: If the custom attribute "scrollable" is true
 			 * then place the vbox inside a GtkScrolledWindow */
@@ -1805,12 +1862,15 @@ instruction_execute_push(
 				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
 					tag_attributes);
 				push_widget(scrolled_window, WIDGET_SCROLLEDW);
-			} else
+			} else {
 				push_widget(Widget, Widget_Type);
+			}
+
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
 		}
 		break;
+
 	case WIDGET_HBOX:
 		{
 			/*
@@ -1829,25 +1889,76 @@ instruction_execute_push(
 				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
 			}
 
-			for (n = s.nwidgets - 1; n >= 0; --n)
+			/* Calculate values for expand and fill at the container level */
+			space_expand = project_space_expand;
+			if (tag_attributes &&
+				((value = get_tag_attribute(tag_attributes, "space-expand")) ||
+				(value = get_tag_attribute(tag_attributes, "space_expand")))) {
+				if ((strcasecmp(value, "true") == 0) ||
+					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+					space_expand = TRUE;
+				} else {
+					space_expand = FALSE;
+				}
+			}
+			space_fill = project_space_fill;
+			if (tag_attributes &&
+				((value = get_tag_attribute(tag_attributes, "space-fill")) ||
+				(value = get_tag_attribute(tag_attributes, "space_fill")))) {
+				if ((strcasecmp(value, "true") == 0) ||
+					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+					space_fill = TRUE;
+				} else {
+					space_fill = FALSE;
+				}
+			}
+
+			/* Pack the widgets into the container */
+			for (n = s.nwidgets - 1; n >= 0; --n) {
+
+				var = find_variable_by_widget(s.widgets[n]);
+				/* Calculate values for expand and fill at the widget level */
+				if (var && var->widget_tag_attr &&
+					((value = get_tag_attribute(var->widget_tag_attr, "space-expand")) ||
+					(value = get_tag_attribute(var->widget_tag_attr, "space_expand")))) {
+					if ((strcasecmp(value, "true") == 0) ||
+						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+						space_expand = TRUE;
+					} else {
+						space_expand = FALSE;
+					}
+				}
+				if (var && var->widget_tag_attr &&
+					((value = get_tag_attribute(var->widget_tag_attr, "space-fill")) ||
+					(value = get_tag_attribute(var->widget_tag_attr, "space_fill")))) {
+					if ((strcasecmp(value, "true") == 0) ||
+						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+						space_fill = TRUE;
+					} else {
+						space_fill = FALSE;
+					}
+				}
+
+				/* Thunor: The entry widget here is being packed with expand
+				 * and fill set to true but not in the vbox or frame, so I'll
+				 * mark this temp temp as it could be a bug */
 				if (s.widgettypes[n] == WIDGET_EDIT ||
 				    s.widgettypes[n] == WIDGET_FRAME ||
 				    s.widgettypes[n] == WIDGET_SCROLLEDW ||
-				    s.widgettypes[n] == WIDGET_ENTRY)
-					gtk_box_pack_end(GTK_BOX(Widget),
-							 s.widgets[n],
-							 TRUE, TRUE, 0);
-				else {
-					/*
-					 * I can't make it work... I mean to set the expand and fill
-					 * from the dialog description.
-					 */ 
-					gtk_box_pack_end(GTK_BOX(Widget),
-							 s.widgets[n],
-							 FALSE, // Expand
-							 FALSE, // Fill
-							 0);
+				    s.widgettypes[n] == WIDGET_ENTRY) {
+					original_expand = original_fill = TRUE;
+				} else {
+					original_expand = original_fill = FALSE;
 				}
+				if (space_expand != -1) original_expand = space_expand;
+				if (space_fill != -1) original_fill = space_fill;
+#ifdef DEBUG
+				fprintf(stderr, "%s(): hbox expand=%i fill=%i\n", __func__,
+					original_expand, original_fill);
+#endif
+				gtk_box_pack_end(GTK_BOX(Widget), s.widgets[n],
+					original_expand, original_fill, 0);
+			}
 
 			/* Thunor: If the custom attribute "scrollable" is true
 			 * then place the hbox inside a GtkScrolledWindow */
@@ -1858,8 +1969,10 @@ instruction_execute_push(
 				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
 					tag_attributes);
 				push_widget(scrolled_window, WIDGET_SCROLLEDW);
-			} else
+			} else {
 				push_widget(Widget, Widget_Type);
+			}
+
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
 		}
@@ -1876,18 +1989,57 @@ instruction_execute_push(
 			vbox = gtk_vbox_new(FALSE, 5);
 			gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 
-			for (n = 0; n < s.nwidgets; ++n)
+			/* Calculate values for expand and fill at the container level.
+			 * 
+			 * Thunor: Because of this embedded unreachable vbox it's
+			 * not possible to control expand and fill from custom tag
+			 * attributes at the container level. The way around this is
+			 * to manually insert a vbox widget within the XML temp temp */
+			space_expand = project_space_expand;
+			space_fill = project_space_fill;
+
+			/* Pack the widgets into the container */
+			for (n = 0; n < s.nwidgets; ++n) {
+
+				var = find_variable_by_widget(s.widgets[n]);
+				/* Calculate values for expand and fill at the widget level */
+				if (var && var->widget_tag_attr &&
+					((value = get_tag_attribute(var->widget_tag_attr, "space-expand")) ||
+					(value = get_tag_attribute(var->widget_tag_attr, "space_expand")))) {
+					if ((strcasecmp(value, "true") == 0) ||
+						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+						space_expand = TRUE;
+					} else {
+						space_expand = FALSE;
+					}
+				}
+				if (var && var->widget_tag_attr &&
+					((value = get_tag_attribute(var->widget_tag_attr, "space-fill")) ||
+					(value = get_tag_attribute(var->widget_tag_attr, "space_fill")))) {
+					if ((strcasecmp(value, "true") == 0) ||
+						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+						space_fill = TRUE;
+					} else {
+						space_fill = FALSE;
+					}
+				}
+
 				if (s.widgettypes[n] == WIDGET_EDIT ||
 				    s.widgettypes[n] == WIDGET_FRAME ||
-				    s.widgettypes[n] == WIDGET_SCROLLEDW)
-					gtk_box_pack_start(GTK_BOX(vbox),
-							   s.widgets[n],
-							   TRUE, TRUE, 0);
-				else
-					gtk_box_pack_start(GTK_BOX(vbox),
-							   s.widgets[n],
-							   FALSE, FALSE,
-							   0);
+				    s.widgettypes[n] == WIDGET_SCROLLEDW) {
+					original_expand = original_fill = TRUE;
+				} else {
+					original_expand = original_fill = FALSE;
+				}
+				if (space_expand != -1) original_expand = space_expand;
+				if (space_fill != -1) original_fill = space_fill;
+#ifdef DEBUG
+				fprintf(stderr, "%s(): frame expand=%i fill=%i\n", __func__,
+					original_expand, original_fill);
+#endif
+				gtk_box_pack_start(GTK_BOX(vbox), s.widgets[n],
+					original_expand, original_fill, 0);
+			}
 
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "");
 			Widget = gtk_frame_new(attributeset_get_first(&element,
