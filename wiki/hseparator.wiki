@@ -15,7 +15,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html GtkHSeparator]
 See the [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html#GtkHSeparator.object-hierarchy GtkHSeparator] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-None.
+|| *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 
 == Directives ==
 None.

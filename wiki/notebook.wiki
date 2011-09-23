@@ -22,6 +22,8 @@ See the [http://developer.gnome.org/gtk/2.24/GtkNotebook.html#GtkNotebook.object
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || tab-base-index || Tab label start page number || Integer || 0.7.21 ||
 || tab-labels || Tab labels || _label0_ {{{|}}} _label1_ {{{|}}} ... || 0.7.21 ||
 || tab-prefix || Tab label prefix || || 0.7.21 ||

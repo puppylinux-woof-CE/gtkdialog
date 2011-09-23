@@ -25,6 +25,8 @@ See the [http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton.ob
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 || range-min || Minimum value || A double precision floating point value || ||
 || range-max || Maximum value || A double precision floating point value || ||

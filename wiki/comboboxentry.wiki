@@ -26,6 +26,8 @@ See the [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html#GtkComboBoxEn
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || ||
 || fs-filters || fileselect function pattern file filters || _pattern_{{{|}}}_pattern_{{{|}}}... || ||
 || fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... [http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types (common types)] || ||

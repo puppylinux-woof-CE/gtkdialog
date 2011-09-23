@@ -22,7 +22,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage]
 See the [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hierarchy GtkImage] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-None.
+|| *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.
@@ -51,5 +53,4 @@ The following functions can be performed upon this widget by any widget capable 
 1. Theme icons default to 32 and do not scale or refresh (the height or width directives can be used to request a size).
 
 2. Stock icons default to GTK_ICON_SIZE_DND and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
-
 ----

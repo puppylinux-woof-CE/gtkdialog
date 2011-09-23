@@ -6,7 +6,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html GtkRadioButton]
 
 == Definition ==
 {{{
-<checkbox tag_attr="value"...>
+<radiobutton tag_attr="value"...>
 	<label>text</label>
 	<default>state</default>
 	<variable>varname</variable>
@@ -14,7 +14,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html GtkRadioButton]
 	<action>activity</action>...
 	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
-</checkbox>
+</radiobutton>
 }}}
 "..." denotes acceptance of multiples of the same thing.
 
@@ -22,7 +22,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html GtkRadioButton]
 See the [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html#GtkRadioButton.object-hierarchy GtkRadioButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
-None.
+|| *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 
 == Directives ==
 Some of these may have tag attribute equivalents.

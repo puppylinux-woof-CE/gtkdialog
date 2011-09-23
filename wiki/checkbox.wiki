@@ -24,6 +24,8 @@ See the [http://developer.gnome.org/gtk/2.24/GtkCheckButton.html#GtkCheckButton.
 
 The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 
 == Directives ==
