@@ -26,8 +26,17 @@
 #include <gtk/gtk.h>
 #include "gtkdialog.h"
 
-#define MAXWIDGETS 256;
+#define MAXWIDGETS (529)	//256
 
+/* Using examples/expand_and_fill:
+ * 
+ * 256  (16^) = 21940 virtual memory
+ * 484  (22^) = 25588 virtual memory
+ * 529  (23^) = 26308 virtual memory
+ * 625  (25^) = 27844 virtual memory
+ * 729  (27^) = 29512 virtual memory
+ * 1024 (32^) = 34248 virtual memory
+ */
 
 /* 
  * The elements in stack can contain MAXWIDGETS number of widgets.
@@ -36,8 +45,8 @@
 typedef struct _stackelement {
 	gchar       *cval;
 	int          nwidgets;
-	GtkWidget   *widgets[256];
-	int          widgettypes[256];
+	GtkWidget   *widgets[MAXWIDGETS];
+	int          widgettypes[MAXWIDGETS];
 } stackelement;
 
 stackelement pop();

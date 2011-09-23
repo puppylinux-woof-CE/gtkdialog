@@ -1,3 +1,9 @@
+* Sat Sep 24 2011 Thunor <thunorsif@hotmail.com>
+- Added examples/miscellaneous/expand_and_fill.
+- Increased MAXWIDGETS from the tiny 256 (21MB virt) to 529 (25MB virt).
+  1024 would've been nice but virtual memory jumps to 34MB. The array
+  really should be dynamically allocated but it's a job for another day.
+
 * Thu Sep 22 2011 Thunor <thunorsif@hotmail.com>
 - Added command line option --space-expand to set the widget packing
   expand state at the project level.
