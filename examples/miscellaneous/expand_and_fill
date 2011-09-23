@@ -1,0 +1,78 @@
+#!/bin/sh
+
+export GTKDIALOG=gtkdialog
+
+funcExampleCreate() {
+	if [ $1 = 0 ]; then echo '
+<window title="Expand and Fill - Original Method" resizable="true">'
+	elif [ $1 = 1 ]; then echo '
+<window title="Expand and Fill - --space-expand" resizable="true">'
+	elif [ $1 = 2 ]; then echo '
+<window title="Expand and Fill - --space-expand + --space-fill" resizable="true">'
+	else echo '
+<window title="Expand and Fill - --space-expand + --space-fill + tweaks" resizable="true">'
+	fi
+	echo '
+	<vbox>
+		<hbox>
+			<tree stock-id="gtk-select-color"><item>tree widget</item></tree>
+			<vseparator></vseparator>
+			<vbox>
+				<entry><default>entry widget</default></entry>
+				<hseparator></hseparator>
+				<text label="text widget"></text>
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox>
+			<vbox>
+				<spinbutton></spinbutton>
+				<hseparator></hseparator>'
+	if [ $1 -lt 3 ]; then echo '
+				<colorbutton use-alpha="true">'
+	else echo '
+				<colorbutton space-expand="false" use-alpha="true">'
+	fi
+	echo '
+					<default>#'$(for f in 0 1 2; do printf "%02x" $(($RANDOM % 256)); done)'|43934"</default>
+				</colorbutton>
+			</vbox>
+			<vseparator></vseparator>
+			<edit><default>edit widget</default></edit>
+		</hbox>
+		<hseparator></hseparator>'
+	if [ $1 -lt 3 ]; then echo '
+		<hbox>'
+	else echo '
+		<hbox space-expand="false">'
+	fi
+	echo '
+			<button image-position="1">
+				<label>Next example</label>
+				<input file stock="gtk-go-forward"></input>'
+	if [ $1 = 0 ]; then echo '
+				<action>$GTKDIALOG --space-expand=true --program=CLI_EXPAND_METHOD &</action>'
+	elif [ $1 = 1 ]; then echo '
+				<action>$GTKDIALOG --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_METHOD &</action>'
+	elif [ $1 = 2 ]; then echo '
+				<action>$GTKDIALOG --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD &</action>'
+	else echo '
+				<sensitive>false</sensitive>'
+	fi
+	echo '
+			</button>
+			<button use-stock="true" label="gtk-ok"></button>
+		</hbox>
+		<statusbar><label>statusbar widget</label></statusbar>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+'
+}
+
+export ORIGINAL_METHOD="$(funcExampleCreate 0)"
+export CLI_EXPAND_METHOD="$(funcExampleCreate 1)"
+export CLI_EXPAND_PLUS_FILL_METHOD="$(funcExampleCreate 2)"
+export CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD="$(funcExampleCreate 3)"
+
+$GTKDIALOG --program=ORIGINAL_METHOD
