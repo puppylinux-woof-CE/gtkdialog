@@ -1,10 +1,13 @@
 #summary button widget reference
 
 = button widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] or [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox]
+
 ----
 
 == Definition ==
+
 {{{
 <button yes no ok cancel help tag_attr="value"...>
 	<label>text</label>
@@ -20,18 +23,22 @@ A [http://developer.gnome.org/gtk/2.24/GtkButton.html GtkButton] containing eith
 	<action type="function">parameter</action>...
 </button>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hierarchy GtkButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || label || Initial text || || || ||
@@ -49,11 +56,13 @@ Some of these may have tag attribute equivalents.
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton-clicked clicked]", emitted when the button has been activated (pressed and released).
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.signals GtkButton] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
@@ -61,6 +70,7 @@ The following functions can be performed upon this widget by any widget capable 
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
 
 The following general functions can be performed by any widget capable of emitting signals:
+
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
@@ -68,9 +78,11 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch new dialog || New dialog's shell variable name || ||
 
 == Notes ==
+
 1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK+ property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
 
 2. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
 
 3. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+
 ----
