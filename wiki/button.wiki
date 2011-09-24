@@ -32,10 +32,12 @@ See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hie
 
 The following custom tag attributes are available:
 
-<wiki:comment>table</wiki:comment>|| *Name* || *Description* || *Value* || *Since* ||
+<wiki:comment><table></wiki:comment>
+|| *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
+<wiki:comment></table></wiki:comment>
 
 == Directives ==
 
