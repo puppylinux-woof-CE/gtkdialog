@@ -32,16 +32,18 @@ See the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.object-hie
 
 The following custom tag attributes are available:
 
-<wiki:comment><table></wiki:comment>
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
-<wiki:comment></table></wiki:comment>
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
 
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || label || Initial text || || || ||
 || variable || Shell variable name || || || ||
@@ -56,6 +58,7 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
 
@@ -66,18 +69,23 @@ See also the [http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton.signa
 == Functions ==
 
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
 
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
 

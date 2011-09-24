@@ -1,33 +1,46 @@
 #summary vseparator widget reference
 
 = vseparator widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkVSeparator.html GtkVSeparator]
+
 ----
 
 == Definition ==
+
 {{{
 <vseparator tag_attr="value"...>
 </vseparator>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkVSeparator.html#GtkVSeparator.object-hierarchy GtkVSeparator] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 None.
 
 == Signals ==
+
 None.
 
 == Functions ==
+
 None.
 
 == Notes ==
+
 This widget was introduced in version 0.7.21.
+
 ----

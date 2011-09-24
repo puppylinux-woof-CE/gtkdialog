@@ -1,10 +1,13 @@
 #summary list widget reference
 
 = list widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkList.html GtkList] packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+
 ----
 
 == Definition ==
+
 {{{
 <list tag_attr="value"...>
 	<variable>varname</variable>
@@ -17,18 +20,26 @@ A [http://developer.gnome.org/gtk/2.24/GtkList.html GtkList] packed inside a [ht
 	<item>data</item>...
 </list>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkList.html#GtkList.object-hierarchy GtkList] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
 || height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
@@ -39,28 +50,39 @@ Some of these may have tag attribute equivalents.
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data || || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkList.html#GtkList-selection-changed selection-changed]", emitted when the selection has just changed.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkList.html#GtkList.signals GtkList] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.
+
 ----

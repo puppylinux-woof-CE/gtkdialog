@@ -1,10 +1,13 @@
 #summary hscale widget reference
 
 = hscale widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkHScale.html GtkHScale]
+
 ----
 
 == Definition ==
+
 {{{
 <hscale tag_attr="value"...>
 	<default>value</default>
@@ -19,12 +22,16 @@ A [http://developer.gnome.org/gtk/2.24/GtkHScale.html GtkHScale]
 	<output file>filename</output>
 </hscale>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkHScale.html#GtkHScale.object-hierarchy GtkHScale] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
@@ -33,9 +40,13 @@ The following custom tag attributes are available:
 || range-max || Maximum value || A double precision floating point value || ||
 || range-step || Step increment || A double precision floating point value || ||
 || range-value || Initial value || A double precision floating point value || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial value || A double precision floating point value || || ||
 || variable || Shell variable name || || || ||
@@ -49,29 +60,40 @@ Some of these may have tag attribute equivalents.
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data for marks and markup^[1]^ || _value_ {{{|}}} _[http://developer.gnome.org/gtk/2.24/gtk-Standard-Enumerations.html#GtkPositionType position]_ {{{|}}} _[http://developer.gnome.org/pango/stable/PangoMarkupFormat.html markup]_ (optional) || || ||
 || output file || Data output target || Filename || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkRange.html#GtkRange-value-changed value-changed]", emitted when the range value changes.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkScale.html#GtkScale.signals GtkScale] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
 || save || Save widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. Scale marks and markup require at least [http://developer.gnome.org/gtk/2.24/GtkScale.html#gtk-scale-add-mark GTK+ 2.16].
 
 This widget was introduced in version 0.7.21.
+
 ----

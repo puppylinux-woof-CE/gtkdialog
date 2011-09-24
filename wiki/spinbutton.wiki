@@ -1,10 +1,13 @@
 #summary spinbutton widget reference
 
 = spinbutton widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkSpinButton.html GtkSpinButton]
+
 ----
 
 == Definition ==
+
 {{{
 <spinbutton tag_attr="value"...>
 	<default>value</default>
@@ -18,12 +21,16 @@ A [http://developer.gnome.org/gtk/2.24/GtkSpinButton.html GtkSpinButton]
 	<output file>filename</output>
 </spinbutton>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton.object-hierarchy GtkSpinButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
@@ -32,9 +39,13 @@ The following custom tag attributes are available:
 || range-max || Maximum value || A double precision floating point value || ||
 || range-step || Step increment || A double precision floating point value || ||
 || range-value || Initial value || A double precision floating point value || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial value || A double precision floating point value || || ||
 || variable || Shell variable name || || || ||
@@ -47,8 +58,10 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || output file || Data output target || Filename || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton-value-changed value-changed]", emitted when the range value changes.
 
 The "changed" signal is emitted when typing into the entry.
@@ -60,20 +73,29 @@ For GTK+ 2.16 and later, the "[http://developer.gnome.org/gtk/2.24/GtkEntry.html
 See also the [http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton.signals GtkSpinButton] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
 || save || Save widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 This widget was introduced in version 0.7.21.
+
 ----

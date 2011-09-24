@@ -1,10 +1,13 @@
 #summary table widget reference
 
 = table widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkCList.html GtkCList] packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+
 ----
 
 == Definition ==
+
 {{{
 <table>
 	<label>text</label>
@@ -18,16 +21,22 @@ A [http://developer.gnome.org/gtk/2.24/GtkCList.html GtkCList] packed inside a [
 	<item>data</item>...
 </table>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 This widget does not accept tag attributes.
 
 The following custom tag attributes are available:
+
 None.
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || label || Column header labels || _label0_ {{{|}}} _label1_ {{{|}}} ... || || ||
 || variable || Shell variable name || || || ||
@@ -39,28 +48,39 @@ Some of these may have tag attribute equivalents.
 || action || Perform function on default signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data || _column0data_ {{{|}}} _column1data_ {{{|}}} ... || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkCList.html#GtkCList-select-row select-row]", emitted when the user selects a row in the list.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkCList.html#GtkCList.signals GtkCList] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.
+
 ----

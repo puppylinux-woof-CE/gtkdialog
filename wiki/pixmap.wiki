@@ -1,10 +1,13 @@
 #summary pixmap widget reference
 
 = pixmap widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage]
+
 ----
 
 == Definition ==
+
 {{{
 <pixmap tag_attr="value"...>
 	<variable>varname</variable>
@@ -16,18 +19,26 @@ A [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage]
 	<sensitive>state</sensitive>
 </pixmap>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage.object-hierarchy GtkImage] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
 || height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
@@ -36,21 +47,29 @@ Some of these may have tag attribute equivalents.
 || input file icon="_image_"^[1]^ || GTK theme icon name  || || (0) || 0.7.21 ||
 || input file stock="_gtk-image_"^[2]^ || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || (0) || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 There is no default signal for this widget.
 
 See the [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget.signals GtkWidget] widget and ancestor class signals. 
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. Theme icons default to 32 and do not scale or refresh (the height or width directives can be used to request a size).
 
 2. Stock icons default to GTK_ICON_SIZE_DND and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+
 ----

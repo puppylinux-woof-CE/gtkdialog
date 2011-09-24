@@ -1,10 +1,13 @@
 #summary window widget reference
 
 = window widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkWindow.html GtkWindow]
+
 ----
 
 == Definition ==
+
 {{{
 <window tag_attr="value"...>
 	widget...
@@ -12,39 +15,56 @@ A [http://developer.gnome.org/gtk/2.24/GtkWindow.html GtkWindow]
 	<action signal="type">activity</action>...
 </window>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.object-hierarchy GtkWindow] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
 None.
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 There is no default signal for this widget.
 
 See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.signals GtkWindow] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 This widget has a default border width of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer--border-width border-width]" tag attribute.
+
 ----

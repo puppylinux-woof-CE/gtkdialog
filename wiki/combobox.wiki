@@ -1,9 +1,13 @@
 #summary combobox widget reference
 
 = combobox widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkCombo.html GtkCombo]
+
 ----
 
 == Notes ==
+
 This widget has been deprecated since 0.7.21 and [comboboxtext] or [comboboxentry] should be used instead.
+
 ----

@@ -1,10 +1,13 @@
 #summary comboboxentry widget reference
 
 = comboboxentry widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html GtkComboBoxEntry]
+
 ----
 
 == Definition ==
+
 {{{
 <comboboxentry tag_attr="value"...>
 	<default>text</default>
@@ -19,12 +22,16 @@ A [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html GtkComboBoxEntry]
 	<output file>filename</output>
 </comboboxentry>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html#GtkComboBoxEntry.object-hierarchy GtkComboBoxEntry] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
@@ -33,9 +40,13 @@ The following custom tag attributes are available:
 || fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... [http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types (common types)] || ||
 || fs-folder || fileselect function current folder || || ||
 || fs-title || fileselect function dialog title || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial selection or entry text if unmatched || Text || || ||
 || variable || Shell variable name || || || ||
@@ -49,8 +60,10 @@ Some of these may have tag attribute equivalents.
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data || || || ||
 || output file || Data output target || Filename || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox-changed changed]", emitted when the active item is changed and when typing into the entry.
 
 The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activate]" signal is emitted when the user activates the entry with the Enter key.
@@ -58,7 +71,10 @@ The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activa
 See also the [http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox.signals GtkComboBox] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
@@ -67,16 +83,22 @@ The following functions can be performed upon this widget by any widget capable 
 || fileselect || Launch file selection dialog || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. The save function will write the entry text to the output file if it is unique and non-null.
 
 This widget was introduced in version 0.7.21.
+
 ----

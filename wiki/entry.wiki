@@ -1,10 +1,13 @@
 #summary entry widget reference
 
 = entry widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkEntry.html GtkEntry]
+
 ----
 
 == Definition ==
+
 {{{
 <entry tag_attr="value"...>
 	<default>text</default>
@@ -20,12 +23,16 @@ A [http://developer.gnome.org/gtk/2.24/GtkEntry.html GtkEntry]
 	<output file>filename</output>
 </entry>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry.object-hierarchy GtkEntry] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
@@ -35,9 +42,13 @@ The following custom tag attributes are available:
 || fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... [http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types (common types)] || 0.7.21 ||
 || fs-folder || fileselect function current folder || || 0.7.21 ||
 || fs-title || fileselect function dialog title || || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial data || Text || || ||
 || variable || Shell variable name || || || ||
@@ -52,8 +63,10 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || output file || Data output target || Filename || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "changed", emitted when typing into the entry.
 
 The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activate]" signal is emitted when the user activates the entry with the Enter key (since 0.7.21).
@@ -63,7 +76,10 @@ For GTK+ 2.16 and later, the "[http://developer.gnome.org/gtk/2.24/GtkEntry.html
 See also the [http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry.signals GtkEntry] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
@@ -72,14 +88,20 @@ The following functions can be performed upon this widget by any widget capable 
 || fileselect || Launch file selection dialog || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 None.
+
 ----

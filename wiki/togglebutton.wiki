@@ -1,10 +1,13 @@
 #summary togglebutton widget reference
 
 = togglebutton widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html GtkToggleButton] containing either a [http://developer.gnome.org/gtk/2.24/GtkLabel.html GtkLabel], a [http://developer.gnome.org/gtk/2.24/GtkImage.html GtkImage] or both packed inside a [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] or [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox]
+
 ----
 
 == Definition ==
+
 {{{
 <togglebutton tag_attr="value"...>
 	<label>text</label>
@@ -22,19 +25,27 @@ A [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html GtkToggleButton] con
 	<action type="function">parameter</action>...
 </togglebutton>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton.object-hierarchy GtkToggleButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || label || Initial text || || || ||
 || default || Initial state || {{{true}}} or {{{false}}} || || ||
@@ -51,27 +62,37 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_^[4]^ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton-toggled toggled]", emitted when the state is changed.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton.signals GtkToggleButton] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK+ property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
 
 2. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
@@ -81,4 +102,5 @@ The following general functions can be performed by any widget capable of emitti
 4. This widget supports conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
 
 This widget was introduced in version 0.7.21.
+
 ----

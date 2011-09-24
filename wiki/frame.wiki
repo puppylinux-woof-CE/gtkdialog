@@ -1,32 +1,43 @@
 #summary frame widget reference
 
 = frame widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkFrame.html GtkFrame] containing a [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox]
+
 ----
 
 == Definition ==
+
 {{{
 <frame label>
 	widget...
 </frame>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 None, as the label consumes all of the space normally occupied by the tag attributes.
 
 The following custom tag attributes are available:
+
 None.
 
 == Directives ==
+
 None.
 
 == Signals ==
+
 None.
 
 == Functions ==
+
 None.
 
 == Notes ==
+
 This widget has a default border width of 5 and a default spacing of 5 which cannot be overridden.
+
 ----

@@ -1,10 +1,13 @@
 #summary menuitem widget reference
 
 = menuitem widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html GtkImageMenuItem]
+
 ----
 
 == Definition ==
+
 {{{
 <menuitem tag_attr="value"...>
 	<label>text</label>
@@ -20,12 +23,16 @@ A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://de
 	<output file>filename</output>
 </menuitem>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#gtk-gtkcheckmenuitem.object-hierarchy GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.object-hierarchy GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || accel-key || Accelerator key || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h (full list)] || 0.7.21 ||
@@ -35,9 +42,13 @@ The following custom tag attributes are available:
 || image-name || Image filename ||  || 0.7.21 ||
 || checkbox || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
 || radiobutton || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || label || Initial text || || || ||
 || variable || Shell variable name || || || ||
@@ -52,8 +63,10 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_^[4]^ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || output file || Data output target || Filename || || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal for the checkbox and radiobutton menuitem widgets is "[http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem-toggled toggled]", emitted when the state is changed, otherwise the default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
 
 All widgets emit the "activate" signal.
@@ -61,21 +74,29 @@ All widgets emit the "activate" signal.
 See also the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.signals GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#gtk-gtkcheckmenuitem.signals GtkCheckMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.signals GtkRadioMenuItem] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || 0.7.21 ||
 || save || Save widget data || Shell variable name || 0.7.21 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. SHIFT is 1, CTRL is 4 and ALT is 8 and you can OR them together.
 
 2. Theme icons default to 16 and do not scale or refresh (the height or width directives can be used to request a size).
@@ -83,4 +104,5 @@ The following general functions can be performed by any widget capable of emitti
 3. The input file directive is used exclusively by the checkbox and radiobutton menuitem widgets since the "image-name" custom tag attribute would contain any image filename.
 
 4. The checkbox and radiobutton menuitem widgets support conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
+
 ----

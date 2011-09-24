@@ -1,10 +1,13 @@
 #summary colorbutton widget reference
 
 = colorbutton widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkColorButton.html GtkColorButton]
+
 ----
 
 == Definition ==
+
 {{{
 <colorbutton tag_attr="value"...>
 	<default>data</default>
@@ -18,18 +21,26 @@ A [http://developer.gnome.org/gtk/2.24/GtkColorButton.html GtkColorButton]
 	<output file>filename</output>
 </colorbutton>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton.object-hierarchy GtkColorButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || default || Initial data || _#rrggbb_ {{{|}}} _alpha_^[1]^ || || ||
 || variable || Shell variable name || || || ||
@@ -42,29 +53,40 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || output file || Data output target || Filename || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton-color-set color-set]", emitted when the user selects a colour.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton.signals GtkColorButton] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
 || save || Save widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 1. Setting the "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton--use-alpha use-alpha]" tag attribute to true will enable alpha selection. Alpha can be passed in following the _#rrggbb_ value separated by a '{{{|}}}' character, or via the "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton--alpha alpha]" tag attribute. Although the colour selection dialog displays alpha as an 8bit 0-255 value, GTK+ and Gtkdialog manage it as a 16bit 0-65535 value and therefore it'll require converting between the two formats. To convert from 8bit to 16bit use {{{alpha * 257}}} and from 16bit to 8bit use {{{(alpha + 257 / 2) / 257}}}.
 
 This widget was introduced in version 0.7.21.
+
 ----

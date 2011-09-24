@@ -1,10 +1,13 @@
 #summary statusbar widget reference
 
 = statusbar widget =
+
 A [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html GtkStatusbar]
+
 ----
 
 == Definition ==
+
 {{{
 <statusbar tag_attr="value"...>
 	<label>text</label>
@@ -17,12 +20,16 @@ A [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html GtkStatusbar]
 	<output file>filename</output>
 </statusbar>
 }}}
+
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
+
 See the [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html#GtkStatusbar.object-hierarchy GtkStatusbar] widget and ancestor class properties.
 
 The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
@@ -31,9 +38,13 @@ The following custom tag attributes are available:
 || fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... [http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types (common types)] || ||
 || fs-folder || fileselect function current folder || || ||
 || fs-title || fileselect function dialog title || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
+
 Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || label || Initial text || || || ||
 || default || Initial text || || || ||
@@ -43,14 +54,19 @@ Some of these may have tag attribute equivalents.
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
+
 There is no default signal for this widget.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkStatusbar.html#GtkStatusbar.signals GtkStatusbar] widget and ancestor class signals.
 
 == Functions ==
+
 The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
@@ -58,14 +74,20 @@ The following functions can be performed upon this widget by any widget capable 
 || save || Save widget data || Shell variable name || ||
 || fileselect || Launch file selection dialog || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close launched dialog || Launched dialog's shell variable name || ||
 || launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
+
 This widget was introduced in version 0.7.21.
+
 ----
