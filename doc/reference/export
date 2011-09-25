@@ -1,0 +1,179 @@
+#!/bin/sh
+
+#------------------------------------------------------------#
+# Google Code Wiki to HTML Export Script - Thunor 2011-09-23
+#------------------------------------------------------------#
+
+# Check command line arguments
+if [ "$1" = --help -o "$1" = -h -o -z "$1" ]; then
+	echo "Google Code wiki to html export script"
+	echo "Usage: export filename.wiki"
+	echo
+	echo "The file will be exported to ./filename.html"
+	echo
+	exit 1
+fi
+
+# Check inputfile exists.
+inputfile=$1
+if [ ! -f $inputfile ]; then
+	echo "Couldn't find inputfile '$inputfile'"
+	exit 1
+fi
+
+# Generate an output filename.
+outputfile=$(basename $inputfile | sed 's|.wiki||').html
+
+# The colour palette.
+clrBody="#e0e0e8"
+clrPage="#ffffff"
+clrBorder="#c8c8d0"
+clrBorderDarker="#b8b8c0"
+clrAHover="#8080ff"
+clrHR="#a8a8b0"
+clrTH="#f0f0f8"
+clrPRE="#e8e8f0"
+
+# The start...
+# I designed this firstly without CSS so that it looks nice in
+# alternative browsers and then the CSS beautifies and tweaks it.
+echo '
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+
+'$(grep "#summary " $inputfile | sed 's|#summary \(.*\)|<title>gtkdialog: \1</title>|')'
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" >
+
+<style type="text/css">
+	body {
+		font-size: 14px;
+		font-family: arial, verdana, sans-serif;
+		background-color: '$clrBody';
+	}
+	h1 {
+		font-size: 24px;
+	}
+	h2 {
+		font-size: 18px;
+	}
+	a:link {
+		text-decoration: none;
+	}
+	a:visited {
+		text-decoration: none;
+	}
+	a:active {
+		text-decoration: none;
+	}
+	a:hover {
+		color: '$clrAHover';
+		text-decoration: underline;
+	}
+	hr {
+		color: '$clrHR';
+		background-color: '$clrHR';
+		height: 1px;
+		border: 0;
+	}
+	pre {
+		background-color: '$clrPRE';
+		width: 500px;
+		border: 1px dotted '$clrBorderDarker';
+		padding: 10px;
+	}
+	sup {
+		font-size: 10px;
+	}
+	table.wiki {
+	/*	border-color: #ff0000;*/
+		border-color: '$clrBorder';
+		border-width: 0px 0px 2px 2px;
+		border-style: solid;
+		border-collapse: collapse;
+		border-spacing: 0px;
+	}
+	td.wiki, th.wiki {
+	/*	border-color: #00ff00;*/
+		border-color: '$clrBorder';
+		border-width: 2px 2px 0px 0px;
+		border-style: solid;
+	}
+	th.wiki {
+		background-color: '$clrTH';
+	}
+	.footer {
+		font-size: 12px;
+	}
+</style>
+
+</head>
+<body bgcolor="'$clrBody'">
+
+<table width="978" align="center" bgcolor="'$clrBorderDarker'" cellpadding="0px" cellspacing="1px">
+<tr>
+<td>
+<table bgcolor="'$clrPage'" cellpadding="0px" cellspacing="10px">
+<tr>
+<td>
+' > $outputfile
+
+# I wasted a lot of time trying to work out how to identify the table
+# boundaries so I embedded special Export* comments into the wiki.
+# Towards the end, any lines that don't start with a tab or ampersand
+# or end with a '>' are destined to be wrapped inside paragraph tags.
+
+sed \
+-e '/^#/d' \
+-e 's|<wiki:comment>\(ExportTableStart\)</wiki:comment>|\1|' \
+-e 's|<wiki:comment>\(ExportTableEnd\)</wiki:comment>|\1|' \
+-e 's|<|\&lt;|g' -e 's|>|\&gt;|g' \
+-e 's|^{{{$|<pre>|' -e 's|^}}}$|</pre>|' \
+-e 's|^==\(.*\)[^==]*==|<h2>\1</h2>|' \
+-e 's|^=\(.*\)[^=]*=|<h1>\1</h1>|' \
+-e 's|^----$|<hr>|' \
+-e 's|\*\([^*]*\)\*|<b>\1</b>|g' \
+-e 's|\([^a-zA-Z0-9]\)_\([^_]*\)_\([^a-zA-Z0-9]\)|\1<i>\2</i>\3|g' \
+-e 's|\([^a-zA-Z0-9]\)_\([^_]*\)_\([^a-zA-Z0-9]\)|\1<i>\2</i>\3|g' \
+-e 's|{{{\([^}}}]*\)}}}|<code>\1</code>|g' \
+-e 's|\^\(\[\([0-9]*\)[^^]*\)\^|<sup><a href="#note\2">\1</a></sup>|g' \
+-e 's|^\([0-9]\)\. |<a name="note\1"></a>&|g' \
+-e 's|\[\(http[^ ]*\) \([^]]*\)\]|<a href="\1">\2</a>|g' \
+-e 's| \[\([a-z]*[^]]*\)\] | <a href="\1.html">\1</a> |g' \
+-e 's|^\|\| <b>|<tr><th class="wiki"> <b>|g' \
+-e 's|^\|\||<tr><td class="wiki">|g' \
+-e 's|</b> \|\|$|</b> </th></tr>|g' \
+-e 's|\|\|$|</td></tr>|g' \
+-e 's|</b> \|\||</b> </th><th class="wiki">|g' \
+-e 's|\|\||</td><td class="wiki">|g' \
+-e 's|ExportTableStart|<table class="wiki" border="1" cellpadding="5px">|' \
+-e 's|ExportTableEnd|</table>|' \
+-e 's|^[^\t&]*[^>]$|<p>&</p>|' \
+$inputfile >> $outputfile
+
+# The end...
+echo '<p>' >> $outputfile
+
+ls -1 $(dirname $inputfile) | sed 's|\(.*\)\(\.wiki\)|<a href="\1.html">\1</a>, |' >> $outputfile
+
+echo '</p>
+
+<p>&nbsp;</p>
+
+</td>
+</tr>
+<tr><td><table width="100%" cellpadding="0px" cellspacing="0px"><tr>
+<td class="footer" width="33%" align="center">'$(date "+%Y-%m-%d")' <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Gtkdialog Project Page</a></td>
+<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Gtkdialog Development</a></td>
+</tr></table></td></tr>
+</table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>' >> $outputfile

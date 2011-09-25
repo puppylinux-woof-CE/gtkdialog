@@ -1,0 +1,186 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+
+<title>gtkdialog: hbox widget reference</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" >
+
+<style type="text/css">
+	body {
+		font-size: 14px;
+		font-family: arial, verdana, sans-serif;
+		background-color: #e0e0e8;
+	}
+	h1 {
+		font-size: 24px;
+	}
+	h2 {
+		font-size: 18px;
+	}
+	a:link {
+		text-decoration: none;
+	}
+	a:visited {
+		text-decoration: none;
+	}
+	a:active {
+		text-decoration: none;
+	}
+	a:hover {
+		color: #8080ff;
+		text-decoration: underline;
+	}
+	hr {
+		color: #a8a8b0;
+		background-color: #a8a8b0;
+		height: 1px;
+		border: 0;
+	}
+	pre {
+		background-color: #e8e8f0;
+		width: 500px;
+		border: 1px dotted #b8b8c0;
+		padding: 10px;
+	}
+	sup {
+		font-size: 10px;
+	}
+	table.wiki {
+	/*	border-color: #ff0000;*/
+		border-color: #c8c8d0;
+		border-width: 0px 0px 2px 2px;
+		border-style: solid;
+		border-collapse: collapse;
+		border-spacing: 0px;
+	}
+	td.wiki, th.wiki {
+	/*	border-color: #00ff00;*/
+		border-color: #c8c8d0;
+		border-width: 2px 2px 0px 0px;
+		border-style: solid;
+	}
+	th.wiki {
+		background-color: #f0f0f8;
+	}
+	.footer {
+		font-size: 12px;
+	}
+</style>
+
+</head>
+<body bgcolor="#e0e0e8">
+
+<table width="978" align="center" bgcolor="#b8b8c0" cellpadding="0px" cellspacing="1px">
+<tr>
+<td>
+<table bgcolor="#ffffff" cellpadding="0px" cellspacing="10px">
+<tr>
+<td>
+
+
+<h1> hbox widget </h1>
+
+A <a href="http://developer.gnome.org/gtk/2.24/GtkHBox.html">GtkHBox</a> optionally packed inside a <a href="http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html">GtkScrolledWindow</a>
+
+<hr>
+
+<h2> Definition </h2>
+
+<pre>
+&lt;hbox tag_attr="value"...&gt;
+	widget...
+&lt;/hbox&gt;
+</pre>
+
+<p>"..." denotes acceptance of multiples of the same thing.</p>
+
+<h2> Tag Attributes </h2>
+
+<p>See the <a href="http://developer.gnome.org/gtk/2.24/GtkHBox.html#GtkHBox.object-hierarchy">GtkHBox</a> widget and ancestor class properties.</p>
+
+<p>The following custom tag attributes are available:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> space-expand<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Pack this and nested widgets expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> space-fill<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Pack this and nested widgets filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> scrollable </td><td class="wiki"> Scrolled window capability </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> height </td><td class="wiki"> Scrolled window dimension </td><td class="wiki"> An integer &gt; <code>0</code> </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> width </td><td class="wiki"> Scrolled window dimension </td><td class="wiki"> An integer &gt; <code>0</code> </td><td class="wiki"> 0.7.21 </td></tr>
+</table>
+
+<h2> Directives </h2>
+
+<p>None.</p>
+
+<h2> Signals </h2>
+
+<p>None.</p>
+
+<h2> Functions </h2>
+
+<p>None.</p>
+
+<h2> Notes </h2>
+
+<p><a name="note1"></a>1. By default the frame widget and every widget automatically placed inside a scrolled window (edit, tree, list, table and optionally the h/vbox) are packed with expand and fill set to true, otherwise widgets are packed with expand and fill set to false. This rather quirky system constitutes the original Gtkdialog widget packing method and therefore must continue to be supported, but since 0.7.21 it's now possible to override this behaviour globally with the --space-expand=state and --space-fill=state command line options, at the h/vbox container level or at the individual widget level or a combination thereof.</p>
+
+<p>This widget has a default spacing of 5 which can be overridden with the "<a href="http://developer.gnome.org/gtk/2.24/GtkBox.html#GtkBox--spacing">spacing</a>" tag attribute.</p>
+
+<hr>
+<p>
+<a href="button.html">button</a>, 
+<a href="checkbox.html">checkbox</a>, 
+<a href="colorbutton.html">colorbutton</a>, 
+<a href="comboboxentry.html">comboboxentry</a>, 
+<a href="comboboxtext.html">comboboxtext</a>, 
+<a href="combobox.html">combobox</a>, 
+<a href="edit.html">edit</a>, 
+<a href="entry.html">entry</a>, 
+<a href="frame.html">frame</a>, 
+<a href="hbox.html">hbox</a>, 
+<a href="hscale.html">hscale</a>, 
+<a href="hseparator.html">hseparator</a>, 
+<a href="list.html">list</a>, 
+<a href="menubar.html">menubar</a>, 
+<a href="menuitemseparator.html">menuitemseparator</a>, 
+<a href="menuitem.html">menuitem</a>, 
+<a href="menu.html">menu</a>, 
+<a href="notebook.html">notebook</a>, 
+<a href="pixmap.html">pixmap</a>, 
+<a href="progressbar.html">progressbar</a>, 
+<a href="radiobutton.html">radiobutton</a>, 
+<a href="separator.html">separator</a>, 
+<a href="spinbutton.html">spinbutton</a>, 
+<a href="statusbar.html">statusbar</a>, 
+<a href="table.html">table</a>, 
+<a href="text.html">text</a>, 
+<a href="timer.html">timer</a>, 
+<a href="togglebutton.html">togglebutton</a>, 
+<a href="tree.html">tree</a>, 
+<a href="vbox.html">vbox</a>, 
+<a href="vscale.html">vscale</a>, 
+<a href="vseparator.html">vseparator</a>, 
+<a href="window.html">window</a>, 
+</p>
+
+<p>&nbsp;</p>
+
+</td>
+</tr>
+<tr><td><table width="100%" cellpadding="0px" cellspacing="0px"><tr>
+<td class="footer" width="33%" align="center">2011-09-25 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Gtkdialog Project Page</a></td>
+<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Gtkdialog Development</a></td>
+</tr></table></td></tr>
+</table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>

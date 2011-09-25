@@ -3,6 +3,7 @@ SUBDIRS=src doc
 EXTRA_DIST = \
 	autogen.sh \
 	install.iss pango.modules pango.aliases gdk-pixbuf.loaders \
+	doc/reference/* \
 	examples/button/* \
 	examples/checkbox/* \
 	examples/colorbutton/* \
