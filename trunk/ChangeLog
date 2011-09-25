@@ -1,4 +1,7 @@
-* Sat Sep 24 2011 Thunor <thunorsif@hotmail.com>
+* Sun Sep 25 2011 Thunor <thunorsif@hotmail.com>
+- Exported the wiki to doc/reference (script included).
+
+* Fri Sep 23 2011 Thunor <thunorsif@hotmail.com>
 - Added examples/miscellaneous/expand_and_fill.
 - Increased MAXWIDGETS from the tiny 256 (21MB virt) to 529 (25MB virt).
   1024 would've been nice but virtual memory jumps to 34MB. The array

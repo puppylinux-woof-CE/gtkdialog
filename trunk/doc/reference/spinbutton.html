@@ -1,0 +1,235 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+
+<title>gtkdialog: spinbutton widget reference</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" >
+
+<style type="text/css">
+	body {
+		font-size: 14px;
+		font-family: arial, verdana, sans-serif;
+		background-color: #e0e0e8;
+	}
+	h1 {
+		font-size: 24px;
+	}
+	h2 {
+		font-size: 18px;
+	}
+	a:link {
+		text-decoration: none;
+	}
+	a:visited {
+		text-decoration: none;
+	}
+	a:active {
+		text-decoration: none;
+	}
+	a:hover {
+		color: #8080ff;
+		text-decoration: underline;
+	}
+	hr {
+		color: #a8a8b0;
+		background-color: #a8a8b0;
+		height: 1px;
+		border: 0;
+	}
+	pre {
+		background-color: #e8e8f0;
+		width: 500px;
+		border: 1px dotted #b8b8c0;
+		padding: 10px;
+	}
+	sup {
+		font-size: 10px;
+	}
+	table.wiki {
+	/*	border-color: #ff0000;*/
+		border-color: #c8c8d0;
+		border-width: 0px 0px 2px 2px;
+		border-style: solid;
+		border-collapse: collapse;
+		border-spacing: 0px;
+	}
+	td.wiki, th.wiki {
+	/*	border-color: #00ff00;*/
+		border-color: #c8c8d0;
+		border-width: 2px 2px 0px 0px;
+		border-style: solid;
+	}
+	th.wiki {
+		background-color: #f0f0f8;
+	}
+	.footer {
+		font-size: 12px;
+	}
+</style>
+
+</head>
+<body bgcolor="#e0e0e8">
+
+<table width="978" align="center" bgcolor="#b8b8c0" cellpadding="0px" cellspacing="1px">
+<tr>
+<td>
+<table bgcolor="#ffffff" cellpadding="0px" cellspacing="10px">
+<tr>
+<td>
+
+
+<h1> spinbutton widget </h1>
+
+A <a href="http://developer.gnome.org/gtk/2.24/GtkSpinButton.html">GtkSpinButton</a>
+
+<hr>
+
+<h2> Definition </h2>
+
+<pre>
+&lt;spinbutton tag_attr="value"...&gt;
+	&lt;default&gt;value&lt;/default&gt;
+	&lt;variable&gt;varname&lt;/variable&gt;
+	&lt;input&gt;command&lt;/input&gt;
+	&lt;input file&gt;filename&lt;/input&gt;
+	&lt;sensitive&gt;state&lt;/sensitive&gt;
+	&lt;action&gt;activity&lt;/action&gt;...
+	&lt;action signal="type"&gt;activity&lt;/action&gt;...
+	&lt;action type="function"&gt;parameter&lt;/action&gt;...
+	&lt;output file&gt;filename&lt;/output&gt;
+&lt;/spinbutton&gt;
+</pre>
+
+<p>"..." denotes acceptance of multiples of the same thing.</p>
+
+<h2> Tag Attributes </h2>
+
+<p>See the <a href="http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton.object-hierarchy">GtkSpinButton</a> widget and ancestor class properties.</p>
+
+<p>The following custom tag attributes are available:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> range-min </td><td class="wiki"> Minimum value </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> range-max </td><td class="wiki"> Maximum value </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> range-step </td><td class="wiki"> Step increment </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> range-value </td><td class="wiki"> Initial value </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td></tr>
+</table>
+
+<h2> Directives </h2>
+
+<p>Some of these may have tag attribute equivalents.</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Mandatory</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> default </td><td class="wiki"> Initial value </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> input file </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action </td><td class="wiki"> Execute command on default signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action type="<i>function</i>" </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> output file </td><td class="wiki"> Data output target </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+</table>
+
+<h2> Signals </h2>
+
+<p>The default signal is "<a href="http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton-value-changed">value-changed</a>", emitted when the range value changes.</p>
+
+<p>The "changed" signal is emitted when typing into the entry.</p>
+
+<p>The "<a href="http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate">activate</a>" signal is emitted when the user activates the entry with the Enter key.</p>
+
+<p>For GTK+ 2.16 and later, the "<a href="http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-press">icon-press</a>" and "<a href="http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-release">icon-release</a>" signals are emitted when an activatable icon is pressed or released, but these signal names will be prefixed with either "primary-" or "secondary-" to indicate the source icon.</p>
+
+<p>See also the <a href="http://developer.gnome.org/gtk/2.24/GtkSpinButton.html#GtkSpinButton.signals">GtkSpinButton</a> widget and ancestor class signals.</p>
+
+<h2> Functions </h2>
+
+<p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> save </td><td class="wiki"> Save widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+</table>
+
+<p>The following general functions can be performed by any widget capable of emitting signals:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> command </td><td class="wiki"> Execute command </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> exit </td><td class="wiki"> Exit dialog </td><td class="wiki"> A value for the <code>EXIT</code> shell variable </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> closewindow </td><td class="wiki"> Close launched dialog </td><td class="wiki"> Launched dialog's shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> launch </td><td class="wiki"> Launch new dialog </td><td class="wiki"> New dialog's shell variable name </td><td class="wiki"> </td></tr>
+</table>
+
+<h2> Notes </h2>
+
+<p>This widget was introduced in version 0.7.21.</p>
+
+<hr>
+<p>
+<a href="button.html">button</a>, 
+<a href="checkbox.html">checkbox</a>, 
+<a href="colorbutton.html">colorbutton</a>, 
+<a href="comboboxentry.html">comboboxentry</a>, 
+<a href="comboboxtext.html">comboboxtext</a>, 
+<a href="combobox.html">combobox</a>, 
+<a href="edit.html">edit</a>, 
+<a href="entry.html">entry</a>, 
+<a href="frame.html">frame</a>, 
+<a href="hbox.html">hbox</a>, 
+<a href="hscale.html">hscale</a>, 
+<a href="hseparator.html">hseparator</a>, 
+<a href="list.html">list</a>, 
+<a href="menubar.html">menubar</a>, 
+<a href="menuitemseparator.html">menuitemseparator</a>, 
+<a href="menuitem.html">menuitem</a>, 
+<a href="menu.html">menu</a>, 
+<a href="notebook.html">notebook</a>, 
+<a href="pixmap.html">pixmap</a>, 
+<a href="progressbar.html">progressbar</a>, 
+<a href="radiobutton.html">radiobutton</a>, 
+<a href="separator.html">separator</a>, 
+<a href="spinbutton.html">spinbutton</a>, 
+<a href="statusbar.html">statusbar</a>, 
+<a href="table.html">table</a>, 
+<a href="text.html">text</a>, 
+<a href="timer.html">timer</a>, 
+<a href="togglebutton.html">togglebutton</a>, 
+<a href="tree.html">tree</a>, 
+<a href="vbox.html">vbox</a>, 
+<a href="vscale.html">vscale</a>, 
+<a href="vseparator.html">vseparator</a>, 
+<a href="window.html">window</a>, 
+</p>
+
+<p>&nbsp;</p>
+
+</td>
+</tr>
+<tr><td><table width="100%" cellpadding="0px" cellspacing="0px"><tr>
+<td class="footer" width="33%" align="center">2011-09-25 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Gtkdialog Project Page</a></td>
+<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Gtkdialog Development</a></td>
+</tr></table></td></tr>
+</table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>
