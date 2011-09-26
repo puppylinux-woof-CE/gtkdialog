@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT(gtkdialog, 0.7.21, pipas@linux.pte.hu)
-AM_INIT_AUTOMAKE(gtkdialog, 0.7.21)
+AC_INIT(gtkdialog, 0.8.0, pipas@linux.pte.hu)
+AM_INIT_AUTOMAKE(gtkdialog, 0.8.0)
 AM_CONFIG_HEADER([config.h])
 AM_MAINTAINER_MODE
 
