@@ -31,7 +31,7 @@ clrBorder="#c8c8d0"
 clrBorderDarker="#b8b8c0"
 clrAHover="#8080ff"
 clrHR="#a8a8b0"
-clrTH="#f0f0f8"
+clrTH="#e8e8f0";#"#f0f0f8"
 clrPRE="#e8e8f0"
 
 # The start...
@@ -81,7 +81,7 @@ echo '
 	}
 	pre {
 		background-color: '$clrPRE';
-		width: 500px;
+		/*width: 500px;*/
 		border: 1px dotted '$clrBorderDarker';
 		padding: 10px;
 	}
@@ -89,7 +89,7 @@ echo '
 		font-size: 10px;
 	}
 	table.wiki {
-	/*	border-color: #ff0000;*/
+		/*border-color: #ff0000;*/
 		border-color: '$clrBorder';
 		border-width: 0px 0px 2px 2px;
 		border-style: solid;
@@ -97,7 +97,7 @@ echo '
 		border-spacing: 0px;
 	}
 	td.wiki, th.wiki {
-	/*	border-color: #00ff00;*/
+		/*border-color: #00ff00;*/
 		border-color: '$clrBorder';
 		border-width: 2px 2px 0px 0px;
 		border-style: solid;
@@ -106,20 +106,20 @@ echo '
 		background-color: '$clrTH';
 	}
 	.footer {
-		font-size: 12px;
+		font-size: 14px;
 	}
 </style>
 
 </head>
 <body bgcolor="'$clrBody'">
 
-<table width="978" align="center" bgcolor="'$clrBorderDarker'" cellpadding="0px" cellspacing="1px">
-<tr>
-<td>
-<table bgcolor="'$clrPage'" cellpadding="0px" cellspacing="10px">
-<tr>
-<td>
-' > $outputfile
+<!--<table width="978" align="center" bgcolor="'$clrBorderDarker'" cellpadding="0px" cellspacing="1px">-->
+	<table bgcolor="'$clrBorderDarker'" cellpadding="0px" cellspacing="1px">
+		<tr>
+			<td>
+				<table bgcolor="'$clrPage'" cellpadding="0px" cellspacing="10px">
+					<tr>
+						<td>' > $outputfile
 
 # I wasted a lot of time trying to work out how to identify the table
 # boundaries so I embedded special Export* comments into the wiki.
@@ -161,19 +161,24 @@ ls -1 $(dirname $inputfile) | sed 's|\(.*\)\(\.wiki\)|<a href="\1.html">\1</a>, 
 
 echo '</p>
 
-<p>&nbsp;</p>
-
-</td>
-</tr>
-<tr><td><table width="100%" cellpadding="0px" cellspacing="0px"><tr>
-<td class="footer" width="33%" align="center">'$(date "+%Y-%m-%d")' <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
-<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Gtkdialog Project Page</a></td>
-<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Gtkdialog Development</a></td>
-</tr></table></td></tr>
-</table>
-</td>
-</tr>
-</table>
+							<p>&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table width="100%" cellpadding="0px" cellspacing="0px">
+								<tr>
+									<td class="footer" width="33%" align="center">'$(date "+%Y-%m-%d")' <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
+									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
 
 </body>
 </html>' >> $outputfile

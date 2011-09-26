@@ -1,3 +1,10 @@
+Please see NEWS for a summary of changes since the last release suitable
+for announcements.
+
+* Mon Sep 26 2011 Thunor <thunorsif@hotmail.com>
+- Version 0.8.0 released (r306)
+- Updated the documentation.
+
 * Sun Sep 25 2011 Thunor <thunorsif@hotmail.com>
 - Exported the wiki to doc/reference (script included).
 

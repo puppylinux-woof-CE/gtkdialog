@@ -1,1 +1,55 @@
+2011-09-26
+* 0.8.0 released
+* Applied several patches from various distributions
+* Added support for all selection modes to the tree widget
+* Added hbox and vbox widget scrolling capability
+* Added hseparator widget
+* Added vseparator widget
+* Added comboboxtext widget
+* Added image positioning support to the button widget
+* Added comboboxentry widget
+* Added hscale widget
+* Added vscale widget
+* Added menuitemseparator widget
+* Added "block-function-signals" custom tag attribute to block signal
+  emissions from action functions
+* Overhauled the entry widget
+* Added "accel-key" and "accel-mods" custom tag attributes to support
+  menuitem keyboard accelerators
+* Re-engineered the menu widget
+* Added submenu support to the menu widget
+* Added checkbox menuitem widget
+* Added radiobutton menuitem widget
+* Added image-from-file support to the menuitem widget
+* Added theme icon support to the pixmap widget
+* Added support for using the width or height directives to override the
+  default theme icon size to the button, menuitem and pixmap widgets
+* Fixed a bug that resulted in all guint GTK+ properties being bugged
+* Added spinbutton widget
+* Added timer widget
+* Added sensitive directive
+* Fixed the hardcoded "gtkdialog" binary name in main
+* Re-engineered a few functions that needed to be reentrant but weren't
+* Overhauled the notebook widget
+* Added "tab-prefix", "tab-suffix" and "tab-base-index" custom tag
+  attributes to the notebook widget to control automated page labelling
+* Added "use-underline" support to buttons with a label directive
+* Added togglebutton widget
+* Overhauled the fileselect action function which includes file filters
+* Added statusbar widget
+* Fixed the tree widget's input file directive
+* Fixed a bug that prevented the table widget items from refreshing
+* Fixed a bug that was making the list widget hang
+* Fixed the tree widget's problematic pixmap rendering when including
+  rows from multiple sources with different icon settings
+* Fixed (or completed) the tree widget's default icon feature
+* Added clear, fileselect and envvar support to the text widget
+* Added colorbutton widget
+* Added --space-expand and --space-fill command line options
+* Added "space-expand" and "space-fill" custom tag attributes to all
+  widgets to control widget packing expand and fill states
+* Increased MAXWIDGETS from 256 to 529
+* Refactored many widgets using a new efficient consistent template
+* Updated and fixed the existing examples and added 37 more
+* Added an html widget reference converted from the project's wiki
 

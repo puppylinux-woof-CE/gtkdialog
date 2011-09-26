@@ -7,16 +7,16 @@ Thunor: I've fixed these or found them to have already been fixed:
 (5)  06.01-editor_attributes: Custom type properties, such as 
       "wrap-mode"            GtkWrapMode           : Read / Write
      are not supported. (Thunor: it already works as a tag attribute).
+(6)  10.01-vbox_and_hbox_attributes: we always packing with the defaults.
 (7)  Segfault if no name given for the frame.
+(8)  All the action handling functions (button_pressed) should get a type
+     parameter showing what kind of command has to be executed.
+(10) The tree widget is virtually unhandled.
 (12) Segmentation fault when the table has no variable name.
 
 Thunor: These still remain:
 ---------------------------
-(6)  10.01-vbox_and_hbox_attributes: we always packing with the defaults.
-(8)  All the action handling functions (button_pressed) should get a type
-     parameter showing what kind of command has to be executed.
 (9)  Opening multiple window with the same name leads to confusion.
-(10) The tree widget is virtually unhandled.
 (11) At the creation of the widgets the initialization should be sorted
      as the dependencies are dictating.
 (13) Unpaired " is printed to the standard output, which is very problematic.
