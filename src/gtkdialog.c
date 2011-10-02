@@ -369,8 +369,8 @@ getnextchar(void)
 	 * This is not too GTKish
 	 */
 	if (source == PRG_MEMORY) {
-		if (program_src == NULL || charsreaded > strlen(program_src))
-			return (EOF);
+/*		if (program_src == NULL || charsreaded > strlen(program_src))
+			return (EOF);	Redundant: Bug: slowness at start-up */
 		c = (int) program_src[charsreaded];
 		if (c == '\0')
 			c = EOF;
