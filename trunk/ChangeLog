@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Oct 2 2011 Thunor <thunorsif@hotmail.com>
+- Fixed a bug that was causing slowness at start-up when loading the
+  XML-like GUI description from an environment variable; loading from
+  a file or stdin though are fine.
+
 * Mon Sep 26 2011 Thunor <thunorsif@hotmail.com>
 - Version 0.8.0 released (r306)
 - Updated the documentation.
