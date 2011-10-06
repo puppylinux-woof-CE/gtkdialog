@@ -75,4 +75,12 @@ export CLI_EXPAND_METHOD="$(funcExampleCreate 1)"
 export CLI_EXPAND_PLUS_FILL_METHOD="$(funcExampleCreate 2)"
 export CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD="$(funcExampleCreate 3)"
 
-$GTKDIALOG --program=ORIGINAL_METHOD
+case $1 in
+	-d | --dump)
+		echo "$ORIGINAL_METHOD"
+		echo "$CLI_EXPAND_METHOD"
+		echo "$CLI_EXPAND_PLUS_FILL_METHOD"
+		echo "$CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD"
+		;;
+	*) $GTKDIALOG --program=ORIGINAL_METHOD ;;
+esac

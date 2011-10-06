@@ -94,4 +94,7 @@ GTK+ deprecated this widget in GTK+ 2.0 in favour of the GtkTreeView (Gtkdialog'
 </window>
 '
 
-$GTKDIALOG --program=MAIN_DIALOG
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

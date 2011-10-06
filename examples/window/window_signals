@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export DIALOG='
+export MAIN_DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
   <vbox>
     <frame Description>
@@ -19,4 +19,7 @@ export DIALOG='
 </window>
 '
 
-$GTKDIALOG --program=DIALOG
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
