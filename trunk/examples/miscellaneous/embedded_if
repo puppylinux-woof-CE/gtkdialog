@@ -28,5 +28,10 @@ export MAIN_DIALOG='
 </vbox>
 '
 
-$GTKDIALOG --program=MAIN_DIALOG
-#$GTKDIALOG --program=MAIN_DIALOG --print-ir
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*)
+		#$GTKDIALOG --program=MAIN_DIALOG --print-ir
+		$GTKDIALOG --program=MAIN_DIALOG
+		;;
+esac

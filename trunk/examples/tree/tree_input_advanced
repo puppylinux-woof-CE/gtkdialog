@@ -111,7 +111,8 @@ exported-column='3'"'"</label>
 	<action signal="hide">exit:Exit</action>
 </window>
 '
-# Uncomment the following line to dump MAIN_DIALOG to a file:
-# ifs=$IFS; IFS=; echo $MAIN_DIALOG > "$TMPDIR"/MAIN_DIALOG.txt; IFS=$ifs
 
-$GTKDIALOG --program=MAIN_DIALOG
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

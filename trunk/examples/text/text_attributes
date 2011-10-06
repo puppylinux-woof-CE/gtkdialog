@@ -57,4 +57,7 @@ the other lines within this text"</label>
 </vbox>
 '
 
-$GTKDIALOG --program=MAIN_DIALOG
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

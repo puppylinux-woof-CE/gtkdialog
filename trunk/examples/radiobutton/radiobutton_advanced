@@ -74,4 +74,7 @@ i.e. the notebook, vbox, hbox and frame widgets."</label>
 </window>
 '
 
-$GTKDIALOG --program=MAIN_DIALOG
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
