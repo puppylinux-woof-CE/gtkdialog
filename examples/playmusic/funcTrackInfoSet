@@ -1,0 +1,53 @@
+#!/bin/sh
+
+## Includes.
+. functmpGet
+. functmpSet
+
+## Set the track info as displayed in entTrackInfo.
+## On entry: $1 = null to use the existing type
+##           $1 = 0 for type Track (default)
+##           $1 = 1 for type Artist/aLbum
+##           $1 = 2 for type inverse of the existing
+
+funcTrackInfoSet() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local playlisttrack=`functmpGet playlisttrack`
+	local trackinfotype=`functmpGet trackinfotype`
+	local arg1=$1
+	local A L T f ifs
+
+	if [ -z "$playlisttrack" ]; then
+		functmpSet trackinfo "[empty]"
+	else
+		## Split the path using only builtins.
+		ifs=$IFS
+		IFS='/'
+		for f in $playlisttrack; do
+			A="$L"; L="$T"; T="$f"
+		done
+		IFS=$ifs
+
+		## Are we using the existing type?
+		if [ -z "$arg1" ]; then
+			arg1=$trackinfotype
+		## Are we toggling the type?
+		elif [ $arg1 -eq 2 ]; then
+			arg1=$((1 - $trackinfotype))
+		fi
+
+		## Prepare and set the string.
+		if [ $arg1 -eq 0 ]; then
+			functmpSet trackinfo "$T"
+		else
+			functmpSet trackinfo "$A/$L"
+		fi
+
+		## If not using the existing type then store the new one.
+		if [ -n "$1" ]; then functmpSet trackinfotype $arg1; fi
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

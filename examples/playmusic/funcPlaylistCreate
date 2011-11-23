@@ -1,0 +1,125 @@
+#!/bin/sh
+
+## Includes.
+. functmpSet
+
+## Create the playlist.
+## On entry: $1 = null, file or folder
+
+funcPlaylistCreate() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local arg1="$1"
+	local wd="`pwd`"
+	local playlist playlistcount playlistindices
+	local A L T char1 currentdir dirname ifs item maxdepth type
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		echo "$FUNCNAME: arg1=$arg1"
+	fi
+
+	## Create the playlist.
+	if [ -z "$arg1" ]; then
+		if [ -f $LOCAL_DATA_DIR/playlist -a \
+			-f $LOCAL_DATA_DIR/playlisttrack -a \
+			-f $LOCAL_DATA_DIR/playlistindex -a \
+			-f $LOCAL_DATA_DIR/playlistcount -a \
+			-f $LOCAL_DATA_DIR/playlistindices ]; then
+			type=n
+		else
+			type=z
+		fi
+	else
+		## Make relative paths absolute ones.
+		if [ $USE_BASHISMS -ne 0 ]; then
+			char1="${arg1:0:1}"
+		else				
+			char1="`echo $arg1 | cut -c 1`"				
+		fi
+		if [ "$char1" != '/' ]; then
+			if [ "$wd" != '/' ]; then
+				arg1="$wd/$arg1"
+			else
+				arg1="$wd$arg1"
+			fi
+			if [ $DEBUG_CONTENT -ne 0 ]; then
+				echo "$FUNCNAME: Converting $1 to $arg1"
+			fi
+		fi
+
+		if [ -d "$arg1" ]; then
+			## Make a reasonable effort to prevent the user from
+			## creating a recursive playlist originating at root.
+			if [ "$arg1" = '/' -o "$arg1" = "/." ] || \
+				[ "$wd" = '/' -a "$char1" = '.' ]; then
+				maxdepth="-maxdepth 1"
+			fi
+			type=d
+			playlist=`find -L "$arg1" $maxdepth -type f | sort`
+		else
+			type=f
+			dirname="`dirname "$arg1"`"
+			playlist=`find -L "$dirname" -maxdepth 1 -type f | sort`
+		fi
+	fi
+
+	## Create a folder index file, count the number of items,
+	## calculate the initial track index and save everything.
+	if [ $type = n ]; then
+		## Resume a previously saved playlist.
+		cp $LOCAL_DATA_DIR/playlist* $TEMP_DIR/
+	elif [ -z "$playlist" ]; then
+		## An empty playlist.
+		functmpSet playlist
+		functmpSet playlisttrack
+		functmpSet playlistindex 0
+		functmpSet playlistcount 0
+		functmpSet playlistindices
+	else
+		## A newly populated playlist.
+		functmpSet playlist "$playlist"
+		playlistcount=0
+		ifs=$IFS
+		IFS='
+'
+		for item in $playlist; do
+			## Split the path using only builtins.
+			IFS='/'
+			for f in $item; do
+				A="$L"; L="$T"; T="$f"
+			done
+			IFS='
+'
+			## Accumulate the indices of the first track
+			## per folder for later folder navigation.
+			if [ "$currentdir" != "$A/$L" ]; then
+				currentdir="$A/$L"
+				playlistindices="$playlistindices $playlistcount"
+			fi
+
+			## Set the initial track to play.
+			if [ $type = d ]; then
+				if [ $playlistcount -eq 0 ]; then
+					functmpSet playlisttrack "$item"
+					functmpSet playlistindex $playlistcount
+				fi
+			elif [ "$item" = "$arg1" ]; then
+				functmpSet playlisttrack "$arg1"
+				functmpSet playlistindex $playlistcount
+			fi
+			playlistcount=$(($playlistcount + 1))
+		done
+		IFS=$ifs
+		functmpSet playlistcount $playlistcount
+		functmpSet playlistindices "$playlistindices"
+
+		if [ $DEBUG_CONTENT -ne 0 ]; then
+			echo "$FUNCNAME: playlistcount=$playlistcount"
+			echo "$FUNCNAME: playlistindices=$playlistindices"
+		fi
+
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

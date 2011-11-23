@@ -1,0 +1,41 @@
+#!/bin/sh
+
+## Includes.
+. functmpSet
+
+## Create a custom style for specific widgets.
+
+funcgtkrcCreate() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	functmpSet gtkrc '
+style "styleFontSize10WhiteOnBlack" {
+	text[NORMAL] = "#ffffff"
+	base[NORMAL] = "#000000"
+	font_name = " 10"
+}
+widget "*entTrackInfo*" style "styleFontSize10WhiteOnBlack"
+
+# This will create a borderless button.
+style "styleButtonBorderless" {
+	GtkWidget::focus-line-width = 0
+	GtkWidget::focus_padding = 0
+	GtkButton::inner-border = {0, 0, 0, 0}
+	xthickness = 0
+	ythickness = 0
+}
+widget "*btnCover" style "styleButtonBorderless"
+widget "*btnCoverDialog" style "styleButtonBorderless"
+
+pixmap_path "'$PACKAGE_DATA_DIR'"
+
+style "styleWindowBackgroundPixmap" {
+	bg_pixmap[NORMAL] = "background.png"
+}
+widget "*winMain" style "styleWindowBackgroundPixmap"
+widget "*winCoverDialog" style "styleWindowBackgroundPixmap"
+'
+	GTK2_RC_FILES=$TEMP_DIR/gtkrc:~/.gtkrc-2.0
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

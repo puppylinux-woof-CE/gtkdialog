@@ -1,0 +1,48 @@
+#!/bin/sh
+
+## Includes.
+. funcPlay
+. funcStop
+. functmpGet
+. functmpSet
+. funcWidgetSchedule
+
+## Position on the previous/next track in the playlist.
+## On entry: $1 = -1 for previous, 1 for next
+
+funcPreviousNext() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local playerstate=`functmpGet playerstate`
+	local playlistindex=`functmpGet playlistindex`
+	local playlistcount=`functmpGet playlistcount`
+	local line playlisttrack
+
+	if [ $playlistcount -gt 0 ]; then
+		## Locate the previous/next track in the playlist.
+		playlistindex=$(($playlistindex + $1))
+		if [ $1 -eq -1 ]; then
+			if [ $playlistindex -lt 0 ]; then
+				playlistindex=$(($playlistcount - 1))
+			fi
+		else
+			if [ $playlistindex -ge $playlistcount ]; then
+				playlistindex=0
+			fi
+		fi
+		line=$(($playlistindex + 1))
+		playlisttrack="`sed -n "$line"p $TEMP_DIR/playlist`"
+		functmpSet playlistindex $playlistindex
+		functmpSet playlisttrack "$playlisttrack"
+
+		## Stop a paused or playing track and auto-play the next.
+		if [ $playerstate = paused -o $playerstate = playing ]; then
+			funcStop
+			funcPlay
+		fi
+		funcWidgetSchedule muiRefreshCheck refreshcheck
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

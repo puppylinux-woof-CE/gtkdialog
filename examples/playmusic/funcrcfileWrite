@@ -1,0 +1,55 @@
+#!/bin/sh
+
+## Includes.
+
+## Write the rcfile.
+
+funcrcfileWrite() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	echo '
+version='$VERSION'
+
+[players]
+# When playing a file, '$TITLE' will navigate down through
+# this list attempting to match the format and if it doesn'"'"'t
+# find anything suitable then it'"'"'ll use whatever'"'"'s in "other".
+# These are best listed in descending order of popularity.
+# You can remove or add anything you like to this list.
+mp3=mpg123 -q
+ogg=ogg123 -q
+wav=aplay -q
+
+# If you'"'"'ve got playsound (part of the SDL_sound package) then
+# it makes a great "other" as it'"'"'ll play mp3, ogg, aiff, flac,
+# wav, mod, midi (if you'"'"'ve got the libraries) and only 22KB!
+#other=playsound
+other=madplay -q
+
+[options]
+# This is the interval in milliseconds for the auto-next timer
+# which is only active when something is playing. On average it
+# will take half the interval for the next track to auto-play.
+autonext_interval='$AUTONEXT_INTERVAL'
+
+# Setting these to non-zero will generate lots of useful
+# debugging information that gets output to the terminal.
+debug_content='$DEBUG_CONTENT'
+debug_transits='$DEBUG_TRANSITS'
+
+# Setting a cover size of -1 will set it to the image size and
+# any non-zero value will scale all images to that exact size.
+cover_size='$COVER_SIZE'
+
+cover_thumb_size='$COVER_THUMB_SIZE'
+
+# There are several places within '$TITLE' where faster bash
+# builtin commands can be used to replace commands that execute
+# in a subshell and setting this to non-zero will activate them.
+use_bashisms='$USE_BASHISMS'
+
+window_width='$WINDOW_WIDTH'
+' > $LOCAL_DATA_DIR/${TARGET}rc
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

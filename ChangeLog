@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Nov 22 2011 Thunor <thunorsif@hotmail.com>
+- Added an example application PlayMusic.
+
 * Thu Oct 6 2011 Thunor <thunorsif@hotmail.com>
 - Added the option to dump the examples as suggested by Dougal.
 

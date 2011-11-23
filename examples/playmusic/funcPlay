@@ -1,0 +1,82 @@
+#!/bin/sh
+
+## Includes.
+. functmpGet
+. functmpSet
+. funcWidgetSchedule
+
+## Play the track.
+
+funcPlay() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local playerstate=`functmpGet playerstate`
+	local playlisttrack=`functmpGet playlisttrack`
+	local format=`echo ${playlisttrack##*.} | tr A-Z a-z`
+	local sectionfound=0
+	local char1 ifs player playerpid retval name value
+
+	if [ `functmpGet playlistcount` -gt 0 ]; then
+		if [ $playerstate = stopped ]; then
+
+			## Get the preferred player for the format.
+			ifs=$IFS
+			IFS='='
+			while read -r name value; do
+				if [ -n "$name" ]; then
+					if [ $sectionfound -eq 0 ]; then
+						## Section start?
+						if [ "$name" = "[players]" ]; then
+							sectionfound=1
+						fi
+					else
+						if [ $USE_BASHISMS -ne 0 ]; then
+							char1="${name:0:1}"
+						else				
+							char1="`echo $name | cut -c 1`"				
+						fi
+						## Section end?
+						if [ "$char1" = '[' ]; then
+							break
+						elif [ "$char1" != '#' -a -n "$value" ]; then
+							if [ "$name" = "$format" -o "$name" = "other" ]; then
+								player="$value"
+								break
+							fi
+						fi
+					fi
+				fi
+			done < $LOCAL_DATA_DIR/${TARGET}rc
+			IFS=$ifs
+
+			## A null player would effectively attempt to execute the
+			## file which would be undesirable so "true" discards it.
+			if [ -z "$player" ]; then
+				player=true
+			fi
+
+			## Execute the player in the background.
+			$player "$playlisttrack" &
+			retval=$?; playerpid=$!
+			if [ $DEBUG_CONTENT -ne 0 ]; then
+				echo "$FUNCNAME: playlisttrack=$playlisttrack"
+				echo "$FUNCNAME: player=$player"
+				echo "$FUNCNAME: retval=$retval pid=$playerpid"
+			fi
+			functmpSet playerpid $playerpid
+			functmpSet playerstate playing
+			functmpSet playpause 1
+			funcWidgetSchedule muiAutoNextCheck autonextcheck
+
+		elif [ $playerstate = paused ]; then
+			## Unpause the player.
+			kill -s CONT `functmpGet playerpid` 2> /dev/null
+			functmpSet playerstate playing
+			functmpSet playpause 1
+			funcWidgetSchedule muiAutoNextCheck autonextcheck
+		fi
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

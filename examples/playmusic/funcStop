@@ -1,0 +1,30 @@
+#!/bin/sh
+
+## Includes.
+. functmpGet
+. functmpSet
+. funcWidgetUnSchedule
+
+## Stop the track.
+
+funcStop() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local playerstate=`functmpGet playerstate`
+	local playerpid
+
+	if [ $playerstate = paused -o $playerstate = playing ]; then
+		playerpid=`functmpGet playerpid`
+		if [ $playerstate = paused ]; then
+			## Unpause the player.
+			kill -s CONT $playerpid 2> /dev/null
+		fi
+		kill $playerpid 2> /dev/null
+		functmpSet playerstate stopped
+		functmpSet playpause 0
+		funcWidgetUnSchedule muiAutoNextCheck autonextcheck
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

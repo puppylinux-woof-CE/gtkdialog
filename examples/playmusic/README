@@ -1,0 +1,69 @@
+PlayMusic - A simple lightweight GUI for audio players.
+
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+Installation
+============
+
+By default the application will run from the current folder but it's
+possible to install it manually if you do the following (generic):
+
+    cp playmusic /usr/local/bin/
+    cp playmusic.desktop /usr/local/share/applications/
+    cp playmusic.svg /usr/local/share/icons/hicolor/scalable/apps/
+    mkdir /usr/local/share/playmusic
+    cp background.png func* /usr/local/share/playmusic/
+
+You'll need to make sure that PACKAGE_DATA_DIR within and towards the top
+of playmusic points to the correct path i.e. /usr/local/share/playmusic
+if that's where you installed background.png and func*
+
+Requirements
+============
+
+Gtkdialog >= 0.8.0
+
+Configuration
+=============
+
+Run playmusic and quit. Open ~/.playmusic/playmusicrc and edit it.
+You'll likely want/need to set-up the required audio players for your
+system and there's plenty of documentation in there to assist you.
+
+Execution
+=========
+
+Usage: playmusic [FILE or FOLDER]
+
+A FILE creates a playlist of the folder non-recursively and plays the file.
+A FOLDER creates a playlist of the folder recursively and plays the first file.
+No arguments resumes playing the last playlist and the last file played.
+
+Operation
+=========
+
+Left-clicking the cover navigates to the next folder/album if one exists.
+Right-clicking the cover navigates to the previous folder/album if one exists.
+Middle-clicking the cover will open the cover full-size in another window.
+
+Contacting Us
+=============
+
+http://code.google.com/p/gtkdialog/
+
+
+2011-11-22

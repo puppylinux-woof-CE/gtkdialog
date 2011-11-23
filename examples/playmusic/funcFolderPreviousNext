@@ -1,0 +1,68 @@
+#!/bin/sh
+
+## Includes.
+. funcPlay
+. funcStop
+. functmpGet
+. functmpSet
+. funcWidgetSchedule
+
+## Position on the previous/next folder in the playlist.
+## On entry: $1 = -1 for previous, 1 for next
+
+funcFolderPreviousNext() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local playerstate=`functmpGet playerstate`
+	local playlistindex=`functmpGet playlistindex`
+	local playlistcount=`functmpGet playlistcount`
+	local playlistindices="`functmpGet playlistindices`"
+	local item previousindex previous2index
+	local line playlisttrack
+
+	if [ $playlistcount -gt 0 ]; then
+		if [ $1 -eq -1 ]; then
+			## Initialise previousindex with the last item.
+			for item in $playlistindices; do
+				previousindex=$item
+			done
+			## Locate the previous folder in the playlist.
+			for item in $playlistindices $playlistcount; do
+				if [ $playlistindex -lt $item ]; then
+					playlistindex=$previous2index
+					break
+				elif [ $playlistindex -eq $item ]; then
+					playlistindex=$previousindex
+					break
+				fi
+				previous2index=$previousindex
+				previousindex=$item
+			done
+		else
+			## Locate the next track in the playlist.
+			for item in $playlistindices $playlistcount; do
+				if [ $playlistcount -eq $item ]; then
+					playlistindex=0
+					break
+				elif [ $playlistindex -lt $item ]; then
+					playlistindex=$item
+					break
+				fi
+			done
+		fi
+		line=$(($playlistindex + 1))
+		playlisttrack="`sed -n "$line"p $TEMP_DIR/playlist`"
+		functmpSet playlistindex $playlistindex
+		functmpSet playlisttrack "$playlisttrack"
+
+		## Stop a paused or playing track and auto-play the next.
+		if [ $playerstate = paused -o $playerstate = playing ]; then
+			funcStop
+			funcPlay
+		fi
+		funcWidgetSchedule muiRefreshCheck refreshcheck
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

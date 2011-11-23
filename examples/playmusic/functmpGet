@@ -1,0 +1,13 @@
+#!/bin/sh
+
+## Get a variable [maintained as a file] from the temporary directory.
+## On entry: $1 = name
+##  On exit: echoes value
+
+functmpGet() {
+	if [ $USE_BASHISMS -ne 0 ]; then
+		echo `<$TEMP_DIR/$1`
+	else				
+		cat $TEMP_DIR/$1
+	fi
+}

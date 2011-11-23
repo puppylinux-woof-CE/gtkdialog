@@ -1,0 +1,33 @@
+#!/bin/sh
+
+## Includes.
+
+## Create a cover based upon the application icon.
+
+funcCoverCreate() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## This is the 320x320 version.
+	echo '
+<svg xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="320" height="320">
+	<circle cx="160" cy="160" r="120"
+		fill="#000000" stroke="#000000" stroke-width="1"/>
+	<circle cx="180" cy="160" r="40"
+		fill="none" stroke="#ffb000" stroke-width="15"/>
+	<rect x="170" y="90" height="140" width="30"
+		fill="#000000" stroke="#000000" stroke-width="1"/>
+	<polygon points="100,150 180,150 180,90 130,130 100,130"
+		fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+	<polygon points="100,170 180,170 180,230 130,190 100,190"
+		fill="#c0d0e0" stroke="#c0d0e0" stroke-width="1"/>
+	<rect x="100" y="150" height="10" width="80"
+		fill="#e0f0ff" stroke="#e0f0ff" stroke-width="1"/>
+	<rect x="100" y="160" height="10" width="80"
+		fill="#d0e0f0" stroke="#d0e0f0" stroke-width="1"/>
+</svg>
+' > $TEMP_DIR/playmusic.svg
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}
