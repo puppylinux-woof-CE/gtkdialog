@@ -1,0 +1,437 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# PlayMusic (c) Thunor 2011
+# GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+# See http://www.gnu.org/licenses/gpl-2.0.txt
+
+## Strip comments from the entire project using:
+## for f in func* playmusic; do sed -i -e '/## /d' -e '/ ##/d' $f; done
+
+## ----------------------------------------------------------------------------
+## Constants
+## ----------------------------------------------------------------------------
+## These are application defaults which may be updated from the rcfile.
+
+TARGET=playmusic
+TITLE=PlayMusic
+VERSION=0.1.0
+LOCAL_DATA_DIR=$HOME/.$TARGET
+PACKAGE_DATA_DIR=`pwd` #/usr/local/share/$TARGET
+DEBUG_CONTENT=0
+DEBUG_TRANSITS=0
+USE_BASHISMS=0
+## These don't require exporting.
+AUTONEXT_INTERVAL=2000
+COVER_SIZE=-1
+COVER_THUMB_SIZE=96
+WINDOW_WIDTH=224
+
+## ----------------------------------------------------------------------------
+## Includes
+## ----------------------------------------------------------------------------
+## These files are sourced from the PATH.
+
+PATH=$PACKAGE_DATA_DIR:$PATH
+
+. funcgtkrcCreate
+. funcPlaylistCreate
+. funcrcfileRead
+. funcrcfileWrite
+. funcRefresh
+. funcStop
+. functmpGet
+. functmpSet
+
+## ----------------------------------------------------------------------------
+## Local Functions
+## ----------------------------------------------------------------------------
+
+## Enable the embedding of comments within the XML.
+Comment() { :; }
+
+## Create the XML for the Previous/Next and Play/Pause buttons.
+## On entry: $1 = button id
+##           $2 = button id
+funcButtonsCreate() {
+	local index=-1
+	local f
+
+	for f in $@; do
+		echo '
+			<button>
+				<input file stock="gtk-media-'`echo $f | tr A-Z a-z`'"></input>
+				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+					echo "<action>echo \"btn$f: IN\"</action>"
+				fi`'
+				<action>disable:tmrAutoNext</action>'
+		if [ $f = Previous -o $f = Next ]; then
+			echo '
+				<action>. funcPreviousNext; funcPreviousNext '$index'</action>'
+		else
+			echo '
+				<action>. func'$f'; func'$f'</action>'
+		fi
+		echo '
+				<action>refresh:nbkPlayPause</action>
+				<action>refresh:muiRefreshCheck</action>
+				<action>refresh:muiAutoNextCheck</action>
+				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+					echo "<action>echo \"btn$f: OUT\"</action>"
+				fi`'
+			</button>'
+		index=1
+	done
+}
+
+## ----------------------------------------------------------------------------
+## Main
+## ----------------------------------------------------------------------------
+
+## Create the local data directory if it doesn't already exist.
+if [ ! -d $LOCAL_DATA_DIR ]; then
+	mkdir $LOCAL_DATA_DIR
+	if [ $? -ne 0 ]; then
+		echo "Error: Couldn't create $LOCAL_DATA_DIR"
+		exit 1
+	fi
+fi
+
+## Create the rcfile if it doesn't already exist.
+if [ ! -f $LOCAL_DATA_DIR/${TARGET}rc ]; then 
+	funcrcfileWrite
+fi
+
+## Process the command-line argument(s).
+if [ "$1" = -h -o "$1" = --help ]; then
+	echo "$TITLE $VERSION (C) 2011 Thunor
+Usage: $TARGET [FILE or FOLDER]
+
+A FILE creates a playlist of the folder non-recursively and plays the file.
+A FOLDER creates a playlist of the folder recursively and plays the first file.
+No arguments resumes playing the last playlist and the last file played.
+
+See $LOCAL_DATA_DIR/${TARGET}rc to configure options.
+"
+	exit 1
+fi
+
+## Create a temporary directory.
+TEMP_DIR=`mktemp -d`
+if [ $? -ne 0 ]; then
+	echo "Error: Couldn't create temporary directory."
+	exit 1
+fi
+
+## Load the rcfile.
+funcrcfileRead
+
+## Create a custom style.
+funcgtkrcCreate
+
+## Create the initial files required.
+functmpSet coverdialogcheck false
+functmpSet folderopencheck false
+functmpSet autonextcheck false
+functmpSet refreshcheck false
+functmpSet covercheck false
+functmpSet coverdialogstate closed
+functmpSet folderopen "[empty]"
+functmpSet playerstate stopped
+functmpSet trackinfotype 0
+functmpSet playpause 0
+funcPlaylistCreate "$1"
+funcRefresh
+
+## Create the XML for the cover dialog.
+DIALOG_COVER='
+<window name="winCoverDialog" title="'$TITLE'" icon-name="'$TARGET'"
+	window-position="2" border-width="0" resizable="false">
+	<button name="btnCoverDialog" relief="2">
+		<variable>btnCoverDialog</variable>
+		<width>'$COVER_SIZE'</width>
+		<height>'$COVER_SIZE'</height>
+		<input file>'$TEMP_DIR'/cover</input>
+		<action>. functmpSet; functmpSet coverdialogstate closed</action>
+		<action>closewindow:winCoverDialog</action>
+	</button>
+	<variable>winCoverDialog</variable>
+	<action signal="hide">. functmpSet; functmpSet coverdialogstate closed</action>
+	<action signal="hide">closewindow:winCoverDialog</action>
+</window>
+'
+
+## Export everything necessary.
+export GTKDIALOG
+export TARGET
+export TITLE
+export VERSION
+export LOCAL_DATA_DIR
+export PACKAGE_DATA_DIR
+export PATH
+export TEMP_DIR
+export DEBUG_CONTENT
+export DEBUG_TRANSITS
+export USE_BASHISMS
+export GTK2_RC_FILES
+export DIALOG_COVER
+
+## Create the XML for the main dialog.
+echo '
+<window name="winMain" title="'$TITLE'" icon-name="'$TARGET'" window-position="2"
+	width-request="'$WINDOW_WIDTH'" resizable="false">
+	<vbox>
+		<entry name="entTrackInfo" editable="false" has-frame="false" can-focus="false">
+			<variable>entTrackInfo</variable>
+			<input file>'$TEMP_DIR'/trackinfo</input>
+			<action signal="button-press-event">"
+				if [ $BUTTON -eq 1 ]; then
+					. funcTrackInfoSet; funcTrackInfoSet 2
+				fi
+			"</action>
+			<action signal="button-press-event">refresh:entTrackInfo</action>
+		</entry>
+		<hbox>
+'`Comment ##
+## Because space-expand and space-fill have been set to true on the command-
+## line and therefore will be the default for all widgets, we need to disable
+## them for this button widget to keep it minimised and contained.
+## `'
+			<button name="btnCover" space-expand="false" space-fill="false"
+				width-request="'$(($COVER_THUMB_SIZE + 10))'"
+				height-request="'$(($COVER_THUMB_SIZE + 10))'">
+				<variable>btnCover</variable>
+				<width>'$COVER_THUMB_SIZE'</width>
+				<height>'$COVER_THUMB_SIZE'</height>
+				<input file>'$TEMP_DIR'/cover</input>
+				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+					echo "<action>echo \"btnCover-click: IN\"</action>"
+					echo "<action signal=\"button-press-event\">echo \
+						\"btnCover-button-press-event: IN\"</action>"
+				fi`'
+'`Comment ##
+## Code to handle the "click" signal.
+## `'
+				<action>disable:tmrAutoNext</action>
+				<action>"
+					. funcFolderPreviousNext; funcFolderPreviousNext 1
+					. funcWidgetSchedule
+					funcWidgetSchedule muiCoverCheck covercheck
+				"</action>
+				<action>refresh:muiCoverCheck</action>
+'`Comment ##
+## Code to handle the "button-press-event" signal. Clicking will also emit
+## the same signal but it gets filtered out when checking the BUTTON.
+## `'
+				<action signal="button-press-event">disable:tmrAutoNext</action>
+				<action signal="button-press-event">"
+					if [ $BUTTON -eq 2 ]; then
+						. funcCoverDialogOpen; funcCoverDialogOpen
+						. functmpGet
+						. funcWidgetSchedule
+						## tmrAutoNext was disabled on entry to these actions
+						## to stop it interferring with folder navigation and
+						## so we need to restore its correct state.
+						if [ `functmpGet playerstate` = playing ]; then
+							funcWidgetSchedule muiAutoNextCheck autonextcheck
+						fi
+						funcWidgetSchedule muiCoverCheck covercheck
+					elif [ $BUTTON -eq 3 ]; then
+						. funcFolderPreviousNext; funcFolderPreviousNext -1
+						. funcWidgetSchedule
+						funcWidgetSchedule muiCoverCheck covercheck
+					fi
+				"</action>
+				<action signal="button-press-event">refresh:muiCoverCheck</action>
+				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+					echo "<action>echo \"btnCover-click: OUT\"</action>"
+					echo "<action signal=\"button-press-event\">echo \
+						\"btnCover-button-press-event: OUT\"</action>"
+				fi`'
+			</button>
+			<vbox>
+				<hbox>
+					'"`funcButtonsCreate Previous Next`"'
+				</hbox>
+				<hbox>
+					<button>
+						<input file stock="gtk-media-stop"></input>
+						'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+							echo "<action>echo \"btnStop: IN\"</action>"
+						fi`'
+						<action>disable:tmrAutoNext</action>
+						<action>. funcStop; funcStop</action>
+						<action>refresh:nbkPlayPause</action>
+						'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+							echo "<action>echo \"btnStop: OUT\"</action>"
+						fi`'
+					</button>
+'`Comment ##
+## As changing stock icons at runtime is not possible, a notebook widget is
+## used instead with one button on each page so we can change the buttons.
+## `'
+					<notebook show-tabs="false" show-border="false">
+						'"`funcButtonsCreate Play Pause`"'
+						<variable>nbkPlayPause</variable>
+						<input file>'$TEMP_DIR'/playpause</input>
+					</notebook>
+				</hbox>
+				<hbox>
+					<button>
+						<input file stock="gtk-open"></input>
+						'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+							echo "<action>echo \"btnFolderOpen: IN\"</action>"
+						fi`'
+						<action>fileselect:entFolderOpen</action>
+						'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+							echo "<action>echo \"btnFolderOpen: OUT\"</action>"
+						fi`'
+					</button>
+					<button>
+						<input file stock="gtk-quit"></input>
+					</button>
+				</hbox>
+			</vbox>
+		</hbox>
+	</vbox>
+	<vbox visible="false">
+		<timer milliseconds="true" interval="'$AUTONEXT_INTERVAL'">
+			<variable>tmrAutoNext</variable>
+			<sensitive>false</sensitive>
+			<action>. funcAutoNext; funcAutoNext</action>
+			<action>refresh:muiRefreshCheck</action>
+		</timer>
+		<menubar>
+			<menu>
+'`Comment ##
+## There are several checkbox menuitems here that are being used to execute
+## action functions conditionally and they are all named *Check because they
+## are checking a value before effecting the target widget. They sit in-between
+## the source widget and the target widget and instead of refreshing the target
+## widget you would call funcWidgetSchedule and then refresh the check widget.
+## `'
+				<menuitem checkbox="false">
+					<variable>muiAutoNextCheck</variable>
+					<input file>'$TEMP_DIR'/autonextcheck</input>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiAutoNextCheck: IN\"</action>"
+					fi`'
+					<action>enable:tmrAutoNext</action>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiAutoNextCheck: OUT\"</action>"
+					fi`'
+				</menuitem>
+				<menuitem checkbox="false">
+					<variable>muiRefreshCheck</variable>
+					<input file>'$TEMP_DIR'/refreshcheck</input>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiRefreshCheck: IN\"</action>"
+					fi`'
+					<action>. funcRefresh; funcRefresh</action>
+					<action>refresh:entTrackInfo</action>
+					<action>refresh:btnCover</action>
+					<action>refresh:btnCoverDialog</action>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiRefreshCheck: OUT\"</action>"
+					fi`'
+				</menuitem>
+				<menuitem checkbox="false">
+					<variable>muiCoverDialogCheck</variable>
+					<input file>'$TEMP_DIR'/coverdialogcheck</input>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiCoverDialogCheck: IN\"</action>"
+					fi`'
+'`Comment ##
+## Something to be aware of: launching will terminate the processing of further
+## actions both here (you won't see OUT printed) and from any triggering action.
+## `'
+					<action>launch:DIALOG_COVER</action>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiCoverDialogCheck: OUT\"</action>"
+					fi`'
+				</menuitem>
+				<menuitem checkbox="false">
+					<variable>muiCoverCheck</variable>
+					<input file>'$TEMP_DIR'/covercheck</input>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiCoverCheck: IN\"</action>"
+					fi`'
+					<action>refresh:nbkPlayPause</action>
+					<action>refresh:muiRefreshCheck</action>
+					<action>refresh:muiAutoNextCheck</action>
+					<action>refresh:muiCoverDialogCheck</action>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiCoverCheck: OUT\"</action>"
+					fi`'
+				</menuitem>
+				<menuitem checkbox="false">
+					<variable>muiFolderOpenCheck</variable>
+					<input file>'$TEMP_DIR'/folderopencheck</input>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiFolderOpenCheck: IN\"</action>"
+					fi`'
+					<action>disable:tmrAutoNext</action>
+'`Comment ##
+## I cannot split this across multiple lines because it requires double-quotes
+## and splitting it into separate actions results in multiple subshells.
+## `'
+					<action>. funcStop; funcStop; . funcPlaylistCreate; funcPlaylistCreate "$entFolderOpen"; . funcWidgetSchedule; funcWidgetSchedule muiRefreshCheck refreshcheck; . funcPlay; funcPlay</action>
+					<action>refresh:nbkPlayPause</action>
+					<action>refresh:muiAutoNextCheck</action>
+					<action>refresh:muiRefreshCheck</action>
+					<action>refresh:entFolderOpen</action>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiFolderOpenCheck: OUT\"</action>"
+					fi`'
+				</menuitem>
+			</menu>
+		</menubar>
+'`Comment ##
+## If the user selects a folder using the folder open button then the path
+## will be stored here which will trigger the default signal. This triggering
+## will also occur when it is refreshed [to empty it] and so a check widget is
+## used to enable the playlist to be created and auto-played conditionally.
+## `'
+		<entry editable="false" fs-action="folder"
+			fs-title="Select a folder to play">
+			<variable>entFolderOpen</variable>
+			<input file>'$TEMP_DIR'/folderopen</input>
+			'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+				echo "<action>echo \"entFolderOpen: IN\"</action>"
+			fi`'
+'`Comment ##
+## I cannot split this across multiple lines because it requires double-quotes
+## and splitting it into separate actions results in multiple subshells.
+## `'
+			<action>if [ "$entFolderOpen" != "[empty]" ]; then . funcWidgetSchedule; funcWidgetSchedule muiFolderOpenCheck folderopencheck; fi</action>
+			<action>refresh:muiFolderOpenCheck</action>
+			'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+				echo "<action>echo \"entFolderOpen: OUT\"</action>"
+			fi`'
+		</entry>
+	</vbox>
+'`Comment ##
+## The window "show" signal is used to start playing the initial track and is
+## a good place to auto-start something although for some reason this signal
+## will fire twice at start-up and care should be taken to ignore the second.
+## `'
+	<action signal="show">. funcPlay; funcPlay</action>
+	<action signal="show">refresh:nbkPlayPause</action>
+	<action signal="show">refresh:muiAutoNextCheck</action>
+	<action signal="hide">exit:Exit</action>
+</window>
+' > $TEMP_DIR/dialog_main
+
+$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/dialog_main
+
+## Stop any playing track.
+funcStop
+
+## Copy the non-empty playlist* files to the local data directory.
+if [ `functmpGet playlistcount` -gt 0 ]; then
+	cp $TEMP_DIR/playlist* $LOCAL_DATA_DIR/
+fi
+
+## Remove the temporary files.
+rm -rf $TEMP_DIR

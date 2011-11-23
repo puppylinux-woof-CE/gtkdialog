@@ -1,0 +1,16 @@
+#!/bin/sh
+
+## Includes.
+. funcCoverSet
+. funcTrackInfoSet
+
+## Refresh the required widgets.
+
+funcRefresh() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	funcCoverSet
+	funcTrackInfoSet
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

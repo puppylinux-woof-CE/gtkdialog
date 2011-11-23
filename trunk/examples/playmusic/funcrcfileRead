@@ -1,0 +1,56 @@
+#!/bin/sh
+
+## Includes.
+
+## Read the rcfile.
+
+funcrcfileRead() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local sectionfound=0
+	local char ifs name value
+
+	ifs=$IFS
+	IFS='='
+	while read -r name value; do
+		if [ -n "$name" ]; then
+			if [ $sectionfound -eq 0 ]; then
+				## Section start?
+				if [ "$name" = "[options]" ]; then
+					sectionfound=1
+				fi
+			else
+				if [ $USE_BASHISMS -ne 0 ]; then
+					char="${name:0:1}"
+				else				
+					char="`echo $name | cut -c 1`"				
+				fi
+				## Section end?
+				if [ "$char" = '[' ]; then
+					break
+				elif [ "$char" != '#' -a -n "$value" ]; then
+					## Store values.
+					if [ "$name" = autonext_interval ]; then
+						AUTONEXT_INTERVAL="$value"
+					elif [ "$name" = debug_content ]; then
+						DEBUG_CONTENT="$value"
+					elif [ "$name" = debug_transits ]; then
+						DEBUG_TRANSITS="$value"
+					elif [ "$name" = cover_size ]; then
+						COVER_SIZE="$value"
+					elif [ "$name" = cover_thumb_size ]; then
+						COVER_THUMB_SIZE="$value"
+					elif [ "$name" = use_bashisms ]; then
+						USE_BASHISMS="$value"
+					elif [ "$name" = window_width ]; then
+						WINDOW_WIDTH="$value"
+					fi
+				fi
+			fi
+		fi
+	done < $LOCAL_DATA_DIR/${TARGET}rc
+	IFS=$ifs
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

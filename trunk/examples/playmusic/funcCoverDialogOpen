@@ -1,0 +1,22 @@
+#!/bin/sh
+
+## Includes.
+. functmpGet
+. functmpSet
+. funcWidgetSchedule
+
+## Attempt to open the cover dialog if it's not already open.
+## Yeah I'm using launch but I'm also using the <window> tag
+## and launch isn't happy about that and will open more than
+## one window which we need to control using a state file.
+
+funcCoverDialogOpen() {
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	if [ `functmpGet coverdialogstate` = closed ]; then
+		functmpSet coverdialogstate open
+		funcWidgetSchedule muiCoverDialogCheck coverdialogcheck
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}
