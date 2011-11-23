@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
-Installation
-============
+Installation (Generic Linux)
+============================
 
-By default the application will run from the current folder but it's
-possible to install it manually if you do the following (generic):
+By default the application will run from the current folder but it's possible
+to install it manually if you do the following:
 
     cp playmusic /usr/local/bin/
     cp playmusic.desktop /usr/local/share/applications/
@@ -28,21 +28,22 @@ possible to install it manually if you do the following (generic):
     mkdir /usr/local/share/playmusic
     cp background.png func* /usr/local/share/playmusic/
 
-You'll need to make sure that PACKAGE_DATA_DIR within and towards the top
-of playmusic points to the correct path i.e. /usr/local/share/playmusic
-if that's where you installed background.png and func*
+You'll need to make sure that PACKAGE_DATA_DIR within and towards the top of
+playmusic points to the correct path i.e. /usr/local/share/playmusic if that's
+where you installed background.png and func*
 
 Requirements
 ============
 
-Gtkdialog >= 0.8.0
+Gtkdialog >= 0.8.0 - http://code.google.com/p/gtkdialog/
 
 Configuration
 =============
 
-Run playmusic and quit. Open ~/.playmusic/playmusicrc and edit it.
-You'll likely want/need to set-up the required audio players for your
-system and there's plenty of documentation in there to assist you.
+Run playmusic and select quit. Open ~/.playmusic/playmusicrc and edit it.
+You'll likely want to set-up the required audio players for your system amd
+there's plenty of documentation in there to assist you. If you're using bash
+then set use_bashisms=1 to activate the faster bash builtin commands.
 
 Execution
 =========
@@ -56,9 +57,13 @@ No arguments resumes playing the last playlist and the last file played.
 Operation
 =========
 
-Left-clicking the cover navigates to the next folder/album if one exists.
-Right-clicking the cover navigates to the previous folder/album if one exists.
+Left-clicking the track details toggles between album/artist and track.
+
+Left-clicking the cover navigates to the next folder if one exists.
+Right-clicking the cover navigates to the previous folder if one exists.
 Middle-clicking the cover will open the cover full-size in another window.
+
+Covers (cover.png/jpg/bmp etc.) are searched for within the music folders.
 
 Contacting Us
 =============
@@ -66,4 +71,4 @@ Contacting Us
 http://code.google.com/p/gtkdialog/
 
 
-2011-11-22
+2011-11-23

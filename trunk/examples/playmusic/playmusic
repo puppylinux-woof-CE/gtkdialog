@@ -16,7 +16,7 @@ GTKDIALOG=gtkdialog
 
 TARGET=playmusic
 TITLE=PlayMusic
-VERSION=0.1.0
+VERSION=0.1.1
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd` #/usr/local/share/$TARGET
 DEBUG_CONTENT=0
@@ -111,6 +111,14 @@ Usage: $TARGET [FILE or FOLDER]
 A FILE creates a playlist of the folder non-recursively and plays the file.
 A FOLDER creates a playlist of the folder recursively and plays the first file.
 No arguments resumes playing the last playlist and the last file played.
+
+Left-clicking the track details toggles between album/artist and track.
+
+Left-clicking the cover navigates to the next folder if one exists.
+Right-clicking the cover navigates to the previous folder if one exists.
+Middle-clicking the cover will open the cover full-size in another window.
+
+Covers (cover.png/jpg/bmp etc.) are searched for within the music folders.
 
 See $LOCAL_DATA_DIR/${TARGET}rc to configure options.
 "
