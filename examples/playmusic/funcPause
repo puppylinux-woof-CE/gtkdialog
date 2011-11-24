@@ -8,6 +8,7 @@
 ## Pause the track.
 
 funcPause() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcPause; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	if [ `functmpGet playerstate` = playing ]; then

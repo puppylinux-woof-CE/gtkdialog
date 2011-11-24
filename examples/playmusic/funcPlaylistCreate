@@ -7,6 +7,7 @@
 ## On entry: $1 = null, file or folder
 
 funcPlaylistCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcPlaylistCreate; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.

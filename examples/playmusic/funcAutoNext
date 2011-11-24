@@ -8,6 +8,7 @@
 ## (this is called periodically from a timer).
 
 funcAutoNext() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcAutoNext; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	if [ `functmpGet playerstate` = playing ]; then

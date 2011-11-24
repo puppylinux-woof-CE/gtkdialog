@@ -6,6 +6,7 @@
 ## Create a custom style for specific widgets.
 
 funcgtkrcCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcgtkrcCreate; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	functmpSet gtkrc '

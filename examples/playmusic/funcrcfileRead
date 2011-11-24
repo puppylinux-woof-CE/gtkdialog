@@ -5,6 +5,7 @@
 ## Read the rcfile.
 
 funcrcfileRead() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcrcfileRead; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.
