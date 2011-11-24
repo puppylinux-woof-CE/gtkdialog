@@ -18,52 +18,60 @@ VERSION=$(shell grep "VERSION=" $(TARGET) | sed 's|.*=||')
 all:
 	@echo
 	@echo "PREFIX=$(PREFIX)"
-	@echo "DISTDIR=$(DISTDIR)"
+	@echo "DESTDIR=$(DESTDIR)"
 	@echo "STRIP_COMMENTS=$(STRIP_COMMENTS)"
 	@echo
 	@echo "Usage examples:"
 	@echo "    make install"
 	@echo "    make STRIP_COMMENTS=false install"
 	@echo "    make PREFIX=/usr install"
-	@echo "    make DISTDIR=$(TARGET)-$(VERSION) install"
+	@echo "    make DESTDIR=$(TARGET)-$(VERSION) install"
 	@echo "    make uninstall"
 	@echo "    make PREFIX=/usr uninstall"
 	@echo
 
+dist:
+	rm -rf $(TARGET)-$(VERSION)
+	mkdir $(TARGET)-$(VERSION)
+	cp background.png func* Makefile $(TARGET) $(TARGET).desktop \
+		$(TARGET).svg README $(TARGET)-$(VERSION)
+	tar czvf $(TARGET)-$(VERSION).tar.gz $(TARGET)-$(VERSION)/
+	rm -rf $(TARGET)-$(VERSION)
+	
 install:
-	mkdir -p $(DISTDIR)$(BINDIR)
-	mkdir -p $(DISTDIR)$(DATADIR)/applications
-	mkdir -p $(DISTDIR)$(DATADIR)/icons/hicolor/scalable/apps
-	mkdir -p $(DISTDIR)$(PACKAGE_DATA_DIR)
+	mkdir -p $(DESTDIR)$(BINDIR)
+	mkdir -p $(DESTDIR)$(DATADIR)/applications
+	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps
+	mkdir -p $(DESTDIR)$(PACKAGE_DATA_DIR)
 
 	if [ "$(STRIP_COMMENTS)" = true ] ; then \
 		sed -e '/## /d' -e '/ ##/d' \
 			-e "s|^\(PACKAGE_DATA_DIR=\)\(.*\)|\1$(PACKAGE_DATA_DIR)|" \
-			$(TARGET) > $(DISTDIR)$(BINDIR)/$(TARGET); \
-		chmod 755 $(DISTDIR)$(BINDIR)/$(TARGET); \
+			$(TARGET) > $(DESTDIR)$(BINDIR)/$(TARGET); \
+		chmod 755 $(DESTDIR)$(BINDIR)/$(TARGET); \
 	else \
 		sed -e "s|^\(PACKAGE_DATA_DIR=\)\(.*\)|\1$(PACKAGE_DATA_DIR)|" \
-			$(TARGET) > $(DISTDIR)$(BINDIR)/$(TARGET); \
-		chmod 755 $(DISTDIR)$(BINDIR)/$(TARGET); \
+			$(TARGET) > $(DESTDIR)$(BINDIR)/$(TARGET); \
+		chmod 755 $(DESTDIR)$(BINDIR)/$(TARGET); \
 	fi
 
 	sed -e "s|^\(Icon=\)\(.*\)|\1$(DATADIR)/icons/hicolor/scalable/apps/$(TARGET).svg|" \
-		$(TARGET).desktop > $(DISTDIR)$(DATADIR)/applications/$(TARGET).desktop; \
-	cp $(TARGET).svg $(DISTDIR)$(DATADIR)/icons/hicolor/scalable/apps
+		$(TARGET).desktop > $(DESTDIR)$(DATADIR)/applications/$(TARGET).desktop; \
+	cp $(TARGET).svg $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps
 
 	for func in func*; do \
 		if [ "$(STRIP_COMMENTS)" = true ] ; then \
-			sed -e '/## /d' -e '/ ##/d' $$func > $(DISTDIR)$(PACKAGE_DATA_DIR)/$$func; \
+			sed -e '/## /d' -e '/ ##/d' $$func > $(DESTDIR)$(PACKAGE_DATA_DIR)/$$func; \
 		else \
-			cp $$func $(DISTDIR)$(PACKAGE_DATA_DIR); \
+			cp $$func $(DESTDIR)$(PACKAGE_DATA_DIR); \
 		fi; \
-		chmod 755 $(DISTDIR)$(PACKAGE_DATA_DIR)/$$func; \
+		chmod 755 $(DESTDIR)$(PACKAGE_DATA_DIR)/$$func; \
 	done
-	cp background.png $(DISTDIR)$(PACKAGE_DATA_DIR)
+	cp background.png $(DESTDIR)$(PACKAGE_DATA_DIR)
 
 uninstall:
-	rm -f $(DISTDIR)$(BINDIR)/$(TARGET)
-	rm -f $(DISTDIR)$(DATADIR)/applications/$(TARGET).desktop
-	rm -f $(DISTDIR)$(DATADIR)/icons/hicolor/scalable/apps/$(TARGET).svg
-	rm -rf $(DISTDIR)$(PACKAGE_DATA_DIR)
+	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
+	rm -f $(DESTDIR)$(DATADIR)/applications/$(TARGET).desktop
+	rm -f $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps/$(TARGET).svg
+	rm -rf $(DESTDIR)$(PACKAGE_DATA_DIR)
 
