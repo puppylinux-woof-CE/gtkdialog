@@ -43,11 +43,6 @@ cover_size='$COVER_SIZE'
 
 cover_thumb_size='$COVER_THUMB_SIZE'
 
-# There are several places within '$TITLE' where faster bash
-# builtin commands can be used to replace commands that execute
-# in a subshell and setting this to non-zero will activate them.
-use_bashisms='$USE_BASHISMS'
-
 window_width='$WINDOW_WIDTH'
 ' > $LOCAL_DATA_DIR/${TARGET}rc
 

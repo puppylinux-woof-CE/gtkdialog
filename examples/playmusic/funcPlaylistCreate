@@ -32,7 +32,7 @@ funcPlaylistCreate() {
 		fi
 	else
 		## Make relative paths absolute ones.
-		if [ $USE_BASHISMS -ne 0 ]; then
+		if [ -n "$BASH" ]; then
 			char1="${arg1:0:1}"
 		else				
 			char1="`echo $arg1 | cut -c 1`"				

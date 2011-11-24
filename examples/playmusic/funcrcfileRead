@@ -21,7 +21,7 @@ funcrcfileRead() {
 					sectionfound=1
 				fi
 			else
-				if [ $USE_BASHISMS -ne 0 ]; then
+				if [ -n "$BASH" ]; then
 					char="${name:0:1}"
 				else				
 					char="`echo $name | cut -c 1`"				
@@ -41,8 +41,6 @@ funcrcfileRead() {
 						COVER_SIZE="$value"
 					elif [ "$name" = cover_thumb_size ]; then
 						COVER_THUMB_SIZE="$value"
-					elif [ "$name" = use_bashisms ]; then
-						USE_BASHISMS="$value"
 					elif [ "$name" = window_width ]; then
 						WINDOW_WIDTH="$value"
 					fi

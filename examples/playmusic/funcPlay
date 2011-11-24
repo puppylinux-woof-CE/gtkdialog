@@ -31,7 +31,7 @@ funcPlay() {
 							sectionfound=1
 						fi
 					else
-						if [ $USE_BASHISMS -ne 0 ]; then
+						if [ -n "$BASH" ]; then
 							char1="${name:0:1}"
 						else				
 							char1="`echo $name | cut -c 1`"				
