@@ -5,6 +5,7 @@
 ## Create a cover based upon the application icon.
 
 funcCoverCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcCoverCreate; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## This is the 320x320 version.

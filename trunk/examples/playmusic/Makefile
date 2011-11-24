@@ -37,7 +37,7 @@ dist:
 		$(TARGET).svg README $(TARGET)-$(VERSION)
 	tar czvf $(TARGET)-$(VERSION).tar.gz $(TARGET)-$(VERSION)/
 	rm -rf $(TARGET)-$(VERSION)
-	
+
 install:
 	mkdir -p $(DESTDIR)$(BINDIR)
 	mkdir -p $(DESTDIR)$(DATADIR)/applications

@@ -8,6 +8,7 @@
 ## Stop the track.
 
 funcStop() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcStop; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.

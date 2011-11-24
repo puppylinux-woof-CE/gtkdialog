@@ -8,12 +8,13 @@
 ## the cover otherwise use the default one.
 
 funcCoverSet() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcCoverSet; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.
-	local playlisttrack=`functmpGet playlisttrack`
-	local trackdir=`dirname "$playlisttrack"`
-	local cover=`ls "$trackdir"/cover.* 2> /dev/null | sed -n '1p'`
+	local playlisttrack="`functmpGet playlisttrack`"
+	local trackdir="`dirname "$playlisttrack"`"
+	local cover="`ls "$trackdir"/cover.* 2> /dev/null | sed -n '1p'`"
 
 	if [ -z "$cover" ]; then
 		cover=$TEMP_DIR/playmusic.svg

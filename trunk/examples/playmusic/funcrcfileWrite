@@ -5,6 +5,7 @@
 ## Write the rcfile.
 
 funcrcfileWrite() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcrcfileWrite; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	echo '

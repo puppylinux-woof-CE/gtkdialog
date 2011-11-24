@@ -11,6 +11,7 @@
 ## one window which we need to control using a state file.
 
 funcCoverDialogOpen() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcCoverDialogOpen; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	if [ `functmpGet coverdialogstate` = closed ]; then

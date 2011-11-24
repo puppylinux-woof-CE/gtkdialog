@@ -11,10 +11,11 @@
 ##           $1 = 2 for type inverse of the existing
 
 funcTrackInfoSet() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcTrackInfoSet; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.
-	local playlisttrack=`functmpGet playlisttrack`
+	local playlisttrack="`functmpGet playlisttrack`"
 	local trackinfotype=`functmpGet trackinfotype`
 	local arg1=$1
 	local A L T f ifs

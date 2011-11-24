@@ -8,11 +8,12 @@
 ## Play the track.
 
 funcPlay() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcPlay; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.
 	local playerstate=`functmpGet playerstate`
-	local playlisttrack=`functmpGet playlisttrack`
+	local playlisttrack="`functmpGet playlisttrack`"
 	local format=`echo ${playlisttrack##*.} | tr A-Z a-z`
 	local sectionfound=0
 	local char1 ifs player playerpid retval name value

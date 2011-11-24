@@ -11,6 +11,7 @@
 ## On entry: $1 = -1 for previous, 1 for next
 
 funcFolderPreviousNext() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcFolderPreviousNext; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.

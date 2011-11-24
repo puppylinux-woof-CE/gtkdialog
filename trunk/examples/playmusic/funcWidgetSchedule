@@ -8,6 +8,7 @@
 ##           $2 = the input file name
 
 funcWidgetSchedule() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcWidgetSchedule; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## Local variables.
