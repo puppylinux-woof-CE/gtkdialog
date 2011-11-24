@@ -16,12 +16,11 @@ GTKDIALOG=gtkdialog
 
 TARGET=playmusic
 TITLE=PlayMusic
-VERSION=0.1.1
+VERSION=0.1.2
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd` #/usr/local/share/$TARGET
 DEBUG_CONTENT=0
 DEBUG_TRANSITS=0
-USE_BASHISMS=0
 ## These don't require exporting.
 AUTONEXT_INTERVAL=2000
 COVER_SIZE=-1
@@ -169,21 +168,6 @@ DIALOG_COVER='
 	<action signal="hide">closewindow:winCoverDialog</action>
 </window>
 '
-
-## Export everything necessary.
-export GTKDIALOG
-export TARGET
-export TITLE
-export VERSION
-export LOCAL_DATA_DIR
-export PACKAGE_DATA_DIR
-export PATH
-export TEMP_DIR
-export DEBUG_CONTENT
-export DEBUG_TRANSITS
-export USE_BASHISMS
-export GTK2_RC_FILES
-export DIALOG_COVER
 
 ## Create the XML for the main dialog.
 echo '
@@ -431,6 +415,21 @@ echo '
 </window>
 ' > $TEMP_DIR/dialog_main
 
+## Export everything necessary.
+export GTKDIALOG
+export TARGET
+export TITLE
+export VERSION
+export LOCAL_DATA_DIR
+export PACKAGE_DATA_DIR
+export PATH
+export TEMP_DIR
+export DEBUG_CONTENT
+export DEBUG_TRANSITS
+export GTK2_RC_FILES
+export DIALOG_COVER
+
+## And off we go...
 $GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/dialog_main
 
 ## Stop any playing track.

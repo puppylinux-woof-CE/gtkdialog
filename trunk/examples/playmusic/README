@@ -16,21 +16,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
-Installation (Generic Linux)
-============================
+Installation
+============
 
 By default the application will run from the current folder but it's possible
-to install it manually if you do the following:
+to install it using the supplied Makefile (type "make" to show usage examples):
 
-    cp playmusic /usr/local/bin/
-    cp playmusic.desktop /usr/local/share/applications/
-    cp playmusic.svg /usr/local/share/icons/hicolor/scalable/apps/
-    mkdir /usr/local/share/playmusic
-    cp background.png func* /usr/local/share/playmusic/
+Install to wherever your PREFIX is currently set to:
 
-You'll need to make sure that PACKAGE_DATA_DIR within and towards the top of
-playmusic points to the correct path i.e. /usr/local/share/playmusic if that's
-where you installed background.png and func*
+	make install
+
+To uninstall:
+
+	make uninstall
 
 Requirements
 ============
@@ -41,9 +39,8 @@ Configuration
 =============
 
 Run playmusic and select quit. Open ~/.playmusic/playmusicrc and edit it.
-You'll likely want to set-up the required audio players for your system amd
-there's plenty of documentation in there to assist you. If you're using bash
-then set use_bashisms=1 to activate the faster bash builtin commands.
+You'll likely want to set-up the required audio players for your system and
+there's plenty of documentation in there to assist you.
 
 Execution
 =========
@@ -71,4 +68,4 @@ Contacting Us
 http://code.google.com/p/gtkdialog/
 
 
-2011-11-23
+2011-11-24

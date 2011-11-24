@@ -5,7 +5,7 @@
 ##  On exit: echoes value
 
 functmpGet() {
-	if [ $USE_BASHISMS -ne 0 ]; then
+	if [ -n "$BASH" ]; then
 		echo `<$TEMP_DIR/$1`
 	else				
 		cat $TEMP_DIR/$1
