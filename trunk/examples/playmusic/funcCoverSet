@@ -1,7 +1,6 @@
 #!/bin/sh
 
 ## Includes.
-. funcCoverCreate
 . functmpGet
 
 ## Set the first file found in the track's folder named cover.* as
@@ -13,14 +12,14 @@ funcCoverSet() {
 
 	## Local variables.
 	local playlisttrack="`functmpGet playlisttrack`"
-	local trackdir="`dirname "$playlisttrack"`"
-	local cover="`ls "$trackdir"/cover.* 2> /dev/null | sed -n '1p'`"
+	local cover trackdir
 
+	if [ -n "$playlisttrack" ]; then
+		trackdir="`dirname "$playlisttrack"`"
+		cover="`ls "$trackdir"/cover.* 2> /dev/null | sed -n '1p'`"
+	fi
 	if [ -z "$cover" ]; then
-		cover=$TEMP_DIR/playmusic.svg
-		if [ ! -f $cover ]; then
-			funcCoverCreate
-		fi
+		cover=$PACKAGE_DATA_DIR/cover.png
 	fi
 	ln -sf "$cover" $TEMP_DIR/cover
 

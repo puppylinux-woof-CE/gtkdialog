@@ -10,13 +10,13 @@
 ## and launch isn't happy about that and will open more than
 ## one window which we need to control using a state file.
 
-funcCoverDialogOpen() {
-	if [ -z "$BASH" ]; then local FUNCNAME=funcCoverDialogOpen; fi
+funcDialogCoverOpen() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcDialogCoverOpen; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
-	if [ `functmpGet coverdialogstate` = closed ]; then
-		functmpSet coverdialogstate open
-		funcWidgetSchedule muiCoverDialogCheck coverdialogcheck
+	if [ `functmpGet dialogcoverstate` = closed ]; then
+		functmpSet dialogcoverstate open
+		funcWidgetSchedule muiDialogCoverCheck dialogcovercheck
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi

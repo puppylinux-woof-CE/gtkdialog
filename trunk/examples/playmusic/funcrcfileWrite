@@ -8,6 +8,40 @@ funcrcfileWrite() {
 	if [ -z "$BASH" ]; then local FUNCNAME=funcrcfileWrite; fi
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
+	## Local variables.
+	local flac mp3 ogg other wav
+
+	## Find a flac player.
+	if [ -n "`which flac123`" ]; then
+		flac="flac123 -q"
+	fi
+
+	## Find an mp3 player.
+	if [ -n "`which mpg123`" ]; then
+		mp3="mpg123 -q"
+	elif [ -n "`which mpg321`" ]; then
+		mp3="mpg321 -q"
+	elif [ -n "`which madplay`" ]; then
+		mp3="madplay -q"
+	fi
+
+	## Find an ogg player.
+	if [ -n "`which ogg123`" ]; then
+		ogg="ogg123 -q"
+	fi
+
+	## Find a player for other.
+	if [ -n "`which playsound`" ]; then
+		other="playsound"
+	fi
+
+	## Find a wav player.
+	if [ -n "`which wavplay`" ]; then
+		wav="wavplay -q"
+	elif [ -n "`which aplay`" ]; then
+		wav="aplay -q"
+	fi
+
 	echo '
 version='$VERSION'
 
@@ -17,15 +51,15 @@ version='$VERSION'
 # find anything suitable then it'"'"'ll use whatever'"'"'s in "other".
 # These are best listed in descending order of popularity.
 # You can remove or add anything you like to this list.
-mp3=mpg123 -q
-ogg=ogg123 -q
-wav=aplay -q
+mp3='$mp3'
+ogg='$ogg'
+flac='$flac'
+wav='$wav'
 
 # If you'"'"'ve got playsound (part of the SDL_sound package) then
 # it makes a great "other" as it'"'"'ll play mp3, ogg, aiff, flac,
 # wav, mod, midi (if you'"'"'ve got the libraries) and only 22KB!
-#other=playsound
-other=madplay -q
+other='$other'
 
 [options]
 # This is the interval in milliseconds for the auto-next timer
@@ -45,6 +79,8 @@ cover_size='$COVER_SIZE'
 cover_thumb_size='$COVER_THUMB_SIZE'
 
 window_width='$WINDOW_WIDTH'
+
+dialog_readme_show='$DIALOG_README_SHOW'
 ' > $LOCAL_DATA_DIR/${TARGET}rc
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi

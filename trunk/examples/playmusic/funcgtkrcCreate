@@ -17,6 +17,11 @@ style "styleFontSize10WhiteOnBlack" {
 }
 widget "*entTrackInfo*" style "styleFontSize10WhiteOnBlack"
 
+style "styleFontMonospace" {
+	font_name = "monospace"
+}
+widget "*entReadMe" style "styleFontMonospace"
+
 # This will create a borderless button.
 style "styleButtonBorderless" {
 	GtkWidget::focus-line-width = 0
@@ -26,7 +31,7 @@ style "styleButtonBorderless" {
 	ythickness = 0
 }
 widget "*btnCover" style "styleButtonBorderless"
-widget "*btnCoverDialog" style "styleButtonBorderless"
+widget "*btnDialogCover" style "styleButtonBorderless"
 
 pixmap_path "'$PACKAGE_DATA_DIR'"
 
@@ -34,7 +39,7 @@ style "styleWindowBackgroundPixmap" {
 	bg_pixmap[NORMAL] = "background.png"
 }
 widget "*winMain" style "styleWindowBackgroundPixmap"
-widget "*winCoverDialog" style "styleWindowBackgroundPixmap"
+widget "*winDialogCover" style "styleWindowBackgroundPixmap"
 '
 	GTK2_RC_FILES=$TEMP_DIR/gtkrc:~/.gtkrc-2.0
 

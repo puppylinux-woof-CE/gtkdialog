@@ -13,7 +13,7 @@ STRIP_COMMENTS?=true
 TARGET=playmusic
 VERSION=$(shell grep "VERSION=" $(TARGET) | sed 's|.*=||')
 
-.PHONY: all install uninstall
+.PHONY: all dist install uninstall
 
 all:
 	@echo
@@ -33,15 +33,15 @@ all:
 dist:
 	rm -rf $(TARGET)-$(VERSION)
 	mkdir $(TARGET)-$(VERSION)
-	cp background.png func* Makefile $(TARGET) $(TARGET).desktop \
-		$(TARGET).svg README $(TARGET)-$(VERSION)
+	cp background.png cover.png func* Makefile $(TARGET) $(TARGET).desktop \
+		$(TARGET)*.png README $(TARGET)-$(VERSION)
 	tar czvf $(TARGET)-$(VERSION).tar.gz $(TARGET)-$(VERSION)/
 	rm -rf $(TARGET)-$(VERSION)
 
 install:
 	mkdir -p $(DESTDIR)$(BINDIR)
 	mkdir -p $(DESTDIR)$(DATADIR)/applications
-	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps
+	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/64x64/apps
 	mkdir -p $(DESTDIR)$(PACKAGE_DATA_DIR)
 
 	if [ "$(STRIP_COMMENTS)" = true ] ; then \
@@ -55,9 +55,9 @@ install:
 		chmod 755 $(DESTDIR)$(BINDIR)/$(TARGET); \
 	fi
 
-	sed -e "s|^\(Icon=\)\(.*\)|\1$(DATADIR)/icons/hicolor/scalable/apps/$(TARGET).svg|" \
+	sed -e "s|^\(Icon=\)\(.*\)|\1$(DATADIR)/icons/hicolor/64x64/apps/$(TARGET).png|" \
 		$(TARGET).desktop > $(DESTDIR)$(DATADIR)/applications/$(TARGET).desktop; \
-	cp $(TARGET).svg $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps
+	cp $(TARGET)64.png $(DESTDIR)$(DATADIR)/icons/hicolor/64x64/apps/$(TARGET).png
 
 	for func in func*; do \
 		if [ "$(STRIP_COMMENTS)" = true ] ; then \
@@ -67,11 +67,11 @@ install:
 		fi; \
 		chmod 755 $(DESTDIR)$(PACKAGE_DATA_DIR)/$$func; \
 	done
-	cp background.png $(DESTDIR)$(PACKAGE_DATA_DIR)
+	cp background.png cover.png README $(DESTDIR)$(PACKAGE_DATA_DIR)
 
 uninstall:
 	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
 	rm -f $(DESTDIR)$(DATADIR)/applications/$(TARGET).desktop
-	rm -f $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps/$(TARGET).svg
+	rm -f $(DESTDIR)$(DATADIR)/icons/hicolor/64x64/apps/$(TARGET).png
 	rm -rf $(DESTDIR)$(PACKAGE_DATA_DIR)
 

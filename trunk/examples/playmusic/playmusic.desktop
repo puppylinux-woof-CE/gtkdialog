@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=PlayMusic audio player
-Icon=playmusic.svg
+Icon=playmusic.png
 Comment=A simple lightweight GUI for audio players
 Exec=playmusic
 Terminal=false
