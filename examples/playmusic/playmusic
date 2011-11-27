@@ -21,7 +21,7 @@ GTKDIALOG=gtkdialog
 
 TARGET=playmusic
 TITLE=PlayMusic
-VERSION=0.1.3
+VERSION=0.1.4
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd` #/usr/local/share/$TARGET
 DEBUG_CONTENT=0
@@ -31,6 +31,7 @@ AUTONEXT_INTERVAL=2000
 COVER_SIZE=-1
 COVER_THUMB_SIZE=96
 WINDOW_WIDTH=224
+DIALOG_README_SHOW=1
 
 ## ----------------------------------------------------------------------------
 ## Includes
@@ -43,6 +44,7 @@ PATH=$PACKAGE_DATA_DIR:$PATH
 . funcPlaylistCreate
 . funcrcfileRead
 . funcrcfileWrite
+. funcDialogReadMeOpen
 . funcRefresh
 . funcStop
 . functmpGet
@@ -143,12 +145,12 @@ funcrcfileRead
 funcgtkrcCreate
 
 ## Create the initial files required.
-functmpSet coverdialogcheck false
+functmpSet dialogcovercheck false
 functmpSet folderopencheck false
 functmpSet autonextcheck false
 functmpSet refreshcheck false
 functmpSet covercheck false
-functmpSet coverdialogstate closed
+functmpSet dialogcoverstate closed
 functmpSet folderopen "[empty]"
 functmpSet playerstate stopped
 functmpSet trackinfotype 0
@@ -158,19 +160,19 @@ funcRefresh
 
 ## Create the XML for the cover dialog.
 DIALOG_COVER='
-<window name="winCoverDialog" title="'$TITLE'" icon-name="'$TARGET'"
+<window name="winDialogCover" title="'$TITLE' - Cover" icon-name="'$TARGET'"
 	window-position="2" border-width="0" resizable="false">
-	<button name="btnCoverDialog" relief="2">
-		<variable>btnCoverDialog</variable>
+	<button name="btnDialogCover" relief="2">
+		<variable>btnDialogCover</variable>
 		<width>'$COVER_SIZE'</width>
 		<height>'$COVER_SIZE'</height>
 		<input file>'$TEMP_DIR'/cover</input>
-		<action>. functmpSet; functmpSet coverdialogstate closed</action>
-		<action>closewindow:winCoverDialog</action>
+		<action>. functmpSet; functmpSet dialogcoverstate closed</action>
+		<action>closewindow:winDialogCover</action>
 	</button>
-	<variable>winCoverDialog</variable>
-	<action signal="hide">. functmpSet; functmpSet coverdialogstate closed</action>
-	<action signal="hide">closewindow:winCoverDialog</action>
+	<variable>winDialogCover</variable>
+	<action signal="hide">. functmpSet; functmpSet dialogcoverstate closed</action>
+	<action signal="hide">closewindow:winDialogCover</action>
 </window>
 '
 
@@ -224,7 +226,7 @@ echo '
 				<action signal="button-press-event">disable:tmrAutoNext</action>
 				<action signal="button-press-event">"
 					if [ $BUTTON -eq 2 ]; then
-						. funcCoverDialogOpen; funcCoverDialogOpen
+						. funcDialogCoverOpen; funcDialogCoverOpen
 						. functmpGet
 						. funcWidgetSchedule
 						## tmrAutoNext was disabled on entry to these actions
@@ -328,16 +330,16 @@ echo '
 					<action>. funcRefresh; funcRefresh</action>
 					<action>refresh:entTrackInfo</action>
 					<action>refresh:btnCover</action>
-					<action>refresh:btnCoverDialog</action>
+					<action>refresh:btnDialogCover</action>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiRefreshCheck: OUT\"</action>"
 					fi`'
 				</menuitem>
 				<menuitem checkbox="false">
-					<variable>muiCoverDialogCheck</variable>
-					<input file>'$TEMP_DIR'/coverdialogcheck</input>
+					<variable>muiDialogCoverCheck</variable>
+					<input file>'$TEMP_DIR'/dialogcovercheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
-						echo "<action>echo \"muiCoverDialogCheck: IN\"</action>"
+						echo "<action>echo \"muiDialogCoverCheck: IN\"</action>"
 					fi`'
 '`Comment ##
 ## Something to be aware of: launching will terminate the processing of further
@@ -345,7 +347,7 @@ echo '
 ## `'
 					<action>launch:DIALOG_COVER</action>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
-						echo "<action>echo \"muiCoverDialogCheck: OUT\"</action>"
+						echo "<action>echo \"muiDialogCoverCheck: OUT\"</action>"
 					fi`'
 				</menuitem>
 				<menuitem checkbox="false">
@@ -357,7 +359,7 @@ echo '
 					<action>refresh:nbkPlayPause</action>
 					<action>refresh:muiRefreshCheck</action>
 					<action>refresh:muiAutoNextCheck</action>
-					<action>refresh:muiCoverDialogCheck</action>
+					<action>refresh:muiDialogCoverCheck</action>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiCoverCheck: OUT\"</action>"
 					fi`'
@@ -433,6 +435,9 @@ export DEBUG_CONTENT
 export DEBUG_TRANSITS
 export GTK2_RC_FILES
 export DIALOG_COVER
+
+## Open the README dialog?
+funcDialogReadMeOpen
 
 ## And off we go...
 $GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/dialog_main

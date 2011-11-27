@@ -44,6 +44,8 @@ funcrcfileRead() {
 						COVER_THUMB_SIZE="$value"
 					elif [ "$name" = window_width ]; then
 						WINDOW_WIDTH="$value"
+					elif [ "$name" = dialog_readme_show ]; then
+						DIALOG_README_SHOW="$value"
 					fi
 				fi
 			fi

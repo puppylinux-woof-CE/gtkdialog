@@ -1,0 +1,44 @@
+#!/bin/sh
+
+## Includes.
+
+## Open the README dialog unless the user has requested not to.
+
+funcDialogReadMeOpen() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcDialogReadMeOpen; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	if [ $DIALOG_README_SHOW -ne 0 ]; then
+		## Create the XML for the README dialog.
+		echo '
+<window title="'$TITLE' - README" icon-name="'$TARGET'" window-position="2"
+	default-width="600" default-height="400" resizable="true">
+	<vbox>
+		<edit name="entReadMe" editable="false" can-focus="false">
+			<input file>'$PACKAGE_DATA_DIR'/README</input>
+		</edit>
+		<hseparator></hseparator>
+		<hbox>
+			<checkbox>
+				<variable>chkShowAgainNot</variable>
+				<label>"Don'"'"'t show this again."</label>
+			</checkbox>
+			<button use-stock="true" label="gtk-ok" is-focus="true"
+				width-request="90">
+				<action>"
+					. funcDialogReadMeExit; funcDialogReadMeExit $chkShowAgainNot
+				"</action>
+				<action>exit:Quit</action>
+			</button>
+		</hbox>
+	</vbox>
+	<action signal="hide">exit:Exit</action>
+</window>
+' > $TEMP_DIR/dialog_readme
+
+		## Show the dialog and background it.
+		$GTKDIALOG --file=$TEMP_DIR/dialog_readme &
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}
