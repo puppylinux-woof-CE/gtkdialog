@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ## Includes.
+. funcrcfileSet
 
 ## On exit of the README dialog, if the user chose not to show
 ## the dialog again then record that in the rcfile.
@@ -11,7 +12,7 @@ funcDialogReadMeExit() {
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	if [ $1 = true ]; then
-		sed -i "s|^\(dialog_readme_show=\)\(.*\)|\10|" $LOCAL_DATA_DIR/${TARGET}rc
+		funcrcfileSet dialog_readme_show 0 options
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi

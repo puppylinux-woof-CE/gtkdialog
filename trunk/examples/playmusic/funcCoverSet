@@ -3,8 +3,8 @@
 ## Includes.
 . functmpGet
 
-## Set the first file found in the track's folder named cover.* as
-## the cover otherwise use the default one.
+## Set the first file found in the track's folder named
+## cover.* as the cover otherwise use the default one.
 
 funcCoverSet() {
 	if [ -z "$BASH" ]; then local FUNCNAME=funcCoverSet; fi
@@ -16,7 +16,7 @@ funcCoverSet() {
 
 	if [ -n "$playlisttrack" ]; then
 		trackdir="`dirname "$playlisttrack"`"
-		cover="`ls "$trackdir"/cover.* 2> /dev/null | sed -n '1p'`"
+		cover="`ls "$trackdir"/$COVER_SEARCH_PATTERN 2> /dev/null | sed -n '1p'`"
 	fi
 	if [ -z "$cover" ]; then
 		cover=$PACKAGE_DATA_DIR/cover.png
