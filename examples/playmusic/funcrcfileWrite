@@ -1,8 +1,11 @@
 #!/bin/sh
 
 ## Includes.
+. funcrcfileSet
 
-## Write the rcfile.
+## Write the rcfile from scratch or upgrade an existing one.
+## On entry: $1 = new to write a new rcfile or
+##                a version number to upgrade from.
 
 funcrcfileWrite() {
 	if [ -z "$BASH" ]; then local FUNCNAME=funcrcfileWrite; fi
@@ -11,40 +14,37 @@ funcrcfileWrite() {
 	## Local variables.
 	local flac mp3 ogg other wav
 
-	## Find a flac player.
-	if [ -n "`which flac123`" ]; then
-		flac="flac123 -q"
+	## Write the main section.
+	if [ $1 = new ]; then
+		echo '
+version='$VERSION'' > $LOCAL_DATA_DIR/${TARGET}rc
+	else
+		funcrcfileSet version $VERSION main
 	fi
 
-	## Find an mp3 player.
-	if [ -n "`which mpg123`" ]; then
-		mp3="mpg123 -q"
-	elif [ -n "`which mpg321`" ]; then
-		mp3="mpg321 -q"
-	elif [ -n "`which madplay`" ]; then
-		mp3="madplay -q"
-	fi
+	## Write the players section.
+	if [ $1 = new ]; then
+		## Find a flac player.
+		if [ -n "`which flac123`" ]; then flac="flac123 -q"; fi
 
-	## Find an ogg player.
-	if [ -n "`which ogg123`" ]; then
-		ogg="ogg123 -q"
-	fi
+		## Find an mp3 player.
+		if [ -n "`which mpg123`" ]; then mp3="mpg123 -q"
+		elif [ -n "`which mpg321`" ]; then mp3="mpg321 -q"
+		elif [ -n "`which madplay`" ]; then mp3="madplay -q"
+		fi
 
-	## Find a player for other.
-	if [ -n "`which playsound`" ]; then
-		other="playsound"
-	fi
+		## Find an ogg player.
+		if [ -n "`which ogg123`" ]; then ogg="ogg123 -q"; fi
 
-	## Find a wav player.
-	if [ -n "`which wavplay`" ]; then
-		wav="wavplay -q"
-	elif [ -n "`which aplay`" ]; then
-		wav="aplay -q"
-	fi
+		## Find a player for other.
+		if [ -n "`which playsound`" ]; then other="playsound"; fi
 
-	echo '
-version='$VERSION'
+		## Find a wav player.
+		if [ -n "`which wavplay`" ]; then wav="wavplay -q"
+		elif [ -n "`which aplay`" ]; then wav="aplay -q"
+		fi
 
+		echo '
 [players]
 # When playing a file, '$TITLE' will navigate down through
 # this list attempting to match the format and if it doesn'"'"'t
@@ -59,8 +59,12 @@ wav='$wav'
 # If you'"'"'ve got playsound (part of the SDL_sound package) then
 # it makes a great "other" as it'"'"'ll play mp3, ogg, aiff, flac,
 # wav, mod, midi (if you'"'"'ve got the libraries) and only 22KB!
-other='$other'
+other='$other'' >> $LOCAL_DATA_DIR/${TARGET}rc
+	fi
 
+	## Write the options section.
+	if [ $1 = new ]; then
+		echo '
 [options]
 # This is the interval in milliseconds for the auto-next timer
 # which is only active when something is playing. On average it
@@ -78,10 +82,16 @@ cover_size='$COVER_SIZE'
 
 cover_thumb_size='$COVER_THUMB_SIZE'
 
-window_width='$WINDOW_WIDTH'
+window_width='$WINDOW_WIDTH'' >> $LOCAL_DATA_DIR/${TARGET}rc
+	fi
+	if [ $1 = new -o $1 \< 0.1.4 ]; then
+		echo '
+# This is passed to the ls command and the first file matched will
+# be set as the cover so modify it if you need to be more selective.
+cover_search_pattern='"$COVER_SEARCH_PATTERN"'
 
-dialog_readme_show='$DIALOG_README_SHOW'
-' > $LOCAL_DATA_DIR/${TARGET}rc
+dialog_readme_show='$DIALOG_README_SHOW'' >> $LOCAL_DATA_DIR/${TARGET}rc
+	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
 }

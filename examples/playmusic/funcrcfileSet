@@ -1,0 +1,32 @@
+#!/bin/sh
+
+## Includes.
+
+## Set a value within the rcfile.
+## On entry: $1 = name
+##           $2 = value
+##           $3 = section main (the top), players or options.
+
+funcrcfileSet() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcrcfileSet; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## If name exists then update it.
+	if [ -n "`grep "^$1=" $LOCAL_DATA_DIR/${TARGET}rc`" ]; then
+		sed -i "s|^\($1=\)\(.*\)|\1$2|" $LOCAL_DATA_DIR/${TARGET}rc
+	else
+		## Name doesn't exist so append it to the section.
+		if [ $3 = main ]; then
+			sed -i "s|^\[players\]|$1=$2\n\n\[players\]|" \
+				$LOCAL_DATA_DIR/${TARGET}rc
+		elif [ $3 = players ]; then
+			sed -i "s|^\[options\]|$1=$2\n\n\[options\]|" \
+				$LOCAL_DATA_DIR/${TARGET}rc
+		elif [ $3 = options ]; then
+			echo "
+$1=$2" >> $LOCAL_DATA_DIR/${TARGET}rc
+		fi
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

@@ -19,16 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 Installation
 ============
 
+From Source
+-----------
 By default the application will run from the current folder but it's possible
 to install it using the supplied Makefile (type "make" to show usage examples):
 
 Install to wherever your PREFIX is currently set to:
 
-	make install
+    make install
 
 To uninstall:
 
-	make uninstall
+    make uninstall
+
+DESTDIR is supported for packagers to install to an intermediate folder e.g.
+make DESTDIR=playmusic-0.1.4 install
 
 Requirements
 ============
@@ -38,9 +43,34 @@ Gtkdialog >= 0.8.0 - http://code.google.com/p/gtkdialog/
 Configuration
 =============
 
-Run playmusic and select quit. Open ~/.playmusic/playmusicrc and edit it.
-You'll likely want to set-up the required audio players for your system and
-there's plenty of documentation in there to assist you.
+PlayMusic's settings are stored within the rcfile ~/.playmusic/playmusicrc
+which is automatically created on application start-up if not found to exist.
+Within this file are several options that you can modify to better configure
+PlayMusic for your particular system:
+
+Section: Players
+----------------
+This section contains a list of players for some of the many different audio
+file formats available plus a catch-all entry called "other" which you can use
+to open anything that doesn't have an entry itself. The syntax of the entries
+is format=player and you can remove or add anything you like to this section.
+You could for example just have other=some_player if that's what you want.
+
+The first time you run PlayMusic it will attempt to auto-configure the players
+and it'll be looking for programs such as madplay, mpg123, mpg321, ogg123,
+flac123, wavplay, aplay and playsound, but it's not [yet] a comprehensive list
+of lightweight audio players so let me know if there's something I've missed.
+
+Section: Options
+----------------
+This section contains several options which control PlayMusic's behaviour and
+the majority of these are documented within the rcfile but there's one that's
+worthy of a mention here and that is cover_search_pattern. This option is used
+to select the image within each music folder to show as the cover art and by
+default it looks for *.[JjPpBbGg][PpNnMmIi][GgPpFf] i.e. a jpg, png, bmp or gif
+case insensitively with the first match found being chosen. You might need to
+be a bit more selective here such as [Cc]over.jpg, AlbumArt_*_Large.jpg or
+whatever is necessary (this pattern is passed to the ls command).
 
 Execution
 =========
@@ -51,6 +81,11 @@ A FILE creates a playlist of the folder non-recursively and plays the file.
 A FOLDER creates a playlist of the folder recursively and plays the first file.
 No arguments resumes playing the last playlist and the last file played.
 
+A very effective way to use the application is to configure it to open folders
+within your file manager by perhaps choosing it from a right-click menu. It'll
+then create a playlist of the folder and everything within it recursively so
+that you can play all the albums of one particular artist.
+
 Operation
 =========
 
@@ -60,12 +95,12 @@ Left-clicking the cover navigates to the next folder if one exists.
 Right-clicking the cover navigates to the previous folder if one exists.
 Middle-clicking the cover will open the cover full-size in another window.
 
-Covers (cover.png/jpg/bmp etc.) are searched for within the music folders.
-
 Contacting Us
 =============
+
+Thunor <thunorsif@hotmail.com>
 
 http://code.google.com/p/gtkdialog/
 
 
-2011-11-24
+2011-11-28

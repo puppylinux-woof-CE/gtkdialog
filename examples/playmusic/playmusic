@@ -10,6 +10,9 @@ GTKDIALOG=gtkdialog
 # 2011-11-23: 0.1.1 Added some documentation to --help.
 # 2011-11-24: 0.1.2 Added a Makefile, replaced USE_BASHIMS with BASH.
 # 2011-11-24: 0.1.3 Fixed some unquoted values and now dash is happy.
+# 2011-11-28: 0.1.4 Changed svg to png, the README shows on first run
+#                   the players are configured on rcfile creation and
+#                   the cover is now selected using a search pattern.
 
 ## Strip comments from the entire project using:
 ## for f in func* playmusic; do sed -i -e '/## /d' -e '/ ##/d' $f; done
@@ -26,12 +29,13 @@ LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd` #/usr/local/share/$TARGET
 DEBUG_CONTENT=0
 DEBUG_TRANSITS=0
+COVER_SEARCH_PATTERN="*.[JjPpBbGg][PpNnMmIi][GgPpFf]"
+DIALOG_README_SHOW=1
 ## These don't require exporting.
 AUTONEXT_INTERVAL=2000
 COVER_SIZE=-1
 COVER_THUMB_SIZE=96
 WINDOW_WIDTH=224
-DIALOG_README_SHOW=1
 
 ## ----------------------------------------------------------------------------
 ## Includes
@@ -106,7 +110,7 @@ fi
 
 ## Create the rcfile if it doesn't already exist.
 if [ ! -f $LOCAL_DATA_DIR/${TARGET}rc ]; then 
-	funcrcfileWrite
+	funcrcfileWrite new
 fi
 
 ## Process the command-line argument(s).
@@ -118,15 +122,7 @@ A FILE creates a playlist of the folder non-recursively and plays the file.
 A FOLDER creates a playlist of the folder recursively and plays the first file.
 No arguments resumes playing the last playlist and the last file played.
 
-Left-clicking the track details toggles between album/artist and track.
-
-Left-clicking the cover navigates to the next folder if one exists.
-Right-clicking the cover navigates to the previous folder if one exists.
-Middle-clicking the cover will open the cover full-size in another window.
-
-Covers (cover.png/jpg/bmp etc.) are searched for within the music folders.
-
-See $LOCAL_DATA_DIR/${TARGET}rc to configure options.
+See $PACKAGE_DATA_DIR/README for more information.
 "
 	exit 1
 fi
@@ -429,10 +425,12 @@ export TITLE
 export VERSION
 export LOCAL_DATA_DIR
 export PACKAGE_DATA_DIR
-export PATH
-export TEMP_DIR
 export DEBUG_CONTENT
 export DEBUG_TRANSITS
+export COVER_SEARCH_PATTERN
+export DIALOG_README_SHOW
+export PATH
+export TEMP_DIR
 export GTK2_RC_FILES
 export DIALOG_COVER
 

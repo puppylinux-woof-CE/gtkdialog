@@ -5,10 +5,10 @@
 . functmpSet
 
 ## Set the track info as displayed in entTrackInfo.
-## On entry: $1 = null to use the existing type
-##           $1 = 0 for type Track (default)
-##           $1 = 1 for type Artist/aLbum
-##           $1 = 2 for type inverse of the existing
+## On entry: $1 = null to use the existing type,
+##                0 for type Track (default),
+##                1 for type Artist/aLbum or
+##                2 for type inverse of the existing.
 
 funcTrackInfoSet() {
 	if [ -z "$BASH" ]; then local FUNCNAME=funcTrackInfoSet; fi
