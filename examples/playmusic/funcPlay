@@ -34,8 +34,8 @@ funcPlay() {
 					else
 						if [ -n "$BASH" ]; then
 							char1="${name:0:1}"
-						else				
-							char1="`echo $name | cut -c 1`"				
+						else
+							char1="`echo $name | cut -c 1`"
 						fi
 						## Section end?
 						if [ "$char1" = '[' ]; then

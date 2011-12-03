@@ -53,7 +53,7 @@ funcFolderPreviousNext() {
 			done
 		fi
 		line=$(($playlistindex + 1))
-		playlisttrack="`sed -n "$line"p $TEMP_DIR/playlist`"
+		playlisttrack="`sed -n ${line}p $TEMP_DIR/playlist`"
 		functmpSet playlistindex $playlistindex
 		functmpSet playlisttrack "$playlisttrack"
 
@@ -62,7 +62,8 @@ funcFolderPreviousNext() {
 			funcStop
 			funcPlay
 		fi
-		funcWidgetSchedule muiRefreshCheck refreshcheck
+		funcWidgetSchedule muiCoverRefreshCheck coverrefreshcheck
+		funcWidgetSchedule muiTrackInfoRefreshCheck trackinforefreshcheck
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi

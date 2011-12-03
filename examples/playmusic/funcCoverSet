@@ -15,8 +15,14 @@ funcCoverSet() {
 	local cover trackdir
 
 	if [ -n "$playlisttrack" ]; then
-		trackdir="`dirname "$playlisttrack"`"
-		cover="`ls "$trackdir"/$COVER_SEARCH_PATTERN 2> /dev/null | sed -n '1p'`"
+		## trackdir="`dirname "$playlisttrack"`"	Redundant: builtin found.
+		trackdir="${playlisttrack%/*}"
+		## Make sure path is at least "/".
+		case "$trackdir" in
+			/*) true ;;
+			*) trackdir=/"$trackdir" ;;
+		esac
+		cover="`ls \"$trackdir\"/$COVER_SEARCH_PATTERN 2> /dev/null | sed -n 1p`"
 	fi
 	if [ -z "$cover" ]; then
 		cover=$PACKAGE_DATA_DIR/cover.png

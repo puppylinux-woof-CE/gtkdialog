@@ -13,10 +13,9 @@ funcStop() {
 
 	## Local variables.
 	local playerstate=`functmpGet playerstate`
-	local playerpid
+	local playerpid=`functmpGet playerpid`
 
 	if [ $playerstate = paused -o $playerstate = playing ]; then
-		playerpid=`functmpGet playerpid`
 		if [ $playerstate = paused ]; then
 			## Unpause the player.
 			kill -s CONT $playerpid 2> /dev/null

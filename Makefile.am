@@ -25,6 +25,7 @@ EXTRA_DIST = \
 	examples/miscellaneous/* \
 	examples/notebook/* \
 	examples/pixmap/* \
+	examples/playmusic/* \
 	examples/progressbar/* \
 	examples/radiobutton/* \
 	examples/spinbutton/* \

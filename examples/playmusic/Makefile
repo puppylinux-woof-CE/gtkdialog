@@ -33,8 +33,8 @@ all:
 dist:
 	rm -rf $(TARGET)-$(VERSION)
 	mkdir $(TARGET)-$(VERSION)
-	cp background.png cover.png func* Makefile $(TARGET) $(TARGET).desktop \
-		$(TARGET)*.png README $(TARGET)-$(VERSION)
+	cp background.png ChangeLog cover.png func* Makefile $(TARGET) \
+		$(TARGET).desktop $(TARGET)*.png README $(TARGET)-$(VERSION)
 	tar czvf $(TARGET)-$(VERSION).tar.gz $(TARGET)-$(VERSION)/
 	rm -rf $(TARGET)-$(VERSION)
 
