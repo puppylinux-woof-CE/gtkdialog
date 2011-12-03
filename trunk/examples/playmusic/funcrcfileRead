@@ -31,8 +31,8 @@ funcrcfileRead() {
 			else
 				if [ -n "$BASH" ]; then
 					char="${name:0:1}"
-				else				
-					char="`echo $name | cut -c 1`"				
+				else
+					char="`echo $name | cut -c 1`"
 				fi
 				## Section end?
 				if [ "$char" = '[' ]; then

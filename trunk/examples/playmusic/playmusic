@@ -6,14 +6,6 @@ GTKDIALOG=gtkdialog
 # GNU GENERAL PUBLIC LICENSE Version 2, June 1991
 # See http://www.gnu.org/licenses/gpl-2.0.txt
 
-# 2011-11-23: 0.1.0 Initial commit.
-# 2011-11-23: 0.1.1 Added some documentation to --help.
-# 2011-11-24: 0.1.2 Added a Makefile, replaced USE_BASHIMS with BASH.
-# 2011-11-24: 0.1.3 Fixed some unquoted values and now dash is happy.
-# 2011-11-28: 0.1.4 Changed svg to png, the README shows on first run
-#                   the players are configured on rcfile creation and
-#                   the cover is now selected using a search pattern.
-
 ## Strip comments from the entire project using:
 ## for f in func* playmusic; do sed -i -e '/## /d' -e '/ ##/d' $f; done
 
@@ -24,7 +16,7 @@ GTKDIALOG=gtkdialog
 
 TARGET=playmusic
 TITLE=PlayMusic
-VERSION=0.1.4
+VERSION=0.1.5
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd` #/usr/local/share/$TARGET
 DEBUG_CONTENT=0
@@ -44,15 +36,16 @@ WINDOW_WIDTH=224
 
 PATH=$PACKAGE_DATA_DIR:$PATH
 
+. funcCoverSet
+. funcDialogReadMeOpen
 . funcgtkrcCreate
 . funcPlaylistCreate
 . funcrcfileRead
 . funcrcfileWrite
-. funcDialogReadMeOpen
-. funcRefresh
 . funcStop
 . functmpGet
 . functmpSet
+. funcTrackInfoSet
 
 ## ----------------------------------------------------------------------------
 ## Local Functions
@@ -78,14 +71,15 @@ funcButtonsCreate() {
 				<action>disable:tmrAutoNext</action>'
 		if [ $f = Previous -o $f = Next ]; then
 			echo '
-				<action>. funcPreviousNext; funcPreviousNext '$index'</action>'
+				<action>. funcPreviousNext; funcPreviousNext '$index'</action>
+				<action>refresh:muiCoverRefreshCheck</action>
+				<action>refresh:muiTrackInfoRefreshCheck</action>'
 		else
 			echo '
 				<action>. func'$f'; func'$f'</action>'
 		fi
 		echo '
 				<action>refresh:nbkPlayPause</action>
-				<action>refresh:muiRefreshCheck</action>
 				<action>refresh:muiAutoNextCheck</action>
 				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 					echo "<action>echo \"btn$f: OUT\"</action>"
@@ -141,18 +135,21 @@ funcrcfileRead
 funcgtkrcCreate
 
 ## Create the initial files required.
+functmpSet trackinforefreshcheck false
+functmpSet coverrefreshcheck false
 functmpSet dialogcovercheck false
+functmpSet coverpresscheck false
 functmpSet folderopencheck false
 functmpSet autonextcheck false
-functmpSet refreshcheck false
-functmpSet covercheck false
 functmpSet dialogcoverstate closed
 functmpSet folderopen "[empty]"
 functmpSet playerstate stopped
 functmpSet trackinfotype 0
 functmpSet playpause 0
+functmpSet playerpid
 funcPlaylistCreate "$1"
-funcRefresh
+funcCoverSet
+funcTrackInfoSet
 
 ## Create the XML for the cover dialog.
 DIALOG_COVER='
@@ -212,9 +209,9 @@ echo '
 				<action>"
 					. funcFolderPreviousNext; funcFolderPreviousNext 1
 					. funcWidgetSchedule
-					funcWidgetSchedule muiCoverCheck covercheck
+					funcWidgetSchedule muiCoverPressCheck coverpresscheck
 				"</action>
-				<action>refresh:muiCoverCheck</action>
+				<action>refresh:muiCoverPressCheck</action>
 '`Comment ##
 ## Code to handle the "button-press-event" signal. Clicking will also emit
 ## the same signal but it gets filtered out when checking the BUTTON.
@@ -231,14 +228,14 @@ echo '
 						if [ `functmpGet playerstate` = playing ]; then
 							funcWidgetSchedule muiAutoNextCheck autonextcheck
 						fi
-						funcWidgetSchedule muiCoverCheck covercheck
+						funcWidgetSchedule muiCoverPressCheck coverpresscheck
 					elif [ $BUTTON -eq 3 ]; then
 						. funcFolderPreviousNext; funcFolderPreviousNext -1
 						. funcWidgetSchedule
-						funcWidgetSchedule muiCoverCheck covercheck
+						funcWidgetSchedule muiCoverPressCheck coverpresscheck
 					fi
 				"</action>
-				<action signal="button-press-event">refresh:muiCoverCheck</action>
+				<action signal="button-press-event">refresh:muiCoverPressCheck</action>
 				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 					echo "<action>echo \"btnCover-click: OUT\"</action>"
 					echo "<action signal=\"button-press-event\">echo \
@@ -295,7 +292,8 @@ echo '
 			<variable>tmrAutoNext</variable>
 			<sensitive>false</sensitive>
 			<action>. funcAutoNext; funcAutoNext</action>
-			<action>refresh:muiRefreshCheck</action>
+			<action>refresh:muiCoverRefreshCheck</action>
+			<action>refresh:muiTrackInfoRefreshCheck</action>
 		</timer>
 		<menubar>
 			<menu>
@@ -318,17 +316,28 @@ echo '
 					fi`'
 				</menuitem>
 				<menuitem checkbox="false">
-					<variable>muiRefreshCheck</variable>
-					<input file>'$TEMP_DIR'/refreshcheck</input>
+					<variable>muiCoverRefreshCheck</variable>
+					<input file>'$TEMP_DIR'/coverrefreshcheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
-						echo "<action>echo \"muiRefreshCheck: IN\"</action>"
+						echo "<action>echo \"muiCoverRefreshCheck: IN\"</action>"
 					fi`'
-					<action>. funcRefresh; funcRefresh</action>
-					<action>refresh:entTrackInfo</action>
+					<action>. funcCoverSet; funcCoverSet</action>
 					<action>refresh:btnCover</action>
 					<action>refresh:btnDialogCover</action>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
-						echo "<action>echo \"muiRefreshCheck: OUT\"</action>"
+						echo "<action>echo \"muiCoverRefreshCheck: OUT\"</action>"
+					fi`'
+				</menuitem>
+				<menuitem checkbox="false">
+					<variable>muiTrackInfoRefreshCheck</variable>
+					<input file>'$TEMP_DIR'/trackinforefreshcheck</input>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiTrackInfoRefreshCheck: IN\"</action>"
+					fi`'
+					<action>. funcTrackInfoSet; funcTrackInfoSet</action>
+					<action>refresh:entTrackInfo</action>
+					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
+						echo "<action>echo \"muiTrackInfoRefreshCheck: OUT\"</action>"
 					fi`'
 				</menuitem>
 				<menuitem checkbox="false">
@@ -347,17 +356,18 @@ echo '
 					fi`'
 				</menuitem>
 				<menuitem checkbox="false">
-					<variable>muiCoverCheck</variable>
-					<input file>'$TEMP_DIR'/covercheck</input>
+					<variable>muiCoverPressCheck</variable>
+					<input file>'$TEMP_DIR'/coverpresscheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
-						echo "<action>echo \"muiCoverCheck: IN\"</action>"
+						echo "<action>echo \"muiCoverPressCheck: IN\"</action>"
 					fi`'
 					<action>refresh:nbkPlayPause</action>
-					<action>refresh:muiRefreshCheck</action>
+					<action>refresh:muiCoverRefreshCheck</action>
+					<action>refresh:muiTrackInfoRefreshCheck</action>
 					<action>refresh:muiAutoNextCheck</action>
 					<action>refresh:muiDialogCoverCheck</action>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
-						echo "<action>echo \"muiCoverCheck: OUT\"</action>"
+						echo "<action>echo \"muiCoverPressCheck: OUT\"</action>"
 					fi`'
 				</menuitem>
 				<menuitem checkbox="false">
@@ -371,10 +381,11 @@ echo '
 ## I cannot split this across multiple lines because it requires double-quotes
 ## and splitting it into separate actions results in multiple subshells.
 ## `'
-					<action>. funcStop; funcStop; . funcPlaylistCreate; funcPlaylistCreate "$entFolderOpen"; . funcWidgetSchedule; funcWidgetSchedule muiRefreshCheck refreshcheck; . funcPlay; funcPlay</action>
+					<action>. funcStop; funcStop; . funcPlaylistCreate; funcPlaylistCreate "$entFolderOpen"; . funcWidgetSchedule; funcWidgetSchedule muiCoverRefreshCheck coverrefreshcheck; funcWidgetSchedule muiTrackInfoRefreshCheck trackinforefreshcheck; . funcPlay; funcPlay</action>
 					<action>refresh:nbkPlayPause</action>
 					<action>refresh:muiAutoNextCheck</action>
-					<action>refresh:muiRefreshCheck</action>
+					<action>refresh:muiCoverRefreshCheck</action>
+					<action>refresh:muiTrackInfoRefreshCheck</action>
 					<action>refresh:entFolderOpen</action>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiFolderOpenCheck: OUT\"</action>"

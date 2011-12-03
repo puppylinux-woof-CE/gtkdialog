@@ -1,0 +1,27 @@
+
+* Sat Dec 3 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.5
+- Changed pid check in funcAutoNext to "kill -0 pid" as it's a faster builtin.
+- Changed usage of dirname to ${envar%/*} throughout as it's a faster builtin.
+- Separated the track info and cover(s) for faster conditional refreshing.
+
+* Mon Nov 28 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.4
+- Changed svg to png, the README shows on first run, the players are configured
+  on rcfile creation and the cover is now selected using a search pattern.
+
+* Thu Nov 24 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.3
+- Fixed some unquoted values and now dash is happy.
+
+* Thu Nov 24 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.2
+- Added a Makefile, replaced USE_BASHIMS with BASH.
+
+* Wed Nov 23 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.1
+- Added some documentation to --help.
+
+* Wed Nov 23 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.0
+- Initial commit.

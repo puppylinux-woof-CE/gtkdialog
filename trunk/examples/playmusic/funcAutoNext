@@ -12,7 +12,8 @@ funcAutoNext() {
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	if [ `functmpGet playerstate` = playing ]; then
-		ps -o s= `functmpGet playerpid` > /dev/null
+		## ps -o s= `functmpGet playerpid` > /dev/null	Redundant: builtin found.
+		kill -0 `functmpGet playerpid` 2> /dev/null
 		if [ $? -ne 0 ]; then
 			funcPreviousNext 1
 		fi

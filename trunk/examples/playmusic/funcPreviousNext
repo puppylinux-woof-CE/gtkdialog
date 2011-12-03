@@ -18,7 +18,9 @@ funcPreviousNext() {
 	local playerstate=`functmpGet playerstate`
 	local playlistindex=`functmpGet playlistindex`
 	local playlistcount=`functmpGet playlistcount`
-	local line playlisttrack
+	local playlisttrack="`functmpGet playlisttrack`"
+	local trackdir="${playlisttrack%/*}"
+	local line
 
 	if [ $playlistcount -gt 0 ]; then
 		## Locate the previous/next track in the playlist.
@@ -33,7 +35,7 @@ funcPreviousNext() {
 			fi
 		fi
 		line=$(($playlistindex + 1))
-		playlisttrack="`sed -n "$line"p $TEMP_DIR/playlist`"
+		playlisttrack="`sed -n ${line}p $TEMP_DIR/playlist`"
 		functmpSet playlistindex $playlistindex
 		functmpSet playlisttrack "$playlisttrack"
 
@@ -42,7 +44,14 @@ funcPreviousNext() {
 			funcStop
 			funcPlay
 		fi
-		funcWidgetSchedule muiRefreshCheck refreshcheck
+
+		# Only refresh the cover(s) if the folder has changed.
+		if [ "$trackdir" != "${playlisttrack%/*}" ]; then
+			funcWidgetSchedule muiCoverRefreshCheck coverrefreshcheck
+		fi
+
+		# Always update the track info.
+		funcWidgetSchedule muiTrackInfoRefreshCheck trackinforefreshcheck
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
