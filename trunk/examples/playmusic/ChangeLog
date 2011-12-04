@@ -1,4 +1,8 @@
 
+* Sun Dec 4 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.6
+- Modified functmpGet to read data from files using a faster method.
+
 * Sat Dec 3 2011 Thunor <thunorsif@hotmail.com>
 - 0.1.5
 - Changed pid check in funcAutoNext to "kill -0 pid" as it's a faster builtin.
