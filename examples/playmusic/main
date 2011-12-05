@@ -16,9 +16,9 @@ GTKDIALOG=gtkdialog
 
 TARGET=playmusic
 TITLE=PlayMusic
-VERSION=0.1.6
+VERSION=0.1.7
 LOCAL_DATA_DIR=$HOME/.$TARGET
-PACKAGE_DATA_DIR=`pwd` #/usr/local/share/$TARGET
+PACKAGE_DATA_DIR=`pwd`
 DEBUG_CONTENT=0
 DEBUG_TRANSITS=0
 COVER_SEARCH_PATTERN="*.[JjPpBbGg][PpNnMmIi][GgPpFf]"
@@ -103,7 +103,7 @@ if [ ! -d $LOCAL_DATA_DIR ]; then
 fi
 
 ## Create the rcfile if it doesn't already exist.
-if [ ! -f $LOCAL_DATA_DIR/${TARGET}rc ]; then 
+if [ ! -f $LOCAL_DATA_DIR/${TARGET}rc ]; then
 	funcrcfileWrite new
 fi
 
@@ -122,7 +122,7 @@ See $PACKAGE_DATA_DIR/README for more information.
 fi
 
 ## Create a temporary directory.
-TEMP_DIR=`mktemp -d`
+TEMP_DIR=`mktemp -d --tmpdir ${TARGET}.XXXXXXXX`
 if [ $? -ne 0 ]; then
 	echo "Error: Couldn't create temporary directory."
 	exit 1
