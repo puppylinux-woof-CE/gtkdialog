@@ -10,16 +10,17 @@ PACKAGE_DATA_DIR=$(DATADIR)/$(TARGET)
 STRIP_COMMENTS?=true
 
 # You shouldn't need to edit anything below -----------------------------------
-TARGET=playmusic
-VERSION=$(shell grep "VERSION=" $(TARGET) | sed 's|.*=||')
+TARGET=$(shell grep "TARGET=" main | sed 's|.*=||')
+VERSION=$(shell grep "VERSION=" main | sed 's|.*=||')
 
-.PHONY: all dist install uninstall
+.PHONY: all check dist install uninstall
 
-all:
+all: check
 	@echo
-	@echo "PREFIX=$(PREFIX)"
-	@echo "DESTDIR=$(DESTDIR)"
-	@echo "STRIP_COMMENTS=$(STRIP_COMMENTS)"
+	@echo "Defaults:"
+	@echo "    PREFIX=$(PREFIX)"
+	@echo "    DESTDIR=$(DESTDIR)"
+	@echo "    STRIP_COMMENTS=$(STRIP_COMMENTS)"
 	@echo
 	@echo "Usage examples:"
 	@echo "    make install"
@@ -30,15 +31,21 @@ all:
 	@echo "    make PREFIX=/usr uninstall"
 	@echo
 
-dist:
+check:
+	@if [ -z "$(TARGET)" -o -z "$(VERSION)" ]; then \
+		echo "Error: TARGET and/or VERSION not set."; \
+		exit 1; \
+	fi
+
+dist: check
 	rm -rf $(TARGET)-$(VERSION)
 	mkdir $(TARGET)-$(VERSION)
-	cp background.png ChangeLog cover.png func* Makefile $(TARGET) \
+	cp background.png ChangeLog cover.png func* main Makefile \
 		$(TARGET).desktop $(TARGET)*.png README $(TARGET)-$(VERSION)
 	tar czvf $(TARGET)-$(VERSION).tar.gz $(TARGET)-$(VERSION)/
 	rm -rf $(TARGET)-$(VERSION)
 
-install:
+install: check
 	mkdir -p $(DESTDIR)$(BINDIR)
 	mkdir -p $(DESTDIR)$(DATADIR)/applications
 	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/64x64/apps
@@ -47,13 +54,12 @@ install:
 	if [ "$(STRIP_COMMENTS)" = true ] ; then \
 		sed -e '/## /d' -e '/ ##/d' \
 			-e "s|^\(PACKAGE_DATA_DIR=\)\(.*\)|\1$(PACKAGE_DATA_DIR)|" \
-			$(TARGET) > $(DESTDIR)$(BINDIR)/$(TARGET); \
-		chmod 755 $(DESTDIR)$(BINDIR)/$(TARGET); \
+			main > $(DESTDIR)$(BINDIR)/$(TARGET); \
 	else \
 		sed -e "s|^\(PACKAGE_DATA_DIR=\)\(.*\)|\1$(PACKAGE_DATA_DIR)|" \
-			$(TARGET) > $(DESTDIR)$(BINDIR)/$(TARGET); \
-		chmod 755 $(DESTDIR)$(BINDIR)/$(TARGET); \
+			main > $(DESTDIR)$(BINDIR)/$(TARGET); \
 	fi
+	chmod 755 $(DESTDIR)$(BINDIR)/$(TARGET)
 
 	sed -e "s|^\(Icon=\)\(.*\)|\1$(DATADIR)/icons/hicolor/64x64/apps/$(TARGET).png|" \
 		$(TARGET).desktop > $(DESTDIR)$(DATADIR)/applications/$(TARGET).desktop; \
@@ -69,7 +75,7 @@ install:
 	done
 	cp background.png cover.png README $(DESTDIR)$(PACKAGE_DATA_DIR)
 
-uninstall:
+uninstall: check
 	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
 	rm -f $(DESTDIR)$(DATADIR)/applications/$(TARGET).desktop
 	rm -f $(DESTDIR)$(DATADIR)/icons/hicolor/64x64/apps/$(TARGET).png
