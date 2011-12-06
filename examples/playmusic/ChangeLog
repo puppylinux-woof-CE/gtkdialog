@@ -1,4 +1,9 @@
 
+* Tue Dec 6 2011 Thunor <thunorsif@hotmail.com>
+- 0.1.7
+- Generalised a few things to make the project more useful as a template.
+- Added funcrcfileGet which was needed to complement funcrcfileSet.
+
 * Sun Dec 4 2011 Thunor <thunorsif@hotmail.com>
 - 0.1.6
 - Modified functmpGet to read data from files using a faster method.

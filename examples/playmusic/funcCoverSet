@@ -15,7 +15,7 @@ funcCoverSet() {
 	local cover trackdir
 
 	if [ -n "$playlisttrack" ]; then
-		## trackdir="`dirname "$playlisttrack"`"	Redundant: builtin found.
+## 		trackdir="`dirname "$playlisttrack"`"	Redundant: builtin found.
 		trackdir="${playlisttrack%/*}"
 		## Make sure path is at least "/".
 		case "$trackdir" in

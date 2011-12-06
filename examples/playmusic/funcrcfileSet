@@ -12,7 +12,7 @@ funcrcfileSet() {
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
 
 	## If name exists then update it.
-	if [ -n "`grep "^$1=" $LOCAL_DATA_DIR/${TARGET}rc`" ]; then
+	if [ -n "`grep \"^$1=\" $LOCAL_DATA_DIR/${TARGET}rc`" ]; then
 		sed -i "s|^\($1=\)\(.*\)|\1$2|" $LOCAL_DATA_DIR/${TARGET}rc
 	else
 		## Name doesn't exist so append it to the section.
