@@ -33,7 +33,7 @@ To uninstall:
     make uninstall
 
 DESTDIR is supported for packagers to install to an intermediate folder e.g.
-make DESTDIR=playmusic-0.1.4 install
+make DESTDIR=playmusic-0.1.7 install
 
 Requirements
 ============
@@ -103,4 +103,4 @@ Thunor <thunorsif@hotmail.com>
 http://code.google.com/p/gtkdialog/
 
 
-2011-11-28
+2011-12-06

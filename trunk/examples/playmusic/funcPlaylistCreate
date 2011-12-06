@@ -60,7 +60,7 @@ funcPlaylistCreate() {
 			playlist=`find -L "$arg1" $maxdepth -type f | sort`
 		else
 			type=f
-			## dirname="`dirname "$arg1"`"	Redundant: builtin found.
+## 			dirname="`dirname "$arg1"`"	Redundant: builtin found.
 			dirname="${arg1%/*}"
 			## Make sure path is at least "/".
 			case "$dirname" in

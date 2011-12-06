@@ -7,7 +7,7 @@ GTKDIALOG=gtkdialog
 # See http://www.gnu.org/licenses/gpl-2.0.txt
 
 ## Strip comments from the entire project using:
-## for f in func* playmusic; do sed -i -e '/## /d' -e '/ ##/d' $f; done
+## for f in func* main; do sed -i -e '/## /d' -e '/ ##/d' $f; done
 
 ## ----------------------------------------------------------------------------
 ## Constants
