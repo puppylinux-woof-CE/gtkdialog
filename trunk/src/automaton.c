@@ -2146,7 +2146,12 @@ instruction_execute_push(
    Miert nem kapja meg az adatokat parameterben es foglalkozik
    a veremmel a hivo?
  */
+#ifdef __arm__
+/* 120701 BK Puppy Linux forum member jamesbond fixed this for arm cpus...*/
+stackelement _sum(stackelement b, stackelement a)
+#else
 stackelement _sum(stackelement a, stackelement b)
+#endif
 {
 	int n;
 	/* Let's copy the widgets from b to a */
