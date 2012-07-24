@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Jul 12 2012 Thunor <thunorsif@hotmail.com>
+- Applied jamesbond's fix for the incorrectly ordered widgets on the Raspberry
+  Pi (ARM).
+
 * Thu Nov 22 2011 Thunor <thunorsif@hotmail.com>
 - Added an example application PlayMusic.
 
