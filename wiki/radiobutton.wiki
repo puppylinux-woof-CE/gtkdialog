@@ -13,6 +13,8 @@ A [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html GtkRadioButton]
 	<label>text</label>
 	<default>state</default>
 	<variable>varname</variable>
+	<input>command</input>
+	<input file>filename</input>
 	<sensitive>state</sensitive>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
@@ -43,6 +45,8 @@ Some of these may have tag attribute equivalents.
 || label || Initial text || || || ||
 || default || Initial state || {{{true}}} or {{{false}}} || || ||
 || variable || Shell variable name || || || ||
+|| input || Data input source || Shell command || || 0.8.1 ||
+|| input file || Data input source || Filename || || 0.8.1 ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_^[1]^ || || ||
@@ -65,6 +69,7 @@ The following functions can be performed upon this widget by any widget capable 
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
