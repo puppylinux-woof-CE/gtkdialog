@@ -19,6 +19,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkRadioButton.html GtkRadioButton]
 	<action>activity</action>...
 	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
+	<output file>filename</output>
 </radiobutton>
 }}}
 
@@ -34,6 +35,7 @@ The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -53,6 +55,7 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_^[1]^ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
+|| output file || Data output target || Filename || || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
@@ -70,6 +73,8 @@ The following functions can be performed upon this widget by any widget capable 
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || 0.8.1 ||
+|| save || Save widget data || Shell variable name || 0.8.1 ||
+|| clear || Remove all widget data || Shell variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:

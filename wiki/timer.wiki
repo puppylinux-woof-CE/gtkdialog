@@ -30,6 +30,7 @@ The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || milliseconds || Timer precision || {{{true}}} or {{{false}}} || ||
 || interval^[2]^ || Timer frequency || An unsigned integer value representing seconds or milliseconds || ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
