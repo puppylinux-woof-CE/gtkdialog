@@ -41,6 +41,7 @@
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
+#include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
 #include "widget_text.h"
@@ -217,6 +218,10 @@ widget_get_text_value(
 			string = widget_pixmap_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_RADIOBUTTON:
+			string = widget_radiobutton_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_SPINBUTTON:
 			string = widget_spinbutton_envvar_construct(widget);
 			return string;
@@ -257,14 +262,6 @@ widget_get_text_value(
 		
 		case WIDGET_CHECKBOX:
 			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
-				return g_strdup("true");
-			else
-				return g_strdup("false");
-			break;
-			
-		case WIDGET_RADIO:
-			if (gtk_toggle_button_get_active
-			    (GTK_TOGGLE_BUTTON(widget)))
 				return g_strdup("true");
 			else
 				return g_strdup("false");
@@ -1371,6 +1368,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_PIXMAP:
 			type = "PIXMAP";
 			break;
+		case WIDGET_RADIOBUTTON:
+			type = "RADIOBUTTON";
+			break;
 		case WIDGET_SPINBUTTON:
 			type = "SPINBUTTON";
 			break;
@@ -1401,9 +1401,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_CHECKBOX:
 		type = "CHECKBOX";
-		break;
-	case WIDGET_RADIO:
-		type = "RADIO";
 		break;
 	case WIDGET_LIST:
 		type = "LIST";

@@ -46,6 +46,9 @@ gint function_signals_block;
 gint project_space_expand;
 gint project_space_fill;
 
+/* The most recently created radiobutton widget (used for grouping) */
+GtkWidget *lastradiowidget;
+
 void reset_program_source(void);
 gint set_program_source(gchar *name);
 void set_program_name(gchar *name);

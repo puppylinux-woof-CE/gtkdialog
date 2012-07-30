@@ -3235,7 +3235,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 344 "gtkdialog_parser.y"
     {
-	   	token_store(PUSH | WIDGET_RADIO);
+	   	token_store(PUSH | WIDGET_RADIOBUTTON);
            }
     break;
 
@@ -3244,7 +3244,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 347 "gtkdialog_parser.y"
     {
-                token_store_attr(PUSH | WIDGET_RADIO, (yyvsp[(2) - (5)].nvval));
+                token_store_attr(PUSH | WIDGET_RADIOBUTTON, (yyvsp[(2) - (5)].nvval));
 	   }
     break;
 

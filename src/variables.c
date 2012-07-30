@@ -26,6 +26,7 @@
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
+#include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
 #include "widget_text.h"
@@ -298,6 +299,9 @@ variables_set_value(const char *name,
 		case WIDGET_PIXMAP:
 			widget_pixmap_fileselect(toset, name, value);
 			break;
+		case WIDGET_RADIOBUTTON:
+			widget_radiobutton_fileselect(toset, name, value);
+			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_fileselect(toset, name, value);
 			break;
@@ -362,6 +366,9 @@ variables_save(const char *name)
 			break;
 		case WIDGET_PIXMAP:
 			widget_pixmap_save(var);
+			break;
+		case WIDGET_RADIOBUTTON:
+			widget_radiobutton_save(var);
 			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_save(var);
@@ -465,6 +472,9 @@ variables_refresh(const char *name)
 			break;
 		case WIDGET_PIXMAP:
 			widget_pixmap_refresh(var);
+			break;
+		case WIDGET_RADIOBUTTON:
+			widget_radiobutton_refresh(var);
 			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_refresh(var);
@@ -1103,6 +1113,9 @@ variables_clear(const char *name)
 		case WIDGET_PIXMAP:
 			widget_pixmap_clear(toclear);
 			break;
+		case WIDGET_RADIOBUTTON:
+			widget_radiobutton_clear(toclear);
+			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_clear(toclear);
 			break;
@@ -1214,6 +1227,9 @@ remove_selected_variable(const char *name)
 			break;
 		case WIDGET_PIXMAP:
 			widget_pixmap_removeselected(toclear);
+			break;
+		case WIDGET_RADIOBUTTON:
+			widget_radiobutton_removeselected(toclear);
 			break;
 		case WIDGET_SPINBUTTON:
 			widget_spinbutton_removeselected(toclear);
