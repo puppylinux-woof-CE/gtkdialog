@@ -1,7 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
-* Tue Jul 12 2012 Thunor <thunorsif@hotmail.com>
+* Mon Jul 30 2012 Thunor <thunorsif@hotmail.com>
+- Refactored the radiobutton widget and added support for <input>,
+  <input file> and refresh.
+
+* Tue Jul 24 2012 Thunor <thunorsif@hotmail.com>
 - Applied jamesbond's fix for the incorrectly ordered widgets on the Raspberry
   Pi (ARM).
 

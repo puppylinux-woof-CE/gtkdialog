@@ -342,10 +342,10 @@ checkbox
 
 radiobutton
   : RADIO attr ERADIO    {
-	   	token_store(PUSH | WIDGET_RADIO);
+	   	token_store(PUSH | WIDGET_RADIOBUTTON);
            }
   | PART_RADIO tagattr '>' attr ERADIO {
-                token_store_attr(PUSH | WIDGET_RADIO, $2);
+                token_store_attr(PUSH | WIDGET_RADIOBUTTON, $2);
 	   }
   | RADIO attr RADIO  {
 		yyerror("</radiobutton> expected instead of <radiobutton>.");

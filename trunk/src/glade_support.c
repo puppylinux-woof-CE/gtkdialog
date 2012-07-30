@@ -627,7 +627,7 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton--->GtkRadioButton */
 	if (GTK_IS_RADIO_BUTTON(widget))
-		retval = WIDGET_RADIO;
+		retval = WIDGET_RADIOBUTTON;
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton */
 	else if (GTK_IS_CHECK_BUTTON(widget))
 		retval = WIDGET_CHECKBOX;

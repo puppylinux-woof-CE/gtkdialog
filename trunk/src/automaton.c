@@ -49,6 +49,7 @@
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
+#include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
 #include "widget_text.h"
@@ -82,7 +83,6 @@ int instruction_counter = 0;		/* The first available memory cell */
 size_t memory_counter = 0;			/* The size of program memory */
 GtkWidget *window = NULL;			/* The actual window */
 GList *accel_groups = NULL;			/* An accumulated list of menu accelerator groups to be added to the window */
-GtkWidget *lastradiowidget = NULL;	/* The most recently created radiobutton widget (used for grouping */
 
 
 /*
@@ -296,6 +296,9 @@ void print_command(instruction command)
 		case WIDGET_PIXMAP:
 			printf("(new pixmap())");
 			break;
+		case WIDGET_RADIOBUTTON:
+			printf("(new radiobutton())");
+			break;
 		case WIDGET_SPINBUTTON:
 			printf("(new spinbutton())");
 			break;
@@ -325,9 +328,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_CHECKBOX:
 	    printf("(new checkbox())");
-	    break;
-	case WIDGET_RADIO:
-	    printf("(new radio())");
 	    break;
 	case WIDGET_PROGRESS:
 	    printf("(new progressbar())");
@@ -559,6 +559,9 @@ void print_token(token Token)
 		case WIDGET_PIXMAP:
 			printf("(PIXMAP)");
 			break;
+		case WIDGET_RADIOBUTTON:
+			printf("(RADIOBUTTON)");
+			break;
 		case WIDGET_SPINBUTTON:
 			printf("(SPINBUTTON)");
 			break;
@@ -589,9 +592,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_CHECKBOX:
 		printf("(CHECKBOX)");
-		break;
-	case WIDGET_RADIO:
-		printf("(RADIO)");
 		break;
 	case WIDGET_PROGRESS:
 		printf("(PROGRESSBAR)");
@@ -870,7 +870,7 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	PIP_DEBUG("");
 
 	/* Read declared directives */
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu Item");
+	attributeset_set_if_unset(Attr, ATTR_LABEL, "menuitem");
 	label = attributeset_get_first(&element, Attr, ATTR_LABEL);
 	if (attributeset_is_avail(Attr, ATTR_WIDTH))
 		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
@@ -1110,7 +1110,7 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
 	}
 
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "Menu");
+	attributeset_set_if_unset(Attr, ATTR_LABEL, "menu");
 	label = attributeset_get_first(&element, Attr, ATTR_LABEL);
 
 	/* Thunor: A menu widget is in fact a menuitem widget with a submenu
@@ -1497,6 +1497,10 @@ instruction_execute_push(
 			Widget = widget_pixmap_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_RADIOBUTTON:
+			Widget = widget_radiobutton_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_SPINBUTTON:
 			Widget = widget_spinbutton_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1611,7 +1615,7 @@ instruction_execute_push(
 		 **
 		 */
 		attributeset_set_if_unset(Attr, ATTR_LABEL,
-					  "Uninitialized checkbox");
+					  "checkbox");
 		/*
 		 **
 		 */
@@ -1647,57 +1651,6 @@ instruction_execute_push(
 			gtk_widget_set_sensitive(Widget, FALSE);
 
 		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_RADIO:
-		attributeset_set_if_unset(Attr, ATTR_LABEL, "Unnamed");
-		/* 
-		 ** It is a little strange hack with the radiobuttons. Not easy
-		 ** to force them work together.
-		 */
-		if (lastradiowidget == NULL) {
-			Widget = gtk_radio_button_new_with_label(NULL,
-				attributeset_get_first(&element, Attr, ATTR_LABEL));
-			lastradiowidget = Widget;
-		} else {
-			Widget = gtk_radio_button_new_with_label_from_widget(
-				GTK_RADIO_BUTTON(lastradiowidget),
-				attributeset_get_first(&element, Attr, ATTR_LABEL));
-//        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(Widget),
-//                                      FALSE );
-		}
-
-		/*
-		 ** Radio buttons can have a default value.
-		 */
-		if (attributeset_cmp_left(Attr, ATTR_DEFAULT, "true") ||
-		    attributeset_cmp_left(Attr, ATTR_DEFAULT, "yes"))
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
-						     (Widget), TRUE);
-
-		/*
-		 ** Radiobuttons also can take actions...
-		 */
-		if (attributeset_is_avail(Attr, ATTR_ACTION)) {
-			char *act;
-			act = attributeset_get_first(&element, Attr, ATTR_ACTION);
-			while (act != NULL) {
-				gtk_signal_connect(GTK_OBJECT(Widget),
-						   "toggled",
-						   GTK_SIGNAL_FUNC
-						   (button_toggled),
-						   (gpointer) act);
-				act = attributeset_get_next(&element, Attr, ATTR_ACTION);
-			}
-		}
-		
-		push_widget(Widget, Widget_Type);
-
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
 		break;
 
 	case WIDGET_PROGRESS:
