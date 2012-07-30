@@ -64,7 +64,6 @@ static void fill_menuitem_by_file(GtkWidget *widget, char *filename);
 static void fill_entry_by_file(GtkWidget *entry, char *filename);
 static void fill_edit_by_file(GtkWidget *widget, char *filename);
 
-void widget_checkbox_refresh(variable *var);
 void widget_combo_refresh(variable *var);
 void widget_scale_refresh(variable *var);
 void widget_menuitem_refresh(variable *var);
@@ -81,7 +80,6 @@ void save_menuitem_to_file(variable *var);
 
 FILE *widget_opencommand(const char *command);
 
-void fill_checkbox_by_command(GtkWidget *checkbox, char *command);
 void fill_clist_by_command(GtkWidget *list, int columns, char *command);
 void fill_scale_by_command(GtkWidget *widget, char *command);
 void fill_menuitem_by_command(GtkWidget *widget, char *command);

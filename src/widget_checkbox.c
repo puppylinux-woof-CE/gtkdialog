@@ -1,5 +1,5 @@
 /*
- * widget_radiobutton.c: 
+ * widget_checkbox.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -34,9 +34,9 @@
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes, located at file bottom */
-static void widget_radiobutton_input_by_command(variable *var, char *command);
-static void widget_radiobutton_input_by_file(variable *var, char *filename);
-static void widget_radiobutton_input_by_items(variable *var);
+static void widget_checkbox_input_by_command(variable *var, char *command);
+static void widget_checkbox_input_by_file(variable *var, char *filename);
+static void widget_checkbox_input_by_items(variable *var);
 
 /* Notes: */
 
@@ -44,7 +44,7 @@ static void widget_radiobutton_input_by_items(variable *var);
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_radiobutton_clear(variable *var)
+void widget_checkbox_clear(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -63,7 +63,7 @@ void widget_radiobutton_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
-GtkWidget *widget_radiobutton_create(
+GtkWidget *widget_checkbox_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GList            *element;
@@ -73,17 +73,10 @@ GtkWidget *widget_radiobutton_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "radiobutton");
+	attributeset_set_if_unset(Attr, ATTR_LABEL, "checkbox");
 
-	if (lastradiowidget == NULL) {
-		widget = gtk_radio_button_new_with_label(NULL,
-			attributeset_get_first(&element, Attr, ATTR_LABEL));
-		lastradiowidget = widget;
-	} else {
-		widget = gtk_radio_button_new_with_label_from_widget(
-			GTK_RADIO_BUTTON(lastradiowidget),
-			attributeset_get_first(&element, Attr, ATTR_LABEL));
-	}
+	widget = gtk_check_button_new_with_label(
+		attributeset_get_first(&element, Attr, ATTR_LABEL));
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -96,7 +89,7 @@ GtkWidget *widget_radiobutton_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_radiobutton_envvar_all_construct(variable *var)
+gchar *widget_checkbox_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -121,7 +114,7 @@ gchar *widget_radiobutton_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_radiobutton_envvar_construct(GtkWidget *widget)
+gchar *widget_checkbox_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
@@ -146,7 +139,7 @@ gchar *widget_radiobutton_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_radiobutton_fileselect(
+void widget_checkbox_fileselect(
 	variable *var, const char *name, const char *value)
 {
 	gchar            *var1;
@@ -166,7 +159,7 @@ void widget_radiobutton_fileselect(
 /***********************************************************************
  * Refresh                                                             *
  ***********************************************************************/
-void widget_radiobutton_refresh(variable *var)
+void widget_checkbox_refresh(variable *var)
 {
 	GList            *element;
 	gchar            *act;
@@ -186,16 +179,16 @@ void widget_radiobutton_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_radiobutton_input_by_command(var, act + 8);
+			widget_checkbox_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-			widget_radiobutton_input_by_file(var, act + 5);
+			widget_checkbox_input_by_file(var, act + 5);
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_radiobutton_input_by_items(var);
+		widget_checkbox_input_by_items(var);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
@@ -236,7 +229,7 @@ void widget_radiobutton_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_radiobutton_removeselected(variable *var)
+void widget_checkbox_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -257,7 +250,7 @@ void widget_radiobutton_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_radiobutton_save(variable *var)
+void widget_checkbox_save(variable *var)
 {
 	FILE             *outfile;
 	GList            *element;
@@ -305,7 +298,7 @@ void widget_radiobutton_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_radiobutton_input_by_command(variable *var, char *command)
+static void widget_checkbox_input_by_command(variable *var, char *command)
 {
 	FILE             *infile;
 	gchar             line[512];
@@ -355,7 +348,7 @@ static void widget_radiobutton_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_radiobutton_input_by_file(variable *var, char *filename)
+static void widget_checkbox_input_by_file(variable *var, char *filename)
 {
 	FILE             *infile;
 	gchar             line[512];
@@ -400,7 +393,7 @@ static void widget_radiobutton_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_radiobutton_input_by_items(variable *var)
+static void widget_checkbox_input_by_items(variable *var)
 {
 	gchar            *var1;
 	gint              var2;

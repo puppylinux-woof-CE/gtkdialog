@@ -37,6 +37,7 @@
 #include "widgets.h"
 #include "stringman.h"
 #include "widget_button.h"
+#include "widget_checkbox.h"
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
@@ -201,6 +202,10 @@ widget_get_text_value(
 			string = widget_button_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_CHECKBOX:
+			string = widget_checkbox_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_COLORBUTTON:
 			string = widget_colorbutton_envvar_construct(widget);
 			return string;
@@ -259,14 +264,7 @@ widget_get_text_value(
 		case WIDGET_COMBO:
 			return (char *) gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(widget)->entry));
 			break;
-		
-		case WIDGET_CHECKBOX:
-			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
-				return g_strdup("true");
-			else
-				return g_strdup("false");
-			break;
-			
+
 		case WIDGET_LIST:
 			item = GTK_LIST(widget)->selection;
 			if (item != NULL)
@@ -810,32 +808,6 @@ widget_entry_refresh(variable *var)
 	}
 }
 
-void widget_checkbox_refresh(variable * var)
-{
-	GList *element;
-	char *act;
-
-	if (var == NULL || var->Attributes == NULL)
-		return;
-	/*
-	 ** The <input> tag... 
-	 */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		if (input_is_shell_command(act))
-			fill_checkbox_by_command(var->Widget, act + 8);
-		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-	}
-
-	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
-		gtk_widget_set_sensitive(var->Widget, FALSE);
-
-}
-
-
 void widget_list_refresh(variable * var)
 {
 	GList *element;
@@ -1202,32 +1174,6 @@ void fill_entry_by_command(GtkWidget * entry, char *command)
 	pclose(infile);
 }
 
-void fill_checkbox_by_command(GtkWidget *checkbox, char *command)
-{
-	FILE *infile;
-	char line[512];
-
-	g_assert(checkbox != NULL && command != NULL);
-
-	infile = widget_opencommand(command);
-	if (infile == NULL) {
-		fprintf(stderr, "%s(): command %s, %m\n", __func__, command);
-		return;
-	}
-
-	if (fgets(line, 512, infile) != NULL) {
-		if (line[strlen(line) - 1] == '\n')
-			line[strlen(line) - 1] = '\0';
-		if (strcmp(line, "true") == 0 || strcmp(line, "yes") == 0)
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbox), TRUE);
-		else
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbox), FALSE);
-	}
-	pclose(infile);
-}
-
-
-
 void 
 fill_table_by_command(
 	GtkWidget * list, 
@@ -1353,6 +1299,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_BUTTON:
 			type = "BUTTON";
 			break;
+		case WIDGET_CHECKBOX:
+			type = "CHECKBOX";
+			break;
 		case WIDGET_COLORBUTTON:
 			type = "COLORBUTTON";
 			break;
@@ -1398,9 +1347,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_EDIT:
 		type = "EDIT";
-		break;
-	case WIDGET_CHECKBOX:
-		type = "CHECKBOX";
 		break;
 	case WIDGET_LIST:
 		type = "LIST";

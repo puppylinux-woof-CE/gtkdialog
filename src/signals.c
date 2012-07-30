@@ -168,6 +168,8 @@ void button_leaved_attr(GtkWidget *button, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
+/* Thunor: create_chooser() is now the only function calling this */
+
 void button_pressed(GtkWidget *button, const gchar *str)
 {
 	execute_action(GTK_WIDGET(button), str, NULL);
@@ -229,42 +231,6 @@ void button_released_attr(GtkWidget *button, AttributeSet *Attr)
 		}
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
-
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
-}
-
-/***********************************************************************
- *                                                                     *
- ***********************************************************************/
-
-/* Thunor: checkbox is the only widget now using this function as the
- * widget_signal_executor is managing this for all widgets so it can
- * be deleted as soon as the checkbox widget has been refactored.
- * button_pressed can go as well. */
-void button_toggled(GtkToggleButton *button, gpointer str)
-{
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
-
-	/* First we check for "if true" and "if false" prefixes */
-	if (strncasecmp(str, "if true ", 8) == 0) {
-		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button)))
-			button_pressed(GTK_WIDGET(button), &((char*)str)[8]);
-		return;
-	}
-
-	if (strncasecmp(str, "if false ", 9) == 0) {
-		if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button)))
-			button_pressed(GTK_WIDGET(button), &((char*)str)[9]);
-		return;
-	}
-
-	/* Otherwise we just call the function we used to call when a
-	 * button is pressed */
-	button_pressed(GTK_WIDGET(button), str);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

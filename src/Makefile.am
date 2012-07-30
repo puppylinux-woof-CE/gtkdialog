@@ -24,6 +24,7 @@ gtkdialog_SOURCES = \
 		    tag_attributes.c tag_attributes.h \
 		    glade_support.c glade_support.h \
 		    widget_button.c widget_button.h \
+		    widget_checkbox.c widget_checkbox.h \
 		    widget_colorbutton.c widget_colorbutton.h \
 		    widget_comboboxtext.c widget_comboboxtext.h \
 		    widget_notebook.c widget_notebook.h \
