@@ -23,6 +23,7 @@
 #include "variables.h"
 #include "widgets.h"
 #include "widget_button.h"
+#include "widget_checkbox.h"
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_pixmap.h"
@@ -286,6 +287,9 @@ variables_set_value(const char *name,
 		case WIDGET_BUTTON:
 			widget_button_fileselect(toset, name, value);
 			break;
+		case WIDGET_CHECKBOX:
+			widget_checkbox_fileselect(toset, name, value);
+			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_fileselect(toset, name, value);
 			break;
@@ -353,6 +357,9 @@ variables_save(const char *name)
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_save(var);
+			break;
+		case WIDGET_CHECKBOX:
+			widget_checkbox_save(var);
 			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_save(var);
@@ -460,6 +467,9 @@ variables_refresh(const char *name)
 		case WIDGET_BUTTON:
 			widget_button_refresh(var);
 			break;
+		case WIDGET_CHECKBOX:
+			widget_checkbox_refresh(var);
+			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_refresh(var);
 			break;
@@ -509,9 +519,6 @@ variables_refresh(const char *name)
 			break;
 		case WIDGET_EDIT:
 			widget_edit_refresh(var);
-			break;
-		case WIDGET_CHECKBOX:
-			widget_checkbox_refresh(var);
 			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
@@ -1100,6 +1107,9 @@ variables_clear(const char *name)
 		case WIDGET_BUTTON:
 			widget_button_clear(toclear);
 			break;
+		case WIDGET_CHECKBOX:
+			widget_checkbox_clear(toclear);
+			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_clear(toclear);
 			break;
@@ -1149,10 +1159,6 @@ variables_clear(const char *name)
 			empty = g_list_append(empty, "");
 			gtk_combo_set_popdown_strings(
 					GTK_COMBO(toclear->Widget), empty);
-			break;
-		case WIDGET_CHECKBOX:
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
-					     (toclear->Widget), FALSE);
 			break;
 		case WIDGET_EDIT:
 			gtk_text_buffer_set_text(
@@ -1214,6 +1220,9 @@ remove_selected_variable(const char *name)
 		case WIDGET_TOGGLEBUTTON:
 		case WIDGET_BUTTON:
 			widget_button_removeselected(toclear);
+			break;
+		case WIDGET_CHECKBOX:
+			widget_checkbox_removeselected(toclear);
 			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_removeselected(toclear);

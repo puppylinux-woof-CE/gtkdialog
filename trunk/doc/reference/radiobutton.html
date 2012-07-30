@@ -101,6 +101,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkRadioButton.html">GtkRadioButt
 	&lt;action&gt;activity&lt;/action&gt;...
 	&lt;action signal="type"&gt;activity&lt;/action&gt;...
 	&lt;action type="function"&gt;parameter&lt;/action&gt;...
+	&lt;output file&gt;filename&lt;/output&gt;
 &lt;/radiobutton&gt;
 </pre>
 
@@ -116,6 +117,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkRadioButton.html">GtkRadioButt
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
 <tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 </table>
 
 <h2> Directives </h2>
@@ -135,6 +137,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkRadioButton.html">GtkRadioButt
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i><sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action type="<i>function</i>" </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> output file </td><td class="wiki"> Data output target </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
 </table>
 
 <h2> Signals </h2>
@@ -152,6 +155,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkRadioButton.html">GtkRadioButt
 <tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> save </td><td class="wiki"> Save widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> clear </td><td class="wiki"> Remove all widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
 </table>
 
 <p>The following general functions can be performed by any widget capable of emitting signals:</p>

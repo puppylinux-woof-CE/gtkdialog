@@ -28,7 +28,6 @@ void button_leaved_attr(GtkWidget *button, AttributeSet*Attr);
 void button_pressed(GtkWidget *button, const gchar *str);
 void button_pressed_attr(GtkWidget *button, AttributeSet *Attr);
 void button_released_attr(GtkWidget *button, AttributeSet *Attr);
-void button_toggled(GtkToggleButton *button, gpointer str);
 
 void list_selection(GtkWidget *list, gpointer Attr);
 

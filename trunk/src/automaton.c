@@ -45,6 +45,7 @@
 #include "tag_attributes.h"
 #include "widgets.h"
 #include "widget_button.h"
+#include "widget_checkbox.h"
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_notebook.h"
@@ -281,6 +282,9 @@ void print_command(instruction command)
 		case WIDGET_BUTTON:
 			printf("(new button())");
 			break;
+		case WIDGET_CHECKBOX:
+			printf("(new checkbox())");
+			break;
 		case WIDGET_COLORBUTTON:
 			printf("(new colorbutton())");
 			break;
@@ -325,9 +329,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_EDIT:
 	    printf("(new edit)");
-	    break;
-	case WIDGET_CHECKBOX:
-	    printf("(new checkbox())");
 	    break;
 	case WIDGET_PROGRESS:
 	    printf("(new progressbar())");
@@ -544,6 +545,9 @@ void print_token(token Token)
 		case WIDGET_BUTTON:
 			printf("(BUTTON)");
 			break;
+		case WIDGET_CHECKBOX:
+			printf("(CHECKBOX)");
+			break;
 		case WIDGET_COLORBUTTON:
 			printf("(COLORBUTTON)");
 			break;
@@ -589,9 +593,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_EDIT:
 		printf("(EDIT)");
-		break;
-	case WIDGET_CHECKBOX:
-		printf("(CHECKBOX)");
 		break;
 	case WIDGET_PROGRESS:
 		printf("(PROGRESSBAR)");
@@ -1478,6 +1479,10 @@ instruction_execute_push(
 			Widget = widget_button_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_CHECKBOX:
+			Widget = widget_checkbox_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_COLORBUTTON:
 			Widget = widget_colorbutton_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1608,49 +1613,6 @@ instruction_execute_push(
 		push_widget(Widget, Widget_Type);
 		/* Creating this widget closes any open group */
 		lastradiowidget = NULL;
-		break;
-
-	case WIDGET_CHECKBOX:
-		/*
-		 **
-		 */
-		attributeset_set_if_unset(Attr, ATTR_LABEL,
-					  "checkbox");
-		/*
-		 **
-		 */
-		Widget = gtk_check_button_new_with_label(
-			attributeset_get_first(&element, Attr, ATTR_LABEL));
-		/*
-		 **
-		 */
-		if (attributeset_cmp_left(Attr, ATTR_DEFAULT, "true") ||
-		    attributeset_cmp_left(Attr, ATTR_DEFAULT, "yes"))
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
-						     (Widget), TRUE);
-		/*
-		 ** Checkboxes also can take actions...
-		 */
-		if (attributeset_is_avail(Attr, ATTR_ACTION)) {
-			char *act;
-			act = attributeset_get_first(&element, Attr, ATTR_ACTION);
-			while (act != NULL) {
-				gtk_signal_connect(GTK_OBJECT(Widget),
-						   "toggled",
-						   GTK_SIGNAL_FUNC
-						   (button_toggled),
-						   (gpointer) act);
-				act = attributeset_get_next(&element, Attr, ATTR_ACTION);
-			}
-		}
-
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-
-		push_widget(Widget, Widget_Type);
 		break;
 
 	case WIDGET_PROGRESS:
