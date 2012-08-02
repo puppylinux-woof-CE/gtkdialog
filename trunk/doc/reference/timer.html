@@ -93,6 +93,8 @@ A <a href="http://developer.gnome.org/glib/unstable/glib-The-Main-Event-Loop.htm
 <pre>
 &lt;timer tag_attr="value"...&gt;
 	&lt;variable&gt;varname&lt;/variable&gt;
+	&lt;input&gt;command&lt;/input&gt;
+	&lt;input file&gt;filename&lt;/input&gt;
 	&lt;sensitive&gt;state&lt;/sensitive&gt;
 	&lt;action&gt;activity&lt;/action&gt;...
 	&lt;action signal="type"&gt;activity&lt;/action&gt;...
@@ -122,6 +124,8 @@ A <a href="http://developer.gnome.org/glib/unstable/glib-The-Main-Event-Loop.htm
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Mandatory</b> </th><th class="wiki"> <b>Since</b> </th></tr>
 <tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> input file </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> sensitive </td><td class="wiki"> Active state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action </td><td class="wiki"> Execute command on default signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
@@ -142,6 +146,7 @@ A <a href="http://developer.gnome.org/glib/unstable/glib-The-Main-Event-Loop.htm
 <tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
 <tr><td class="wiki"> enable </td><td class="wiki"> Reactivate timer </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> disable </td><td class="wiki"> Deactivate timer </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
 </table>
 
 <p>The following general functions can be performed by any widget capable of emitting signals:</p>
@@ -206,7 +211,7 @@ A <a href="http://developer.gnome.org/glib/unstable/glib-The-Main-Event-Loop.htm
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-07-30 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-08-02 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
