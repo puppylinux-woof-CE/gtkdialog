@@ -1,0 +1,76 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# Please note that the name of the exported shell variable matches the
+# window widget's variable directive which is a requirement. Not doing
+# this will result in the launching of duplicate windows none of which
+# can be closed and a warning message being sent to the terminal.
+# 
+# Try changing modal to true for a different window behaviour.
+
+modal=false
+
+funcframeCreate() {
+	if [ $2 -eq 1 ]; then
+		echo '<frame This window>'
+	else
+		echo '<frame>'
+	fi
+	echo '			<button>
+				<label>launch '$1'</label>
+				<action type="launch">'$1'</action>
+			</button>
+			<button>
+				<label>closewindow '$1'</label>
+				<action type="closewindow">'$1'</action>
+			</button>
+		</frame>'
+}
+
+export winMain='
+<window title="winMain" width-request="250" modal="'$modal'">
+	<vbox>
+		'"$(funcframeCreate winMain 1)"'
+		'"$(funcframeCreate winLaunch1 0)"'
+		'"$(funcframeCreate winLaunch2 0)"'
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+	<variable>winMain</variable>
+</window>
+'
+
+export winLaunch1='
+<window title="winLaunch1" width-request="250" modal="'$modal'">
+	<vbox>
+		'"$(funcframeCreate winMain 0)"'
+		'"$(funcframeCreate winLaunch1 1)"'
+		'"$(funcframeCreate winLaunch2 0)"'
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+	<variable>winLaunch1</variable>
+</window>
+'
+
+export winLaunch2='
+<window title="winLaunch2" width-request="250" modal="'$modal'">
+	<vbox>
+		'"$(funcframeCreate winMain 0)"'
+		'"$(funcframeCreate winLaunch1 0)"'
+		'"$(funcframeCreate winLaunch2 1)"'
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+	<variable>winLaunch2</variable>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$winMain" "$winLaunch1" "$winLaunch2" ;;
+	*) $GTKDIALOG --program=winMain ;;
+esac

@@ -467,9 +467,12 @@ print_program()
 */
 void run_program()
 {
-	int pc, q;
-	stackelement s;
-	
+	static int        is_launched = 0;
+	int               pc, q;
+	stackelement      s;
+	variable         *var;
+	gchar            *progname;
+
 	PIP_DEBUG("Program starting.");
 
 	/*
@@ -490,15 +493,36 @@ void run_program()
 
 	PIP_DEBUG("Window: %p.", s.widgets[0]);
 
-
 	//
 	// Now, all of the widgets are realized, so we can initialize
 	// them as needed.
 	//
 	variables_initialize_all();
-	
+
+	/* Thunor: This verifies that later launched windows contain a variable
+	 * that matches the exported shell variable which is a requirement.
+	 * I can't enforce it since there will be applications out there that
+	 * might break, but I can dump a warning to the terminal */
+	if (is_launched++) {
+
+		progname = get_program_name();
+		var = variables_get_by_name(progname);
+
+#ifdef DEBUG
+		fprintf(stderr, "%s(): program_name=%s variable->Name=%s\n",
+			__func__, progname, var->Name);
+#endif
+		if (var->Name == NULL) {
+			g_warning("The recently launched window \"%s\" is missing \
+an equivalently named variable directive <variable>%s</variable> which \
+is a requirement of the launch action.", progname, progname);
+		}
+
+	}
+
 	instruction_counter = 0;
-	reset_program_source();	
+	reset_program_source();
+
 	gtk_main();
 }
 
@@ -1312,8 +1336,16 @@ create_window(
 	/*
 	 * The windows can send signals, so they can have actions.
 	 */
-	widget_connect_signals(window, Attr);
-			
+
+	/* Thunor: This appears to be an unnecessary duplicate which I am
+	 * disabling: it's called on return to instruction_execute_push
+	 * just as it is with every other widget and it's resulting in the
+	 * doubling of events and therefore actions, so for the moment in
+	 * case there's a problem I'll mark it temp temp
+	 * 
+	 * widget_connect_signals(window, Attr);
+	 */
+
 	gtk_signal_connect(GTK_OBJECT(window), "delete-event",
 			   GTK_SIGNAL_FUNC(window_delete_event_handler), NULL);
 
@@ -2045,10 +2077,8 @@ instruction_execute_push(
 				(gpointer) tag_attributes);
 
 	/* Thunor: This is in addition to the widget specific signals that
-	 * are generally connected within the widget's refresh function at
-	 * start-up. I've noticed that this function is being called within
-	 * create_window and here meaning that it's being called twice for
-	 * the window widget temp temp */
+	 * are generally connected within each widget's refresh function at
+	 * start-up. */
 	widget_connect_signals(Widget, Attr);
 
 	PIP_DEBUG("Variable created.");

@@ -566,29 +566,6 @@ gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-
-#if 0
-	// This is TODO temp temp
-	// Trouble is the key press events stop firing when the popup is
-	// active i.e. when you press Enter on the combobox.
-
-	/* comboxtext supports the key-search custom tag attribute which
-	 * must be managed here first before continuing. It has to be done
-	 * here because we need access to the event and we're really doing
-	 * is intercepting the signal before passing it to the executor */
-	if (GTK_IS_COMBO_BOX(widget)) {
-
-		/* Get initialised state of widget */
-		if ((g_object_get_data(G_OBJECT(widget), "key-search") != NULL) ||
-			(g_object_get_data(G_OBJECT(widget), "key_search") != NULL)) {
-				
-			fprintf(stderr, "%s(): key-search found\n", __func__);
-
-		}
-	}
-#endif
-
-
 	widget_signal_executor(widget, Attr, "key-press-event");
 
 #ifdef DEBUG_TRANSITS
