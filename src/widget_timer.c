@@ -316,14 +316,44 @@ void widget_timer_save(variable *var)
 
 static void widget_timer_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
+	gint              is_active;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
+#endif
+
+	/* Opening pipe for reading... */
+	if (infile = widget_opencommand(command)) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+
+			if ((strcasecmp(line, "true") == 0) ||
+				(strcasecmp(line, "yes") == 0) || (atoi(line) == 1)) {
+				is_active = 1;
+			} else {
+				is_active = 0;
+			}
+			gtk_widget_set_sensitive(var->Widget, is_active);
+
+		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			command);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -336,14 +366,39 @@ static void widget_timer_input_by_command(variable *var, char *command)
 
 static void widget_timer_input_by_file(variable *var, char *filename)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
+	gint              is_active;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+
+			if ((strcasecmp(line, "true") == 0) ||
+				(strcasecmp(line, "yes") == 0) || (atoi(line) == 1)) {
+				is_active = 1;
+			} else {
+				is_active = 0;
+			}
+			gtk_widget_set_sensitive(var->Widget, is_active);
+
+		}
+		/* Close the file */
+		fclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			filename);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

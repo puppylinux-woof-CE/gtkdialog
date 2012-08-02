@@ -6,6 +6,7 @@ for announcements.
 - Added a check when launch-ing that the window contains the required
   matching variable directive with a warning being displayed if missing.
 - Added examples/miscellaneous/launch_and_closewindow.
+- Added <input>, <input file> and refresh support to the timer widget.
 
 * Mon Jul 30 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the radiobutton widget and added support for <input>,
