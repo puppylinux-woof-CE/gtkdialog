@@ -37,98 +37,134 @@
 
 extern gchar *option_include_file;
 
-/* 
-** This action will close a window. The program remain running.
-** If we get a window's name, we close that if the name is null
-** we close the widget's parent window.
-*/
-int 
-action_closewindow(GtkWidget *widget, char *string)
+/***********************************************************************
+ * Action closewindow                                                  *
+ ***********************************************************************/
+/* Thunor: This function will close an existing window that contains a
+ * variable that matches string although ideally the application developer
+ * would have supplied a unique name in the window widget's variable
+ * directive.
+ * 
+ * gtkdialog doesn't enforce unique variable names so if an application
+ * launches a window where the name of the exported shell variable does
+ * not match any widget's variable contained within the program resulting
+ * in multiple windows being launched containing duplicate variable names,
+ * then only the most recently launched window will close. Why? Because
+ * the variables are contained within a B-tree data structure and the
+ * function that searches this structure (_tree_find) exits on the first
+ * match so you can't iterate through the duplicates.
+ */
+
+int action_closewindow(GtkWidget *widget, char *string)
 {
-	GtkWidget *parent_widget;
+	GtkWidget        *parent;
+	variable         *existing;
 
 	g_assert(GTK_IS_WIDGET(widget));
+
 #ifdef DEBUG
 	g_message("%s(%p, '%s')", __func__, widget, string);
 #endif
 
-/**
- * Patriot Oct 2009: zigbert has been dreaming for this to be fixed.
- * Issue: closewindow command closes THE window its called from.
- * Fixed: Workaround applied to point to the correct window.
- **/
+	/**
+	 * Patriot Oct 2009: zigbert has been dreaming for this to be fixed.
+	 * Issue: closewindow command closes THE window its called from.
+	 * Fixed: Workaround applied to point to the correct window.
+	 **/
 
-	variable *windowvar;
-	windowvar = variables_get_by_name(string);
+	existing = variables_get_by_name(string);
+
 #ifdef DEBUG
-		fprintf(stderr, "%s(): Widget name: %s.\n", __func__, windowvar->Name);
-		fprintf(stderr, "%s(): Widget type: %d.\n", __func__, windowvar->Type);
+	fprintf(stderr, "%s(): string=%s existing=%p\n",
+		__func__, string, existing);
+	fflush(stderr);
+#endif
+
+	if (existing != NULL && existing->Widget != NULL) {
+
+#ifdef DEBUG
+		fprintf(stderr, "%s(): existing->Name=%s existing->Type=%i\n",
+			__func__, existing->Name, existing->Type);
 		fflush(stderr);
 #endif
-	if (windowvar != NULL && windowvar->Widget != NULL) {
-		parent_widget = gtk_widget_get_toplevel(windowvar->Widget);
-	}
-	else {
-		return (0);
+
+		parent = gtk_widget_get_toplevel(existing->Widget);
+		variables_drop_by_parent(NULL, parent);
+		gtk_widget_destroy(parent);
+
+		/*If we are closing the last window then we can exit gtkdialog */
+		if (variables_count_widgets() == 0) {
+			printf("EXIT=\"closewindow\"\n");
+			print_variables(NULL);
+			gtk_main_quit();
+			exit(EXIT_SUCCESS);
+		}
 	}
 
-//	parent_widget = gtk_widget_get_toplevel(widget);  // incorrect pointer
-	variables_drop_by_parent(NULL, parent_widget);
-	gtk_widget_destroy(parent_widget);
-
-	/*
-	 * Now, if this was the last window, we can exit.
-	 */
-	if (variables_count_widgets() == 0) {
-		printf("EXIT=\"closewindow\"\n");
-		print_variables(NULL);
-		gtk_main_quit();
-		exit(EXIT_SUCCESS);
-	}
 	return 0;
 }
 
-/*
-** This action will launch a dialog box, a new window. It's a little
-** bit tricky, because we have to exit the gtk main loop and call the
-** parser to interpret new code.
-*/
-int action_launchwindow(GtkWidget * widget, char *string)
+/***********************************************************************
+ * Action launchwindow                                                 *
+ ***********************************************************************/
+/* Thunor: This function will launch a new window, the source of which
+ * should be contained within an existing exported shell variable.
+ * 
+ * The parameter to this function is the shell variable name which MUST
+ * match any widget's variable within the program, although it would be
+ * better practice to use a dedicated window widget's variable for this.
+ * 
+ * Currently the variable name matching requirement remains unenforced
+ * and will require to remain so as there will be broken applications
+ * out there using fixes and workarounds. The best that can be hoped for
+ * is a warning message once the new window has been loaded. 
+ */
+
+int action_launchwindow(GtkWidget *widget, char *string)
 {
-	GtkWidget *parent_widget;
-	variable *existing;
+	GtkWidget        *parent;
+	variable         *existing;
+
 #ifdef DEBUG
-	fprintf(stderr, "%s(): Window: %s.\n", __func__, string);
-	fflush(stderr);
+	fprintf(stderr, "%s(): string=%s\n", __func__, string);
 #endif
-	/*
-	 ** If the window is already opened, we give the focus to it and
-	 ** will not open another instance.
-	 */
+
+	/* Check if a variable already exists with the same name as that
+	 * passed as the parameter to launch to establish if the window
+	 * has already been launched (it's not foolproof but it works) */
 	existing = variables_get_by_name(string);
+
 	if (existing != NULL && existing->Widget != NULL) {
-	/**
-	* Patriot Oct 2009: Fixing the issue above also 
-	* require a minor adjustment to this section.
- 	**/
-		parent_widget = gtk_widget_get_toplevel(existing->Widget);
-		gtk_window_present(GTK_WINDOW(parent_widget));
-//		gtk_window_present(GTK_WINDOW(existing->Widget)); // incorrect pointer
-		return (0);
+
+		/* The window has already been launched so just give it the focus */
+#ifdef DEBUG
+		fprintf(stderr, "%s(): existing=%p existing->Name=%s\n", __func__,
+			existing, existing->Name);
+#endif
+
+		/**
+		* Patriot Oct 2009: Fixing the issue above [in action_closewindow]
+		* also requires a minor adjustment to this section.
+		**/
+		parent = gtk_widget_get_toplevel(existing->Widget);
+		gtk_window_present(GTK_WINDOW(parent));
+
+	} else {
+
+		/* Set the program source from the environment variable (if it
+		 * fails it'll exit and won't return here) */
+		set_program_source(string);
+
+		/* Export all variables */
+		variables_export_all();
+
+		/* Call the parser to interpret the new code (it won't return) */
+		gtkdialog_parse();
+
+		g_warning("%s(): This won't be reached.", __func__);
+
 	}
 
-	/*
-	 * Let's find the source of the window.
-	 */
-	set_program_source(string);
-
-	/*
-	 ** We exit the gtk main loop to call the parser to interpret the
-	 ** new code.
-	 */
-	variables_export_all();
-	//gtk_main_quit();
-	gtkdialog_parse();
 	return 0;
 }
 
@@ -137,9 +173,12 @@ int action_exitprogram(GtkWidget *widget,
 {
 	print_variables(NULL);
 	if (string[0] == '=')
+		/* Thunor: An interesting undocumented feature temp temp */
 		printf("EXIT%s", string);
 	else
 		printf("EXIT=\"%s\"\n", string);
+	/* Thunor: I don't see atexit being used anywhere to shut gtk down
+	 * properly so I'll mark it temp temp and investigate it later */
 	exit(EXIT_SUCCESS);
 }
 

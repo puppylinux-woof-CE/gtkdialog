@@ -1,6 +1,12 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Aug 2 2012 Thunor <thunorsif@hotmail.com>
+- Checked through and tidied-up the launch and closewindow functions.
+- Added a check when launch-ing that the window contains the required
+  matching variable directive with a warning being displayed if missing.
+- Added examples/miscellaneous/launch_and_closewindow.
+
 * Mon Jul 30 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the radiobutton widget and added support for <input>,
   <input file> and refresh.
@@ -10,8 +16,8 @@ for announcements.
   save.
 
 * Tue Jul 24 2012 Thunor <thunorsif@hotmail.com>
-- Applied jamesbond's fix for the incorrectly ordered widgets on the Raspberry
-  Pi (ARM).
+- Applied jamesbond's fix for the incorrectly ordered widgets on the
+  Raspberry Pi (ARM).
 
 * Thu Nov 22 2011 Thunor <thunorsif@hotmail.com>
 - Added an example application PlayMusic.

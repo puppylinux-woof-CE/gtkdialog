@@ -426,7 +426,8 @@ get_program_name(void)
 	if (program_name != NULL) 
 		return program_name;
 	else
-		return "Unknown";
+/*		return "Unknown"; */
+		return "";	/* Thunor: A null string is better */
 }
 
 /*
