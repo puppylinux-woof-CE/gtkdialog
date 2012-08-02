@@ -11,6 +11,8 @@ A [http://developer.gnome.org/glib/unstable/glib-The-Main-Event-Loop.html#g-time
 {{{
 <timer tag_attr="value"...>
 	<variable>varname</variable>
+	<input>command</input>
+	<input file>filename</input>
 	<sensitive>state</sensitive>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
@@ -40,6 +42,8 @@ Some of these may have tag attribute equivalents.
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || ||
+|| input || Data input source || Shell command || || 0.8.1 ||
+|| input file || Data input source || Filename || || 0.8.1 ||
 || sensitive || Active state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
@@ -60,6 +64,7 @@ The following functions can be performed upon this widget by any widget capable 
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Reactivate timer || Shell variable name || ||
 || disable || Deactivate timer || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
