@@ -49,6 +49,18 @@ gint project_space_fill;
 /* The most recently created radiobutton widget (used for grouping) */
 GtkWidget *lastradiowidget;
 
+/* An accumulated list of menu accelerator groups to be added to the window */
+GList *accel_groups;
+
+/* Command line options */
+gboolean have_geometry_xy;
+gboolean have_geometry_dxdy;
+gint geometry_dx;
+gint geometry_dy;
+gint geometry_x;
+gint geometry_y;
+gboolean option_centering;
+
 void reset_program_source(void);
 gint set_program_source(gchar *name);
 void set_program_name(gchar *name);

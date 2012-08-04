@@ -48,6 +48,7 @@
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
+#include "widget_window.h"
 #include "signals.h"
 
 #undef DEBUG
@@ -249,6 +250,10 @@ widget_get_text_value(
 			return string;
 			break;
 #endif
+		case WIDGET_WINDOW:
+			string = widget_window_envvar_construct(widget);
+			return string;
+			break;
 
 
 #if GTK_CHECK_VERSION(2,4,0)
@@ -1340,6 +1345,9 @@ char *widgets_to_str(int itype)
 			type = "TREE";
 			break;
 #endif
+		case WIDGET_WINDOW:
+			type = "WINDOW";
+			break;
 
 
 	case WIDGET_ENTRY:
@@ -1368,9 +1376,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_FRAME:
 		type = "FRAME";
-		break;
-	case WIDGET_WINDOW:
-		type = "WINDOW";
 		break;
 	case WIDGET_MENUBAR:
 		type = "MENUBAR";

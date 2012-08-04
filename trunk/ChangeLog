@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Aug 4 2012 Thunor <thunorsif@hotmail.com>
+- Refactored the window widget and added support for <input>,
+  <input file>, refresh, save and clear ("title" is the item of data
+  that is being manipulated).
+
 * Thu Aug 2 2012 Thunor <thunorsif@hotmail.com>
 - Checked through and tidied-up the launch and closewindow functions.
 - Added a check when launch-ing that the window contains the required
