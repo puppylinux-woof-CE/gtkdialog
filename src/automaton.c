@@ -56,6 +56,7 @@
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
+#include "widget_window.h"
 #include "signals.h"
 
 #undef DEBUG
@@ -65,26 +66,13 @@
 #undef TOOLTIPS
 
 extern gboolean option_no_warning;
-extern gboolean option_centering;
-
-//
-// Command line -geometry options
-//
-extern gboolean have_geometry_xy;
-extern gboolean have_geometry_dxdy;
-extern gint geometry_dx;
-extern gint geometry_dy;
-extern gint geometry_x;
-extern gint geometry_y;
-
-
 
 instruction *program = NULL;
 int instruction_counter = 0;		/* The first available memory cell */
 size_t memory_counter = 0;			/* The size of program memory */
-GtkWidget *window = NULL;			/* The actual window */
-GList *accel_groups = NULL;			/* An accumulated list of menu accelerator groups to be added to the window */
 
+/* This records the last window widget created */
+GtkWidget *window = NULL;
 
 /*
  * Static function definitions.
@@ -323,6 +311,10 @@ void print_command(instruction command)
 			printf("(new tree())");
 			break;
 #endif
+		case WIDGET_WINDOW:
+			printf("(new window(pop()))");
+			break;
+
 
 	case WIDGET_ENTRY:
 	    printf("(new entry())");
@@ -353,9 +345,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_FRAME:
 	    printf("(new frame(pop()))");
-	    break;
-	case WIDGET_WINDOW:
-	    printf("(new window(pop()))");
 	    break;
 	case WIDGET_MENUBAR:
 	    printf("(new menubar(pop()))");
@@ -610,6 +599,9 @@ void print_token(token Token)
 			printf("(TREE)");
 			break;
 #endif
+		case WIDGET_WINDOW:
+			printf("(WINDOW)");
+			break;
 
 
 	case WIDGET_ENTRY:
@@ -641,9 +633,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_FRAME:
 		printf("(FRAME)");
-		break;
-	case WIDGET_WINDOW:
-		printf("(WINDOW)");
 		break;
 	case WIDGET_MENUBAR:
 		printf("(MENUBAR)");
@@ -1301,74 +1290,6 @@ create_chooser(AttributeSet *Attr)
 }
 #endif
 
-/*****************************************************************************
- * Window handling functions.                                                *
- *                                                                           *
- *****************************************************************************/
-static GtkWidget *
-create_window(
-		AttributeSet *Attr, 
-		tag_attr   *attr)
-{
-	GList            *element;
-	gint              border_width;
-	gchar            *value;
-
-	PIP_DEBUG("Attr: %p", Attr);
-	/*
-	 * Creating a window with the default settings.
-	 */
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
-
-	/* Thunor: Default the border_width to 5 and override it with the
-	 * "margin" custom tag attribute if present (using the border_width
-	 * property as a tag attribute always seems to result in about 50px so 
-	 * it doesn't work if you leave it up to GTK to set after realization)
-	 * 
-	 * [UPDATE] That was because try_set_property's guint conversion was
-	 * bugged and now that I've fixed it, border_width works as expected */
-	border_width = 5;
-	if (attr && (value = get_tag_attribute(attr, "margin")))	/* Deprecated */
-		border_width = atoi(value);
-
-	gtk_container_set_border_width(GTK_CONTAINER(window), border_width);
-	
-	/*
-	 * The windows can send signals, so they can have actions.
-	 */
-
-	/* Thunor: This appears to be an unnecessary duplicate which I am
-	 * disabling: it's called on return to instruction_execute_push
-	 * just as it is with every other widget and it's resulting in the
-	 * doubling of events and therefore actions, so for the moment in
-	 * case there's a problem I'll mark it temp temp
-	 * 
-	 * widget_connect_signals(window, Attr);
-	 */
-
-	gtk_signal_connect(GTK_OBJECT(window), "delete-event",
-			   GTK_SIGNAL_FUNC(window_delete_event_handler), NULL);
-
-	/*
-	 * If we have geometry given in the command line, we set that.
-	 */
-	if (have_geometry_dxdy)
-		gtk_widget_set_usize(window, geometry_dx, geometry_dy);
-	if (have_geometry_xy)
-		gtk_widget_set_uposition(window, geometry_x, geometry_y);
-	if (option_centering)
-		gtk_window_set_position(GTK_WINDOW(window), 
-				GTK_WIN_POS_CENTER_ALWAYS);
-	/*
-	 * Setting the title of the window
-	 */
-	attributeset_set_if_unset(Attr, ATTR_LABEL, PACKAGE);
-	gtk_window_set_title(GTK_WINDOW(window), 
-			attributeset_get_first(&element, Attr, ATTR_LABEL));
-
-	return window;
-}
-
 
 /*****************************************************************************
  * List handling functions.                                                  *
@@ -1561,6 +1482,10 @@ instruction_execute_push(
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			break;
 #endif
+		case WIDGET_WINDOW:
+			Widget = window = widget_window_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 
 
 	case WIDGET_ENTRY:
@@ -1996,32 +1921,6 @@ instruction_execute_push(
 		push_widget(Widget, Widget_Type);
 		/* Creating this widget closes any open group */
 		lastradiowidget = NULL;
-		break;
-
-	case WIDGET_WINDOW:
-		{
-			stackelement s;
-			s = pop();
-			Widget = create_window(Attr, tag_attributes);
-			gtk_container_add(GTK_CONTAINER (Widget), s.widgets[0]);
-			push_widget(Widget, Widget_Type);
-			/* Thunor: Each menu created will have an accelerator group
-			 * for its menitems which will require adding to the window */
-			if (accel_groups) {
-				accel_group = g_list_first(accel_groups);
-				while (accel_group) {
-					gtk_window_add_accel_group(GTK_WINDOW(Widget),
-						GTK_ACCEL_GROUP(accel_group->data));
-#ifdef DEBUG
-					fprintf(stderr, "%s: Adding accel_group=%p to window\n",
-						__func__, accel_group->data);
-#endif
-					accel_group = accel_group->next;
-				}
-				g_list_free(accel_groups);
-				accel_groups = NULL;
-			}
-		}
 		break;
 
 	case WIDGET_HSEPARATOR:
