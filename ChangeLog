@@ -1,10 +1,15 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Aug 5 2012 Thunor <thunorsif@hotmail.com>
+- Added support for the envvar GTKDIALOG_PIXMAP_PATH to find_pixmap().
+
 * Sat Aug 4 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the window widget and added support for <input>,
   <input file>, refresh, save and clear ("title" is the item of data
   that is being manipulated).
+- Added the "image-name" custom tag attribute for the window widget
+  to set the title bar icon from a full path and filename.
 
 * Thu Aug 2 2012 Thunor <thunorsif@hotmail.com>
 - Checked through and tidied-up the launch and closewindow functions.

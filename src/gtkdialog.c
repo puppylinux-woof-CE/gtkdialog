@@ -65,12 +65,20 @@ gchar *option_space_fill = NULL;
 gboolean option_input_stdin = FALSE;
 gboolean option_no_warning = FALSE;
 gboolean option_print_ir = FALSE;
+gboolean option_centering = FALSE;
 
 static gint source = PRG_UNKNOWN;    // Where the program is coming from?
 static gchar *program_src = NULL;    // The actual program source.
 static gint charsreaded = 0;         // How much did we red from the source in the memory.
 static FILE *sourcefile = NULL;      // The input file handler.
 static gchar *program_name = NULL;   // The name of the dialog for messages.
+
+gboolean have_geometry_xy = FALSE;
+gboolean have_geometry_dxdy = FALSE;
+gint geometry_dx = 0;
+gint geometry_dy = 0;
+gint geometry_x = 0;
+gint geometry_y = 0;
 
 static gboolean 
 get_geometry(const char *argument)
@@ -271,7 +279,7 @@ gtkdialog_init(
 
 	context = g_option_context_new(
 "\n"
-"Create dialog boxes and windows according to the given dialog description."
+"Create dialog boxes and windows according to the given dialog description.\n"
 "For more information try 'info gtkdialog'."
 );
 
@@ -456,13 +464,6 @@ main(int argc, char *argv[])
 	GTKD_FUNCTION_SIGNALS_RESET;
 	lastradiowidget = NULL;
 	accel_groups = NULL;
-	have_geometry_xy = FALSE;
-	have_geometry_dxdy = FALSE;
-	geometry_dx = 0;
-	geometry_dy = 0;
-	geometry_x = 0;
-	geometry_y = 0;
-	option_centering = FALSE;
 
 	setlocale(LC_ALL, "");
 	/*
