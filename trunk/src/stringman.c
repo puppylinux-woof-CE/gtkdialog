@@ -40,7 +40,6 @@
 #define IN_TEXT         1
 #define IN_SEPARATOR    2
 
-
 #ifdef G_OS_WIN32
 ssize_t
 getline(char **lineptr, size_t *n, FILE *stream)
@@ -351,14 +350,73 @@ command_get_prefix(const gchar *string,
 	*command = g_strchug(g_strdup(string));
 }
 
+/* Thunor: I saw what technosaurus was doing with GTKDIALOG_PIXMAP_PATH
+ * at http://www.murga-linux.com/puppy/viewtopic.php?p=632867#632867
+ * and thought it a very good platform independent idea to implement */
 
-char *
-find_pixmap(char *filename)
+char *find_pixmap(char *filename)
 {
-	if (access(filename, R_OK) == 0)
-		return filename;
+	static gchar retval[512];
+	gchar fullpath[512];
+	gchar **folders;
+	gchar *gtkdialog_pixmap_path;
+	gint count;
 
-	return "";	/* Thunor: added as missing */
+	strcpy(retval, "");	/* Reset the return value */
+
+	if (access(filename, R_OK) == 0) {
+
+		strcpy(retval, filename);
+
+	} else {
+
+		/* If the GTKDIALOG_PIXMAP_PATH envvar exists then attempt to find
+		 * the file in any one of a number of user defined locations */
+		if ((gtkdialog_pixmap_path = getenv("GTKDIALOG_PIXMAP_PATH"))) {
+
+			folders = g_strsplit(gtkdialog_pixmap_path, ":", 16);
+
+#ifdef DEBUG
+			fprintf(stderr, "%s(): gtkdialog_pixmap_path=\"%s\"\n",
+				__func__, gtkdialog_pixmap_path);
+			count = 0;
+			while (folders[count]) {
+				fprintf(stderr, "%s(): folders[%i]=\"%s\"\n", __func__,
+					count, folders[count]);
+				count++;
+			}
+#endif
+
+			count = 0;
+			while (folders[count]) {
+				strcpy(fullpath, folders[count]);
+				if (fullpath[strlen(fullpath) - 1] != '/')
+					strcat(fullpath, "/");
+				strcat(fullpath, filename);
+
+#ifdef DEBUG
+				fprintf(stderr, "%s(): Finding \"%s\"\n", __func__,
+					fullpath);
+#endif
+
+				if (access(fullpath, R_OK) == 0) {
+					strcpy(retval, fullpath);
+					break;
+				}
+
+				count++;
+			}
+
+			if (folders) g_strfreev(folders);
+		}
+
+	}
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Returning \"%s\"\n", __func__, retval);
+#endif
+
+	return retval;
 }
 
 
