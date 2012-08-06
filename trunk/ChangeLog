@@ -1,6 +1,14 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Mon Aug 6 2012 Thunor <thunorsif@hotmail.com>
+- Added KEY_VAL, KEY_SYM (both are listed in gdk/gdkkeysyms.h), KEY_UNI
+  (the Unicode character if applicable), KEY_MOD (GdkModifierType) and
+  KEY_RAW (hardware) envvars on key_press_event and key_release_event.
+- Added PTR_X and PTR_Y (widget relative), PTR_MOD (GdkModifierType),
+  PTR_BTN (equivalent to the existing BUTTON), PTR_X_ROOT and PTR_Y_ROOT
+  (screen relative) envvars on button_press_event/button_release_event.
+
 * Sun Aug 5 2012 Thunor <thunorsif@hotmail.com>
 - Added support for the envvar GTKDIALOG_PIXMAP_PATH to find_pixmap().
 

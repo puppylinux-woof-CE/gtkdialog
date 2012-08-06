@@ -297,16 +297,42 @@ void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 gboolean on_any_widget_button_pressed(GtkWidget *widget,
 	GdkEventButton *event, AttributeSet *Attr)
 {
-	gchar *button = g_strdup_printf("%d", event->button);
+	gchar *ptrx = g_strdup_printf("%.0f", event->x);
+	gchar *ptry = g_strdup_printf("%.0f", event->y);
+	gchar *ptrmod = g_strdup_printf("%u", event->state);
+	gchar *button = g_strdup_printf("%u", event->button);
+	gchar *ptrbtn = g_strdup_printf("%u", event->button);
+	gchar *ptrxroot = g_strdup_printf("%.0f", event->x_root);
+	gchar *ptryroot = g_strdup_printf("%.0f", event->y_root);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	g_setenv("BUTTON", button, TRUE);
+	g_setenv("PTR_X", ptrx, TRUE);
+	g_setenv("PTR_Y", ptry, TRUE);
+	g_setenv("PTR_MOD", ptrmod, TRUE);
+	g_setenv("BUTTON", button, TRUE);	/* Deprecated */
+	g_setenv("PTR_BTN", ptrbtn, TRUE);
+	g_setenv("PTR_X_ROOT", ptrxroot, TRUE);
+	g_setenv("PTR_Y_ROOT", ptryroot, TRUE);
+
 	widget_signal_executor(widget, Attr, "button-press-event");
+
+	g_unsetenv("PTR_X");
+	g_unsetenv("PTR_Y");
+	g_unsetenv("PTR_MOD");
 	g_unsetenv("BUTTON");
+	g_unsetenv("PTR_BTN");
+	g_unsetenv("PTR_X_ROOT");
+	g_unsetenv("PTR_Y_ROOT");
+	g_free(ptrx);
+	g_free(ptry);
+	g_free(ptrmod);
 	g_free(button);
+	g_free(ptrbtn);
+	g_free(ptrxroot);
+	g_free(ptryroot);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -322,16 +348,42 @@ gboolean on_any_widget_button_pressed(GtkWidget *widget,
 gboolean on_any_widget_button_released(GtkWidget *widget,
 	GdkEventButton *event, AttributeSet *Attr)
 {
-	gchar *button = g_strdup_printf("%d", event->button);
+	gchar *ptrx = g_strdup_printf("%.0f", event->x);
+	gchar *ptry = g_strdup_printf("%.0f", event->y);
+	gchar *ptrmod = g_strdup_printf("%u", event->state);
+	gchar *button = g_strdup_printf("%u", event->button);
+	gchar *ptrbtn = g_strdup_printf("%u", event->button);
+	gchar *ptrxroot = g_strdup_printf("%.0f", event->x_root);
+	gchar *ptryroot = g_strdup_printf("%.0f", event->y_root);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	g_setenv("BUTTON", button, TRUE);
+	g_setenv("PTR_X", ptrx, TRUE);
+	g_setenv("PTR_Y", ptry, TRUE);
+	g_setenv("PTR_MOD", ptrmod, TRUE);
+	g_setenv("BUTTON", button, TRUE);	/* Deprecated */
+	g_setenv("PTR_BTN", ptrbtn, TRUE);
+	g_setenv("PTR_X_ROOT", ptrxroot, TRUE);
+	g_setenv("PTR_Y_ROOT", ptryroot, TRUE);
+
 	widget_signal_executor(widget, Attr, "button-release-event");
+
+	g_unsetenv("PTR_X");
+	g_unsetenv("PTR_Y");
+	g_unsetenv("PTR_MOD");
 	g_unsetenv("BUTTON");
+	g_unsetenv("PTR_BTN");
+	g_unsetenv("PTR_X_ROOT");
+	g_unsetenv("PTR_Y_ROOT");
+	g_free(ptrx);
+	g_free(ptry);
+	g_free(ptrmod);
 	g_free(button);
+	g_free(ptrbtn);
+	g_free(ptrxroot);
+	g_free(ptryroot);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -562,11 +614,34 @@ void on_any_widget_icon_release_event(GtkWidget *widget,
 gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	GdkEventKey *event, AttributeSet *Attr)
 {
+	gchar *keyval = g_strdup_printf("0x%03x", event->keyval);
+	gchar *keysym = g_strdup(gdk_keyval_name(event->keyval));
+	gchar *keyuni = g_strdup_printf("%lc", gdk_keyval_to_unicode(event->keyval));
+	gchar *keymod = g_strdup_printf("%u", event->state);
+	gchar *keyraw = g_strdup_printf("0x%x", event->hardware_keycode);
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	g_setenv("KEY_VAL", keyval, TRUE);
+	g_setenv("KEY_SYM", keysym, TRUE);
+	g_setenv("KEY_UNI", keyuni, TRUE);
+	g_setenv("KEY_MOD", keymod, TRUE);
+	g_setenv("KEY_RAW", keyraw, TRUE);
+
 	widget_signal_executor(widget, Attr, "key-press-event");
+
+	g_unsetenv("KEY_VAL");
+	g_unsetenv("KEY_SYM");
+	g_unsetenv("KEY_UNI");
+	g_unsetenv("KEY_MOD");
+	g_unsetenv("KEY_RAW");
+	g_free(keyval);
+	g_free(keysym);
+	g_free(keyuni);
+	g_free(keymod);
+	g_free(keyraw);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -582,11 +657,34 @@ gboolean on_any_widget_key_press_event(GtkWidget *widget,
 gboolean on_any_widget_key_release_event(GtkWidget*widget,
 	GdkEventKey *event, AttributeSet *Attr)
 {
+	gchar *keyval = g_strdup_printf("0x%03x", event->keyval);
+	gchar *keysym = g_strdup(gdk_keyval_name(event->keyval));
+	gchar *keyuni = g_strdup_printf("%lc", gdk_keyval_to_unicode(event->keyval));
+	gchar *keymod = g_strdup_printf("%u", event->state);
+	gchar *keyraw = g_strdup_printf("0x%x", event->hardware_keycode);
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	g_setenv("KEY_VAL", keyval, TRUE);
+	g_setenv("KEY_SYM", keysym, TRUE);
+	g_setenv("KEY_UNI", keyuni, TRUE);
+	g_setenv("KEY_MOD", keymod, TRUE);
+	g_setenv("KEY_RAW", keyraw, TRUE);
+
 	widget_signal_executor(widget, Attr, "key-release-event");
+
+	g_unsetenv("KEY_VAL");
+	g_unsetenv("KEY_SYM");
+	g_unsetenv("KEY_UNI");
+	g_unsetenv("KEY_MOD");
+	g_unsetenv("KEY_RAW");
+	g_free(keyval);
+	g_free(keysym);
+	g_free(keyuni);
+	g_free(keymod);
+	g_free(keyraw);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
