@@ -33,22 +33,20 @@
 #include "stringman.h"
 #include "automaton.h"
 
-extern char *program_name;
-extern char *includefile;
-
-/*
-** Functions defined in actions.c
-*/
-int action_closewindow( GtkWidget *widget, char *string );
-int action_launchwindow( GtkWidget *widget, char *string );
-int action_exitprogram( GtkWidget *widget, char *string );
-int action_refreshwidget( GtkWidget *widget, char *string );
-int action_fileselect( GtkWidget *widget, char *string );
-void action_fileselection_made( GtkWidget *w, actioncommand *ac );
-void action_fileselection_destroy( GtkWidget *w, actioncommand *ac );
-int action_clearwidget( GtkWidget *widget, char *string );
-int action_removeselected( GtkWidget *widget, char *string );
-int action_append( GtkWidget *widget, char *string );
-int action_shellcommand( GtkWidget *widget, char *string );
+/* Function prototypes */
+int action_closewindow(GtkWidget *widget, char *string);
+int action_launchwindow(GtkWidget *widget, char *string);
+int action_exitprogram(GtkWidget *widget, char *string);
+int action_refreshwidget(GtkWidget *widget, char *string);
+int action_savewidget(GtkWidget *widget, char *string);
+int action_fileselect(GtkWidget *widget, char *string);
+int action_clearwidget(GtkWidget *widget, char *string);
+int action_removeselected(GtkWidget *widget, char *string);
+int action_append(GtkWidget *widget, char *string);
+int action_enable(GtkWidget *widget, char *string);
+int action_disable(GtkWidget *widget, char *string);
+int action_show(GtkWidget *widget, char *string);
+int action_hide(GtkWidget *widget, char *string);
+int action_shellcommand(GtkWidget *widget, char *string);
 
 #endif

@@ -37,18 +37,33 @@
 
 extern gboolean option_no_warning;
 
-/*
-** Local functions...
-*/
-static variable *_tree_find(const char *name, variable * actual);
+/* Local function prototypes */
+#ifdef DEBUG
+void variables_print_one(variable *var);
+#endif
+variable *variables_new(const char *name);
+variable *variables_set_widget(const char *name, GtkWidget *widget);
+variable *variables_set_parent(const char *name, GtkWidget *parent);
+variable *variables_set_type(const char *name, int type);
+gboolean variables_is_avail_by_name(const char *name);
+int _tree_insert(variable *new, variable *actual);
+static variable *_tree_find(const char *name, variable *actual);
+static gint do_variables_count_widgets(variable *actual, gint n);
+static variable *do_find_variable_by_widget(variable *actual, GtkWidget *widget);
+static void _variables_initialize(variable *actual);
 static void _variables_export(variable * actual);
+#ifdef DEBUG
+void variables_print_debug(variable *actual);
+#endif
 
-extern GtkWidget *window;	/* The actual window */
 variable *root = NULL;
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 #ifdef DEBUG
-void 
-variables_print_one(variable * var)
+void variables_print_one(variable *var)
 {
 	fprintf(stderr, "Name: %s\n", var->Name);
 	fprintf(stderr, "  Widget: %p\n", var->Widget);
@@ -58,11 +73,12 @@ variables_print_one(variable * var)
 }
 #endif
 
-/*
-** This function will create a new variable.
-*/
-variable *
-variables_new(const char *name)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will create a new variable */
+
+variable *variables_new(const char *name)
 {
 	variable *new;
 #ifdef DEBUG
@@ -97,15 +113,13 @@ variables_new(const char *name)
 	return new;
 }
 
-/*
-** This function will create a new variable with widget and type.
-*/
-variable *
-variables_new_with_widget(
-		AttributeSet *Attr, 
-		tag_attr     *widget_tag_attr,
-		GtkWidget    *widget, 
-		int           type)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will create a new variable with widget and type */
+
+variable *variables_new_with_widget(AttributeSet *Attr,
+	tag_attr *widget_tag_attr, GtkWidget *widget, int type)
 {
 	GList *element;
 	char *name;
@@ -152,10 +166,11 @@ variables_new_with_widget(
 	return (var);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
-variable *
-variables_set_widget(const char *name, 
-		GtkWidget * widget)
+variable *variables_set_widget(const char *name, GtkWidget *widget)
 {
 	variable *var;
 #ifdef DEBUG
@@ -169,10 +184,12 @@ variables_set_widget(const char *name,
 	return (var);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 #if 0
-variable *
-variables_set_parent(const char *name, 
-		GtkWidget * parent)
+variable *variables_set_parent(const char *name, GtkWidget *parent)
 {
 	variable *var;
 #ifdef DEBUG
@@ -190,9 +207,11 @@ variables_set_parent(const char *name,
 }
 #endif
 
-variable *
-variables_set_type(const char *name, 
-		int type)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+variable *variables_set_type(const char *name, int type)
 {
 	variable *var;
 #ifdef DEBUG
@@ -207,9 +226,11 @@ variables_set_type(const char *name,
 	return (var);
 }
 
-variable *
-variables_set_attributes(const char *name, 
-		AttributeSet * a)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+variable *variables_set_attributes(const char *name, AttributeSet *a)
 {
 	variable *var;
 #ifdef DEBUG
@@ -223,11 +244,11 @@ variables_set_attributes(const char *name,
 	return (var);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
-variable *
-variables_set_row_column(const char *name, 
-		int row, 
-		int column)
+variable *variables_set_row_column(const char *name, int row, int column)
 {
 	variable *toset;
 #ifdef DEBUG
@@ -243,16 +264,14 @@ variables_set_row_column(const char *name,
 	return (toset);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will set the value of the given variable. This means
+ * that it will set a widget's data or insert data to the widget as the
+ * type of the widget makes clear */
 
-
-/*
-** This function will set the value of the given variable. That mean
-** it will set a widget's data or insert data to the widget as the
-** type of the widget make it clear. 
-*/
-variable *
-variables_set_value(const char *name, 
-		const char *value)
+variable *variables_set_value(const char *name, const char *value)
 {
 	variable         *toset;
 	gchar            *string;
@@ -342,8 +361,11 @@ variables_set_value(const char *name,
 	return (toset);
 }
 
-variable *
-variables_save(const char *name)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+variable *variables_save(const char *name)
 {
 	variable *var;
 	var = _tree_find(name, NULL);
@@ -425,14 +447,12 @@ variables_save(const char *name)
 	return (var);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will actualize the variable by reinitializing widget */
 
-
-/*
-** This function will actualize the variable by reinitializing 
-** widget.
-*/
-variable *
-variables_refresh(const char *name)
+variable *variables_refresh(const char *name)
 {
 	variable         *var;
 	gchar            *string;
@@ -560,8 +580,11 @@ variables_refresh(const char *name)
 	return var;
 }
 
-variable *
-variables_enable(const char *name)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+variable *variables_enable(const char *name)
 {
 	variable *var;
 #ifdef DEBUG
@@ -578,8 +601,11 @@ variables_enable(const char *name)
 	return (var);
 }
 
-variable *
-variables_disable(const char *name)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+variable *variables_disable(const char *name)
 {
 	variable *var;
 #ifdef DEBUG
@@ -596,8 +622,53 @@ variables_disable(const char *name)
 	return (var);
 }
 
-gboolean 
-variables_is_avail_by_name(const char *name)
+/***********************************************************************
+ * Variables show                                                      *
+ ***********************************************************************/
+
+variable *variables_show(const char *name)
+{
+	variable *var;
+#ifdef DEBUG
+	fprintf(stderr, "%s(): %s\n", __func__, name);
+	fflush(stderr);
+#endif
+	var = _tree_find(name, NULL);
+	if (var == NULL)
+		return (NULL);
+	if (var->Widget == NULL)
+		return (NULL);
+
+	gtk_widget_show(var->Widget);
+	return (var);
+}
+
+/***********************************************************************
+ * Variables hide                                                      *
+ ***********************************************************************/
+
+variable *variables_hide(const char *name)
+{
+	variable *var;
+#ifdef DEBUG
+	fprintf(stderr, "%s(): %s\n", __func__, name);
+	fflush(stderr);
+#endif
+	var = _tree_find(name, NULL);
+	if (var == NULL)
+		return (NULL);
+	if (var->Widget == NULL)
+		return (NULL);
+
+	gtk_widget_hide(var->Widget);
+	return (var);
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+gboolean variables_is_avail_by_name(const char *name)
 {
 	if (_tree_find(name, NULL) == NULL)
 		return (FALSE);
@@ -605,19 +676,22 @@ variables_is_avail_by_name(const char *name)
 		return (TRUE);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 variable *variables_get_by_name(const char *name)
 {
 	return _tree_find(name, NULL);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function inserts a new tree node. The node must have a unique
+ * name or the function will abort the program */
 
-/*
-** This function insert a new tree node. The node must have a unique
-** name or the function will abort the program.
-*/
-int 
-_tree_insert(variable * new, 
-		variable * actual)
+int _tree_insert(variable *new, variable *actual)
 {
 	int compare;
 	if (new == NULL) {
@@ -658,12 +732,13 @@ _tree_insert(variable * new,
 		}
 }
 
-/*
-** This function finds the variable by its name and returns the ponter
-** to it.
-*/
-static variable *
-_tree_find(const char *name, variable * actual)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function finds the variable by its name and returns the pointer
+ * to it */
+
+static variable *_tree_find(const char *name, variable *actual)
 {
 	int compare;
 
@@ -690,8 +765,11 @@ _tree_find(const char *name, variable * actual)
 			return NULL;
 }
 
-static gint
-do_variables_count_widgets(variable *actual, gint n)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+static gint do_variables_count_widgets(variable *actual, gint n)
 {
 	if (actual == NULL)
 		actual = root;
@@ -711,17 +789,21 @@ do_variables_count_widgets(variable *actual, gint n)
 	return n;
 }
 
-gint 
-variables_count_widgets(void) 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+gint variables_count_widgets(void) 
 {
 	return do_variables_count_widgets(NULL, 0);
 }
 
-/*
-** This function will drop all the widgets with the given parent.
-*/
-void 
-variables_drop_by_parent(variable *actual, GtkWidget *Parent)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will drop all the widgets with the given parent */
+
+void variables_drop_by_parent(variable *actual, GtkWidget *Parent)
 {
 	if (actual == NULL)
 		actual = root;
@@ -741,9 +823,12 @@ variables_drop_by_parent(variable *actual, GtkWidget *Parent)
 		variables_drop_by_parent(actual->right, Parent);
 }
 
-static variable *
-do_find_variable_by_widget(variable *actual,
-		GtkWidget *widget)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+static variable *do_find_variable_by_widget(variable *actual,
+	GtkWidget *widget)
 {
 	variable *found;
 
@@ -766,15 +851,20 @@ do_find_variable_by_widget(variable *actual,
 	return NULL;
 }
 
-variable *
-find_variable_by_widget(GtkWidget *widget)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+variable *find_variable_by_widget(GtkWidget *widget)
 {
 	return do_find_variable_by_widget(root, widget);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
-static void 
-_variables_initialize(variable *actual)
+static void _variables_initialize(variable *actual)
 {
 	GList *element;
 	char *socket_id;
@@ -813,8 +903,11 @@ _variables_initialize(variable *actual)
 		_variables_initialize(actual->right);
 }
 
-static void 
-_variables_export(variable *actual)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+static void _variables_export(variable *actual)
 {
 	gchar            *value;
 	GList            *itemlist;
@@ -908,25 +1001,32 @@ _variables_export(variable *actual)
 		_variables_export(actual->right);
 }
 
-/*
-** This function will export the variables as environment variables.
-*/
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will export the variables as environment variables */
+
 void variables_export_all(void)
 {
 	_variables_export(NULL);
 }
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
 void variables_initialize_all(void)
 {
 	_variables_initialize(NULL);
 }
 
-/* 
-** This function is called when we want to send the variables values
-** to the standard output.
-*/
-void 
-print_variables(variable * actual)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function is called when we want to send the variable's values
+ * to the standard output */
+
+void print_variables(variable *actual)
 {
 	gchar            *value;
 	GList            *itemlist;
@@ -1005,10 +1105,11 @@ next_item:
 	fflush(stdout);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
-int 
-append_fromto_variable(const char *from, 
-		const char *to)
+int append_fromto_variable(const char *from, const char *to)
 {
 	GtkTreeModel *model;
 	GtkTreeIter   iter;
@@ -1078,12 +1179,13 @@ append_fromto_variable(const char *from,
 	return TRUE;
 }
 
-/* 
-** This function will clear the variable by deleting everything from
-** the widget.
-*/
-variable *
-variables_clear(const char *name)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will clear the variable by deleting everything from
+ * the widget */
+
+variable *variables_clear(const char *name)
 {
 	variable         *toclear;
 	GList            *empty = NULL;
@@ -1191,11 +1293,12 @@ variables_clear(const char *name)
 	return (toclear);
 }
 
-/*
-** This function will remove the selected item from the widget.
-*/
-int 
-remove_selected_variable(const char *name)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will remove the selected item from the widget */
+
+int remove_selected_variable(const char *name)
 {
 	variable         *toclear;
 	gchar            *string;
@@ -1307,13 +1410,14 @@ remove_selected_variable(const char *name)
 	return 0;
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This is a debug function we use to print all variables to the 
+ * standard error. It will print a lot of information */
+
 #ifdef DEBUG
-/* 
-** This is a debug function we use to print all variables to the 
-** standard error. It will print a lot of information.
-*/
-void 
-variables_print_debug(variable * actual)
+void variables_print_debug(variable *actual)
 {
 	if (actual == NULL)
 		actual = root;
