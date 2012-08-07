@@ -45,7 +45,7 @@ export MAIN_DIALOG='
 			<action signal="button-press-event">refresh:entpressPTR_MOD</action>
 			<action signal="button-press-event">refresh:entpressPTR_BTN</action>
 			<action signal="button-press-event">refresh:entpressPTR_X_ROOT</action>
-			<action signal="button-press-event">refresh:entpressPTR_X_ROOT</action>
+			<action signal="button-press-event">refresh:entpressPTR_Y_ROOT</action>
 
 			<action signal="button-release-event">echo "$PTR_X" > '"$TMPDIR"'/releasePTR_X; echo "$PTR_Y" > '"$TMPDIR"'/releasePTR_Y; echo "$PTR_MOD" > '"$TMPDIR"'/releasePTR_MOD; echo "$PTR_BTN" > '"$TMPDIR"'/releasePTR_BTN; echo "$PTR_X_ROOT" > '"$TMPDIR"'/releasePTR_X_ROOT; echo "$PTR_Y_ROOT" > '"$TMPDIR"'/releasePTR_Y_ROOT</action>
 			<action signal="button-release-event">refresh:entreleasePTR_X</action>
@@ -53,7 +53,7 @@ export MAIN_DIALOG='
 			<action signal="button-release-event">refresh:entreleasePTR_MOD</action>
 			<action signal="button-release-event">refresh:entreleasePTR_BTN</action>
 			<action signal="button-release-event">refresh:entreleasePTR_X_ROOT</action>
-			<action signal="button-release-event">refresh:entreleasePTR_X_ROOT</action>
+			<action signal="button-release-event">refresh:entreleasePTR_Y_ROOT</action>
 		</edit>
 		<vbox>
 			<hbox homogeneous="true">
