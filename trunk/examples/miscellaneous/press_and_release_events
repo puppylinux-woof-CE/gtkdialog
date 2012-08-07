@@ -1,0 +1,107 @@
+#!/bin/sh
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+GTKDIALOG=gtkdialog
+
+funcenvvarCreate() {
+	echo '<hbox homogeneous="true">
+				<text><label>'$1'</label></text>
+				<entry editable="false" can-focus="false">
+					<variable>entpress'$1'</variable>
+					<input file>'"$TMPDIR"'/press'$1'</input>
+				</entry>
+				<entry editable="false" can-focus="false">
+					<variable>entrelease'$1'</variable>
+					<input file>'"$TMPDIR"'/release'$1'</input>
+				</entry>
+			</hbox>'
+}
+
+export MAIN_DIALOG='
+<window title="Press and Release Events" width-request="560" height-request="530">
+	<vbox>
+		<edit>
+			<default>Type and click into this edit widget.</default>
+
+			<action signal="key-press-event">echo "$KEY_VAL" > '"$TMPDIR"'/pressKEY_VAL; echo "$KEY_SYM" > '"$TMPDIR"'/pressKEY_SYM; echo "$KEY_UNI" > '"$TMPDIR"'/pressKEY_UNI; echo "$KEY_MOD" > '"$TMPDIR"'/pressKEY_MOD; echo "$KEY_RAW" > '"$TMPDIR"'/pressKEY_RAW</action>
+			<action signal="key-press-event">refresh:entpressKEY_VAL</action>
+			<action signal="key-press-event">refresh:entpressKEY_SYM</action>
+			<action signal="key-press-event">refresh:entpressKEY_UNI</action>
+			<action signal="key-press-event">refresh:entpressKEY_MOD</action>
+			<action signal="key-press-event">refresh:entpressKEY_RAW</action>
+
+			<action signal="key-release-event">echo "$KEY_VAL" > '"$TMPDIR"'/releaseKEY_VAL; echo "$KEY_SYM" > '"$TMPDIR"'/releaseKEY_SYM; echo "$KEY_UNI" > '"$TMPDIR"'/releaseKEY_UNI; echo "$KEY_MOD" > '"$TMPDIR"'/releaseKEY_MOD; echo "$KEY_RAW" > '"$TMPDIR"'/releaseKEY_RAW</action>
+			<action signal="key-release-event">refresh:entreleaseKEY_VAL</action>
+			<action signal="key-release-event">refresh:entreleaseKEY_SYM</action>
+			<action signal="key-release-event">refresh:entreleaseKEY_UNI</action>
+			<action signal="key-release-event">refresh:entreleaseKEY_MOD</action>
+			<action signal="key-release-event">refresh:entreleaseKEY_RAW</action>
+
+			<action signal="button-press-event">echo "$PTR_X" > '"$TMPDIR"'/pressPTR_X; echo "$PTR_Y" > '"$TMPDIR"'/pressPTR_Y; echo "$PTR_MOD" > '"$TMPDIR"'/pressPTR_MOD; echo "$PTR_BTN" > '"$TMPDIR"'/pressPTR_BTN; echo "$PTR_X_ROOT" > '"$TMPDIR"'/pressPTR_X_ROOT; echo "$PTR_Y_ROOT" > '"$TMPDIR"'/pressPTR_Y_ROOT</action>
+			<action signal="button-press-event">refresh:entpressPTR_X</action>
+			<action signal="button-press-event">refresh:entpressPTR_Y</action>
+			<action signal="button-press-event">refresh:entpressPTR_MOD</action>
+			<action signal="button-press-event">refresh:entpressPTR_BTN</action>
+			<action signal="button-press-event">refresh:entpressPTR_X_ROOT</action>
+			<action signal="button-press-event">refresh:entpressPTR_X_ROOT</action>
+
+			<action signal="button-release-event">echo "$PTR_X" > '"$TMPDIR"'/releasePTR_X; echo "$PTR_Y" > '"$TMPDIR"'/releasePTR_Y; echo "$PTR_MOD" > '"$TMPDIR"'/releasePTR_MOD; echo "$PTR_BTN" > '"$TMPDIR"'/releasePTR_BTN; echo "$PTR_X_ROOT" > '"$TMPDIR"'/releasePTR_X_ROOT; echo "$PTR_Y_ROOT" > '"$TMPDIR"'/releasePTR_Y_ROOT</action>
+			<action signal="button-release-event">refresh:entreleasePTR_X</action>
+			<action signal="button-release-event">refresh:entreleasePTR_Y</action>
+			<action signal="button-release-event">refresh:entreleasePTR_MOD</action>
+			<action signal="button-release-event">refresh:entreleasePTR_BTN</action>
+			<action signal="button-release-event">refresh:entreleasePTR_X_ROOT</action>
+			<action signal="button-release-event">refresh:entreleasePTR_X_ROOT</action>
+		</edit>
+		<vbox>
+			<hbox homogeneous="true">
+				<text use-markup="true">
+					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> envvar </span>"</label>
+				</text>
+				<text use-markup="true">
+					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> Last Key Press </span>"</label>
+				</text>
+				<text use-markup="true">
+					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> Last Key Release </span>"</label>
+				</text>
+			</hbox>
+			'"$(funcenvvarCreate KEY_VAL)"'
+			'"$(funcenvvarCreate KEY_SYM)"'
+			'"$(funcenvvarCreate KEY_UNI)"'
+			'"$(funcenvvarCreate KEY_MOD)"'
+			'"$(funcenvvarCreate KEY_RAW)"'
+		</vbox>
+		<hseparator></hseparator>
+		<vbox>
+			<hbox homogeneous="true">
+				<text use-markup="true">
+					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> envvar </span>"</label>
+				</text>
+				<text use-markup="true">
+					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> Last Button Press </span>"</label>
+				</text>
+				<text use-markup="true">
+					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> Last Button Release </span>"</label>
+				</text>
+			</hbox>
+			'"$(funcenvvarCreate PTR_BTN)"'
+			'"$(funcenvvarCreate PTR_MOD)"'
+			'"$(funcenvvarCreate PTR_X)"'
+			'"$(funcenvvarCreate PTR_Y)"'
+			'"$(funcenvvarCreate PTR_X_ROOT)"'
+			'"$(funcenvvarCreate PTR_Y_ROOT)"'
+		</vbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac
