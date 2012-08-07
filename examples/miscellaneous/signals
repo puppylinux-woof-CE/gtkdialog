@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export DIALOG='
+export MAIN_DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
   <vbox>
     <frame Widgets>

@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Aug 7 2012 Thunor <thunorsif@hotmail.com>
+- Added examples/miscellaneous/press_and_release_events.
+
 * Mon Aug 6 2012 Thunor <thunorsif@hotmail.com>
 - Added KEY_VAL, KEY_SYM (both are listed in gdk/gdkkeysyms.h), KEY_UNI
   (the Unicode character if applicable), KEY_MOD (GdkModifierType) and
@@ -8,6 +11,7 @@ for announcements.
 - Added PTR_X and PTR_Y (widget relative), PTR_MOD (GdkModifierType),
   PTR_BTN (equivalent to the existing BUTTON), PTR_X_ROOT and PTR_Y_ROOT
   (screen relative) envvars on button_press_event/button_release_event.
+- Fixed examples/miscellaneous/signals - DIALOG changed to DIALOG_MAIN.
 
 * Sun Aug 5 2012 Thunor <thunorsif@hotmail.com>
 - Added support for the envvar GTKDIALOG_PIXMAP_PATH to find_pixmap().
