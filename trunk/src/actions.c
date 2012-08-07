@@ -37,6 +37,10 @@
 
 extern gchar *option_include_file;
 
+/* Local function prototypes */
+void action_fileselection_made(GtkWidget *w, actioncommand *ac);
+void action_fileselection_destroy(GtkWidget *w, actioncommand *ac);
+
 /***********************************************************************
  * Action closewindow                                                  *
  ***********************************************************************/
@@ -168,8 +172,11 @@ int action_launchwindow(GtkWidget *widget, char *string)
 	return 0;
 }
 
-int action_exitprogram(GtkWidget *widget, 
-		char *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+int action_exitprogram(GtkWidget *widget, char *string)
 {
 	print_variables(NULL);
 	if (string[0] == '=')
@@ -182,23 +189,33 @@ int action_exitprogram(GtkWidget *widget,
 	exit(EXIT_SUCCESS);
 }
 
-int action_refreshwidget(GtkWidget * widget, char *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+int action_refreshwidget(GtkWidget *widget, char *string)
 {
 	variables_refresh(string);
 	return (0);
 }
 
-int action_savewidget(GtkWidget * widget, char *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+int action_savewidget(GtkWidget *widget, char *string)
 {
 	variables_save(string);
 	return (0);
 }
 
-/*
-** This function will create and open a fileselection dialog and
-** connect it to the action_fileselection_made function to take
-** the selected file name.
-*/
+/***********************************************************************
+ * Action fileselect                                                   *
+ ***********************************************************************/
+/* This function will create and open a fileselection dialog and
+ * connect it to the action_fileselection_made function to take
+ * the selected file name */
+
 #if GTK_CHECK_VERSION(2,4,0)
 int action_fileselect(GtkWidget *widget, char *string)
 {
@@ -363,9 +380,7 @@ int action_fileselect(GtkWidget *widget, char *string)
 
 #else
 
-int 
-action_fileselect(GtkWidget *widget, 
-		char *string)
+int action_fileselect(GtkWidget *widget, char *string)
 {
 	actioncommand *ac;
 	/*
@@ -396,13 +411,13 @@ action_fileselect(GtkWidget *widget,
 }
 #endif
 
-/*
-** This function is called, when the user pressed the OK button in
-** a fileselection dialog.
-*/
-void 
-action_fileselection_made(GtkWidget * w, 
-		actioncommand * ac)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function is called when the user presses the OK button in
+ * a fileselection dialog */
+
+void action_fileselection_made(GtkWidget *w, actioncommand * ac)
 {
 	/*
 	 ** Let's copy the selected file name to the destination widget.
@@ -418,11 +433,13 @@ action_fileselection_made(GtkWidget * w,
 	free(ac);
 }
 
-/*
-** This function is called, when the user pressed the Cancel button in
-** a fileselection dialog.
-*/
-void action_fileselection_destroy(GtkWidget * w, actioncommand * ac)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function is called when the user presses the Cancel button in
+ * a fileselection dialog */
+
+void action_fileselection_destroy(GtkWidget *w, actioncommand *ac)
 {
 	/*
 	 ** We destroy the fileselection dialog and free the actioncommand
@@ -433,28 +450,33 @@ void action_fileselection_destroy(GtkWidget * w, actioncommand * ac)
 }
 
 
-/*
-** The action is about to remove all elements from the widget.
-*/
-int action_clearwidget(GtkWidget * widget, char *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This action removes all elements from a widget */
+
+int action_clearwidget(GtkWidget *widget, char *string)
 {
 	variables_clear(string);
 	return (0);
 }
 
-/*
-** This action is about to remove the selected element from a
-** widget.
-*/
-int action_removeselected(GtkWidget * widget, char *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This action removes a selected element from a widget */
+
+int action_removeselected(GtkWidget *widget, char *string)
 {
 	remove_selected_variable(string);
 	return 0;
 }
 
-int 
-action_append(GtkWidget *widget, 
-		char    *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+int action_append(GtkWidget *widget, char *string)
 {
 #ifndef G_OS_WIN32
 	regex_t twoparams;
@@ -491,27 +513,52 @@ action_append(GtkWidget *widget,
 #endif
 }
 
-/*
-*/
-int action_enable(GtkWidget * widget, char *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+int action_enable(GtkWidget *widget, char *string)
 {
 	variables_enable(string);
 	return (0);
 }
 
-/*
-*/
-int action_disable(GtkWidget * widget, char *string)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+int action_disable(GtkWidget *widget, char *string)
 {
 	variables_disable(string);
 	return (0);
 }
 
+/***********************************************************************
+ * Action show                                                         *
+ ***********************************************************************/
 
-/*
-** This fuction will export variables and run a shell command.
-*/
-int action_shellcommand(GtkWidget * widget, char *string)
+int action_show(GtkWidget *widget, char *string)
+{
+	variables_show(string);
+	return 0;
+}
+
+/***********************************************************************
+ * Action hide                                                         *
+ ***********************************************************************/
+
+int action_hide(GtkWidget *widget, char *string)
+{
+	variables_hide(string);
+	return 0;
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This fuction will export variables and run a shell command */
+
+int action_shellcommand(GtkWidget *widget, char *string)
 {
 	char *command;
 	int result;

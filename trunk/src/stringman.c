@@ -295,13 +295,26 @@ command_get_append_command(const gchar *command)
 }
 
 
+/* Thunor: These need to match CommandType as defined in stringman.h */
 
 static gchar *prefixes[] = {
-		"command", "exit",  "closewindow", "launch", "enable",
-		"disable", "refresh", "save", "fileselect", "clear",
-		"removeselected", "insert", "append", NULL
-	};
-
+	"command",
+	"exit",
+	"closewindow",
+	"launch",
+	"enable",
+	"disable",
+	"show",
+	"hide",
+	"refresh",
+	"save",
+	"fileselect",
+	"clear",
+	"removeselected",
+	"insert",
+	"append",
+	NULL
+};
 
 CommandType
 command_prefix_get_type(const gchar *prefix) 

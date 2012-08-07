@@ -43,43 +43,29 @@ typedef struct _variable {
   int                 autonamed;         /* have a default name?       */
 } variable;
 
-/*
-** Functions:
-*/
-variable *variables_new( const char *name );
-variable *
-variables_new_with_widget(
-		AttributeSet *Attr, 
-		tag_attr     *widget_tag_attr,
-		GtkWidget    *widget, 
-		int           type);
-
-gboolean variables_is_avail_by_name( const char *name );
-variable *variables_get_by_name( const char *name );
-variable *find_variable_by_widget(GtkWidget *widget);
-
-variable *variables_set_widget( const char *name, GtkWidget *widget );
-variable *variables_set_parent( const char *name, GtkWidget *parent );
-variable *variables_set_type( const char *name, int type );
-variable *variables_set_attributes( const char *name, AttributeSet *a);
-variable *variables_set_value( const char *name, const char *value );
-variable *variables_set_row_column( const char *name,
-                                    int row, int column );
-
-void variables_drop_by_parent(variable *actual, GtkWidget *Parent);
-
-variable *variables_refresh( const char *name );
-variable *variables_clear( const char *name );
-int remove_selected_variable(const char *name);
-int append_fromto_variable(const char *from, const char *to);
-
-
-void variables_export_all( void );
-void variables_initialize_all( void );
-
-void variables_print_debug( variable *actual );
-void variables_print_one( variable *var );
+/* Function prototypes */
+variable *variables_new_with_widget(AttributeSet *Attr,
+	tag_attr *widget_tag_attr, GtkWidget *widget, int type);
+variable *variables_set_attributes(const char *name, AttributeSet *a);
+variable *variables_set_row_column(const char *name, int row, int column);
+variable *variables_set_value(const char *name, const char *value);
+variable *variables_save(const char *name);
+variable *variables_refresh(const char *name);
+variable *variables_enable(const char *name);
+variable *variables_disable(const char *name);
+variable *variables_show(const char *name);
+variable *variables_hide(const char *name);
+variable *variables_get_by_name(const char *name);
 gint variables_count_widgets(void);
+void variables_drop_by_parent(variable *actual, GtkWidget *Parent);
+variable *find_variable_by_widget(GtkWidget *widget);
+void variables_export_all(void);
+void variables_initialize_all(void);
+void print_variables(variable *actual);
+int append_fromto_variable(const char *from, const char *to);
+variable *variables_clear(const char *name);
+int remove_selected_variable(const char *name);
+
 #endif
 
 

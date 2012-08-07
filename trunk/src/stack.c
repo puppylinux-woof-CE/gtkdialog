@@ -24,12 +24,20 @@
 #include "gtkdialog.h"
 #include "stack.h"
 
+/* This value represents the maximum number of stackelements that the
+ * stack can contain, but a stackelement can contain one widget or it
+ * can contain a container full of widgets so the maximum number of
+ * widgets that the project can accept is STACKSIZE * MAXWIDGETS */
 #ifndef STACKSIZE
-#define STACKSIZE 2048 
+#define STACKSIZE 2048
 #endif
 
 stackelement stack[STACKSIZE];
 int sp = 0;
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
 void push_widget(GtkWidget * widget, int widgettype)
 {
@@ -43,25 +51,39 @@ void push_widget(GtkWidget * widget, int widgettype)
 	push(s);
 }
 
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
-void 
-push(stackelement new)
+void push(stackelement new)
 {
 #ifdef DEBUG
+	static int spgreatest = 0;
+
+	if (sp > spgreatest) {
+		spgreatest = sp;
+		g_message("%s: spgreatest=%d", __func__, spgreatest);
+	}
+
 	g_message("%s: Start sp = %d", __func__, sp);
 #endif
+
 	if (sp == STACKSIZE) {
 		fprintf(stderr, "Stack overflow.\n");
 		exit(EXIT_FAILURE);
 	}
 	stack[sp++] = new;
+
 #ifdef DEBUG
 	g_message("%s()): end sp = %d", __func__, sp);
 #endif
 }
 
-stackelement 
-pop(void)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+stackelement pop(void)
 {
 	if (sp == 0) 
 		g_error("Stack underflow: Empty program or internal error.");
@@ -76,9 +98,11 @@ pop(void)
 	return (stack[sp]);
 }
 
-/*
- * This show command is much more complex than I thought.
- */
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This show command is much more complex than I thought */
+
 void show_without_pop(GtkWidget *window)
 {
 	GtkWidget *parent;
@@ -94,4 +118,3 @@ void show_without_pop(GtkWidget *window)
 	gtk_widget_show_all(window);
 	//gtk_main();
 }
-

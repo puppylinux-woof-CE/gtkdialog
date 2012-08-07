@@ -26,17 +26,9 @@
 #include <gtk/gtk.h>
 #include "gtkdialog.h"
 
-#define MAXWIDGETS (529)	//256
-
-/* Using examples/expand_and_fill:
- * 
- * 256  (16^) = 21940 virtual memory
- * 484  (22^) = 25588 virtual memory
- * 529  (23^) = 26308 virtual memory
- * 625  (25^) = 27844 virtual memory
- * 729  (27^) = 29512 virtual memory
- * 1024 (32^) = 34248 virtual memory
- */
+/* This value represents the maximum number of widgets that one individual
+ * stackelement can contain, so it can be viewed as widgets per container */
+#define MAXWIDGETS 256
 
 /* 
  * The elements in stack can contain MAXWIDGETS number of widgets.

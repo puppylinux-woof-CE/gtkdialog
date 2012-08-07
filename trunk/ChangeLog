@@ -3,6 +3,8 @@ for announcements.
 
 * Tue Aug 7 2012 Thunor <thunorsif@hotmail.com>
 - Added examples/miscellaneous/press_and_release_events.
+- Added show and hide action functions.
+- Dropped MAXWIDGETS back to 256 since it's per container, not project.
 
 * Mon Aug 6 2012 Thunor <thunorsif@hotmail.com>
 - Added KEY_VAL, KEY_SYM (both are listed in gdk/gdkkeysyms.h), KEY_UNI
