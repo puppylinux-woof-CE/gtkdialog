@@ -1,5 +1,5 @@
 /*
- * widget_frame.c: 
+ * widget_hbox.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -34,9 +34,9 @@
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes, located at file bottom */
-static void widget_frame_input_by_command(variable *var, char *command);
-static void widget_frame_input_by_file(variable *var, char *filename);
-static void widget_frame_input_by_items(variable *var);
+static void widget_hbox_input_by_command(variable *var, char *command);
+static void widget_hbox_input_by_file(variable *var, char *filename);
+static void widget_hbox_input_by_items(variable *var);
 
 /* Notes: */
 
@@ -44,7 +44,7 @@ static void widget_frame_input_by_items(variable *var);
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_frame_clear(variable *var)
+void widget_hbox_clear(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -53,7 +53,7 @@ void widget_frame_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	gtk_frame_set_label(GTK_FRAME(var->Widget), "");
+	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -63,15 +63,14 @@ void widget_frame_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
-GtkWidget *widget_frame_create(
+GtkWidget *widget_hbox_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	gchar            *value;
+	gint              border_width;
 	gint              n;
 	gint              original_expand, original_fill;
 	gint              space_expand, space_fill;
-	GList            *element;
-	GtkWidget        *vbox;
 	GtkWidget        *widget;
 	stackelement      s;
 	variable         *var;
@@ -80,31 +79,44 @@ GtkWidget *widget_frame_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* Set a default label */
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "");
+	/* The spacing value here is the GtkBox "spacing" property
+	 * and therefore can be overridden with a spacing="0" tag
+	 * attribute*/
+	widget = gtk_hbox_new(FALSE, 5);
 
-	/* Create the frame widget */
-	widget = gtk_frame_new(attributeset_get_first(&element, 
-		Attr, ATTR_LABEL));
+	if (attr &&
+		(value = get_tag_attribute(attr, "margin"))) {	/* Deprecated */
+		border_width = atoi(value);
+		gtk_container_set_border_width(GTK_CONTAINER(widget), border_width);
+	}
 
-	/* Thunor: I'm noting this embedded unreachable vbox spacing
-	 * and the border_width that can't be overidden because of
-	 * the frame widget not supporting tag attributes temp temp */
-	vbox = gtk_vbox_new(FALSE, 5);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
-
-	/* Calculate values for expand and fill at the container level.
-	 * 
-	 * Thunor: Because of this embedded unreachable vbox it's
-	 * not possible to control expand and fill from custom tag
-	 * attributes at the container level. The way around this is
-	 * to manually insert a vbox widget within the XML temp temp */
+	/* Calculate values for expand and fill at the container level */
 	space_expand = project_space_expand;
+	if (attr &&
+		((value = get_tag_attribute(attr, "space-expand")) ||
+		(value = get_tag_attribute(attr, "space_expand")))) {
+		if ((strcasecmp(value, "true") == 0) ||
+			(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+			space_expand = TRUE;
+		} else {
+			space_expand = FALSE;
+		}
+	}
 	space_fill = project_space_fill;
+	if (attr &&
+		((value = get_tag_attribute(attr, "space-fill")) ||
+		(value = get_tag_attribute(attr, "space_fill")))) {
+		if ((strcasecmp(value, "true") == 0) ||
+			(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
+			space_fill = TRUE;
+		} else {
+			space_fill = FALSE;
+		}
+	}
 
 	/* Pack the widgets into the container */
 	s = pop();
-	for (n = 0; n < s.nwidgets; ++n) {
+	for (n = s.nwidgets - 1; n >= 0; --n) {
 
 		/* Calculate values for expand and fill at the widget level */
 		var = find_variable_by_widget(s.widgets[n]);
@@ -129,9 +141,13 @@ GtkWidget *widget_frame_create(
 			}
 		}
 
+		/* Thunor: The entry widget here is being packed with expand
+		 * and fill set to true but not in the vbox or frame, so I'll
+		 * mark this temp temp as it could be a bug */
 		if (s.widgettypes[n] == WIDGET_EDIT ||
 			s.widgettypes[n] == WIDGET_FRAME ||
-			s.widgettypes[n] == WIDGET_SCROLLEDW) {
+			s.widgettypes[n] == WIDGET_SCROLLEDW ||
+			s.widgettypes[n] == WIDGET_ENTRY) {
 			original_expand = original_fill = TRUE;
 		} else {
 			original_expand = original_fill = FALSE;
@@ -139,14 +155,12 @@ GtkWidget *widget_frame_create(
 		if (space_expand != -1) original_expand = space_expand;
 		if (space_fill != -1) original_fill = space_fill;
 #ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): frame expand=%i fill=%i\n", __func__,
+		fprintf(stderr, "%s(): hbox expand=%i fill=%i\n", __func__,
 			original_expand, original_fill);
 #endif
-		gtk_box_pack_start(GTK_BOX(vbox), s.widgets[n],
+		gtk_box_pack_end(GTK_BOX(widget), s.widgets[n],
 			original_expand, original_fill, 0);
 	}
-
-	gtk_container_add(GTK_CONTAINER(widget), vbox);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -159,7 +173,7 @@ GtkWidget *widget_frame_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_frame_envvar_all_construct(variable *var)
+gchar *widget_hbox_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -184,7 +198,7 @@ gchar *widget_frame_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_frame_envvar_construct(GtkWidget *widget)
+gchar *widget_hbox_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
@@ -192,7 +206,7 @@ gchar *widget_frame_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup(gtk_frame_get_label(GTK_FRAME(widget)));
+	string = g_strdup("");
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -205,7 +219,7 @@ gchar *widget_frame_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_frame_fileselect(
+void widget_hbox_fileselect(
 	variable *var, const char *name, const char *value)
 {
 	gchar            *var1;
@@ -225,7 +239,7 @@ void widget_frame_fileselect(
 /***********************************************************************
  * Refresh                                                             *
  ***********************************************************************/
-void widget_frame_refresh(variable *var)
+void widget_hbox_refresh(variable *var)
 {
 	GList            *element;
 	gchar            *act;
@@ -243,20 +257,23 @@ void widget_frame_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_frame_input_by_command(var, act + 8);
+			widget_hbox_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-			widget_frame_input_by_file(var, act + 5);
+			widget_hbox_input_by_file(var, act + 5);
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_frame_input_by_items(var);
+		widget_hbox_input_by_items(var);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
 		/* Apply directives */
+		if (attributeset_is_avail(var->Attributes, ATTR_LABEL))
+			fprintf(stderr, "%s(): <label> not implemented for this widget.\n",
+				__func__);
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
 				__func__);
@@ -285,7 +302,7 @@ void widget_frame_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_frame_removeselected(variable *var)
+void widget_hbox_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -306,41 +323,16 @@ void widget_frame_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_frame_save(variable *var)
+void widget_hbox_save(variable *var)
 {
-	FILE             *outfile;
-	GList            *element;
-	gchar            *act;
-	gchar            *filename = NULL;
+	gchar            *var1;
+	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* We'll use the output file filename if available */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
-	while (act) {
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			filename = act + 5;
-			break;
-		}
-		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
-	}
-
-	/* If we have a valid filename then open it and dump the
-	 * widget's data to it */
-	if (filename) {
-		if ((outfile = fopen(filename, "w"))) {
-			fprintf(outfile, "%s", gtk_frame_get_label(GTK_FRAME(var->Widget)));
-			/* Close the file */
-			fclose(outfile);
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
-				__func__, filename);
-		}
-	} else {
-		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
-	}
+	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -351,39 +343,16 @@ void widget_frame_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_frame_input_by_command(variable *var, char *command)
+static void widget_hbox_input_by_command(variable *var, char *command)
 {
-	FILE             *infile;
-	gchar             line[512];
-	gint              count;
+	gchar            *var1;
+	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
-
-	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
-		/* Just one line */
-		if (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-
-			gtk_frame_set_label(GTK_FRAME(var->Widget), line);
-
-		}
-		/* Close the file */
-		pclose(infile);
-	} else {
-		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
-			command);
-	}
+	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -394,34 +363,16 @@ static void widget_frame_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_frame_input_by_file(variable *var, char *filename)
+static void widget_hbox_input_by_file(variable *var, char *filename)
 {
-	FILE             *infile;
-	gchar             line[512];
-	gint              count;
+	gchar            *var1;
+	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (infile = fopen(filename, "r")) {
-		/* Just one line */
-		if (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-
-			gtk_frame_set_label(GTK_FRAME(var->Widget), line);
-
-		}
-		/* Close the file */
-		fclose(infile);
-	} else {
-		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
-			filename);
-	}
+	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -432,7 +383,7 @@ static void widget_frame_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_frame_input_by_items(variable *var)
+static void widget_hbox_input_by_items(variable *var)
 {
 	gchar            *var1;
 	gint              var2;

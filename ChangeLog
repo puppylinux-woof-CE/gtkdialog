@@ -6,6 +6,8 @@ for announcements.
   <input file>, enable, disable, show, hide, refresh, save and clear.
 - Added support for show and hide to all widgets except those that
   require refactoring and updating in the parser to support directives.
+- Refactored the hbox widget and updated it in the parser so that it
+  now supports the recently added hide and show action functions.
 
 * Tue Aug 7 2012 Thunor <thunorsif@hotmail.com>
 - Added examples/miscellaneous/press_and_release_events.
