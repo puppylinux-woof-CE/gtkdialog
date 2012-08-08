@@ -1,6 +1,12 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Wed Aug 8 2012 Thunor <thunorsif@hotmail.com>
+- Refactored the frame widget and added support for <input>,
+  <input file>, enable, disable, show, hide, refresh, save and clear.
+- Added support for show and hide to all widgets except those that
+  require refactoring and updating in the parser to support directives.
+
 * Tue Aug 7 2012 Thunor <thunorsif@hotmail.com>
 - Added examples/miscellaneous/press_and_release_events.
 - Added show and hide action functions.
