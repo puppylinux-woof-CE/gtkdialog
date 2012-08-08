@@ -11,6 +11,9 @@ A [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] optionally packed i
 {{{
 <hbox tag_attr="value"...>
 	widget...
+	<variable>varname</variable>
+	<sensitive>state</sensitive>
+	<action signal="type">activity</action>...
 </hbox>
 }}}
 
@@ -26,6 +29,7 @@ The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand^[1]^ || Pack this and nested widgets expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill^[1]^ || Pack this and nested widgets filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
 || width || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
@@ -33,15 +37,43 @@ The following custom tag attributes are available:
 
 == Directives ==
 
-None.
+Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| variable || Shell variable name || || || 0.8.1 ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.8.1 ||
+|| action signal="_type_" || Execute command on signal || Shell command || || 0.8.1 ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || 0.8.1 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
 
-None.
+There is no default signal for this widget.
+
+See the [http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer.signals GtkContainer] widget and ancestor class signals.
 
 == Functions ==
 
-None.
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || 0.8.1 ||
+|| disable || Desensitise widget || Shell variable name || 0.8.1 ||
+|| show || Show widget || Shell variable name || 0.8.1 ||
+|| hide || Hide widget || Shell variable name || 0.8.1 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
 
