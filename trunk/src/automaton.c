@@ -49,6 +49,7 @@
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_frame.h"
+#include "widget_hbox.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -294,6 +295,9 @@ void print_command(instruction command)
 		case WIDGET_FRAME:
 			printf("(new frame(pop()))");
 			break;
+		case WIDGET_HBOX:
+			printf("(new hbox(pop()))");
+			break;
 		case WIDGET_NOTEBOOK:
 			printf("(new notebook(pop()))");
 			break;
@@ -351,9 +355,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_VBOX:
 	    printf("(new vbox(pop()))");
-	    break;
-	case WIDGET_HBOX:
-	    printf("(new hbox(pop()))");
 	    break;
 	case WIDGET_MENUBAR:
 	    printf("(new menubar(pop()))");
@@ -582,6 +583,9 @@ void print_token(token Token)
 		case WIDGET_FRAME:
 			printf("(FRAME)");
 			break;
+		case WIDGET_HBOX:
+			printf("(HBOX)");
+			break;
 		case WIDGET_NOTEBOOK:
 			printf("(NOTEBOOK)");
 			break;
@@ -639,9 +643,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_VBOX:
 		printf("(VBOX)");
-		break;
-	case WIDGET_HBOX:
-		printf("(HBOX)");
 		break;
 	case WIDGET_MENUBAR:
 		printf("(MENUBAR)");
@@ -1460,6 +1461,23 @@ instruction_execute_push(
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
 			break;
+		case WIDGET_HBOX:
+			Widget = widget_hbox_create(Attr, tag_attributes, Widget_Type);
+			/* Thunor: If the custom attribute "scrollable" is true
+			 * then place the hbox inside a GtkScrolledWindow */
+			if (tag_attributes &&
+				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
+				((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+					tag_attributes);
+				push_widget(scrolled_window, WIDGET_SCROLLEDW);
+			} else {
+				push_widget(Widget, Widget_Type);
+			}
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
+			break;
 		case WIDGET_NOTEBOOK:
 			Widget = widget_notebook_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1742,113 +1760,6 @@ instruction_execute_push(
 
 			/* Thunor: If the custom attribute "scrollable" is true
 			 * then place the vbox inside a GtkScrolledWindow */
-			if (tag_attributes &&
-				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
-				((strcasecmp(value, "true") == 0) ||
-				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
-				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
-					tag_attributes);
-				push_widget(scrolled_window, WIDGET_SCROLLEDW);
-			} else {
-				push_widget(Widget, Widget_Type);
-			}
-
-			/* Creating this widget closes any open group */
-			lastradiowidget = NULL;
-		}
-		break;
-
-	case WIDGET_HBOX:
-		{
-			/*
-			 ** The hbox is very similar to vbox...
-			 */
-			stackelement s = pop();
-
-			/* The spacing value here is the GtkBox "spacing" property
-			 * and therefore can be overridden with a spacing="0" tag
-			 * attribute*/
-			Widget = gtk_hbox_new(FALSE, 5);
-
-			if (tag_attributes &&
-				(value = get_tag_attribute(tag_attributes, "margin"))) {	/* Deprecated */
-				border_width = atoi(value);
-				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
-			}
-
-			/* Calculate values for expand and fill at the container level */
-			space_expand = project_space_expand;
-			if (tag_attributes &&
-				((value = get_tag_attribute(tag_attributes, "space-expand")) ||
-				(value = get_tag_attribute(tag_attributes, "space_expand")))) {
-				if ((strcasecmp(value, "true") == 0) ||
-					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-					space_expand = TRUE;
-				} else {
-					space_expand = FALSE;
-				}
-			}
-			space_fill = project_space_fill;
-			if (tag_attributes &&
-				((value = get_tag_attribute(tag_attributes, "space-fill")) ||
-				(value = get_tag_attribute(tag_attributes, "space_fill")))) {
-				if ((strcasecmp(value, "true") == 0) ||
-					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-					space_fill = TRUE;
-				} else {
-					space_fill = FALSE;
-				}
-			}
-
-			/* Pack the widgets into the container */
-			for (n = s.nwidgets - 1; n >= 0; --n) {
-
-				var = find_variable_by_widget(s.widgets[n]);
-				/* Calculate values for expand and fill at the widget level */
-				if (var && var->widget_tag_attr &&
-					((value = get_tag_attribute(var->widget_tag_attr, "space-expand")) ||
-					(value = get_tag_attribute(var->widget_tag_attr, "space_expand")))) {
-					if ((strcasecmp(value, "true") == 0) ||
-						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-						space_expand = TRUE;
-					} else {
-						space_expand = FALSE;
-					}
-				}
-				if (var && var->widget_tag_attr &&
-					((value = get_tag_attribute(var->widget_tag_attr, "space-fill")) ||
-					(value = get_tag_attribute(var->widget_tag_attr, "space_fill")))) {
-					if ((strcasecmp(value, "true") == 0) ||
-						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-						space_fill = TRUE;
-					} else {
-						space_fill = FALSE;
-					}
-				}
-
-				/* Thunor: The entry widget here is being packed with expand
-				 * and fill set to true but not in the vbox or frame, so I'll
-				 * mark this temp temp as it could be a bug */
-				if (s.widgettypes[n] == WIDGET_EDIT ||
-				    s.widgettypes[n] == WIDGET_FRAME ||
-				    s.widgettypes[n] == WIDGET_SCROLLEDW ||
-				    s.widgettypes[n] == WIDGET_ENTRY) {
-					original_expand = original_fill = TRUE;
-				} else {
-					original_expand = original_fill = FALSE;
-				}
-				if (space_expand != -1) original_expand = space_expand;
-				if (space_fill != -1) original_fill = space_fill;
-#ifdef DEBUG
-				fprintf(stderr, "%s(): hbox expand=%i fill=%i\n", __func__,
-					original_expand, original_fill);
-#endif
-				gtk_box_pack_end(GTK_BOX(Widget), s.widgets[n],
-					original_expand, original_fill, 0);
-			}
-
-			/* Thunor: If the custom attribute "scrollable" is true
-			 * then place the hbox inside a GtkScrolledWindow */
 			if (tag_attributes &&
 				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
 				((strcasecmp(value, "true") == 0) ||

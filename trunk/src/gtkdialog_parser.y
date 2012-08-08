@@ -190,17 +190,17 @@ wlist
 		token_store_attr(PUSH | WIDGET_VBOX, $3); 
 		token_store(SUM);      
 	}
-  | HBOX wlist EHBOX   { 
+  | HBOX wlist attr EHBOX   { 
 		token_store(PUSH | WIDGET_HBOX); 
 	}
-  | wlist HBOX wlist EHBOX   { 
+  | wlist HBOX wlist attr EHBOX   { 
 		token_store(PUSH | WIDGET_HBOX); 
 		token_store(SUM);      
 	}
-  | PART_HBOX tagattr '>' wlist EHBOX {
+  | PART_HBOX tagattr '>' wlist attr EHBOX {
 		token_store_attr(PUSH | WIDGET_HBOX, $2); 
 	}
-  | wlist PART_HBOX tagattr '>' wlist EHBOX {
+  | wlist PART_HBOX tagattr '>' wlist attr EHBOX {
 		token_store_attr(PUSH | WIDGET_HBOX, $3); 
 		token_store(SUM);      
 	}

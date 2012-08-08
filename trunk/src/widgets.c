@@ -41,6 +41,7 @@
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_frame.h"
+#include "widget_hbox.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -219,6 +220,10 @@ widget_get_text_value(
 			break;
 		case WIDGET_FRAME:
 			string = widget_frame_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_HBOX:
+			string = widget_hbox_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_NOTEBOOK:
@@ -1324,6 +1329,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_FRAME:
 			type = "FRAME";
 			break;
+		case WIDGET_HBOX:
+			type = "HBOX";
+			break;
 		case WIDGET_NOTEBOOK:
 			type = "NOTEBOOK";
 			break;
@@ -1378,9 +1386,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_VBOX:
 		type = "VBOX";
-		break;
-	case WIDGET_HBOX:
-		type = "HBOX";
 		break;
 	case WIDGET_MENUBAR:
 		type = "MENUBAR";
