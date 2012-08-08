@@ -50,6 +50,7 @@
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
+#include "widget_vbox.h"
 #include "widget_window.h"
 #include "signals.h"
 
@@ -260,6 +261,10 @@ widget_get_text_value(
 			return string;
 			break;
 #endif
+		case WIDGET_VBOX:
+			string = widget_vbox_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_WINDOW:
 			string = widget_window_envvar_construct(widget);
 			return string;
@@ -1361,6 +1366,9 @@ char *widgets_to_str(int itype)
 			type = "TREE";
 			break;
 #endif
+		case WIDGET_VBOX:
+			type = "VBOX";
+			break;
 		case WIDGET_WINDOW:
 			type = "WINDOW";
 			break;
@@ -1383,9 +1391,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_SCROLLEDW:
 		type = "SCROLLEDW";
-		break;
-	case WIDGET_VBOX:
-		type = "VBOX";
 		break;
 	case WIDGET_MENUBAR:
 		type = "MENUBAR";

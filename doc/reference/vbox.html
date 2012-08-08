@@ -93,6 +93,9 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkVBox.html">GtkVBox</a> optiona
 <pre>
 &lt;vbox tag_attr="value"...&gt;
 	widget...
+	&lt;variable&gt;varname&lt;/variable&gt;
+	&lt;sensitive&gt;state&lt;/sensitive&gt;
+	&lt;action signal="type"&gt;activity&lt;/action&gt;...
 &lt;/vbox&gt;
 </pre>
 
@@ -108,6 +111,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkVBox.html">GtkVBox</a> optiona
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
 <tr><td class="wiki"> space-expand<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Pack this and nested widgets expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> space-fill<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Pack this and nested widgets filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> scrollable </td><td class="wiki"> Scrolled window capability </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> height </td><td class="wiki"> Scrolled window dimension </td><td class="wiki"> An integer &gt; <code>0</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> width </td><td class="wiki"> Scrolled window dimension </td><td class="wiki"> An integer &gt; <code>0</code> </td><td class="wiki"> 0.7.21 </td></tr>
@@ -115,15 +119,43 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkVBox.html">GtkVBox</a> optiona
 
 <h2> Directives </h2>
 
-<p>None.</p>
+<p>Some of these may have tag attribute equivalents.</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Mandatory</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+</table>
 
 <h2> Signals </h2>
 
-<p>None.</p>
+<p>There is no default signal for this widget.</p>
+
+<p>See the <a href="http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer.signals">GtkContainer</a> widget and ancestor class signals.</p>
 
 <h2> Functions </h2>
 
-<p>None.</p>
+<p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> show </td><td class="wiki"> Show widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+</table>
+
+<p>The following general functions can be performed by any widget capable of emitting signals:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> command </td><td class="wiki"> Execute command </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> exit </td><td class="wiki"> Exit dialog </td><td class="wiki"> A value for the <code>EXIT</code> shell variable </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> closewindow </td><td class="wiki"> Close launched dialog </td><td class="wiki"> Launched dialog's shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> launch </td><td class="wiki"> Launch new dialog </td><td class="wiki"> New dialog's shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+</table>
 
 <h2> Notes </h2>
 

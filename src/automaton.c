@@ -58,6 +58,7 @@
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
+#include "widget_vbox.h"
 #include "widget_window.h"
 #include "signals.h"
 
@@ -327,6 +328,9 @@ void print_command(instruction command)
 			printf("(new tree())");
 			break;
 #endif
+		case WIDGET_VBOX:
+			printf("(new vbox(pop()))");
+			break;
 		case WIDGET_WINDOW:
 			printf("(new window(pop()))");
 			break;
@@ -352,9 +356,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_SCROLLEDW:
 	    printf("(new scrolledwindow(pop()))");
-	    break;
-	case WIDGET_VBOX:
-	    printf("(new vbox(pop()))");
 	    break;
 	case WIDGET_MENUBAR:
 	    printf("(new menubar(pop()))");
@@ -615,6 +616,9 @@ void print_token(token Token)
 			printf("(TREE)");
 			break;
 #endif
+		case WIDGET_VBOX:
+			printf("(VBOX)");
+			break;
 		case WIDGET_WINDOW:
 			printf("(WINDOW)");
 			break;
@@ -640,9 +644,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_SCROLLEDW:
 		printf("(SCROLLEDW)");
-		break;
-	case WIDGET_VBOX:
-		printf("(VBOX)");
 		break;
 	case WIDGET_MENUBAR:
 		printf("(MENUBAR)");
@@ -1515,6 +1516,23 @@ instruction_execute_push(
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			break;
 #endif
+		case WIDGET_VBOX:
+			Widget = widget_vbox_create(Attr, tag_attributes, Widget_Type);
+			/* Thunor: If the custom attribute "scrollable" is true
+			 * then place the vbox inside a GtkScrolledWindow */
+			if (tag_attributes &&
+				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
+				((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+					tag_attributes);
+				push_widget(scrolled_window, WIDGET_SCROLLEDW);
+			} else {
+				push_widget(Widget, Widget_Type);
+			}
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
+			break;
 		case WIDGET_WINDOW:
 			Widget = window = widget_window_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1667,113 +1685,6 @@ instruction_execute_push(
 		g_signal_connect(G_OBJECT(Widget), "select-row",
 				 G_CALLBACK(table_selection),
 				 (gpointer) Attr);
-		break;
-
-	case WIDGET_VBOX:
-		{
-			/*
-			 ** Creating a box is not a simple process, because we have to
-			 ** add the widgets to it. First we remove the widgets from the
-			 ** top of the stack (only one stack element with more widgets,
-			 ** thanks to the SUM instruction), then we add it to the box.
-			 ** The last step is pushing the box back to the stack.
-			 */
-			stackelement s = pop();
-
-			/* The spacing value here is the GtkBox "spacing" property
-			 * and therefore can be overridden with a spacing="0" tag
-			 * attribute*/
-			Widget = gtk_vbox_new(FALSE, 5);
-
-			if (tag_attributes &&
-				(value = get_tag_attribute(tag_attributes, "margin"))) {	/* Deprecated */
-				border_width = atoi(value);
-				gtk_container_set_border_width(GTK_CONTAINER(Widget), border_width);
-			}
-
-			/* Calculate values for expand and fill at the container level */
-			space_expand = project_space_expand;
-			if (tag_attributes &&
-				((value = get_tag_attribute(tag_attributes, "space-expand")) ||
-				(value = get_tag_attribute(tag_attributes, "space_expand")))) {
-				if ((strcasecmp(value, "true") == 0) ||
-					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-					space_expand = TRUE;
-				} else {
-					space_expand = FALSE;
-				}
-			}
-			space_fill = project_space_fill;
-			if (tag_attributes &&
-				((value = get_tag_attribute(tag_attributes, "space-fill")) ||
-				(value = get_tag_attribute(tag_attributes, "space_fill")))) {
-				if ((strcasecmp(value, "true") == 0) ||
-					(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-					space_fill = TRUE;
-				} else {
-					space_fill = FALSE;
-				}
-			}
-
-			/* Pack the widgets into the container */
-			for (n = 0; n < s.nwidgets; ++n) {
-
-				var = find_variable_by_widget(s.widgets[n]);
-				/* Calculate values for expand and fill at the widget level */
-				if (var && var->widget_tag_attr &&
-					((value = get_tag_attribute(var->widget_tag_attr, "space-expand")) ||
-					(value = get_tag_attribute(var->widget_tag_attr, "space_expand")))) {
-					if ((strcasecmp(value, "true") == 0) ||
-						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-						space_expand = TRUE;
-					} else {
-						space_expand = FALSE;
-					}
-				}
-				if (var && var->widget_tag_attr &&
-					((value = get_tag_attribute(var->widget_tag_attr, "space-fill")) ||
-					(value = get_tag_attribute(var->widget_tag_attr, "space_fill")))) {
-					if ((strcasecmp(value, "true") == 0) ||
-						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-						space_fill = TRUE;
-					} else {
-						space_fill = FALSE;
-					}
-				}
-
-				if (s.widgettypes[n] == WIDGET_EDIT ||
-				    s.widgettypes[n] == WIDGET_FRAME ||
-				    s.widgettypes[n] == WIDGET_SCROLLEDW) {
-					original_expand = original_fill = TRUE;
-				} else {
-					original_expand = original_fill = FALSE;
-				}
-				if (space_expand != -1) original_expand = space_expand;
-				if (space_fill != -1) original_fill = space_fill;
-#ifdef DEBUG
-				fprintf(stderr, "%s(): vbox expand=%i fill=%i\n", __func__,
-					original_expand, original_fill);
-#endif
-				gtk_box_pack_start(GTK_BOX(Widget), s.widgets[n],
-					original_expand, original_fill, 0);
-			}
-
-			/* Thunor: If the custom attribute "scrollable" is true
-			 * then place the vbox inside a GtkScrolledWindow */
-			if (tag_attributes &&
-				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
-				((strcasecmp(value, "true") == 0) ||
-				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
-				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
-					tag_attributes);
-				push_widget(scrolled_window, WIDGET_SCROLLEDW);
-			} else {
-				push_widget(Widget, Widget_Type);
-			}
-
-			/* Creating this widget closes any open group */
-			lastradiowidget = NULL;
-		}
 		break;
 
 	case WIDGET_HSEPARATOR:

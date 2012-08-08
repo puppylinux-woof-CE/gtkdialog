@@ -36,6 +36,7 @@
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
+#include "widget_vbox.h"
 #include "widget_window.h"
 
 extern gboolean option_no_warning;
@@ -352,6 +353,9 @@ variable *variables_set_value(const char *name, const char *value)
 			widget_tree_fileselect(toset, name, value);
 			break;
 #endif
+		case WIDGET_VBOX:
+			widget_vbox_fileselect(toset, name, value);
+			break;
 		case WIDGET_WINDOW:
 			widget_window_fileselect(toset, name, value);
 			break;
@@ -436,6 +440,9 @@ variable *variables_save(const char *name)
 			widget_tree_save(var);
 			break;
 #endif
+		case WIDGET_VBOX:
+			widget_vbox_save(var);
+			break;
 		case WIDGET_WINDOW:
 			widget_window_save(var);
 			break;
@@ -552,6 +559,9 @@ variable *variables_refresh(const char *name)
 			widget_tree_refresh(var);
 			break;
 #endif
+		case WIDGET_VBOX:
+			widget_vbox_refresh(var);
+			break;
 		case WIDGET_WINDOW:
 			widget_window_refresh(var);
 			break;
@@ -1283,6 +1293,9 @@ variable *variables_clear(const char *name)
 			widget_tree_clear(toclear);
 			break;
 #endif
+		case WIDGET_VBOX:
+			widget_vbox_clear(toclear);
+			break;
 		case WIDGET_WINDOW:
 			widget_window_clear(toclear);
 			break;
@@ -1407,6 +1420,9 @@ int remove_selected_variable(const char *name)
 			widget_tree_removeselected(toclear);
 			break;
 #endif
+		case WIDGET_VBOX:
+			widget_vbox_removeselected(toclear);
+			break;
 		case WIDGET_WINDOW:
 			widget_window_removeselected(toclear);
 			break;
