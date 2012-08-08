@@ -37,6 +37,7 @@ gtkdialog_SOURCES = \
 		    widget_text.c widget_text.h \
 		    widget_timer.c widget_timer.h \
 		    widget_tree.c widget_tree.h \
+		    widget_vbox.c widget_vbox.h \
 		    widget_window.c widget_window.h
 
 AM_CFLAGS = $(GTK_CFLAGS) \

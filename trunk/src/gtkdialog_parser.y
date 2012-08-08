@@ -176,17 +176,17 @@ wlist
 	}
   | imperative
   | wlist imperative
-  | VBOX wlist EVBOX   { 
+  | VBOX wlist attr EVBOX   { 
 		token_store(PUSH | WIDGET_VBOX); 
 	}
-  | wlist VBOX wlist EVBOX   { 
+  | wlist VBOX wlist attr EVBOX   { 
 		token_store(PUSH | WIDGET_VBOX); 
 		token_store(SUM);      
 	}
-  | PART_VBOX tagattr '>' wlist EVBOX {
+  | PART_VBOX tagattr '>' wlist attr EVBOX {
 		token_store_attr(PUSH | WIDGET_VBOX, $2); 
 	}
-  | wlist PART_VBOX tagattr '>' wlist EVBOX {
+  | wlist PART_VBOX tagattr '>' wlist attr EVBOX {
 		token_store_attr(PUSH | WIDGET_VBOX, $3); 
 		token_store(SUM);      
 	}
