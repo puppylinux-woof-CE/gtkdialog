@@ -30,6 +30,7 @@ The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -56,7 +57,11 @@ All action directives will be executed when the input data reaches 100.
 
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 
-None.
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| show || Show widget || Shell variable name || 0.8.1 ||
+|| hide || Hide widget || Shell variable name || 0.8.1 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by this widget when the input data reaches 100:
 

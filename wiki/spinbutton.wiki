@@ -80,6 +80,8 @@ The following functions can be performed upon this widget by any widget capable 
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
+|| show || Show widget || Shell variable name || 0.8.1 ||
+|| hide || Hide widget || Shell variable name || 0.8.1 ||
 || refresh || Reload input data || Shell variable name || ||
 || save || Save widget data || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>

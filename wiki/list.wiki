@@ -33,6 +33,7 @@ The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -66,6 +67,8 @@ The following functions can be performed upon this widget by any widget capable 
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
+|| show || Show widget || Shell variable name || 0.8.1 ||
+|| hide || Hide widget || Shell variable name || 0.8.1 ||
 || refresh || Reload input data || Shell variable name || ||
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
