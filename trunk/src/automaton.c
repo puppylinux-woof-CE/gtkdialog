@@ -48,6 +48,7 @@
 #include "widget_checkbox.h"
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
+#include "widget_frame.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -290,6 +291,9 @@ void print_command(instruction command)
 		case WIDGET_COMBOBOXTEXT:
 			printf("(new comboboxtext())");
 			break;
+		case WIDGET_FRAME:
+			printf("(new frame(pop()))");
+			break;
 		case WIDGET_NOTEBOOK:
 			printf("(new notebook(pop()))");
 			break;
@@ -350,9 +354,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_HBOX:
 	    printf("(new hbox(pop()))");
-	    break;
-	case WIDGET_FRAME:
-	    printf("(new frame(pop()))");
 	    break;
 	case WIDGET_MENUBAR:
 	    printf("(new menubar(pop()))");
@@ -578,6 +579,9 @@ void print_token(token Token)
 		case WIDGET_COMBOBOXTEXT:
 			printf("(COMBOBOXTEXT)");
 			break;
+		case WIDGET_FRAME:
+			printf("(FRAME)");
+			break;
 		case WIDGET_NOTEBOOK:
 			printf("(NOTEBOOK)");
 			break;
@@ -638,9 +642,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_HBOX:
 		printf("(HBOX)");
-		break;
-	case WIDGET_FRAME:
-		printf("(FRAME)");
 		break;
 	case WIDGET_MENUBAR:
 		printf("(MENUBAR)");
@@ -1453,6 +1454,12 @@ instruction_execute_push(
 			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_FRAME:
+			Widget = widget_frame_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
+			break;
 		case WIDGET_NOTEBOOK:
 			Widget = widget_notebook_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1856,79 +1863,6 @@ instruction_execute_push(
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
 		}
-		break;
-
-	case WIDGET_FRAME:
-		{
-			stackelement s;
-			GtkWidget *vbox;
-			s = pop();
-			/* Thunor: I'm noting this embedded unreachable vbox spacing
-			 * and the border_width that can't be overidden because of
-			 * the frame widget not supporting tag attributes temp temp */
-			vbox = gtk_vbox_new(FALSE, 5);
-			gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
-
-			/* Calculate values for expand and fill at the container level.
-			 * 
-			 * Thunor: Because of this embedded unreachable vbox it's
-			 * not possible to control expand and fill from custom tag
-			 * attributes at the container level. The way around this is
-			 * to manually insert a vbox widget within the XML temp temp */
-			space_expand = project_space_expand;
-			space_fill = project_space_fill;
-
-			/* Pack the widgets into the container */
-			for (n = 0; n < s.nwidgets; ++n) {
-
-				var = find_variable_by_widget(s.widgets[n]);
-				/* Calculate values for expand and fill at the widget level */
-				if (var && var->widget_tag_attr &&
-					((value = get_tag_attribute(var->widget_tag_attr, "space-expand")) ||
-					(value = get_tag_attribute(var->widget_tag_attr, "space_expand")))) {
-					if ((strcasecmp(value, "true") == 0) ||
-						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-						space_expand = TRUE;
-					} else {
-						space_expand = FALSE;
-					}
-				}
-				if (var && var->widget_tag_attr &&
-					((value = get_tag_attribute(var->widget_tag_attr, "space-fill")) ||
-					(value = get_tag_attribute(var->widget_tag_attr, "space_fill")))) {
-					if ((strcasecmp(value, "true") == 0) ||
-						(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-						space_fill = TRUE;
-					} else {
-						space_fill = FALSE;
-					}
-				}
-
-				if (s.widgettypes[n] == WIDGET_EDIT ||
-				    s.widgettypes[n] == WIDGET_FRAME ||
-				    s.widgettypes[n] == WIDGET_SCROLLEDW) {
-					original_expand = original_fill = TRUE;
-				} else {
-					original_expand = original_fill = FALSE;
-				}
-				if (space_expand != -1) original_expand = space_expand;
-				if (space_fill != -1) original_fill = space_fill;
-#ifdef DEBUG
-				fprintf(stderr, "%s(): frame expand=%i fill=%i\n", __func__,
-					original_expand, original_fill);
-#endif
-				gtk_box_pack_start(GTK_BOX(vbox), s.widgets[n],
-					original_expand, original_fill, 0);
-			}
-
-			attributeset_set_if_unset(Attr, ATTR_LABEL, "");
-			Widget = gtk_frame_new(attributeset_get_first(&element,
-				Attr, ATTR_LABEL));
-			gtk_container_add(GTK_CONTAINER(Widget), vbox);
-		}
-		push_widget(Widget, Widget_Type);
-		/* Creating this widget closes any open group */
-		lastradiowidget = NULL;
 		break;
 
 	case WIDGET_HSEPARATOR:

@@ -218,11 +218,11 @@ wlist
 		token_store_attr(PUSH | WIDGET_NOTEBOOK, $3);
 		token_store(SUM);      
 	}
-  | FRAME wlist EFRAME { 
+  | FRAME wlist attr EFRAME { 
 		token_store_with_argument(SET|ATTR_LABEL, $1); 
 		token_store(PUSH | WIDGET_FRAME); 
 	}
-  | wlist FRAME wlist EFRAME { 
+  | wlist FRAME wlist attr EFRAME { 
 		token_store_with_argument(SET|ATTR_LABEL, $2); 
 		token_store(PUSH | WIDGET_FRAME); 
 		token_store(SUM);      
