@@ -72,10 +72,10 @@ The following general functions can be performed by any widget capable of emitti
 
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
-|| command || Execute command || Shell command || ||
-|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
-|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
-|| launch || Launch new dialog || New dialog's shell variable name || ||
+|| command || Execute command || Shell command || 0.8.1 ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || 0.8.1 ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || 0.8.1 ||
+|| launch || Launch new dialog || New dialog's shell variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
