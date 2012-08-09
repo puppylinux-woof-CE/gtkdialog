@@ -58,129 +58,130 @@
      EENTRY = 274,
      PART_ENTRY = 275,
      MENUBAR = 276,
-     EMENUBAR = 277,
-     MENU = 278,
-     PART_MENU = 279,
-     EMENU = 280,
-     MENUITEM = 281,
-     PART_MENUITEM = 282,
-     EMENUITEM = 283,
-     MENUITEMSEPARATOR = 284,
-     EMENUITEMSEPARATOR = 285,
-     EDIT = 286,
-     PART_EDIT = 287,
-     EEDIT = 288,
-     TREE = 289,
-     PART_TREE = 290,
-     ETREE = 291,
-     CHOOSER = 292,
-     PART_CHOOSER = 293,
-     ECHOOSER = 294,
-     LABEL = 295,
-     ELABEL = 296,
-     ITEM = 297,
-     EITEM = 298,
-     PART_ITEM = 299,
-     BUTTON = 300,
-     PART_BUTTON = 301,
-     EBUTTON = 302,
-     BUTTONOK = 303,
-     BUTTONCANCEL = 304,
-     BUTTONHELP = 305,
-     BUTTONYES = 306,
-     BUTTONNO = 307,
-     CHECKBOX = 308,
-     ECHECKBOX = 309,
-     PART_CHECKBOX = 310,
-     RADIO = 311,
-     ERADIO = 312,
-     PART_RADIO = 313,
-     PROGRESS = 314,
-     EPROGRESS = 315,
-     PART_PROGRESS = 316,
-     LIST = 317,
-     PART_LIST = 318,
-     ELIST = 319,
-     TABLE = 320,
-     ETABLE = 321,
-     COMBO = 322,
-     PART_COMBO = 323,
-     ECOMBO = 324,
-     GVIM = 325,
-     EGVIM = 326,
-     TEXT = 327,
-     PART_TEXT = 328,
-     ETEXT = 329,
-     PIXMAP = 330,
-     PART_PIXMAP = 331,
-     EPIXMAP = 332,
-     DEFAULT = 333,
-     EDEFAULT = 334,
-     SENSITIVE = 335,
-     ESENSITIVE = 336,
-     VARIABLE = 337,
-     EVARIABLE = 338,
-     WIDTH = 339,
-     EWIDTH = 340,
-     HEIGHT = 341,
-     EHEIGHT = 342,
-     INPUT = 343,
-     INPUTFILE = 344,
-     EINPUT = 345,
-     PART_INPUT = 346,
-     PART_INPUTFILE = 347,
-     OUTPUT = 348,
-     OUTPUTFILE = 349,
-     EOUTPUT = 350,
-     ACTION = 351,
-     EACTION = 352,
-     PART_ACTION = 353,
-     COMM = 354,
-     ENDCOMM = 355,
-     IF = 356,
-     ENDIF = 357,
-     WHILE = 358,
-     EWHILE = 359,
-     SHOW_WIDGETS = 360,
-     EMB_VARIABLE = 361,
-     EMB_NUMBER = 362,
-     END_OF_FILE = 363,
-     NUMBER = 364,
-     STRING = 365,
-     UMINUS = 366,
-     HSEPARATOR = 367,
-     PART_HSEPARATOR = 368,
-     EHSEPARATOR = 369,
-     VSEPARATOR = 370,
-     PART_VSEPARATOR = 371,
-     EVSEPARATOR = 372,
-     COMBOBOXTEXT = 373,
-     PART_COMBOBOXTEXT = 374,
-     ECOMBOBOXTEXT = 375,
-     COMBOBOXENTRY = 376,
-     PART_COMBOBOXENTRY = 377,
-     ECOMBOBOXENTRY = 378,
-     HSCALE = 379,
-     PART_HSCALE = 380,
-     EHSCALE = 381,
-     VSCALE = 382,
-     PART_VSCALE = 383,
-     EVSCALE = 384,
-     SPINBUTTON = 385,
-     PART_SPINBUTTON = 386,
-     ESPINBUTTON = 387,
-     TIMER = 388,
-     PART_TIMER = 389,
-     ETIMER = 390,
-     TOGGLEBUTTON = 391,
-     PART_TOGGLEBUTTON = 392,
-     ETOGGLEBUTTON = 393,
-     STATUSBAR = 394,
-     PART_STATUSBAR = 395,
-     ESTATUSBAR = 396,
-     COLORBUTTON = 397,
-     PART_COLORBUTTON = 398,
-     ECOLORBUTTON = 399
+     PART_MENUBAR = 277,
+     EMENUBAR = 278,
+     MENU = 279,
+     PART_MENU = 280,
+     EMENU = 281,
+     MENUITEM = 282,
+     PART_MENUITEM = 283,
+     EMENUITEM = 284,
+     MENUITEMSEPARATOR = 285,
+     EMENUITEMSEPARATOR = 286,
+     EDIT = 287,
+     PART_EDIT = 288,
+     EEDIT = 289,
+     TREE = 290,
+     PART_TREE = 291,
+     ETREE = 292,
+     CHOOSER = 293,
+     PART_CHOOSER = 294,
+     ECHOOSER = 295,
+     LABEL = 296,
+     ELABEL = 297,
+     ITEM = 298,
+     EITEM = 299,
+     PART_ITEM = 300,
+     BUTTON = 301,
+     PART_BUTTON = 302,
+     EBUTTON = 303,
+     BUTTONOK = 304,
+     BUTTONCANCEL = 305,
+     BUTTONHELP = 306,
+     BUTTONYES = 307,
+     BUTTONNO = 308,
+     CHECKBOX = 309,
+     ECHECKBOX = 310,
+     PART_CHECKBOX = 311,
+     RADIO = 312,
+     ERADIO = 313,
+     PART_RADIO = 314,
+     PROGRESS = 315,
+     EPROGRESS = 316,
+     PART_PROGRESS = 317,
+     LIST = 318,
+     PART_LIST = 319,
+     ELIST = 320,
+     TABLE = 321,
+     ETABLE = 322,
+     COMBO = 323,
+     PART_COMBO = 324,
+     ECOMBO = 325,
+     GVIM = 326,
+     EGVIM = 327,
+     TEXT = 328,
+     PART_TEXT = 329,
+     ETEXT = 330,
+     PIXMAP = 331,
+     PART_PIXMAP = 332,
+     EPIXMAP = 333,
+     DEFAULT = 334,
+     EDEFAULT = 335,
+     SENSITIVE = 336,
+     ESENSITIVE = 337,
+     VARIABLE = 338,
+     EVARIABLE = 339,
+     WIDTH = 340,
+     EWIDTH = 341,
+     HEIGHT = 342,
+     EHEIGHT = 343,
+     INPUT = 344,
+     INPUTFILE = 345,
+     EINPUT = 346,
+     PART_INPUT = 347,
+     PART_INPUTFILE = 348,
+     OUTPUT = 349,
+     OUTPUTFILE = 350,
+     EOUTPUT = 351,
+     ACTION = 352,
+     EACTION = 353,
+     PART_ACTION = 354,
+     COMM = 355,
+     ENDCOMM = 356,
+     IF = 357,
+     ENDIF = 358,
+     WHILE = 359,
+     EWHILE = 360,
+     SHOW_WIDGETS = 361,
+     EMB_VARIABLE = 362,
+     EMB_NUMBER = 363,
+     END_OF_FILE = 364,
+     NUMBER = 365,
+     STRING = 366,
+     UMINUS = 367,
+     HSEPARATOR = 368,
+     PART_HSEPARATOR = 369,
+     EHSEPARATOR = 370,
+     VSEPARATOR = 371,
+     PART_VSEPARATOR = 372,
+     EVSEPARATOR = 373,
+     COMBOBOXTEXT = 374,
+     PART_COMBOBOXTEXT = 375,
+     ECOMBOBOXTEXT = 376,
+     COMBOBOXENTRY = 377,
+     PART_COMBOBOXENTRY = 378,
+     ECOMBOBOXENTRY = 379,
+     HSCALE = 380,
+     PART_HSCALE = 381,
+     EHSCALE = 382,
+     VSCALE = 383,
+     PART_VSCALE = 384,
+     EVSCALE = 385,
+     SPINBUTTON = 386,
+     PART_SPINBUTTON = 387,
+     ESPINBUTTON = 388,
+     TIMER = 389,
+     PART_TIMER = 390,
+     ETIMER = 391,
+     TOGGLEBUTTON = 392,
+     PART_TOGGLEBUTTON = 393,
+     ETOGGLEBUTTON = 394,
+     STATUSBAR = 395,
+     PART_STATUSBAR = 396,
+     ESTATUSBAR = 397,
+     COLORBUTTON = 398,
+     PART_COLORBUTTON = 399,
+     ECOLORBUTTON = 400
    };
 #endif
 /* Tokens.  */
@@ -203,129 +204,130 @@
 #define EENTRY 274
 #define PART_ENTRY 275
 #define MENUBAR 276
-#define EMENUBAR 277
-#define MENU 278
-#define PART_MENU 279
-#define EMENU 280
-#define MENUITEM 281
-#define PART_MENUITEM 282
-#define EMENUITEM 283
-#define MENUITEMSEPARATOR 284
-#define EMENUITEMSEPARATOR 285
-#define EDIT 286
-#define PART_EDIT 287
-#define EEDIT 288
-#define TREE 289
-#define PART_TREE 290
-#define ETREE 291
-#define CHOOSER 292
-#define PART_CHOOSER 293
-#define ECHOOSER 294
-#define LABEL 295
-#define ELABEL 296
-#define ITEM 297
-#define EITEM 298
-#define PART_ITEM 299
-#define BUTTON 300
-#define PART_BUTTON 301
-#define EBUTTON 302
-#define BUTTONOK 303
-#define BUTTONCANCEL 304
-#define BUTTONHELP 305
-#define BUTTONYES 306
-#define BUTTONNO 307
-#define CHECKBOX 308
-#define ECHECKBOX 309
-#define PART_CHECKBOX 310
-#define RADIO 311
-#define ERADIO 312
-#define PART_RADIO 313
-#define PROGRESS 314
-#define EPROGRESS 315
-#define PART_PROGRESS 316
-#define LIST 317
-#define PART_LIST 318
-#define ELIST 319
-#define TABLE 320
-#define ETABLE 321
-#define COMBO 322
-#define PART_COMBO 323
-#define ECOMBO 324
-#define GVIM 325
-#define EGVIM 326
-#define TEXT 327
-#define PART_TEXT 328
-#define ETEXT 329
-#define PIXMAP 330
-#define PART_PIXMAP 331
-#define EPIXMAP 332
-#define DEFAULT 333
-#define EDEFAULT 334
-#define SENSITIVE 335
-#define ESENSITIVE 336
-#define VARIABLE 337
-#define EVARIABLE 338
-#define WIDTH 339
-#define EWIDTH 340
-#define HEIGHT 341
-#define EHEIGHT 342
-#define INPUT 343
-#define INPUTFILE 344
-#define EINPUT 345
-#define PART_INPUT 346
-#define PART_INPUTFILE 347
-#define OUTPUT 348
-#define OUTPUTFILE 349
-#define EOUTPUT 350
-#define ACTION 351
-#define EACTION 352
-#define PART_ACTION 353
-#define COMM 354
-#define ENDCOMM 355
-#define IF 356
-#define ENDIF 357
-#define WHILE 358
-#define EWHILE 359
-#define SHOW_WIDGETS 360
-#define EMB_VARIABLE 361
-#define EMB_NUMBER 362
-#define END_OF_FILE 363
-#define NUMBER 364
-#define STRING 365
-#define UMINUS 366
-#define HSEPARATOR 367
-#define PART_HSEPARATOR 368
-#define EHSEPARATOR 369
-#define VSEPARATOR 370
-#define PART_VSEPARATOR 371
-#define EVSEPARATOR 372
-#define COMBOBOXTEXT 373
-#define PART_COMBOBOXTEXT 374
-#define ECOMBOBOXTEXT 375
-#define COMBOBOXENTRY 376
-#define PART_COMBOBOXENTRY 377
-#define ECOMBOBOXENTRY 378
-#define HSCALE 379
-#define PART_HSCALE 380
-#define EHSCALE 381
-#define VSCALE 382
-#define PART_VSCALE 383
-#define EVSCALE 384
-#define SPINBUTTON 385
-#define PART_SPINBUTTON 386
-#define ESPINBUTTON 387
-#define TIMER 388
-#define PART_TIMER 389
-#define ETIMER 390
-#define TOGGLEBUTTON 391
-#define PART_TOGGLEBUTTON 392
-#define ETOGGLEBUTTON 393
-#define STATUSBAR 394
-#define PART_STATUSBAR 395
-#define ESTATUSBAR 396
-#define COLORBUTTON 397
-#define PART_COLORBUTTON 398
-#define ECOLORBUTTON 399
+#define PART_MENUBAR 277
+#define EMENUBAR 278
+#define MENU 279
+#define PART_MENU 280
+#define EMENU 281
+#define MENUITEM 282
+#define PART_MENUITEM 283
+#define EMENUITEM 284
+#define MENUITEMSEPARATOR 285
+#define EMENUITEMSEPARATOR 286
+#define EDIT 287
+#define PART_EDIT 288
+#define EEDIT 289
+#define TREE 290
+#define PART_TREE 291
+#define ETREE 292
+#define CHOOSER 293
+#define PART_CHOOSER 294
+#define ECHOOSER 295
+#define LABEL 296
+#define ELABEL 297
+#define ITEM 298
+#define EITEM 299
+#define PART_ITEM 300
+#define BUTTON 301
+#define PART_BUTTON 302
+#define EBUTTON 303
+#define BUTTONOK 304
+#define BUTTONCANCEL 305
+#define BUTTONHELP 306
+#define BUTTONYES 307
+#define BUTTONNO 308
+#define CHECKBOX 309
+#define ECHECKBOX 310
+#define PART_CHECKBOX 311
+#define RADIO 312
+#define ERADIO 313
+#define PART_RADIO 314
+#define PROGRESS 315
+#define EPROGRESS 316
+#define PART_PROGRESS 317
+#define LIST 318
+#define PART_LIST 319
+#define ELIST 320
+#define TABLE 321
+#define ETABLE 322
+#define COMBO 323
+#define PART_COMBO 324
+#define ECOMBO 325
+#define GVIM 326
+#define EGVIM 327
+#define TEXT 328
+#define PART_TEXT 329
+#define ETEXT 330
+#define PIXMAP 331
+#define PART_PIXMAP 332
+#define EPIXMAP 333
+#define DEFAULT 334
+#define EDEFAULT 335
+#define SENSITIVE 336
+#define ESENSITIVE 337
+#define VARIABLE 338
+#define EVARIABLE 339
+#define WIDTH 340
+#define EWIDTH 341
+#define HEIGHT 342
+#define EHEIGHT 343
+#define INPUT 344
+#define INPUTFILE 345
+#define EINPUT 346
+#define PART_INPUT 347
+#define PART_INPUTFILE 348
+#define OUTPUT 349
+#define OUTPUTFILE 350
+#define EOUTPUT 351
+#define ACTION 352
+#define EACTION 353
+#define PART_ACTION 354
+#define COMM 355
+#define ENDCOMM 356
+#define IF 357
+#define ENDIF 358
+#define WHILE 359
+#define EWHILE 360
+#define SHOW_WIDGETS 361
+#define EMB_VARIABLE 362
+#define EMB_NUMBER 363
+#define END_OF_FILE 364
+#define NUMBER 365
+#define STRING 366
+#define UMINUS 367
+#define HSEPARATOR 368
+#define PART_HSEPARATOR 369
+#define EHSEPARATOR 370
+#define VSEPARATOR 371
+#define PART_VSEPARATOR 372
+#define EVSEPARATOR 373
+#define COMBOBOXTEXT 374
+#define PART_COMBOBOXTEXT 375
+#define ECOMBOBOXTEXT 376
+#define COMBOBOXENTRY 377
+#define PART_COMBOBOXENTRY 378
+#define ECOMBOBOXENTRY 379
+#define HSCALE 380
+#define PART_HSCALE 381
+#define EHSCALE 382
+#define VSCALE 383
+#define PART_VSCALE 384
+#define EVSCALE 385
+#define SPINBUTTON 386
+#define PART_SPINBUTTON 387
+#define ESPINBUTTON 388
+#define TIMER 389
+#define PART_TIMER 390
+#define ETIMER 391
+#define TOGGLEBUTTON 392
+#define PART_TOGGLEBUTTON 393
+#define ETOGGLEBUTTON 394
+#define STATUSBAR 395
+#define PART_STATUSBAR 396
+#define ESTATUSBAR 397
+#define COLORBUTTON 398
+#define PART_COLORBUTTON 399
+#define ECOLORBUTTON 400
 
 
 
@@ -346,7 +348,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 350 "gtkdialog_parser.h"
+#line 352 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

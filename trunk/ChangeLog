@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Aug 9 2012 Thunor <thunorsif@hotmail.com>
+- Refactored the menubar widget and updated it in the parser so that it
+  now supports the recently added hide and show action functions.
+
 * Wed Aug 8 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the frame widget and added support for <input>,
   <input file>, enable, disable, show, hide, refresh, save and clear.

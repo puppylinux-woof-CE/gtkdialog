@@ -50,6 +50,7 @@
 #include "widget_comboboxtext.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_menubar.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -299,6 +300,9 @@ void print_command(instruction command)
 		case WIDGET_HBOX:
 			printf("(new hbox(pop()))");
 			break;
+		case WIDGET_MENUBAR:
+			printf("(new menubar(pop()))");
+			break;
 		case WIDGET_NOTEBOOK:
 			printf("(new notebook(pop()))");
 			break;
@@ -356,9 +360,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_SCROLLEDW:
 	    printf("(new scrolledwindow(pop()))");
-	    break;
-	case WIDGET_MENUBAR:
-	    printf("(new menubar(pop()))");
 	    break;
 	case WIDGET_MENU:
 	    printf("(new menu(pop()))");
@@ -587,6 +588,9 @@ void print_token(token Token)
 		case WIDGET_HBOX:
 			printf("(HBOX)");
 			break;
+		case WIDGET_MENUBAR:
+			printf("(MENUBAR)");
+			break;
 		case WIDGET_NOTEBOOK:
 			printf("(NOTEBOOK)");
 			break;
@@ -644,9 +648,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_SCROLLEDW:
 		printf("(SCROLLEDW)");
-		break;
-	case WIDGET_MENUBAR:
-		printf("(MENUBAR)");
 		break;
 	case WIDGET_MENU:
 		printf("(MENU)");
@@ -1150,22 +1151,6 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 }
 
 static
-GtkWidget *create_menubar(AttributeSet * Attr, stackelement menus)
-{
-	int n;
-	GtkWidget *menu_bar;
-	GtkWidget *root_menu;
-	
-	menu_bar = gtk_menu_bar_new ();
-	for (n = 0; n < menus.nwidgets; ++n){
-		root_menu = menus.widgets[n];
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), root_menu);
-	}
-	
-	return menu_bar;
-}
-
-static
 gboolean widget_moved(GtkWidget *widget,
                       GdkEvent *event,
                       gpointer user_data){
@@ -1479,6 +1464,12 @@ instruction_execute_push(
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
 			break;
+		case WIDGET_MENUBAR:
+			Widget = widget_menubar_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
+			break;
 		case WIDGET_NOTEBOOK:
 			Widget = widget_notebook_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1595,13 +1586,6 @@ instruction_execute_push(
 		push_widget(Widget, Widget_Type);
 		break;
 		
-	case WIDGET_MENUBAR:
-		Widget = create_menubar(Attr, pop());
-		push_widget(Widget, Widget_Type);
-		/* Creating this widget closes any open group */
-		lastradiowidget = NULL;
-		break;
-
 	case WIDGET_MENU:
 		Widget = create_menu(Attr, tag_attributes, pop());
 		push_widget(Widget, Widget_Type);
