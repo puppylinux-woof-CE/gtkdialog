@@ -91,7 +91,7 @@ start_up(void)
 %type  <nvval> tagattr
 %token         EFRAME
 %token         ENTRY EENTRY PART_ENTRY
-%token         MENUBAR EMENUBAR
+%token         MENUBAR PART_MENUBAR EMENUBAR
 %token         MENU PART_MENU EMENU
 %token         MENUITEM PART_MENUITEM EMENUITEM
 %token         MENUITEMSEPARATOR EMENUITEMSEPARATOR
@@ -411,8 +411,19 @@ menubar
   : MENUBAR EMENUBAR {
 		yyerror("The menubar widget requires at least one menu widget.");
 	}
-  | MENUBAR menu EMENUBAR {
+  | MENUBAR menu attr EMENUBAR {
 		token_store(PUSH | WIDGET_MENUBAR);
+	}
+  | menu MENUBAR menu attr EMENUBAR {
+		token_store(PUSH | WIDGET_MENUBAR);
+		token_store(SUM);
+	}
+  | PART_MENUBAR tagattr '>' menu attr EMENUBAR {
+		token_store_attr(PUSH | WIDGET_MENUBAR, $2);
+	}
+  | menu PART_MENUBAR tagattr '>' menu attr EMENUBAR {
+		token_store_attr(PUSH | WIDGET_MENUBAR, $3);
+		token_store(SUM);
 	}
   ;
 

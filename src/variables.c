@@ -28,6 +28,7 @@
 #include "widget_comboboxtext.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_menubar.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -327,6 +328,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_HBOX:
 			widget_hbox_fileselect(toset, name, value);
 			break;
+		case WIDGET_MENUBAR:
+			widget_menubar_fileselect(toset, name, value);
+			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_fileselect(toset, name, value);
 			break;
@@ -413,6 +417,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_HBOX:
 			widget_hbox_save(var);
+			break;
+		case WIDGET_MENUBAR:
+			widget_menubar_save(var);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_save(var);
@@ -532,6 +539,9 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_HBOX:
 			widget_hbox_refresh(var);
+			break;
+		case WIDGET_MENUBAR:
+			widget_menubar_refresh(var);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_refresh(var);
@@ -1267,6 +1277,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_clear(toclear);
 			break;
+		case WIDGET_MENUBAR:
+			widget_menubar_clear(toclear);
+			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_clear(toclear);
 			break;
@@ -1393,6 +1406,9 @@ int remove_selected_variable(const char *name)
 			break;
 		case WIDGET_HBOX:
 			widget_hbox_removeselected(toclear);
+			break;
+		case WIDGET_MENUBAR:
+			widget_menubar_removeselected(toclear);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_removeselected(toclear);

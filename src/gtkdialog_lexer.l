@@ -436,6 +436,9 @@ gchar *Token;
 \<\/table\>  				{ Token="</table>"; return(ETABLE);  			}
 
 \<menubar\>    				{ Token="<menubar>"; return(MENUBAR); }
+\<menubar[ ]+    			{ Token="<menubar>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_MENUBAR); }
 \<\/menubar\>  				{ Token="</menubar>"; return(EMENUBAR); }
 
 \<menu\>    				{ Token="<menu>"; return(MENU); }
