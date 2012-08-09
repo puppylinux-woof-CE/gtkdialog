@@ -57,7 +57,7 @@ Some of these may have tag attribute equivalents.
 
 There is no default signal for this widget.
 
-See also the [http://developer.gnome.org/gtk/2.24/GtkTextView.html#GtkTextView.signals GtkTextView] widget and ancestor class signals.
+See the [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget.signals GtkWidget] widget and ancestor class signals. 
 
 == Functions ==
 

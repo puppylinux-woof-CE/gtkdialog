@@ -29,7 +29,7 @@ The following custom tag attributes are available:
 || *Name* || *Description* || *Value* || *Since* ||
 || space-expand^[1]^ || Pack this and nested widgets expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill^[1]^ || Pack this and nested widgets filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
-|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.8.1 ||
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
 || width || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
@@ -51,7 +51,7 @@ Some of these may have tag attribute equivalents.
 
 There is no default signal for this widget.
 
-See the [http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer.signals GtkContainer] widget and ancestor class signals.
+See the [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget.signals GtkWidget] widget and ancestor class signals. 
 
 == Functions ==
 

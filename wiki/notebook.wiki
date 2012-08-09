@@ -55,7 +55,7 @@ Some of these may have tag attribute equivalents.
 
 There is no default signal for this widget.
 
-See the [http://developer.gnome.org/gtk/2.24/GtkNotebook.html#GtkNotebook.signals GtkNotebook] widget and ancestor class signals.
+See the [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget.signals GtkWidget] widget and ancestor class signals. 
 
 == Functions ==
 
