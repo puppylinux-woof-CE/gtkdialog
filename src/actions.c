@@ -96,20 +96,19 @@ int action_closewindow(GtkWidget *widget, char *string)
 
 		/* If we are closing the last window then we can exit gtkdialog */
 		if (variables_count_widgets() == 0) {
+
 			printf("EXIT=\"closewindow\"\n");
-			print_variables(NULL);
 
-#ifdef DEBUG
-			fprintf(stderr, "%s(): Calling gtk_main_quit()\n", __func__);
-#endif
-
-			gtk_main_quit();
+			/* Redundant: Since being here requires that there are no
+			 * remaining variables therefore there's nothing to print.
+			 * print_variables(NULL); */
 
 #ifdef DEBUG
 			fprintf(stderr, "%s(): Calling exit(EXIT_SUCCESS)\n", __func__);
 #endif
 
 			exit(EXIT_SUCCESS);
+
 		}
 	}
 
@@ -211,12 +210,6 @@ int action_exitprogram(GtkWidget *widget, char *string)
 		printf("EXIT%s", string);
 	else
 		printf("EXIT=\"%s\"\n", string);
-
-#ifdef DEBUG
-	fprintf(stderr, "%s(): Calling gtk_main_quit()\n", __func__);
-#endif
-
-	gtk_main_quit();
 
 #ifdef DEBUG
 	fprintf(stderr, "%s(): Calling exit(EXIT_SUCCESS)\n", __func__);

@@ -959,11 +959,6 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 		printf("EXIT=\"abort\"\n");
 
 #ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): Calling gtk_main_quit()\n", __func__);
-#endif
-		gtk_main_quit();
-
-#ifdef DEBUG_CONTENT
 		fprintf(stderr, "%s(): Calling exit(EXIT_SUCCESS)\n", __func__);
 #endif
 

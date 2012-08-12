@@ -526,6 +526,10 @@ is a requirement of the launch action.", progname, progname);
 	instruction_counter = 0;
 	reset_program_source();
 
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Calling gtk_main()\n", __func__);
+#endif
+
 	gtk_main();
 }
 
