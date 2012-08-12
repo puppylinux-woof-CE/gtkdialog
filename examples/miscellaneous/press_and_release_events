@@ -1,9 +1,9 @@
 #!/bin/sh
 
+GTKDIALOG=gtkdialog
+
 export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
-
-GTKDIALOG=gtkdialog
 
 funcenvvarCreate() {
 	echo '<hbox homogeneous="true">

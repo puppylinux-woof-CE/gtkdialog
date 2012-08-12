@@ -186,7 +186,17 @@ gchar *widget_window_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup(gtk_window_get_title(GTK_WINDOW(widget)));
+	/* Thunor: Variables are exported before a window is launched which
+	 * can be a problem if launching from a launched window because
+	 * launched windows are required to contain a variable that matches
+	 * the name of the program's envvar and this results in the program
+	 * being overwritten with the window title ;) It took me a day to
+	 * find this issue because the error was being reported by the parser
+	 * but the problem was located in action_launchwindow. So window
+	 * variables can't be exported, they must be reserved for scripts.
+	 * 
+	 * string = g_strdup(gtk_window_get_title(GTK_WINDOW(widget))); */
+	string = NULL;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

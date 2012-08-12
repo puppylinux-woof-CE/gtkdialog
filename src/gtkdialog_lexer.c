@@ -1193,10 +1193,14 @@ static gchar *process_string(gchar *str);
 extern int linenumber;
 gchar *Token;
 
+/**************************************************************
+* Thunor: Uncomment this to debug.
+**************************************************************
+* %option debug */
 
 
 
-#line 1200 "gtkdialog_lexer.c"
+#line 1204 "gtkdialog_lexer.c"
 
 #define INITIAL 0
 #define EMBEDDED 1
@@ -1388,14 +1392,14 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 57 "gtkdialog_lexer.l"
+#line 62 "gtkdialog_lexer.l"
 
 
 	#ifdef DEBUG
 		g_message("%s(): Start", __func__);
 	#endif
 
-#line 1399 "gtkdialog_lexer.c"
+#line 1403 "gtkdialog_lexer.c"
 
 	if ( !(yy_init) )
 		{
@@ -1515,13 +1519,13 @@ do_action:	/* This label is used only to access EOF actions. */
 	{ /* beginning of action switch */
 case 1:
 YY_RULE_SETUP
-#line 63 "gtkdialog_lexer.l"
+#line 68 "gtkdialog_lexer.l"
 { Token=">"; return(gtkdialog_text[0]); 			}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 64 "gtkdialog_lexer.l"
+#line 69 "gtkdialog_lexer.l"
 { Token="indent chars"; 				}
 	YY_BREAK
 /*
@@ -1529,7 +1533,7 @@ YY_RULE_SETUP
 	 */
 case 3:
 YY_RULE_SETUP
-#line 69 "gtkdialog_lexer.l"
+#line 74 "gtkdialog_lexer.l"
 {
 	#ifdef DEBUG 
 	g_message(" -> TAG_ATTR_NAME: '%s'", gtkdialog_text);
@@ -1541,7 +1545,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 79 "gtkdialog_lexer.l"
+#line 84 "gtkdialog_lexer.l"
 {
 					  #ifdef DEBUG 
 					  g_message(" -> spec char: '%s'", gtkdialog_text);
@@ -1552,7 +1556,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 86 "gtkdialog_lexer.l"
+#line 91 "gtkdialog_lexer.l"
 {
 					  #ifdef DEBUG 
 					  g_message(" -> spec char: '%s'", gtkdialog_text);
@@ -1564,7 +1568,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 95 "gtkdialog_lexer.l"
+#line 100 "gtkdialog_lexer.l"
 {
 					  Token = "double quote";
 					  BEGIN(ST_QUOTED_TAGATTR);				}
@@ -1572,21 +1576,21 @@ YY_RULE_SETUP
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 99 "gtkdialog_lexer.l"
+#line 104 "gtkdialog_lexer.l"
 {
 					  Token = "string";
 					  yymore();						}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 103 "gtkdialog_lexer.l"
+#line 108 "gtkdialog_lexer.l"
 {
 					  Token = "string";
 					  yymore();						}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 107 "gtkdialog_lexer.l"
+#line 112 "gtkdialog_lexer.l"
 {
 					  Token = gtkdialog_text;
 					  gtkdialog_lval.cval = g_strdup(gtkdialog_text);
@@ -1600,7 +1604,7 @@ YY_RULE_SETUP
 	 */
 case 10:
 YY_RULE_SETUP
-#line 123 "gtkdialog_lexer.l"
+#line 128 "gtkdialog_lexer.l"
 { 
 	Token="<show/>"; 
 	return SHOW_WIDGETS;
@@ -1608,7 +1612,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 128 "gtkdialog_lexer.l"
+#line 133 "gtkdialog_lexer.l"
 {
 	Token="<command>";    
 	BEGIN(EMBEDDED);
@@ -1617,7 +1621,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 134 "gtkdialog_lexer.l"
+#line 139 "gtkdialog_lexer.l"
 {
 	Token="<if>";    
 	BEGIN(EMBEDDED);
@@ -1626,7 +1630,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 140 "gtkdialog_lexer.l"
+#line 145 "gtkdialog_lexer.l"
 {
 	Token="<while>";    
 	BEGIN(EMBEDDED);
@@ -1635,7 +1639,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 146 "gtkdialog_lexer.l"
+#line 151 "gtkdialog_lexer.l"
 {
 	Token = "operator";
 	return gtkdialog_text[0];
@@ -1643,7 +1647,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 151 "gtkdialog_lexer.l"
+#line 156 "gtkdialog_lexer.l"
 {
 	Token = "variable";
 	gtkdialog_lval.cval = g_strdup(gtkdialog_text);
@@ -1652,7 +1656,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 157 "gtkdialog_lexer.l"
+#line 162 "gtkdialog_lexer.l"
 {
 	Token = "number";
 	gtkdialog_lval.cval = g_strdup(gtkdialog_text);
@@ -1661,14 +1665,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 163 "gtkdialog_lexer.l"
+#line 168 "gtkdialog_lexer.l"
 { 
 	BEGIN(0);
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 167 "gtkdialog_lexer.l"
+#line 172 "gtkdialog_lexer.l"
 { 
 	Token="</if>"; 
 	return ENDCOMM;
@@ -1676,7 +1680,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 172 "gtkdialog_lexer.l"
+#line 177 "gtkdialog_lexer.l"
 { 
 	Token="</if>"; 
 	return ENDIF;
@@ -1684,7 +1688,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 177 "gtkdialog_lexer.l"
+#line 182 "gtkdialog_lexer.l"
 { 
 	Token="</while>"; 
 	return EWHILE;
@@ -1695,7 +1699,7 @@ YY_RULE_SETUP
 	 */
 case 21:
 YY_RULE_SETUP
-#line 186 "gtkdialog_lexer.l"
+#line 191 "gtkdialog_lexer.l"
 { 
 	Token="<window>"; 
 	return(WINDOW);
@@ -1703,7 +1707,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 191 "gtkdialog_lexer.l"
+#line 196 "gtkdialog_lexer.l"
 { 
 	Token="<window>"; 
 	BEGIN(ST_TAG_ATTR);
@@ -1712,7 +1716,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 197 "gtkdialog_lexer.l"
+#line 202 "gtkdialog_lexer.l"
 { 
 	Token="</window>"; 
 	return(EWINDOW);
@@ -1720,7 +1724,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 203 "gtkdialog_lexer.l"
+#line 208 "gtkdialog_lexer.l"
 { 
 	Token="<notebook>"; 
 	return(NOTEBOOK);
@@ -1728,7 +1732,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 208 "gtkdialog_lexer.l"
+#line 213 "gtkdialog_lexer.l"
 { 
 	Token="<notebook>";
 	BEGIN(ST_TAG_ATTR);
@@ -1737,7 +1741,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 214 "gtkdialog_lexer.l"
+#line 219 "gtkdialog_lexer.l"
 { 
 	Token="</notebook>"; 
 	return(ENOTEBOOK);
@@ -1745,7 +1749,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 220 "gtkdialog_lexer.l"
+#line 225 "gtkdialog_lexer.l"
 { 
 	Token="<vbox>"; 
 	return(VBOX);
@@ -1753,7 +1757,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 225 "gtkdialog_lexer.l"
+#line 230 "gtkdialog_lexer.l"
 { 
 	Token="<vbox>"; 
 	BEGIN(ST_TAG_ATTR);
@@ -1762,7 +1766,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 231 "gtkdialog_lexer.l"
+#line 236 "gtkdialog_lexer.l"
 { 
 	Token="</vbox>"; 
 	return(EVBOX);
@@ -1770,7 +1774,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 237 "gtkdialog_lexer.l"
+#line 242 "gtkdialog_lexer.l"
 { 
 	Token="<hbox>"; 
 	return(HBOX);
@@ -1778,7 +1782,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 242 "gtkdialog_lexer.l"
+#line 247 "gtkdialog_lexer.l"
 { 
 	Token="<hbox>";
 	BEGIN(ST_TAG_ATTR);
@@ -1787,7 +1791,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 248 "gtkdialog_lexer.l"
+#line 253 "gtkdialog_lexer.l"
 { 
 	Token="</hbox>"; 
 	return(EHBOX);
@@ -1795,7 +1799,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 254 "gtkdialog_lexer.l"
+#line 259 "gtkdialog_lexer.l"
 { 
 	Token="<frame>"; 
 	gtkdialog_lval.cval = "";  
@@ -1805,7 +1809,7 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 260 "gtkdialog_lexer.l"
+#line 265 "gtkdialog_lexer.l"
 {
 	Token="<frame>";
 	gtkdialog_lval.cval=strdup(&gtkdialog_text[7]);  
@@ -1815,7 +1819,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 267 "gtkdialog_lexer.l"
+#line 272 "gtkdialog_lexer.l"
 { 
 	Token="</frame>"; 
 	return(EFRAME);
@@ -1823,7 +1827,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 273 "gtkdialog_lexer.l"
+#line 278 "gtkdialog_lexer.l"
 { 
 	Token="<text>"; 
 	return(TEXT);
@@ -1831,7 +1835,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 278 "gtkdialog_lexer.l"
+#line 283 "gtkdialog_lexer.l"
 { 
 	Token="<text>"; 
 	BEGIN(ST_TAG_ATTR);
@@ -1840,7 +1844,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 284 "gtkdialog_lexer.l"
+#line 289 "gtkdialog_lexer.l"
 { 
 	Token="</text>"; 
 	return(ETEXT);
@@ -1848,7 +1852,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 290 "gtkdialog_lexer.l"
+#line 295 "gtkdialog_lexer.l"
 { 
 	Token="<pixmap>"; 
 	return(PIXMAP);
@@ -1856,7 +1860,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 295 "gtkdialog_lexer.l"
+#line 300 "gtkdialog_lexer.l"
 { 
 	Token="</pixmap>"; 
 	return(EPIXMAP); 
@@ -1864,7 +1868,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 300 "gtkdialog_lexer.l"
+#line 305 "gtkdialog_lexer.l"
 { 
 	Token="<pixmap>"; 
 	BEGIN(ST_TAG_ATTR);
@@ -1873,7 +1877,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 307 "gtkdialog_lexer.l"
+#line 312 "gtkdialog_lexer.l"
 { 
 	Token="<entry>"; 
 	return(ENTRY);
@@ -1881,7 +1885,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 312 "gtkdialog_lexer.l"
+#line 317 "gtkdialog_lexer.l"
 { 
 	Token="</entry>"; 
 	return(EENTRY);
@@ -1889,7 +1893,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 317 "gtkdialog_lexer.l"
+#line 322 "gtkdialog_lexer.l"
 { 
 	Token="<entry>"; 
 	BEGIN(ST_TAG_ATTR);
@@ -1898,7 +1902,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 324 "gtkdialog_lexer.l"
+#line 329 "gtkdialog_lexer.l"
 { 
 	Token="<edit>"; 
 	return(EDIT);
@@ -1906,7 +1910,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 329 "gtkdialog_lexer.l"
+#line 334 "gtkdialog_lexer.l"
 { 
 	Token="<entry>"; 
 	BEGIN(ST_TAG_ATTR);
@@ -1915,7 +1919,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 335 "gtkdialog_lexer.l"
+#line 340 "gtkdialog_lexer.l"
 { 
 	Token="</edit>"; 
 	return(EEDIT);
@@ -1923,7 +1927,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 341 "gtkdialog_lexer.l"
+#line 346 "gtkdialog_lexer.l"
 { 
 	Token="<tree>";  
 	return  TREE;
@@ -1931,7 +1935,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 346 "gtkdialog_lexer.l"
+#line 351 "gtkdialog_lexer.l"
 { 
 	Token="<tree>";  
 	BEGIN(ST_TAG_ATTR);
@@ -1940,7 +1944,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 352 "gtkdialog_lexer.l"
+#line 357 "gtkdialog_lexer.l"
 {
 	Token="</tree>"; 
 	return ETREE;
@@ -1948,7 +1952,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 358 "gtkdialog_lexer.l"
+#line 363 "gtkdialog_lexer.l"
 { 
 	Token="<chooser>"; 
 	return(CHOOSER);
@@ -1956,7 +1960,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 363 "gtkdialog_lexer.l"
+#line 368 "gtkdialog_lexer.l"
 { 
 	Token="</chooser>"; 
 	return(ECHOOSER);
@@ -1964,7 +1968,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 368 "gtkdialog_lexer.l"
+#line 373 "gtkdialog_lexer.l"
 { 
 	Token="<chooser>";  
 	BEGIN(ST_TAG_ATTR);
@@ -1973,7 +1977,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 375 "gtkdialog_lexer.l"
+#line 380 "gtkdialog_lexer.l"
 { 
 	Token="<button>"; 
 	return(BUTTON);
@@ -1981,7 +1985,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 380 "gtkdialog_lexer.l"
+#line 385 "gtkdialog_lexer.l"
 { 
 	Token="</button>"; 
 	return(EBUTTON);
@@ -1989,7 +1993,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 385 "gtkdialog_lexer.l"
+#line 390 "gtkdialog_lexer.l"
 { 
 	//g_message("PART_BUTTON: '%s'", gtkdialog_text);
 	Token="<button>";  
@@ -1999,213 +2003,213 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 392 "gtkdialog_lexer.l"
+#line 397 "gtkdialog_lexer.l"
 { Token="<button>"; return(BUTTONOK);  			}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 393 "gtkdialog_lexer.l"
+#line 398 "gtkdialog_lexer.l"
 { Token="<button>"; return(BUTTONCANCEL);  		}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 394 "gtkdialog_lexer.l"
+#line 399 "gtkdialog_lexer.l"
 { Token="<button>"; return(BUTTONHELP);  		}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 395 "gtkdialog_lexer.l"
+#line 400 "gtkdialog_lexer.l"
 { Token="<button>"; return(BUTTONYES);  		}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 396 "gtkdialog_lexer.l"
+#line 401 "gtkdialog_lexer.l"
 { Token="<button>"; return(BUTTONNO);  			}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 398 "gtkdialog_lexer.l"
+#line 403 "gtkdialog_lexer.l"
 { Token="<checkbox>"; return(CHECKBOX);       		}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 399 "gtkdialog_lexer.l"
+#line 404 "gtkdialog_lexer.l"
 { Token="</checkbox>"; return(ECHECKBOX);     		}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 400 "gtkdialog_lexer.l"
+#line 405 "gtkdialog_lexer.l"
 { Token="<checkbox>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_CHECKBOX);  				}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 404 "gtkdialog_lexer.l"
+#line 409 "gtkdialog_lexer.l"
 { Token="<radiobutton>"; return(RADIO);      		}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 405 "gtkdialog_lexer.l"
+#line 410 "gtkdialog_lexer.l"
 { Token="</radiobutton>"; return(ERADIO);    		}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 406 "gtkdialog_lexer.l"
+#line 411 "gtkdialog_lexer.l"
 { Token="<radiobutton>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_RADIO);  					}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 410 "gtkdialog_lexer.l"
+#line 415 "gtkdialog_lexer.l"
 { Token="<progressbar>"; return(PROGRESS);      	}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 411 "gtkdialog_lexer.l"
+#line 416 "gtkdialog_lexer.l"
 { Token="</progressbar>"; return(EPROGRESS);    	}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 412 "gtkdialog_lexer.l"
+#line 417 "gtkdialog_lexer.l"
 { Token="<progressbar>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_PROGRESS);  				}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 417 "gtkdialog_lexer.l"
+#line 422 "gtkdialog_lexer.l"
 { Token="<radio>"; return(RADIO);  			}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 418 "gtkdialog_lexer.l"
+#line 423 "gtkdialog_lexer.l"
 { Token="</radio>"; return(ERADIO);  			}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 420 "gtkdialog_lexer.l"
+#line 425 "gtkdialog_lexer.l"
 { Token="<gvim>"; return(GVIM);  			}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 421 "gtkdialog_lexer.l"
+#line 426 "gtkdialog_lexer.l"
 { Token="</gvim>"; return(EGVIM);  			}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 423 "gtkdialog_lexer.l"
+#line 428 "gtkdialog_lexer.l"
 { Token="<combobox>"; return(COMBO);  	  		}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 424 "gtkdialog_lexer.l"
+#line 429 "gtkdialog_lexer.l"
 { Token="<combobox>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_COMBO); 					}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 427 "gtkdialog_lexer.l"
+#line 432 "gtkdialog_lexer.l"
 { Token="</combobox>"; return(ECOMBO);    		}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 429 "gtkdialog_lexer.l"
+#line 434 "gtkdialog_lexer.l"
 { Token="<list>";  return(LIST);  			}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 430 "gtkdialog_lexer.l"
+#line 435 "gtkdialog_lexer.l"
 { Token="<list>";  
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_LIST); 					}
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 433 "gtkdialog_lexer.l"
+#line 438 "gtkdialog_lexer.l"
 { Token="</list>"; return(ELIST);  			}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 435 "gtkdialog_lexer.l"
+#line 440 "gtkdialog_lexer.l"
 { Token="<table>"; return(TABLE);  			}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 436 "gtkdialog_lexer.l"
+#line 441 "gtkdialog_lexer.l"
 { Token="</table>"; return(ETABLE);  			}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 438 "gtkdialog_lexer.l"
+#line 443 "gtkdialog_lexer.l"
 { Token="<menubar>"; return(MENUBAR); }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 439 "gtkdialog_lexer.l"
+#line 444 "gtkdialog_lexer.l"
 { Token="<menubar>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_MENUBAR); }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 442 "gtkdialog_lexer.l"
+#line 447 "gtkdialog_lexer.l"
 { Token="</menubar>"; return(EMENUBAR); }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 444 "gtkdialog_lexer.l"
+#line 449 "gtkdialog_lexer.l"
 { Token="<menu>"; return(MENU); }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 445 "gtkdialog_lexer.l"
+#line 450 "gtkdialog_lexer.l"
 { Token="<menu>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_MENU); }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 448 "gtkdialog_lexer.l"
+#line 453 "gtkdialog_lexer.l"
 { Token="</menu>"; return(EMENU); }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 450 "gtkdialog_lexer.l"
+#line 455 "gtkdialog_lexer.l"
 { Token="<menuitem>"; return(MENUITEM); }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 451 "gtkdialog_lexer.l"
+#line 456 "gtkdialog_lexer.l"
 { Token="<menuitem>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_MENUITEM); }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 454 "gtkdialog_lexer.l"
+#line 459 "gtkdialog_lexer.l"
 { Token="</menuitem>"; return(EMENUITEM); }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 456 "gtkdialog_lexer.l"
+#line 461 "gtkdialog_lexer.l"
 { Token="<menuitemseparator>"; return(MENUITEMSEPARATOR); }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 457 "gtkdialog_lexer.l"
+#line 462 "gtkdialog_lexer.l"
 { Token="</menuitemseparator>"; return(EMENUITEMSEPARATOR); }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 459 "gtkdialog_lexer.l"
+#line 464 "gtkdialog_lexer.l"
 { Token="<menuitemseparator>"; return(MENUITEMSEPARATOR); }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 460 "gtkdialog_lexer.l"
+#line 465 "gtkdialog_lexer.l"
 { Token="</menuitemseparator>"; return(EMENUITEMSEPARATOR); }
 	YY_BREAK
 /**************************************************************
@@ -2213,324 +2217,324 @@ YY_RULE_SETUP
 	 **************************************************************/
 case 96:
 YY_RULE_SETUP
-#line 465 "gtkdialog_lexer.l"
+#line 470 "gtkdialog_lexer.l"
 { Token="<hseparator>"; return(HSEPARATOR); }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 466 "gtkdialog_lexer.l"
+#line 471 "gtkdialog_lexer.l"
 { Token="<hseparator>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_HSEPARATOR); }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 469 "gtkdialog_lexer.l"
+#line 474 "gtkdialog_lexer.l"
 { Token="</hseparator>"; return(EHSEPARATOR); }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 471 "gtkdialog_lexer.l"
+#line 476 "gtkdialog_lexer.l"
 { Token="<vseparator>"; return(VSEPARATOR); }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 472 "gtkdialog_lexer.l"
+#line 477 "gtkdialog_lexer.l"
 { Token="<vseparator>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_VSEPARATOR); }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 475 "gtkdialog_lexer.l"
+#line 480 "gtkdialog_lexer.l"
 { Token="</vseparator>"; return(EVSEPARATOR); }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 477 "gtkdialog_lexer.l"
+#line 482 "gtkdialog_lexer.l"
 { Token="<comboboxtext>"; return(COMBOBOXTEXT); }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 478 "gtkdialog_lexer.l"
+#line 483 "gtkdialog_lexer.l"
 { Token="<comboboxtext>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_COMBOBOXTEXT); }
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 481 "gtkdialog_lexer.l"
+#line 486 "gtkdialog_lexer.l"
 { Token="</comboboxtext>"; return(ECOMBOBOXTEXT); }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 483 "gtkdialog_lexer.l"
+#line 488 "gtkdialog_lexer.l"
 { Token="<comboboxentry>"; return(COMBOBOXENTRY); }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 484 "gtkdialog_lexer.l"
+#line 489 "gtkdialog_lexer.l"
 { Token="<comboboxentry>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_COMBOBOXENTRY); }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 487 "gtkdialog_lexer.l"
+#line 492 "gtkdialog_lexer.l"
 { Token="</comboboxentry>"; return(ECOMBOBOXENTRY); }
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 489 "gtkdialog_lexer.l"
+#line 494 "gtkdialog_lexer.l"
 { Token="<hscale>"; return(HSCALE); }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 490 "gtkdialog_lexer.l"
+#line 495 "gtkdialog_lexer.l"
 { Token="<hscale>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_HSCALE); }
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 493 "gtkdialog_lexer.l"
+#line 498 "gtkdialog_lexer.l"
 { Token="</hscale>"; return(EHSCALE); }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 495 "gtkdialog_lexer.l"
+#line 500 "gtkdialog_lexer.l"
 { Token="<vscale>"; return(VSCALE); }
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 496 "gtkdialog_lexer.l"
+#line 501 "gtkdialog_lexer.l"
 { Token="<vscale>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_VSCALE); }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 499 "gtkdialog_lexer.l"
+#line 504 "gtkdialog_lexer.l"
 { Token="</vscale>"; return(EVSCALE); }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 501 "gtkdialog_lexer.l"
+#line 506 "gtkdialog_lexer.l"
 { Token="<spinbutton>"; return(SPINBUTTON); }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 502 "gtkdialog_lexer.l"
+#line 507 "gtkdialog_lexer.l"
 { Token="<spinbutton>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_SPINBUTTON); }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 505 "gtkdialog_lexer.l"
+#line 510 "gtkdialog_lexer.l"
 { Token="</spinbutton>"; return(ESPINBUTTON); }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 507 "gtkdialog_lexer.l"
+#line 512 "gtkdialog_lexer.l"
 { Token="<timer>"; return(TIMER); }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 508 "gtkdialog_lexer.l"
+#line 513 "gtkdialog_lexer.l"
 { Token="<timer>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_TIMER); }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 511 "gtkdialog_lexer.l"
+#line 516 "gtkdialog_lexer.l"
 { Token="</timer>"; return(ETIMER); }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 513 "gtkdialog_lexer.l"
+#line 518 "gtkdialog_lexer.l"
 { Token="<togglebutton>"; return(TOGGLEBUTTON); }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 514 "gtkdialog_lexer.l"
+#line 519 "gtkdialog_lexer.l"
 { Token="<togglebutton>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_TOGGLEBUTTON); }
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 517 "gtkdialog_lexer.l"
+#line 522 "gtkdialog_lexer.l"
 { Token="</togglebutton>"; return(ETOGGLEBUTTON); }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 519 "gtkdialog_lexer.l"
+#line 524 "gtkdialog_lexer.l"
 { Token="<statusbar>"; return(STATUSBAR); }
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 520 "gtkdialog_lexer.l"
+#line 525 "gtkdialog_lexer.l"
 { Token="<statusbar>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_STATUSBAR); }
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 523 "gtkdialog_lexer.l"
+#line 528 "gtkdialog_lexer.l"
 { Token="</statusbar>"; return(ESTATUSBAR); }
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 525 "gtkdialog_lexer.l"
+#line 530 "gtkdialog_lexer.l"
 { Token="<colorbutton>"; return(COLORBUTTON); }
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 526 "gtkdialog_lexer.l"
+#line 531 "gtkdialog_lexer.l"
 { Token="<colorbutton>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_COLORBUTTON); }
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 529 "gtkdialog_lexer.l"
+#line 534 "gtkdialog_lexer.l"
 { Token="</colorbutton>"; return(ECOLORBUTTON); }
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 535 "gtkdialog_lexer.l"
+#line 540 "gtkdialog_lexer.l"
 { Token="<label>"; return(LABEL);    			}
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 536 "gtkdialog_lexer.l"
+#line 541 "gtkdialog_lexer.l"
 { Token="</label>"; return(ELABEL);  			}
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 538 "gtkdialog_lexer.l"
+#line 543 "gtkdialog_lexer.l"
 { Token="<item>"; return(ITEM);      			}
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 539 "gtkdialog_lexer.l"
+#line 544 "gtkdialog_lexer.l"
 { Token="</item>"; return(EITEM);    			}
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 540 "gtkdialog_lexer.l"
+#line 545 "gtkdialog_lexer.l"
 { Token="<item>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_ITEM); 					}
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 544 "gtkdialog_lexer.l"
+#line 549 "gtkdialog_lexer.l"
 { Token="<default>"; return(DEFAULT);  			}
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 545 "gtkdialog_lexer.l"
+#line 550 "gtkdialog_lexer.l"
 { Token="</default>"; return(EDEFAULT);  		}
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 547 "gtkdialog_lexer.l"
+#line 552 "gtkdialog_lexer.l"
 { Token="<sensitive>"; return(SENSITIVE);  		}
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 548 "gtkdialog_lexer.l"
+#line 553 "gtkdialog_lexer.l"
 { Token="</sensitive>"; return(ESENSITIVE);  	}
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 550 "gtkdialog_lexer.l"
+#line 555 "gtkdialog_lexer.l"
 { Token="<sensitive>"; return(SENSITIVE);  		}
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 551 "gtkdialog_lexer.l"
+#line 556 "gtkdialog_lexer.l"
 { Token="</sensitive>"; return(ESENSITIVE);  	}
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 553 "gtkdialog_lexer.l"
+#line 558 "gtkdialog_lexer.l"
 { 
 					  Token="<variable>"; 
 					  return(VARIABLE); 					}
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 556 "gtkdialog_lexer.l"
+#line 561 "gtkdialog_lexer.l"
 { 
 					  Token="</variable>"; 
 					  return(EVARIABLE); 					}
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
-#line 560 "gtkdialog_lexer.l"
+#line 565 "gtkdialog_lexer.l"
 { Token="<height>"; return(HEIGHT);  			}
 	YY_BREAK
 case 143:
 YY_RULE_SETUP
-#line 561 "gtkdialog_lexer.l"
+#line 566 "gtkdialog_lexer.l"
 { Token="</height>"; return(EHEIGHT);  			}
 	YY_BREAK
 case 144:
 YY_RULE_SETUP
-#line 563 "gtkdialog_lexer.l"
+#line 568 "gtkdialog_lexer.l"
 { Token="<width>"; return(WIDTH);   			}
 	YY_BREAK
 case 145:
 YY_RULE_SETUP
-#line 564 "gtkdialog_lexer.l"
+#line 569 "gtkdialog_lexer.l"
 { Token="</width>"; return(EWIDTH);   			}
 	YY_BREAK
 case 146:
 YY_RULE_SETUP
-#line 566 "gtkdialog_lexer.l"
+#line 571 "gtkdialog_lexer.l"
 { Token="<input>"; return(INPUT);   			}
 	YY_BREAK
 case 147:
 YY_RULE_SETUP
-#line 567 "gtkdialog_lexer.l"
+#line 572 "gtkdialog_lexer.l"
 { Token="</input>"; return(EINPUT);   			}
 	YY_BREAK
 case 148:
 YY_RULE_SETUP
-#line 568 "gtkdialog_lexer.l"
+#line 573 "gtkdialog_lexer.l"
 { Token="<input file>"; return(INPUTFILE);   		}
 	YY_BREAK
 case 149:
 YY_RULE_SETUP
-#line 569 "gtkdialog_lexer.l"
+#line 574 "gtkdialog_lexer.l"
 { Token="<input file>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_INPUTFILE);   				}
 	YY_BREAK
 case 150:
 YY_RULE_SETUP
-#line 572 "gtkdialog_lexer.l"
+#line 577 "gtkdialog_lexer.l"
 { Token="<input>"; 
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_INPUT);   				}
 	YY_BREAK
 case 151:
 YY_RULE_SETUP
-#line 576 "gtkdialog_lexer.l"
+#line 581 "gtkdialog_lexer.l"
 { Token="<output>"; return(OUTPUT);   			}
 	YY_BREAK
 case 152:
 YY_RULE_SETUP
-#line 577 "gtkdialog_lexer.l"
+#line 582 "gtkdialog_lexer.l"
 { Token="</output>"; return(EOUTPUT);   		}
 	YY_BREAK
 case 153:
 YY_RULE_SETUP
-#line 578 "gtkdialog_lexer.l"
+#line 583 "gtkdialog_lexer.l"
 { Token="<output>"; return(OUTPUTFILE);   		}
 	YY_BREAK
 /*
@@ -2538,7 +2542,7 @@ YY_RULE_SETUP
 	*/
 case 154:
 YY_RULE_SETUP
-#line 583 "gtkdialog_lexer.l"
+#line 588 "gtkdialog_lexer.l"
 { 
 	Token="<action>"; 
 	return(ACTION);
@@ -2546,7 +2550,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 155:
 YY_RULE_SETUP
-#line 588 "gtkdialog_lexer.l"
+#line 593 "gtkdialog_lexer.l"
 { 
 	Token="<action>"; 
 	BEGIN(ST_TAG_ATTR);
@@ -2555,7 +2559,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 156:
 YY_RULE_SETUP
-#line 594 "gtkdialog_lexer.l"
+#line 599 "gtkdialog_lexer.l"
 { 
 	Token="</action>"; 
 	return(EACTION);
@@ -2564,7 +2568,7 @@ YY_RULE_SETUP
 case 157:
 /* rule 157 can match eol */
 YY_RULE_SETUP
-#line 604 "gtkdialog_lexer.l"
+#line 609 "gtkdialog_lexer.l"
 { 
 	Token=g_strdup(gtkdialog_text); 
 	gtkdialog_error("Unknown end tag.");  
@@ -2573,7 +2577,7 @@ YY_RULE_SETUP
 case 158:
 /* rule 158 can match eol */
 YY_RULE_SETUP
-#line 609 "gtkdialog_lexer.l"
+#line 614 "gtkdialog_lexer.l"
 { 
 	Token=g_strdup(gtkdialog_text); 
 	gtkdialog_error("Unknown tag.");      
@@ -2585,7 +2589,7 @@ YY_RULE_SETUP
 					 */
 case 159:
 YY_RULE_SETUP
-#line 618 "gtkdialog_lexer.l"
+#line 623 "gtkdialog_lexer.l"
 {
 					  Token = "double quote";
 					  BEGIN(ST_QUOTED_STRING);				}
@@ -2593,19 +2597,19 @@ YY_RULE_SETUP
 case 160:
 /* rule 160 can match eol */
 YY_RULE_SETUP
-#line 622 "gtkdialog_lexer.l"
+#line 627 "gtkdialog_lexer.l"
 {
 					  yymore();						}
 	YY_BREAK
 case 161:
 YY_RULE_SETUP
-#line 625 "gtkdialog_lexer.l"
+#line 630 "gtkdialog_lexer.l"
 {
 					  yymore();						}
 	YY_BREAK
 case 162:
 YY_RULE_SETUP
-#line 628 "gtkdialog_lexer.l"
+#line 633 "gtkdialog_lexer.l"
 {
 					  Token = gtkdialog_text;
 					  gtkdialog_lval.cval = g_strdup(gtkdialog_text);
@@ -2620,7 +2624,7 @@ YY_RULE_SETUP
 					 */
 case 163:
 YY_RULE_SETUP
-#line 640 "gtkdialog_lexer.l"
+#line 645 "gtkdialog_lexer.l"
 {
 					  Token = "string";
 					  BEGIN(ST_STRING);
@@ -2629,7 +2633,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 164:
 YY_RULE_SETUP
-#line 645 "gtkdialog_lexer.l"
+#line 650 "gtkdialog_lexer.l"
 {
 					  Token = "string";
 					  yymore();
@@ -2637,21 +2641,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 165:
 YY_RULE_SETUP
-#line 651 "gtkdialog_lexer.l"
+#line 656 "gtkdialog_lexer.l"
 {
 					  yymore();
 												}
 	YY_BREAK
 case 166:
 YY_RULE_SETUP
-#line 655 "gtkdialog_lexer.l"
+#line 660 "gtkdialog_lexer.l"
 {
 					  yymore();
 												}
 	YY_BREAK
 case 167:
 YY_RULE_SETUP
-#line 659 "gtkdialog_lexer.l"
+#line 664 "gtkdialog_lexer.l"
 {
 					  gtkdialog_lval.cval = g_strdup(gtkdialog_text);
 					  gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 1] = '\0';
@@ -2663,31 +2667,31 @@ YY_RULE_SETUP
 case 168:
 /* rule 168 can match eol */
 YY_RULE_SETUP
-#line 669 "gtkdialog_lexer.l"
+#line 674 "gtkdialog_lexer.l"
 {
 					  ++linenumber;
 												}
 	YY_BREAK
 case 169:
 YY_RULE_SETUP
-#line 672 "gtkdialog_lexer.l"
+#line 677 "gtkdialog_lexer.l"
 {
 					  /* */
 												}
 	YY_BREAK
 case 170:
 YY_RULE_SETUP
-#line 676 "gtkdialog_lexer.l"
+#line 681 "gtkdialog_lexer.l"
 {
 					  /* we do nothing, this is a dropped char. */
 												}
 	YY_BREAK
 case 171:
 YY_RULE_SETUP
-#line 679 "gtkdialog_lexer.l"
+#line 684 "gtkdialog_lexer.l"
 ECHO;
 	YY_BREAK
-#line 2691 "gtkdialog_lexer.c"
+#line 2695 "gtkdialog_lexer.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(EMBEDDED):
 			case YY_STATE_EOF(ST_TAG_ATTR):
@@ -3664,7 +3668,7 @@ void gtkdialog_free (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 679 "gtkdialog_lexer.l"
+#line 684 "gtkdialog_lexer.l"
 
 
 

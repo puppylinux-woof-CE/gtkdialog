@@ -52,8 +52,12 @@ GtkWidget *lastradiowidget;
 /* An accumulated list of menu accelerator groups to be added to the window */
 GList *accel_groups;
 
+/* An auto-incremented unique id for each window created */
+gint window_id;
+
 void reset_program_source(void);
-gint set_program_source(gchar *name);
+//Redundant: gint set_program_source(gchar *name);
+gint get_program_from_variable(gchar *name);
 void set_program_name(gchar *name);
 gchar *get_program_name(void);
 
