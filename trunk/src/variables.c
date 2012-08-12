@@ -47,9 +47,9 @@ extern gboolean option_no_warning;
 void variables_print_one(variable *var);
 #endif
 variable *variables_new(const char *name);
-variable *variables_set_widget(const char *name, GtkWidget *widget);
-variable *variables_set_parent(const char *name, GtkWidget *parent);
-variable *variables_set_type(const char *name, int type);
+/* Redundant: Not being used: variable *variables_set_widget(const char *name, GtkWidget *widget); */
+/* Redundant: Not being used: variable *variables_set_parent(const char *name, GtkWidget *parent); */
+/* Redundant: Not being used: variable *variables_set_type(const char *name, int type); */
 gboolean variables_is_avail_by_name(const char *name);
 int _tree_insert(variable *new, variable *actual);
 static variable *_tree_find(const char *name, variable *actual);
@@ -86,9 +86,11 @@ void variables_print_one(variable *var)
 variable *variables_new(const char *name)
 {
 	variable *new;
+
 #ifdef DEBUG
-	g_message("%s(): start '%s'.", __func__, name);
+	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
+
 	/* 
 	 ** If the variable exists we simply returns without making a 
 	 ** a warning. 
@@ -102,6 +104,7 @@ variable *variables_new(const char *name)
 	 ** Setting the defaults for this variable.
 	 */
 	new->Widget = NULL;
+	new->window_id = 0;
 	new->Attributes = NULL;
 	new->Type = 0;
 	new->row = -1;
@@ -112,9 +115,15 @@ variable *variables_new(const char *name)
 	new->right = NULL;
 
 	_tree_insert(new, NULL);
+
 #ifdef DEBUG
-	g_message("%s(): end '%s'.", __func__, name);
+	fprintf(stderr, "%s(): Name=%s\n", __func__, new->Name);
 #endif
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
 	return new;
 }
 
@@ -131,12 +140,13 @@ variable *variables_new_with_widget(AttributeSet *Attr,
 	variable *var;
 	int autonamed = FALSE;
 
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
 	g_assert(Attr != NULL);
 	g_assert(widget != NULL);
 
-#ifdef DEBUG
-	g_message("%s(): Starting.", __func__);
-#endif
 	/*
 	 ** If the widget have no name we create a default one for it.
 	 */
@@ -161,13 +171,21 @@ variable *variables_new_with_widget(AttributeSet *Attr,
 	g_assert(var != NULL);
 
 	var->Widget = widget;
+	var->window_id = window_id;
 	var->Type = type;
-	var->autonamed = autonamed;
 	var->Attributes = Attr;
 	var->widget_tag_attr = widget_tag_attr;
+	var->autonamed = autonamed;
+
 #ifdef DEBUG
-	g_message("%s(): End.", __func__);
+	fprintf(stderr, "%s(): Name=%s Widget=%p window_id=%i Type=%i\n",
+		__func__, var->Name, var->Widget, var->window_id, var->Type);
 #endif
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
 	return (var);
 }
 
@@ -175,6 +193,7 @@ variable *variables_new_with_widget(AttributeSet *Attr,
  *                                                                     *
  ***********************************************************************/
 
+/* Redundant: Not being used.
 variable *variables_set_widget(const char *name, GtkWidget *widget)
 {
 	variable *var;
@@ -187,12 +206,13 @@ variable *variables_set_widget(const char *name, GtkWidget *widget)
 
 	var->Widget = widget;
 	return (var);
-}
+} */
 
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
 
+/* Redundant: Not being used.
 #if 0
 variable *variables_set_parent(const char *name, GtkWidget *parent)
 {
@@ -210,12 +230,13 @@ variable *variables_set_parent(const char *name, GtkWidget *parent)
 #endif
 	return var;
 }
-#endif
+#endif */
 
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
 
+/* Redundant: Not being used.
 variable *variables_set_type(const char *name, int type)
 {
 	variable *var;
@@ -229,7 +250,7 @@ variable *variables_set_type(const char *name, int type)
 
 	var->Type = type;
 	return (var);
-}
+} */
 
 /***********************************************************************
  *                                                                     *
@@ -844,24 +865,65 @@ gint variables_count_widgets(void)
  ***********************************************************************/
 /* This function will drop all the widgets with the given parent */
 
-void variables_drop_by_parent(variable *actual, GtkWidget *Parent)
+void variables_drop_by_window_id(variable *actual, gint window_id)
 {
-	if (actual == NULL)
-		actual = root;
-	if (actual == NULL)
-		return;
+#ifdef DEBUG
+	GtkWidget *ancestor;
+#endif
 
-	if (actual->left != NULL)
-		variables_drop_by_parent(actual->left, Parent);
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
 
-	if (actual->Widget != NULL) {
-		g_assert(GTK_IS_WIDGET(actual->Widget));
-		if (gtk_widget_get_toplevel(actual->Widget) == Parent) 
-			actual->Widget = NULL;
+	if (actual == NULL) actual = root;
+
+	if (actual != NULL) {
+
+		if (actual->left != NULL)
+			variables_drop_by_window_id(actual->left, window_id);
+
+		if (actual->Widget != NULL) {
+
+#ifdef DEBUG
+			fprintf(stderr, "%s(): Name=%s Widget=%p window_id=%i Type=%i\n",
+				__func__, actual->Name, actual->Widget, actual->window_id, actual->Type);
+#endif
+
+			g_assert(GTK_IS_WIDGET(actual->Widget));
+
+#ifdef DEBUG
+			ancestor = gtk_widget_get_parent(actual->Widget);
+			fprintf(stderr, "%s(): ancestor1=%p\n", __func__, ancestor);
+			if (ancestor) ancestor = gtk_widget_get_parent(ancestor);
+			fprintf(stderr, "%s(): ancestor2=%p\n", __func__, ancestor);
+			if (ancestor) ancestor = gtk_widget_get_parent(ancestor);
+			fprintf(stderr, "%s(): ancestor3=%p\n", __func__, ancestor);
+			if (ancestor) ancestor = gtk_widget_get_parent(ancestor);
+			fprintf(stderr, "%s(): ancestor4=%p\n", __func__, ancestor);
+#endif
+
+			//Redundant: if (gtk_widget_get_toplevel(actual->Widget) == Parent) {
+			//Redundant: if (gtk_widget_get_ancestor(actual->Widget, GTK_TYPE_WINDOW) == Parent) {
+			if (actual->window_id == window_id) {
+
+				actual->Widget = NULL;
+
+#ifdef DEBUG
+				fprintf(stderr, "%s(): Name=%s Widget=%p window_id=%i Type=%i\n",
+					__func__, actual->Name, actual->Widget, actual->window_id, actual->Type);
+#endif
+
+			}
+		}
+
+		if (actual->right != NULL)
+			variables_drop_by_window_id(actual->right, window_id);
+
 	}
 
-	if (actual->right != NULL)
-		variables_drop_by_parent(actual->right, Parent);
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
 }
 
 /***********************************************************************

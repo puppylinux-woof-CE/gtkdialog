@@ -33,6 +33,7 @@
 typedef struct _variable {
   char                Name[ NAMELEN+1 ]; /* The name of the variable   */
   GtkWidget          *Widget;            /* The pointer to the widget  */
+  int                 window_id;         /* The id of the owning window */
   int                 Type;              /* The type of the widget     */
   AttributeSet       *Attributes;        /* Attributes for Widget      */
   int                 row, column;       /* Selected items position.   */
@@ -57,7 +58,7 @@ variable *variables_show(const char *name);
 variable *variables_hide(const char *name);
 variable *variables_get_by_name(const char *name);
 gint variables_count_widgets(void);
-void variables_drop_by_parent(variable *actual, GtkWidget *Parent);
+void variables_drop_by_window_id(variable *actual, gint window_id);
 variable *find_variable_by_widget(GtkWidget *widget);
 void variables_export_all(void);
 void variables_initialize_all(void);

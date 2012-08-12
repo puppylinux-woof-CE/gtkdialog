@@ -476,6 +476,8 @@ void run_program()
 
 	PIP_DEBUG("Program starting.");
 
+	window_id++;	/* Generate a new unique window id */
+
 	/*
 	 * This is the main loop which creates the widgets, runs the program.
 	 */
@@ -1137,7 +1139,7 @@ GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
 	}
 
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "menu");
-	label = attributeset_get_first(&element, Attr, ATTR_LABEL);
+	//Redundant: label = attributeset_get_first(&element, Attr, ATTR_LABEL);
 
 	/* Thunor: A menu widget is in fact a menuitem widget with a submenu
 	 * so it'll be created just like any other menuitem widget. It's

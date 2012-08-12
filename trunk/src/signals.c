@@ -940,15 +940,33 @@ next_command:
 gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data)
 {
+	variable         *var;
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	variables_drop_by_parent(NULL, widget);
+	//Redundant: variables_drop_by_parent(NULL, widget);
+	var = find_variable_by_widget(widget);
+	variables_drop_by_window_id(NULL, var->window_id);
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): variables_count_widgets()=%i\n", __func__,
+		variables_count_widgets());
+#endif
 
 	if (variables_count_widgets() == 0) {
-		gtk_main_quit();
 		printf("EXIT=\"abort\"\n");
+
+#ifdef DEBUG_CONTENT
+		fprintf(stderr, "%s(): Calling gtk_main_quit()\n", __func__);
+#endif
+		gtk_main_quit();
+
+#ifdef DEBUG_CONTENT
+		fprintf(stderr, "%s(): Calling exit(EXIT_SUCCESS)\n", __func__);
+#endif
+
 		exit(EXIT_SUCCESS);
 	}
 

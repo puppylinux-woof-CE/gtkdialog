@@ -1,6 +1,12 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Aug 12 2012 Thunor <thunorsif@hotmail.com>
+- Fixed a bug that caused applications that included a menu to fail to
+  close via the window manager (title bar) and in fact closewindow too.
+- Fixed a bug that caused a parser error when using multiple launched
+  windows: the envvar that contained the program was being overwritten.
+
 * Thu Aug 9 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the menubar widget and updated it in the parser so that it
   now supports the recently added hide and show action functions.

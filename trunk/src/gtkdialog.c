@@ -68,8 +68,8 @@ gboolean option_print_ir = FALSE;
 gboolean option_centering = FALSE;
 
 static gint source = PRG_UNKNOWN;    // Where the program is coming from?
-static gchar *program_src = NULL;    // The actual program source.
-static gint charsreaded = 0;         // How much did we red from the source in the memory.
+gchar *program_src = NULL;           // The actual program source.
+gint charsreaded = 0;                // How much did we red from the source in the memory.
 static FILE *sourcefile = NULL;      // The input file handler.
 static gchar *program_name = NULL;   // The name of the dialog for messages.
 
@@ -293,20 +293,21 @@ gtkdialog_init(
 	g_option_context_free(context);
 }
 
-static gint 
-get_program_from_variable(gchar *name)
+gint get_program_from_variable(gchar *name)
 {
 	g_assert(name != NULL);
 
 	PIP_DEBUG("Start.");
-	
-	set_program_name(program_name);
+
+	//Redundant: Bug: set_program_name(program_name);
+	set_program_name(name);
 	program_src = g_strdup(g_getenv(name));
+
 	if (program_src == NULL) 
 		g_error(
 "Gtkdialog: Could not find the dialog description in the environment "
 "variable '%s'.", name);
-	
+
 	source = PRG_MEMORY;
 }
 	
@@ -435,27 +436,29 @@ get_program_name(void)
  * function will search the window description as an environment variable, which
  * is not a perfect solution.
  */
+/* Redundant: get_program_from_variable() already does this AND it
+ * duplicates the string returned by g_getenv() which is important.
 gint
 set_program_source(gchar *name)
 {
 	g_assert(name != NULL);
 
 	PIP_DEBUG("name: '%s'", name);
-	/*
+	/$
 	 ** We read the window description from the environment variable.
-	 */
+	 $/
 	program_src = (gchar*)g_getenv(name);
-	/*
+	/$
 	 ** If we could not find the window we give a message to the user and
 	 ** exit.
-	 */
+	 $/
 	if (program_src == NULL) 
 		g_error("%s(): Could not find window: '%s'.", __func__, name);
 	
 	source = PRG_MEMORY;
 	charsreaded = 0;
 	set_program_name(name);
-}
+} */
 
 int 
 main(int argc, char *argv[])
@@ -464,6 +467,7 @@ main(int argc, char *argv[])
 	GTKD_FUNCTION_SIGNALS_RESET;
 	lastradiowidget = NULL;
 	accel_groups = NULL;
+	window_id = 0;
 
 	setlocale(LC_ALL, "");
 	/*
