@@ -967,6 +967,14 @@ variable *find_variable_by_widget(GtkWidget *widget)
  *                                                                     *
  ***********************************************************************/
 
+void variables_initialize_all(void)
+{
+	_variables_initialize(NULL);
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 static void _variables_initialize(variable *actual)
 {
 	GList *element;
@@ -1004,6 +1012,16 @@ static void _variables_initialize(variable *actual)
 
 	if (actual->right != NULL)
 		_variables_initialize(actual->right);
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* This function will export the variables as environment variables */
+
+void variables_export_all(void)
+{
+	_variables_export(NULL);
 }
 
 /***********************************************************************
@@ -1102,25 +1120,6 @@ static void _variables_export(variable *actual)
 
 	if (actual->right != NULL)
 		_variables_export(actual->right);
-}
-
-/***********************************************************************
- *                                                                     *
- ***********************************************************************/
-/* This function will export the variables as environment variables */
-
-void variables_export_all(void)
-{
-	_variables_export(NULL);
-}
-
-/***********************************************************************
- *                                                                     *
- ***********************************************************************/
-
-void variables_initialize_all(void)
-{
-	_variables_initialize(NULL);
 }
 
 /***********************************************************************

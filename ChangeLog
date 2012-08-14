@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Aug 14 2012 Thunor <thunorsif@hotmail.com>
+- Added examples/miscellaneous/show_and_hide.
+
 * Sun Aug 12 2012 Thunor <thunorsif@hotmail.com>
 - Fixed a bug that caused applications that included a menu to fail to
   close via the window manager (title bar) and in fact closewindow too.
