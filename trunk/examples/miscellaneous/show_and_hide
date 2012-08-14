@@ -1,0 +1,180 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+functgbCreate() {
+	echo '<togglebutton active="true">
+					<label>'$1'</label>
+					<action>if true show:'$2'</action>
+					<action>if false hide:'$2'</action>
+				</togglebutton>'
+}
+
+export MAIN_DIALOG='
+<window title="Show and Hide" border-width="0">
+	<vbox>
+		<menubar>
+			<menu label="_File" use-underline="true">
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<variable>mniExample</variable>
+					<action>exit:Quit</action>
+				</menuitem>
+			</menu>
+			<menu label="_View" use-underline="true">
+				<menuitem checkbox="true" label="vbox Left">
+					<action>if true show:vbxLeft</action>
+					<action>if false hide:vbxLeft</action>
+				</menuitem>
+				<menuitem checkbox="true" label="vbox Middle">
+					<action>if true show:vbxMiddle</action>
+					<action>if false hide:vbxMiddle</action>
+				</menuitem>
+				<menuitem checkbox="true" label="vbox Right">
+					<action>if true show:vbxRight</action>
+					<action>if false hide:vbxRight</action>
+				</menuitem>
+				<variable>mnuExample</variable>
+			</menu>
+			<variable>mnbExample</variable>
+		</menubar>
+		<hbox border-width="5">
+			<vbox>
+				<button label="button (GtkButton)">
+					<variable>btnExample</variable>
+					<action>""</action>
+				</button>
+				<checkbox active="true" label="checkbox (GtkCheckButton)">
+					<variable>chkExample</variable>
+				</checkbox>
+				<colorbutton use-alpha="true" tooltip-text="colorbutton (GtkColorButton)">
+					<variable>clbExample</variable>
+					<default>#4488cc|32768</default>
+				</colorbutton>
+				<combobox>
+					<variable>cboExample</variable>
+					<item>combobox</item>
+					<item>(GtkCombo)</item>
+				</combobox>
+				<comboboxentry>
+					<variable>cbeExample</variable>
+					<default>comboboxentry</default>
+					<item>comboboxentry</item>
+					<item>(GtkComboBoxEntry)</item>
+				</comboboxentry>
+				<comboboxtext>
+					<variable>cbtExample</variable>
+					<item>comboboxtext</item>
+					<item>(GtkComboBox)</item>
+				</comboboxtext>
+				<edit>
+					<variable>ediExample</variable>
+					<default>"edit
+(GtkTextView)"</default>
+				</edit>
+				<variable>vbxLeft</variable>
+			</vbox>
+			<vseparator></vseparator>
+			<vbox>
+				<frame frame (GtkFrame)>
+					<entry>
+						<variable>entExample</variable>
+						<default>entry (GtkEntry)</default>
+					</entry>
+					<variable>fraExample</variable>
+				</frame>
+				<hscale range-value="50" tooltip-text="hscale (GtkHScale)">
+					<variable>hscExample</variable>
+				</hscale>
+				<list>
+					<variable>lstExample</variable>
+					<item>list</item>
+					<item>(GtkList)</item>
+				</list>
+				<notebook tab-labels="pixmap|radiobutton">
+					<pixmap tooltip-text="(GtkImage)">
+						<variable>pmpExample</variable>
+						<input file>geany.png</input>
+					</pixmap>
+					<radiobutton label="(GtkRadioButton)">
+						<variable>rdoExample</variable>
+					</radiobutton>
+					<variable>ntbExample</variable>
+				</notebook>
+				<variable>vbxMiddle</variable>
+			</vbox>
+			<vseparator></vseparator>
+			<vbox>
+				<progressbar text="progressbar (GtkProgressBar)">
+					<variable>prgExample</variable>
+					<input>echo 50</input>
+				</progressbar>
+				<spinbutton value="50" tooltip-text="spinbutton (GtkSpinButton)">
+					<variable>spbExample</variable>
+				</spinbutton>
+				<table>
+					<variable>tblExample</variable>
+					<item>table</item>
+					<item>(GtkCList)</item>
+				</table>
+				<text label="text (GtkLabel)">
+					<variable>txtExample</variable>
+				</text>
+				<togglebutton label="togglebutton (GtkToggleButton)">
+					<variable>tgbExample</variable>
+				</togglebutton>
+				<tree>
+					<variable>treExample</variable>
+					<item>tree</item>
+					<item>(GtkTreeView)</item>
+				</tree>
+				<variable>vbxRight</variable>
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox border-width="5">
+			<vbox>
+				'"$(functgbCreate button btnExample)"'
+				'"$(functgbCreate checkbox chkExample)"'
+				'"$(functgbCreate colorbutton clbExample)"'
+				'"$(functgbCreate combobox cboExample)"'
+				'"$(functgbCreate comboboxentry cbeExample)"'
+				'"$(functgbCreate comboboxtext cbtExample)"'
+				'"$(functgbCreate edit ediExample)"'
+				'"$(functgbCreate statusbar stbExample)"'
+			</vbox>
+			<vbox>
+				'"$(functgbCreate menubar mnbExample)"'
+				'"$(functgbCreate entry entExample)"'
+				'"$(functgbCreate frame fraExample)"'
+				'"$(functgbCreate hscale hscExample)"'
+				'"$(functgbCreate list lstExample)"'
+				'"$(functgbCreate notebook ntbExample)"'
+				'"$(functgbCreate pixmap pmpExample)"'
+				'"$(functgbCreate radiobutton rdoExample)"'
+			</vbox>
+			<vbox>
+				'"$(functgbCreate menu mnuExample)"'
+				'"$(functgbCreate menuitem mniExample)"'
+				'"$(functgbCreate progressbar prgExample)"'
+				'"$(functgbCreate spinbutton spbExample)"'
+				'"$(functgbCreate table tblExample)"'
+				'"$(functgbCreate text txtExample)"'
+				'"$(functgbCreate togglebutton tgbExample)"'
+				'"$(functgbCreate tree treExample)"'
+			</vbox>
+		</hbox>
+		<statusbar>
+			<default>statusbar (GtkStatusbar)</default>
+			<variable>stbExample</variable>
+		</statusbar>
+	</vbox>
+	<variable>MAIN_DIALOG</variable>
+</window>
+'
+
+export GTKDIALOG_PIXMAP_PATH=/usr/share/icons/hicolor/48x48/apps:/usr/share/pixmaps
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac
