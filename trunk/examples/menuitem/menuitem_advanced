@@ -98,7 +98,6 @@ export MAIN_DIALOG='
 				'"$(funcmuiCreate mnu03 1 "_Radiobutton")"'
 		</menubar>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 

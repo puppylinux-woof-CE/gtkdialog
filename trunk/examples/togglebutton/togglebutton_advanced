@@ -56,7 +56,6 @@ export MAIN_DIALOG='
 			</hbox>
 		</vbox>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 

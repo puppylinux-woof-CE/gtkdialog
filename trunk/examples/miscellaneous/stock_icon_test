@@ -78,7 +78,6 @@ export MAIN_DIALOG='
 			'"$(treCreate)"'
 		</hbox>
 	</vbox>
-	<action signal="hide">exit:Exit</action> 
 </window>
 '
 
