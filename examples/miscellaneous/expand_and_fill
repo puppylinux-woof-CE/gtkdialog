@@ -65,7 +65,6 @@ funcExampleCreate() {
 		</hbox>
 		<statusbar><label>statusbar widget</label></statusbar>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 }

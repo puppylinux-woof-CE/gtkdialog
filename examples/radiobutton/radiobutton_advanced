@@ -70,7 +70,6 @@ i.e. the notebook, vbox, hbox and frame widgets."</label>
 			<button ok><variable>btnOK</variable></button>
 		</hbox>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 

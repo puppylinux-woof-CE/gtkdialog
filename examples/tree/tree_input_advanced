@@ -108,7 +108,6 @@ exported-column='3'"'"</label>
 			<button ok></button>
 		</hbox>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 

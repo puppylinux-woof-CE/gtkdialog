@@ -32,7 +32,6 @@ funcDialogReadMeOpen() {
 			</button>
 		</hbox>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 ' > $TEMP_DIR/dialog_readme
 

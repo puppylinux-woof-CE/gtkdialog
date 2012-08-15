@@ -29,7 +29,6 @@ export MAIN_DIALOG='
 			</menu>
 		</menubar>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 

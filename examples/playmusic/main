@@ -425,7 +425,6 @@ echo '
 	<action signal="show">. funcPlay; funcPlay</action>
 	<action signal="show">refresh:nbkPlayPause</action>
 	<action signal="show">refresh:muiAutoNextCheck</action>
-	<action signal="hide">exit:Exit</action>
 </window>
 ' > $TEMP_DIR/dialog_main
 

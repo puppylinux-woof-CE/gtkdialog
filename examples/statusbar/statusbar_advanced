@@ -44,7 +44,6 @@ export MAIN_DIALOG='
 			<output file>'"$TMPDIR"'/outputfile</output>
 		</statusbar>
 	</vbox>
-	<action signal="hide">exit:Exit</action> 
 </window>
 '
 

@@ -83,7 +83,6 @@ it would not be economical to develop this any further."'"></text>
 			<button ok></button>
 		</hbox>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 

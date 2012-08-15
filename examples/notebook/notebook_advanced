@@ -125,7 +125,6 @@ export MAIN_DIALOG='
 			<input file>'"$TMPDIR"'/inputfile</input>
 		</notebook>
     </vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 

@@ -90,7 +90,6 @@ export MAIN_DIALOG='
 			<button ok></button>
 		</hbox>
 	</vbox>
-	<action signal="hide">exit:Exit</action>
 </window>
 '
 
