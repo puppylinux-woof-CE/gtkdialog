@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Fri Aug 17 2012 Thunor <thunorsif@hotmail.com>
+- New widget: <fontbutton>.
+- Added examples/fontbutton/fontbutton.
+- Updated the wiki and the reference docs.
+
 * Tue Aug 14 2012 Thunor <thunorsif@hotmail.com>
 - Added examples/miscellaneous/show_and_hide.
 

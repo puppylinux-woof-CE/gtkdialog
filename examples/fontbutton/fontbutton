@@ -1,0 +1,95 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcbtnCreate() {
+	echo '<button image-position="'$1'">
+					<label>"'$2'"</label>
+					<input file stock="'$3'"></input>
+					<action>echo "'$2' '$4'"</action>
+					<action type="'$2'">'$4'</action>
+				</button>'
+}
+
+echo "Nimbus Sans L Regular 15" > "$TMPDIR"/inputfile
+
+export MAIN_DIALOG='
+<window title="FontButton">
+	<vbox>
+		<vbox border-width="30">
+			<hseparator></hseparator>
+			<text>
+				<label>All defaults.</label>
+			</text>
+			<fontbutton>
+				<variable>ftb0</variable>
+				<action>echo ftb0 changed to $ftb0</action>
+			</fontbutton>
+			<hseparator></hseparator>
+			<text>
+				<label>font-name="Monospace 18" use-font="true"</label>
+			</text>
+			<fontbutton font-name="Monospace 18" use-font="true">
+				<variable>ftb1</variable>
+				<action>echo ftb1 changed to $ftb1</action>
+			</fontbutton>
+			<hseparator></hseparator>
+			<text>
+				<label>font-name="Monospace 18" use-font="true" use-size="true"</label>
+			</text>
+			<fontbutton font-name="Monospace 18" use-font="true" use-size="true">
+				<variable>ftb2</variable>
+				<action>echo ftb2 changed to $ftb2</action>
+			</fontbutton>
+			<hseparator></hseparator>
+			<text>
+				<label>Font name from default directive.</label>
+			</text>
+			<fontbutton>
+				<variable>ftb3</variable>
+				<default>DejaVu Sans Bold 13</default>
+				<action>echo ftb3 changed to $ftb3</action>
+			</fontbutton>
+			<hseparator></hseparator>
+			<text>
+				<label>Font name from input directive.</label>
+			</text>
+			<fontbutton>
+				<variable>ftb4</variable>
+				<input> echo Liberation Mono Italic 14</input>
+				<action>echo ftb4 changed to $ftb4</action>
+			</fontbutton>
+			<hseparator></hseparator>
+			<text>
+				<label>Font name from input file directive.</label>
+			</text>
+			<fontbutton>
+				<variable>ftb5</variable>
+				<input file>'"$TMPDIR"'/inputfile</input>
+				<output file>'"$TMPDIR"'/inputfile</output>
+				<action>echo ftb5 changed to $ftb5</action>
+			</fontbutton>
+			<hbox>
+				'"$(funcbtnCreate 0 Disable gtk-no ftb5)"'
+				'"$(funcbtnCreate 0 Enable gtk-yes ftb5)"'
+				'"$(funcbtnCreate 0 Hide gtk-no ftb5)"'
+				'"$(funcbtnCreate 0 Show gtk-yes ftb5)"'
+				'"$(funcbtnCreate 0 Refresh gtk-refresh ftb5)"'
+				'"$(funcbtnCreate 0 Save gtk-save ftb5)"'
+			</hbox>
+			<hseparator></hseparator>
+		</vbox>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac

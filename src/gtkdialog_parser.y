@@ -152,6 +152,7 @@ start_up(void)
 %token         TOGGLEBUTTON PART_TOGGLEBUTTON ETOGGLEBUTTON
 %token         STATUSBAR PART_STATUSBAR ESTATUSBAR
 %token         COLORBUTTON PART_COLORBUTTON ECOLORBUTTON
+%token         FONTBUTTON PART_FONTBUTTON EFONTBUTTON
 
 %% 
 window
@@ -256,6 +257,7 @@ widget
   | togglebutton
   | statusbar
   | colorbutton
+  | fontbutton
   ;
 
 entry
@@ -576,6 +578,15 @@ colorbutton
 	}
   | PART_COLORBUTTON tagattr '>' attr ECOLORBUTTON {
 		token_store_attr(PUSH | WIDGET_COLORBUTTON, $2);
+	}
+  ;
+
+fontbutton
+  : FONTBUTTON attr EFONTBUTTON {
+		token_store(PUSH | WIDGET_FONTBUTTON);
+	}
+  | PART_FONTBUTTON tagattr '>' attr EFONTBUTTON {
+		token_store_attr(PUSH | WIDGET_FONTBUTTON, $2);
 	}
   ;
 

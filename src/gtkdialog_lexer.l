@@ -533,6 +533,11 @@ gchar *Token;
 					  return(PART_COLORBUTTON); }
 \<\/colorbutton\>			{ Token="</colorbutton>"; return(ECOLORBUTTON); }
 
+\<fontbutton\>				{ Token="<fontbutton>"; return(FONTBUTTON); }
+\<fontbutton[ ]+			{ Token="<fontbutton>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_FONTBUTTON); }
+\<\/fontbutton\>			{ Token="</fontbutton>"; return(EFONTBUTTON); }
 
 
 

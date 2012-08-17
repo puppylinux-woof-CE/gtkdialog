@@ -430,6 +430,23 @@ void on_any_widget_color_set_event(GtkWidget *widget, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
+void on_any_widget_font_set_event(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "font-set");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 gboolean on_any_widget_configure_event(GtkWidget *widget,
 	GdkEventConfigure *event, AttributeSet *Attr)
 {
@@ -1102,6 +1119,9 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 						execute = TRUE;
 					}
 				}
+			} else if (GTK_IS_FONT_BUTTON(widget)) {
+				if (strcasecmp(signal_name, "font-set") == 0)
+					execute = TRUE;
 			}
 		}
 		if (execute) execute_action(widget, command, type);
