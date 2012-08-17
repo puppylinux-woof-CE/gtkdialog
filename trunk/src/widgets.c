@@ -40,6 +40,7 @@
 #include "widget_checkbox.h"
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
+#include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
 #include "widget_menubar.h"
@@ -218,6 +219,10 @@ widget_get_text_value(
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			string = widget_comboboxtext_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_FONTBUTTON:
+			string = widget_fontbutton_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_FRAME:
@@ -1335,6 +1340,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_COMBOBOXTEXT:
 			type = "COMBOBOXTEXT";
+			break;
+		case WIDGET_FONTBUTTON:
+			type = "FONTBUTTON";
 			break;
 		case WIDGET_FRAME:
 			type = "FRAME";

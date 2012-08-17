@@ -48,6 +48,7 @@
 #include "widget_checkbox.h"
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
+#include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
 #include "widget_menubar.h"
@@ -293,6 +294,9 @@ void print_command(instruction command)
 			break;
 		case WIDGET_COMBOBOXTEXT:
 			printf("(new comboboxtext())");
+			break;
+		case WIDGET_FONTBUTTON:
+			printf("(new fontbutton())");
 			break;
 		case WIDGET_FRAME:
 			printf("(new frame(pop()))");
@@ -587,6 +591,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_COMBOBOXTEXT:
 			printf("(COMBOBOXTEXT)");
+			break;
+		case WIDGET_FONTBUTTON:
+			printf("(FONTBUTTON)");
 			break;
 		case WIDGET_FRAME:
 			printf("(FRAME)");
@@ -1445,6 +1452,10 @@ instruction_execute_push(
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+		case WIDGET_FONTBUTTON:
+			Widget = widget_fontbutton_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
 		case WIDGET_FRAME:

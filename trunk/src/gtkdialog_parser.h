@@ -181,7 +181,10 @@
      ESTATUSBAR = 397,
      COLORBUTTON = 398,
      PART_COLORBUTTON = 399,
-     ECOLORBUTTON = 400
+     ECOLORBUTTON = 400,
+     FONTBUTTON = 401,
+     PART_FONTBUTTON = 402,
+     EFONTBUTTON = 403
    };
 #endif
 /* Tokens.  */
@@ -328,6 +331,9 @@
 #define COLORBUTTON 398
 #define PART_COLORBUTTON 399
 #define ECOLORBUTTON 400
+#define FONTBUTTON 401
+#define PART_FONTBUTTON 402
+#define EFONTBUTTON 403
 
 
 
@@ -348,7 +354,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 352 "gtkdialog_parser.h"
+#line 358 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

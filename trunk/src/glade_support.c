@@ -637,6 +637,9 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
 	else if (GTK_IS_TOGGLE_BUTTON(widget))
 		retval = WIDGET_TOGGLEBUTTON;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkFontButton */
+	else if (GTK_IS_FONT_BUTTON(widget))
+		retval = WIDGET_FONTBUTTON;
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton */
 	else if (GTK_IS_BUTTON(widget))
 		retval = WIDGET_BUTTON;
