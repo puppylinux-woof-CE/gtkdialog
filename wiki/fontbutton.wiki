@@ -1,0 +1,93 @@
+#summary fontbutton widget reference
+
+= fontbutton widget =
+
+A [http://developer.gnome.org/gtk/2.24/GtkFontButton.html GtkFontButton]
+
+----
+
+== Definition ==
+
+{{{
+<fontbutton tag_attr="value"...>
+	<default>data</default>
+	<variable>varname</variable>
+	<input>command</input>
+	<input file>filename</input>
+	<sensitive>state</sensitive>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+	<output file>filename</output>
+</fontbutton>
+}}}
+
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+
+See the [http://developer.gnome.org/gtk/2.24/GtkFontButton.html#GtkFontButton.object-hierarchy GtkFontButton] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+== Directives ==
+
+Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| default || Initial data || Font name || || ||
+|| variable || Shell variable name || || || ||
+|| input || Data input source || Shell command || || ||
+|| input file || Data input source || Filename || || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+|| output file || Data output target || Filename || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+== Signals ==
+
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkFontButton.html#GtkFontButton-font-set font-set]", emitted when the user selects a font.
+
+See also the [http://developer.gnome.org/gtk/2.24/GtkFontButton.html#GtkFontButton.signals GtkFontButton] widget and ancestor class signals.
+
+== Functions ==
+
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Sensitise widget || Shell variable name || ||
+|| disable || Desensitise widget || Shell variable name || ||
+|| show || Show widget || Shell variable name || ||
+|| hide || Hide widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+== Notes ==
+
+This widget was introduced in version 0.8.1.
+
+----
