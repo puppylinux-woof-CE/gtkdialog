@@ -66,6 +66,7 @@ input_get_shell_command(const gchar *command)
 		return NULL;
 }
 
+/* Redundant: Not being used
 gboolean
 command_is_shell_command(const gchar *command)
 {
@@ -292,7 +293,7 @@ command_get_append_command(const gchar *command)
 		return command + 7;
 	else
 		return NULL;
-}
+} */
 
 
 /* Thunor: These need to match CommandType as defined in stringman.h */
@@ -306,6 +307,7 @@ static gchar *prefixes[] = {
 	"disable",
 	"show",
 	"hide",
+	"activate",
 	"refresh",
 	"save",
 	"fileselect",

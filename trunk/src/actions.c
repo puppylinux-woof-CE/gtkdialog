@@ -583,6 +583,16 @@ int action_hide(GtkWidget *widget, char *string)
 }
 
 /***********************************************************************
+ * Action activate                                                     *
+ ***********************************************************************/
+
+int action_activate(GtkWidget *widget, char *string)
+{
+	variables_activate(string);
+	return 0;
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 /* This fuction will export variables and run a shell command */

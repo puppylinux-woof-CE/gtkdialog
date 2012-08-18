@@ -47,6 +47,7 @@ int action_enable(GtkWidget *widget, char *string);
 int action_disable(GtkWidget *widget, char *string);
 int action_show(GtkWidget *widget, char *string);
 int action_hide(GtkWidget *widget, char *string);
+int action_activate(GtkWidget *widget, char *string);
 int action_shellcommand(GtkWidget *widget, char *string);
 
 #endif
