@@ -45,29 +45,24 @@ typedef enum {
 	CommandDisable           = 5,
 	CommandShow              = 6,
 	CommandHide              = 7,
-	CommandRefresh           = 8,
-	CommandSave              = 9,
-	CommandFileSelect        = 10,
-	CommandClear             = 11,
-	CommandRemoveSelected    = 12,
-	CommandInsert            = 13,
-	CommandAppend            = 14
+	CommandActivate          = 8,
+	CommandRefresh           = 9,
+	CommandSave              = 10,
+	CommandFileSelect        = 11,
+	CommandClear             = 12,
+	CommandRemoveSelected    = 13,
+	CommandInsert            = 14,
+	CommandAppend            = 15
 } CommandType;
 
 #ifdef G_OS_WIN32
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 #endif
 
-list_t *linecutter(char *str, int fs );
-void list_t_free(list_t *ptr);
-char *find_pixmap( char *filename );
-tag_attr *new_tag_attributeset(char *name, char *value);
-tag_attr *add_tag_attribute(tag_attr *attr, char *name, char *value);
-char *str_default_name (int itype);
-char *get_tag_attribute(tag_attr *attr, const char *name);
-
 gboolean input_is_shell_command(const gchar *command);
 const gchar *input_get_shell_command(const gchar *command);
+
+/* Redundant: Not being used
 gboolean command_is_shell_command(const gchar *command);
 const gchar *command_get_shell_command(const gchar *command);
 gboolean command_is_exit_command(const gchar *command);
@@ -96,11 +91,17 @@ gboolean command_is_insert_command(const gchar *command);
 const gchar *command_get_insert_command(const gchar *command);
 gboolean command_is_append_command(const gchar *command);
 const gchar *command_get_append_command(const gchar *command);
+*/
+
 void command_get_prefix(const gchar *string, gchar **prefix, gchar **command);
 CommandType command_prefix_get_type(const gchar *prefix);
-
-
-
+char *find_pixmap( char *filename );
+list_t *linecutter(char *str, int fs );
+void list_t_free(list_t *ptr);
+char *str_default_name (int itype);
+char *get_tag_attribute(tag_attr *attr, const char *name);
+tag_attr *add_tag_attribute(tag_attr *attr, char *name, char *value);
+tag_attr *new_tag_attributeset(char *name, char *value);
 
 #endif
 

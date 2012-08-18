@@ -737,6 +737,34 @@ variable *variables_hide(const char *name)
 }
 
 /***********************************************************************
+ * Variables activate                                                  *
+ ***********************************************************************/
+
+variable *variables_activate(const char *name)
+{
+	gboolean  retval;
+	variable *var;
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): %s\n", __func__, name);
+	fflush(stderr);
+#endif
+
+	var = _tree_find(name, NULL);
+	if (var == NULL)
+		return (NULL);
+	if (var->Widget == NULL)
+		return (NULL);
+
+	retval = gtk_widget_activate(var->Widget);
+
+	if (!retval)
+		fprintf(stderr, "%s(): %s is not an activatable widget.\n", __func__, name);
+
+	return (var);
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 

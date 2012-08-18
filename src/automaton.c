@@ -205,6 +205,10 @@ execute_action(GtkWidget *widget,
 				action_hide(widget, command_string);
 				break;
 
+			case CommandActivate:
+				action_activate(widget, command_string);
+				break;
+
 			case CommandRefresh:
 				variables_export_all();
 				action_refreshwidget(widget, command_string);

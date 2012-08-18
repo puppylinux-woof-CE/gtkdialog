@@ -1,0 +1,112 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export MAIN_DIALOG='
+<window title="Activate" border-width="0">
+	<vbox>
+		<menubar space-expand="false" space-fill="false">
+			<menu>
+				<menuitem>
+					<variable>menuitem</variable>
+					<action>echo Activating menuitem</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem radiobutton="true" label="radiomenuitem0">
+				</menuitem>
+				<menuitem radiobutton="false" label="radiomenuitem1">
+					<variable>radiomenuitem1</variable>
+					<action>echo Activating radiomenuitem1</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem checkbox="false" label="checkmenuitem">
+					<variable>checkmenuitem</variable>
+					<action>echo Activating checkmenuitem</action>
+				</menuitem>
+				<variable>menu</variable>
+				<action>echo Activating menu</action>
+			</menu>
+		</menubar>
+		<vbox border-width="5" space-expand="true" space-fill="true">
+			<button label="button">
+				<variable>button</variable>
+				<action>echo Activating button</action>
+			</button>
+			<hseparator></hseparator>
+			<checkbox>
+				<variable>checkbox</variable>
+				<action>echo Activating checkbox</action>
+			</checkbox>
+			<hseparator></hseparator>
+			<colorbutton>
+				<variable>colorbutton</variable>
+			</colorbutton>
+			<hseparator></hseparator>
+			<entry text="entry">
+				<variable>entry</variable>
+				<action signal="activate">echo Activating entry</action>
+			</entry>
+			<hseparator></hseparator>
+			<hbox>
+				<fontbutton>
+					<variable>fontbutton</variable>
+				</fontbutton>
+				<togglebutton label="Visibility" active="true">
+					<action>if false hide:fontbutton</action>
+					<action>if true show:fontbutton</action>
+				</togglebutton>
+				<togglebutton label="Sensitivity" active="true">
+					<action>if false disable:fontbutton</action>
+					<action>if true enable:fontbutton</action>
+				</togglebutton>
+			</hbox>
+			<hseparator></hseparator>
+			<hbox>
+				<radiobutton label="radiobutton0"></radiobutton>
+				<radiobutton label="radiobutton1">
+					<variable>radiobutton1</variable>
+					<action>echo Activating radiobutton1</action>
+				</radiobutton>
+			</hbox>
+			<hseparator></hseparator>
+			<spinbutton>
+				<variable>spinbutton</variable>
+				<action signal="activate">echo Activating spinbutton</action>
+			</spinbutton>
+			<hseparator></hseparator>
+			<togglebutton label="togglebutton">
+				<variable>togglebutton</variable>
+				<action>echo Activating togglebutton</action>
+			</togglebutton>
+			<hseparator></hseparator>
+			<hbox space-expand="false" space-fill="false">
+				<button>
+					<label>Activate color/fontbutton</label>
+					<action type="activate">colorbutton</action>
+					<action type="activate">fontbutton</action>
+				</button>
+				<button>
+					<label>Activate everything else</label>
+					<action type="activate">menu</action>
+					<action type="activate">menuitem</action>
+					<action type="activate">radiomenuitem1</action>
+					<action type="activate">checkmenuitem</action>
+					<action type="activate">button</action>
+					<action type="activate">checkbox</action>
+					<action type="activate">entry</action>
+					<action type="activate">radiobutton1</action>
+					<action type="activate">spinbutton</action>
+					<action type="activate">togglebutton</action>
+				</button>
+				<vseparator></vseparator>
+				<button use-stock="true" label="gtk-quit"></button>
+			</hbox>
+		</vbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac

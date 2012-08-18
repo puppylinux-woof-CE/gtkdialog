@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Aug 18 2012 Thunor <thunorsif@hotmail.com>
+- Added support for activate to compatible widgets.
+- Added examples/miscellaneous/activate.
+
 * Fri Aug 17 2012 Thunor <thunorsif@hotmail.com>
 - New widget: <fontbutton>.
 - Added examples/fontbutton/fontbutton.
