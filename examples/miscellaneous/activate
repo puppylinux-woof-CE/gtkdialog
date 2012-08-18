@@ -38,8 +38,9 @@ export MAIN_DIALOG='
 				<action>echo Activating checkbox</action>
 			</checkbox>
 			<hseparator></hseparator>
-			<colorbutton>
+			<colorbutton use-alpha="true">
 				<variable>colorbutton</variable>
+				<default>#4488cc|32768</default>
 			</colorbutton>
 			<hseparator></hseparator>
 			<entry text="entry">
@@ -48,7 +49,7 @@ export MAIN_DIALOG='
 			</entry>
 			<hseparator></hseparator>
 			<hbox>
-				<fontbutton>
+				<fontbutton font-name="Sans 18" use-font="true" use-size="true">
 					<variable>fontbutton</variable>
 				</fontbutton>
 				<togglebutton label="Visibility" active="true">
@@ -69,7 +70,7 @@ export MAIN_DIALOG='
 				</radiobutton>
 			</hbox>
 			<hseparator></hseparator>
-			<spinbutton>
+			<spinbutton value="46">
 				<variable>spinbutton</variable>
 				<action signal="activate">echo Activating spinbutton</action>
 			</spinbutton>
