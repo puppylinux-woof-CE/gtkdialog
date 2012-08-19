@@ -3,58 +3,60 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-	<hbox border-width="30" spacing="30">
-		<vbox>
-			<text wrap="false" angle="45">
-				<label>"Angled text (line wrapping must
+<window>
+	<vbox>
+		<hbox border-width="30" spacing="30">
+			<vbox>
+				<text wrap="false" angle="45">
+					<label>"Angled text (line wrapping must
     be disabled for this) and any
         angle is supported."</label>
-			</text>
-			<hseparator></hseparator>
-			<text justify="0">
-				<label>"This text is left justified relative to
+				</text>
+				<hseparator></hseparator>
+				<text justify="0">
+					<label>"This text is left justified relative to
 the other lines within this text (default)"</label>
-			</text>
-			<hseparator></hseparator>
-			<text justify="1">
-				<label>"This text is right justified relative to
+				</text>
+				<hseparator></hseparator>
+				<text justify="1">
+					<label>"This text is right justified relative to
 the other lines within this text"</label>
-			</text>
-		</vbox>
-		<vseparator></vseparator>
-		<vbox>
-			<text justify="2">
-				<label>"This text is centre justified relative to
+				</text>
+			</vbox>
+			<vseparator></vseparator>
+			<vbox>
+				<text justify="2">
+					<label>"This text is centre justified relative to
 the other lines within this text"</label>
-			</text>
-			<hseparator></hseparator>
-			<text max-width-chars="20">
-				<label>The desired maximum width of the text, in characters.</label>
-			</text>
-			<hseparator></hseparator>
-			<text width-chars="20">
-				<label>The desired width of the text, in characters.</label>
-			</text>
-			<hseparator></hseparator>
-			<text pattern="This ____ includes ____ underlined _____.">
-				<label>This text includes some underlined words.</label>
-			</text>
-			<hseparator></hseparator>
-			<text selectable="true">
-				<label>This text can be selected and will be selected by default if it has the focus (press Tab to move the focus here from the OK button).</label>
-			</text>
-			<hseparator></hseparator>
-			<text use-markup="true">
-				<label>"<span fgcolor='"'darkred'"'><b>This</b></span> <s>text</s> <i>includes</i> <span fgcolor='"'darkgreen'"'>XML</span> <u>markup</u>."</label>
-			</text>
-		</vbox>
-	</hbox>
-	<hseparator></hseparator>
-	<hbox homogeneous="true">
-		<button use-stock="true" label="gtk-ok" has-focus="true"></button>
-	</hbox>
-</vbox>
+				</text>
+				<hseparator></hseparator>
+				<text max-width-chars="20">
+					<label>The desired maximum width of the text, in characters.</label>
+				</text>
+				<hseparator></hseparator>
+				<text width-chars="20">
+					<label>The desired width of the text, in characters.</label>
+				</text>
+				<hseparator></hseparator>
+				<text pattern="This ____ includes ____ underlined _____.">
+					<label>This text includes some underlined words.</label>
+				</text>
+				<hseparator></hseparator>
+				<text selectable="true">
+					<label>This text can be selected and will be selected by default if it has the focus (press Tab to move the focus here from the OK button).</label>
+				</text>
+				<hseparator></hseparator>
+				<text use-markup="true">
+					<label>"<span fgcolor='"'darkred'"'><b>This</b></span> <s>text</s> <i>includes</i> <span fgcolor='"'darkgreen'"'>XML</span> <u>markup</u>."</label>
+				</text>
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-ok" has-focus="true"></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

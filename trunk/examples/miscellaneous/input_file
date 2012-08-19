@@ -5,21 +5,23 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <hbox>
-    <text>
-      <label>Input:</label>
-    </text>
-    <entry>
-      <variable>ENTRY</variable>
-    </entry>
-  </hbox>
-  <hbox>
-    <button help></button>
-    <button cancel></button>
-    <button ok></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<hbox>
+			<text>
+				<label>Input:</label>
+			</text>
+			<entry>
+				<variable>ENTRY</variable>
+			</entry>
+		</hbox>
+		<hbox>
+			<button help></button>
+			<button cancel></button>
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

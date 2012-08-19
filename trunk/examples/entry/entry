@@ -3,16 +3,18 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <entry>
-    <default>Default value</default>
-    <variable>ENTRY</variable>
-  </entry>
-  <hbox>
-    <button ok></button>
-    <button cancel></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<entry>
+			<default>Default value</default>
+			<variable>ENTRY</variable>
+		</entry>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

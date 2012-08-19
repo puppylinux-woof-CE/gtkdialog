@@ -1,11 +1,13 @@
 #! /usr/local/bin/gtkdialog -f 
 
-<vbox>
-  <button>
-    <label>Xterm</label>
-    <action>xterm&</action>
-  </button>
-  <button>
-    <label>Exit</label>
-  </button>
-</vbox>
+<window>
+	<vbox>
+		<button>
+			<label>Xterm</label>
+			<action>xterm&</action>
+		</button>
+		<button>
+			<label>Exit</label>
+		</button>
+	</vbox>
+</window>

@@ -10,57 +10,59 @@
 GTKDIALOG=gtkdialog
 
 inputstock() {
-  echo "gtk-open | | gtk-open | 2 "
-  echo "gtk-about | | gtk-about | 2 "
-  echo "gtk-add | | gtk-add | 2 "
-  echo "gtk-apply | | gtk-apply | 2 "
-  echo "gtk-bold | | gtk-bold | 2 "
-  echo "gtk-cancel | | gtk-cancel | 2 "
-  echo "gtk-cdrom | | gtk-cdrom | 2 "
-  echo "gtk-clear | | gtk-clear | 2 "
-  echo "gtk-close | | gtk-close | 2 "
-  echo "gtk-color-picker | | gtk-color-picker | 2 "
-  echo "gtk-convert | | gtk-convert | 2 "
+	echo "gtk-open | | gtk-open | 2 "
+	echo "gtk-about | | gtk-about | 2 "
+	echo "gtk-add | | gtk-add | 2 "
+	echo "gtk-apply | | gtk-apply | 2 "
+	echo "gtk-bold | | gtk-bold | 2 "
+	echo "gtk-cancel | | gtk-cancel | 2 "
+	echo "gtk-cdrom | | gtk-cdrom | 2 "
+	echo "gtk-clear | | gtk-clear | 2 "
+	echo "gtk-close | | gtk-close | 2 "
+	echo "gtk-color-picker | | gtk-color-picker | 2 "
+	echo "gtk-convert | | gtk-convert | 2 "
 }; export -f inputstock
 
 inputicon() {
-  echo "gimp | | gimp | 2 "
-  echo "gnumeric | | gnumeric | 2 "
-  echo "geany | | geany | 2 "
-  echo "viewnior | | viewnior | 2 "
-  echo "xarchive | | xarchive | 2 "
-  echo "scribus | | scribus | 2 "
-  echo "inkscape | | inkscape | 2 "
-  echo "html | | html | 2 "
-  echo "top | | top | 2 "
-  echo "midori | | midori | 2 "
-  echo "abiword | | abiword | 2 "
+	echo "gimp | | gimp | 2 "
+	echo "gnumeric | | gnumeric | 2 "
+	echo "geany | | geany | 2 "
+	echo "viewnior | | viewnior | 2 "
+	echo "xarchive | | xarchive | 2 "
+	echo "scribus | | scribus | 2 "
+	echo "inkscape | | inkscape | 2 "
+	echo "html | | html | 2 "
+	echo "top | | top | 2 "
+	echo "midori | | midori | 2 "
+	echo "abiword | | abiword | 2 "
 }; export -f inputicon
 
 export MAIN_DIALOG='
-<vbox>
-  <hbox>
-    <frame Stock icons from input command>
-      <tree>
-        <variable>TREE1</variable>
-        <width>200</width><height>300</height>
-        <label>0 | 1 | 2</label>
-        <input stock-column="0">inputstock</input>
-      </tree>
-    </frame>
-    <frame Theme icons from input command>
-      <tree>
-        <variable>TREE2</variable>
-        <width>200</width><height>300</height>
-        <label>0 | 1 | 2</label>
-        <input icon-column="0">inputicon</input>
-      </tree>
-    </frame>
-  </hbox>
-  <hbox homogeneous="true">
-    <button ok></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<hbox>
+			<frame Stock icons from input command>
+				<tree>
+					<variable>TREE1</variable>
+					<width>200</width><height>300</height>
+					<label>0 | 1 | 2</label>
+					<input stock-column="0">inputstock</input>
+				</tree>
+			</frame>
+			<frame Theme icons from input command>
+				<tree>
+					<variable>TREE2</variable>
+					<width>200</width><height>300</height>
+					<label>0 | 1 | 2</label>
+					<input icon-column="0">inputicon</input>
+				</tree>
+			</frame>
+		</hbox>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

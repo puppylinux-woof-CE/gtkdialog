@@ -8,37 +8,39 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <frame Button signals>
-    <hbox>
-      <button>
-        <label>All Default</label>
-      </button>
-      <button>
-        <label>Enter/Leave/Clicked</label>
-        <action signal="clicked">echo Signal: clicked /default/</action>
-        <action signal="enter">echo Signal: enter</action>
-        <action signal="leave">echo Signal: leave</action>
-      </button>
-      <button>
-        <label>Pressed/Released/Clicked</label>
-        <action signal="clicked">echo Signal: clicked /default/</action>
-        <action signal="pressed">echo Signal: pressed</action>
-        <action signal="released">echo Signal: released</action>
-      </button>
-    </hbox>
-  </frame>
-  <hbox>
-    <button cancel>
-      <action signal="enter">echo Do you really want to exit?</action>
-      <action type="exit">Cancel</action>
-    </button>
-    <button ok>
-      <action signal="enter">echo Do you really want to exit?</action>
-      <action type="exit">OK</action>
-    </button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Button signals>
+			<hbox>
+				<button>
+					<label>All Default</label>
+				</button>
+				<button>
+					<label>Enter/Leave/Clicked</label>
+					<action signal="clicked">echo Signal: clicked /default/</action>
+					<action signal="enter">echo Signal: enter</action>
+					<action signal="leave">echo Signal: leave</action>
+				</button>
+				<button>
+					<label>Pressed/Released/Clicked</label>
+					<action signal="clicked">echo Signal: clicked /default/</action>
+					<action signal="pressed">echo Signal: pressed</action>
+					<action signal="released">echo Signal: released</action>
+				</button>
+			</hbox>
+		</frame>
+		<hbox>
+			<button cancel>
+				<action signal="enter">echo Do you really want to exit?</action>
+				<action type="exit">Cancel</action>
+			</button>
+			<button ok>
+				<action signal="enter">echo Do you really want to exit?</action>
+				<action type="exit">OK</action>
+			</button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

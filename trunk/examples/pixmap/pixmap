@@ -5,49 +5,51 @@ GTKDIALOG=gtkdialog
 IMAGEFILE="$(find /usr/share/pixmaps -maxdepth 1 -type f | head -1)"
 
 export MAIN_DIALOG='
-<vbox>
-  <hbox>
-    <frame Pixmap from stock icon_size="1">
-      <pixmap icon_size="1">
-        <input file stock="gtk-save"></input>
-      </pixmap>
-    </frame>
-    <frame Pixmap from stock icon_size="3">
-      <pixmap icon_size="3">
-        <input file stock="gtk-save"></input>
-      </pixmap>
-    </frame>
-  </hbox>
-  <hbox>
-    <frame Pixmap from stock icon_size="5">
-      <pixmap icon_size="5">
-        <input file stock="gtk-save"></input>
-      </pixmap>
-    </frame>
-    <frame Pixmap from stock icon_size="6">
-      <pixmap icon_size="6">
-        <input file stock="gtk-save"></input>
-      </pixmap>
-    </frame>
-  </hbox>
-  <hbox>
-    <frame Pixmap from file>
-      <pixmap>
-        <input file>'"$IMAGEFILE"'</input>
-      </pixmap>
-    </frame>
-    <frame Pixmap from file scaled>
-      <pixmap>
-        <width>128</width>
-        <input file>'"$IMAGEFILE"'</input>
-      </pixmap>
-    </frame>
-  </hbox>
-  <hbox>
-    <button cancel></button>
-    <button ok></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<hbox>
+			<frame Pixmap from stock icon_size="1">
+				<pixmap icon_size="1">
+					<input file stock="gtk-save"></input>
+				</pixmap>
+			</frame>
+			<frame Pixmap from stock icon_size="3">
+				<pixmap icon_size="3">
+					<input file stock="gtk-save"></input>
+				</pixmap>
+			</frame>
+		</hbox>
+		<hbox>
+			<frame Pixmap from stock icon_size="5">
+				<pixmap icon_size="5">
+					<input file stock="gtk-save"></input>
+				</pixmap>
+			</frame>
+			<frame Pixmap from stock icon_size="6">
+				<pixmap icon_size="6">
+					<input file stock="gtk-save"></input>
+				</pixmap>
+			</frame>
+		</hbox>
+		<hbox>
+			<frame Pixmap from file>
+				<pixmap>
+					<input file>'"$IMAGEFILE"'</input>
+				</pixmap>
+			</frame>
+			<frame Pixmap from file scaled>
+				<pixmap>
+					<width>128</width>
+					<input file>'"$IMAGEFILE"'</input>
+				</pixmap>
+			</frame>
+		</hbox>
+		<hbox>
+			<button cancel></button>
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

@@ -5,27 +5,29 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <frame Imperative Example>
-    <checkbox active="true">
-      <label>First checkbox</label>
-      <variable>CHECKBOX</variable>
-    </checkbox>
-    <command assignment="n := 1"></command>
-    <while condition="n = 22">
-      <checkbox>
-        <label>The second checkbox</label>
-      </checkbox>
-      <command assignment="n := n + 1"></command>
-    </while>
-  </frame>
-  <hbox>
-    <button ok>
-      <variable>OKBUTTON</variable>
-    </button>
-    <button cancel></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Imperative Example>
+			<checkbox active="true">
+				<label>First checkbox</label>
+				<variable>CHECKBOX</variable>
+			</checkbox>
+			<command assignment="n := 1"></command>
+			<while condition="n = 22">
+				<checkbox>
+					<label>The second checkbox</label>
+				</checkbox>
+				<command assignment="n := n + 1"></command>
+			</while>
+		</frame>
+		<hbox>
+			<button ok>
+				<variable>OKBUTTON</variable>
+			</button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

@@ -3,134 +3,136 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <hbox>
-    <button>
-      <input file icon="xterm"></input>
-      <action>echo xterm</action>
-    </button>
-    <button>
-      <input file icon="xarchive"></input>
-      <action>echo xarchive</action>
-    </button>
-    <button>
-      <input file icon="urxvt"></input>
-      <action>echo urxvt</action>
-    </button>
-    <button>
-      <input file icon="sylpheed"></input>
-      <action>echo sylpheed</action>
-    </button>
-    <button>
-      <input file icon="so"></input>
-      <action>echo so</action>
-    </button>
-    <button>
-      <input file icon="scribus"></input>
-      <action>echo scribus</action>
-    </button>
-    <button>
-      <input file icon="rxvt"></input>
-      <action>echo rxvt</action>
-    </button>
-    <button>
-      <input file icon="paste"></input>
-      <action>echo paste</action>
-    </button>
-    <button>
-      <input file icon="package"></input>
-      <action>echo package</action>
-    </button>
-    <button>
-      <input file icon="outbox"></input>
-      <action>echo outbox</action>
-    </button>
-  </hbox>
-  <hbox>
-    <button>
-      <input file icon="network"></input>
-      <action>echo network</action>
-    </button>
-    <button>
-      <input file icon="inkscape"></input>
-      <action>echo inkscape</action>
-    </button>
-    <button>
-      <input file icon="inbox"></input>
-      <action>echo inbox</action>
-    </button>
-    <button>
-      <input file icon="icewm-logo"></input>
-      <action>echo icewm-logo</action>
-    </button>
-    <button>
-      <input file icon="icewin"></input>
-      <action>echo icewin</action>
-    </button>
-    <button>
-      <input file icon="html"></input>
-      <action>echo html</action>
-    </button>
-    <button>
-      <input file icon="gz"></input>
-      <action>echo gz</action>
-    </button>
-    <button>
-      <input file icon="gtktheme"></input>
-      <action>echo gtktheme</action>
-    </button>
-    <button>
-      <input file icon="gtkhash"></input>
-      <action>echo gtkhash</action>
-    </button>
-    <button>
-      <input file icon="grubconfig"></input>
-      <action>echo grubconfig</action>
-    </button>
-  </hbox>
-  <hbox>
-    <button>
-      <input file icon="gparted"></input>
-      <action>echo gparted</action>
-    </button>
-    <button>
-      <input file icon="gnome-mplayer"></input>
-      <action>echo gnome-mplayer</action>
-    </button>
-    <button>
-      <input file icon="top"></input>
-      <action>echo top</action>
-    </button>
-    <button>
-      <input file icon="midori"></input>
-      <action>echo midori</action>
-    </button>
-    <button>
-      <input file icon="extension"></input>
-      <action>echo extension</action>
-    </button>
-    <button>
-      <input file icon="news-feed"></input>
-      <action>echo news-feed</action>
-    </button>
-    <button>
-      <input file icon="gexec"></input>
-      <action>echo gexec</action>
-    </button>
-    <button>
-      <input file icon="geany"></input>
-      <action>echo geany</action>
-    </button>
-    <button>
-      <input file icon="adblock"></input>
-      <action>echo adblock</action>
-    </button>
-    <button>
-      <input file icon="abiword"></input>
-      <action>echo abiword</action>
-    </button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<hbox>
+			<button>
+				<input file icon="xterm"></input>
+				<action>echo xterm</action>
+			</button>
+			<button>
+				<input file icon="xarchive"></input>
+				<action>echo xarchive</action>
+			</button>
+			<button>
+				<input file icon="urxvt"></input>
+				<action>echo urxvt</action>
+			</button>
+			<button>
+				<input file icon="sylpheed"></input>
+				<action>echo sylpheed</action>
+			</button>
+			<button>
+				<input file icon="so"></input>
+				<action>echo so</action>
+			</button>
+			<button>
+				<input file icon="scribus"></input>
+				<action>echo scribus</action>
+			</button>
+			<button>
+				<input file icon="rxvt"></input>
+				<action>echo rxvt</action>
+			</button>
+			<button>
+				<input file icon="paste"></input>
+				<action>echo paste</action>
+			</button>
+			<button>
+				<input file icon="package"></input>
+				<action>echo package</action>
+			</button>
+			<button>
+				<input file icon="outbox"></input>
+				<action>echo outbox</action>
+			</button>
+		</hbox>
+		<hbox>
+			<button>
+				<input file icon="network"></input>
+				<action>echo network</action>
+			</button>
+			<button>
+				<input file icon="inkscape"></input>
+				<action>echo inkscape</action>
+			</button>
+			<button>
+				<input file icon="inbox"></input>
+				<action>echo inbox</action>
+			</button>
+			<button>
+				<input file icon="icewm-logo"></input>
+				<action>echo icewm-logo</action>
+			</button>
+			<button>
+				<input file icon="icewin"></input>
+				<action>echo icewin</action>
+			</button>
+			<button>
+				<input file icon="html"></input>
+				<action>echo html</action>
+			</button>
+			<button>
+				<input file icon="gz"></input>
+				<action>echo gz</action>
+			</button>
+			<button>
+				<input file icon="gtktheme"></input>
+				<action>echo gtktheme</action>
+			</button>
+			<button>
+				<input file icon="gtkhash"></input>
+				<action>echo gtkhash</action>
+			</button>
+			<button>
+				<input file icon="grubconfig"></input>
+				<action>echo grubconfig</action>
+			</button>
+		</hbox>
+		<hbox>
+			<button>
+				<input file icon="gparted"></input>
+				<action>echo gparted</action>
+			</button>
+			<button>
+				<input file icon="gnome-mplayer"></input>
+				<action>echo gnome-mplayer</action>
+			</button>
+			<button>
+				<input file icon="top"></input>
+				<action>echo top</action>
+			</button>
+			<button>
+				<input file icon="midori"></input>
+				<action>echo midori</action>
+			</button>
+			<button>
+				<input file icon="extension"></input>
+				<action>echo extension</action>
+			</button>
+			<button>
+				<input file icon="news-feed"></input>
+				<action>echo news-feed</action>
+			</button>
+			<button>
+				<input file icon="gexec"></input>
+				<action>echo gexec</action>
+			</button>
+			<button>
+				<input file icon="geany"></input>
+				<action>echo geany</action>
+			</button>
+			<button>
+				<input file icon="adblock"></input>
+				<action>echo adblock</action>
+			</button>
+			<button>
+				<input file icon="abiword"></input>
+				<action>echo abiword</action>
+			</button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

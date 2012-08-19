@@ -24,29 +24,31 @@ geany        | Network Drive | /network/  | ak.c
 EOF
 
 export MAIN_DIALOG='
-<vbox>
-  <text label="Mixed data input sources"></text>
-  <tree>
-    <variable>TREE1</variable>
-    <width>400</width><height>400</height>
-    <label>Device                           | Directory | File</label>
-    <item>CD_ROM Drive                      | /cdrom/   | ak.iso</item>
-    <item>Floppy Disk                       | /floppy/  | ak.bin</item>
-    <item>Trash                             | /trash/   | ak.old</item>
-    <item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | ak.idx</item>
-    <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-    <item stock-id="gtk-delete">Trash       | /trash/   | ak.old</item>
-    <item icon-name="gimp">CD_ROM Drive     | /cdrom/   | ak.png</item>
-    <item icon-name="gnumeric">Floppy Disk  | /floppy/  | ak.ods</item>
-    <item icon-name="">Trash                | /trash/   | ak.old</item>
-    <input file stock-column="0">'"$TMPDIR"'/inputfile0</input>
-    <input file icon-column="0">'"$TMPDIR"'/inputfile1</input>
-  </tree>
-  <hseparator></hseparator>
-  <hbox homogeneous="true">
-    <button ok></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<text label="Mixed data input sources"></text>
+		<tree>
+			<variable>TREE1</variable>
+			<width>400</width><height>400</height>
+			<label>Device                           | Directory | File</label>
+			<item>CD_ROM Drive                      | /cdrom/   | ak.iso</item>
+			<item>Floppy Disk                       | /floppy/  | ak.bin</item>
+			<item>Trash                             | /trash/   | ak.old</item>
+			<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | ak.idx</item>
+			<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+			<item stock-id="gtk-delete">Trash       | /trash/   | ak.old</item>
+			<item icon-name="gimp">CD_ROM Drive     | /cdrom/   | ak.png</item>
+			<item icon-name="gnumeric">Floppy Disk  | /floppy/  | ak.ods</item>
+			<item icon-name="">Trash                | /trash/   | ak.old</item>
+			<input file stock-column="0">'"$TMPDIR"'/inputfile0</input>
+			<input file icon-column="0">'"$TMPDIR"'/inputfile1</input>
+		</tree>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

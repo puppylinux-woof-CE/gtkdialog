@@ -3,22 +3,24 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <frame Frame1>
-    <text><label>Label1</label></text>
-    <entry></entry>
-  </frame>
-  <frame Frame2>
-    <hbox>
-      <text><label>Label2</label></text>
-      <entry></entry>
-    </hbox>
-  </frame>
-  <hbox>
-    <button cancel></button>
-    <button help></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Frame1>
+			<text><label>Label1</label></text>
+			<entry></entry>
+		</frame>
+		<frame Frame2>
+			<hbox>
+				<text><label>Label2</label></text>
+				<entry></entry>
+			</hbox>
+		</frame>
+		<hbox>
+			<button cancel></button>
+			<button help></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

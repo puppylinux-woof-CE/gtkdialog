@@ -3,72 +3,76 @@
 GTKDIALOG=gtkdialog
 
 progress() {
-  for i in $(seq 0 10 100); do 
-    echo $i
-    [ "$i" -le 30 ] && echo "Start..."
-    [ "$i" -le 60 -a "$i" -gt 30 ] && echo "Middle..."
-    [ "$i" -gt 60 ] && echo "End..."
-    sleep 0.3 
-  done; 
-  echo ready
+	for i in $(seq 0 10 100); do 
+		echo $i
+		[ "$i" -le 30 ] && echo "Start..."
+		[ "$i" -le 60 -a "$i" -gt 30 ] && echo "Middle..."
+		[ "$i" -gt 60 ] && echo "End..."
+		sleep 0.3 
+	done; 
+	echo ready
 }; export -f progress
 
 progress_fast() {
-  for i in $(seq 0 1 10000); do 
-    echo $((i/100))
-    [ "$i" -le 3000 ] && echo "Start..."
-    [ "$i" -le 6000 -a "$i" -gt 3000 ] && echo "Middle..."
-    [ "$i" -gt 6000 ] && echo "End..."
-    #sleep 0.1
-  done; 
-  echo ready
+	for i in $(seq 0 1 10000); do 
+		echo $((i/100))
+		[ "$i" -le 3000 ] && echo "Start..."
+		[ "$i" -le 6000 -a "$i" -gt 3000 ] && echo "Middle..."
+		[ "$i" -gt 6000 ] && echo "End..."
+		#sleep 0.1
+	done; 
+	echo ready
 }; export -f progress_fast
 
 export BAR_DIALOG='
-<variable>BAR_DIALOG</variable>
-<vbox>
-  <frame Progress>
-    <text>
-      <label>Some text describing what is happening.</label>
-    </text>
-    <progressbar>
-      <variable>PROGRESS_BAR</variable>
-      <label>Some Text</label>
-      <input>progress_fast</input>
-      <action type="refresh">ENTRY</action>
-      <action type="closewindow">BAR_DIALOG</action>
-      <action>echo ready</action>
-    </progressbar>
-  </frame>
-  <hbox>
-    <button cancel>
-      <action type="closewindow">BAR_DIALOG</action>
-    </button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Progress>
+			<text>
+				<label>Some text describing what is happening.</label>
+			</text>
+			<progressbar>
+				<variable>PROGRESS_BAR</variable>
+				<label>Some Text</label>
+				<input>progress_fast</input>
+				<action type="refresh">ENTRY</action>
+				<action type="closewindow">BAR_DIALOG</action>
+				<action>echo ready</action>
+			</progressbar>
+		</frame>
+		<hbox>
+			<button cancel>
+				<action type="closewindow">BAR_DIALOG</action>
+			</button>
+		</hbox>
+	</vbox>
+	<variable>BAR_DIALOG</variable>
+</window>
 '
 
 export MAIN_DIALOG='
-<vbox>
-  <entry>
-    <variable>ENTRY</variable>
-    <input>date</input>
-  </entry>
-  <hbox>
-    <button cancel></button>
-    <button>
-      <label>Launch</label>
-      <action type="launch">BAR_DIALOG</action>
-    </button>
-    <button>
-      <label>Close</label>
-      <action type="exit">CLOSE</action>
-    </button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<entry>
+			<variable>ENTRY</variable>
+			<input>date</input>
+		</entry>
+		<hbox>
+			<button cancel></button>
+			<button>
+				<label>Launch</label>
+				<action type="launch">BAR_DIALOG</action>
+			</button>
+			<button>
+				<label>Close</label>
+				<action type="exit">CLOSE</action>
+			</button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in
-	-d | --dump) echo "$MAIN_DIALOG" ;;
+	-d | --dump) echo "$MAIN_DIALOG" "$BAR_DIALOG" ;;
 	*) $GTKDIALOG --program=MAIN_DIALOG ;;
 esac

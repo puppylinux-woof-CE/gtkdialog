@@ -3,48 +3,52 @@
 GTKDIALOG=gtkdialog
 
 progress() {
-  for i in $(seq 0 10 100); do
-    echo $i
-    [ "$i" -le 30 ] && echo "Start..."
-    [ "$i" -le 60 -a "$i" -gt 30 ] && echo "Middle..."
-    [ "$i" -gt 60 ] && echo "End..."
-    sleep 0.3
-  done;
-  echo ready
+	for i in $(seq 0 10 100); do
+		echo $i
+		[ "$i" -le 30 ] && echo "Start..."
+		[ "$i" -le 60 -a "$i" -gt 30 ] && echo "Middle..."
+		[ "$i" -gt 60 ] && echo "End..."
+		sleep 0.3
+	done;
+	echo ready
 }; export -f progress
 
 export BAR_DIALOG='
-<variable>BAR_DIALOG</variable>
-<vbox>
-  <frame Progress>
-    <text>
-      <label>Some text describing what is happening.</label>
-    </text>
-    <progressbar>
-      <label>Some Text</label>
-      <input>progress</input>
-      <action type="closewindow">Ready</action>
-    </progressbar>
-  </frame>
-  <hbox>
-    <button cancel>
-      <action type="closewindow">BAR_DIALOG</action>
-    </button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Progress>
+			<text>
+				<label>Some text describing what is happening.</label>
+			</text>
+			<progressbar>
+				<label>Some Text</label>
+				<input>progress</input>
+				<action type="closewindow">Ready</action>
+			</progressbar>
+		</frame>
+		<hbox>
+			<button cancel>
+				<action type="closewindow">BAR_DIALOG</action>
+			</button>
+		</hbox>
+	</vbox>
+	<variable>BAR_DIALOG</variable>
+</window>
 '
 
 export MAIN_DIALOG='
-<hbox>
-  <button cancel> </button>
-  <button>
-    <label>Launch</label>
-    <action type="launch">BAR_DIALOG</action>
-  </button>
-</hbox>
+<window>
+	<hbox>
+		<button cancel></button>
+		<button>
+			<label>Launch</label>
+			<action type="launch">BAR_DIALOG</action>
+		</button>
+	</hbox>
+</window>
 '
 
 case $1 in
-	-d | --dump) echo "$MAIN_DIALOG" ;;
+	-d | --dump) echo "$MAIN_DIALOG" "$BAR_DIALOG" ;;
 	*) $GTKDIALOG --program=MAIN_DIALOG ;;
 esac

@@ -14,37 +14,39 @@ gtk-delete   | Trash         | /trash/    |
 EOF
 
 export MAIN_DIALOG='
-<vbox>
-  <frame With Rules, Without Headers>
-    <tree rules-hint="true" headers-visible="false">
-      <variable>TREE1</variable>
-      <width>400</width><height>260</height>
-      <label>Device                           | Directory | File</label>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
-      <item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-      <input file stock-column="0">'"$TMPDIR"'/inputfile</input>
-    </tree>
-  </frame>
-  <frame Hover Mode>
-    <tree hover-expand="true" hover-selection="true">
-      <variable>TREE2</variable>
-      <width>400</width><height>260</height>
-      <label>Device                           | Directory | File</label>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
-      <item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
-      <item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-      <input file stock-column="0">'"$TMPDIR"'/inputfile</input>
-    </tree>
-  </frame>
-  <hbox homogeneous="true">
-    <button ok></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame With Rules, Without Headers>
+			<tree rules-hint="true" headers-visible="false">
+				<variable>TREE1</variable>
+				<width>400</width><height>260</height>
+				<label>Device                           | Directory | File</label>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
+				<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+				<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
+			</tree>
+		</frame>
+		<frame Hover Mode>
+			<tree hover-expand="true" hover-selection="true">
+				<variable>TREE2</variable>
+				<width>400</width><height>260</height>
+				<label>Device                           | Directory | File</label>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
+				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
+				<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+				<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
+			</tree>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in
