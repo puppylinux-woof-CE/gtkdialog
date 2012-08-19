@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Aug 19 2012 Thunor <thunorsif@hotmail.com>
+- Added window tags to a substantial number of old examples because they
+  really should be there despite the parser accepting them without and
+  it'll stop newcomers experiencing problems writing apps that launch.
+
 * Sat Aug 18 2012 Thunor <thunorsif@hotmail.com>
 - Added support for activate to compatible widgets.
 - Added examples/miscellaneous/activate.

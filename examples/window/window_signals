@@ -4,18 +4,18 @@ GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
-  <vbox>
-    <frame Description>
-      <text>
-        <label>Close via the title bar</label>
-      </text>
-    </frame>
-    <hbox>
-      <button ok></button>
-      <button cancel></button>
-    </hbox>
-  </vbox>
-  <action signal="delete-event">echo delete-event</action>
+	<vbox>
+		<frame Description>
+			<text>
+				<label>Close via the title bar</label>
+			</text>
+		</frame>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+	<action signal="delete-event">echo delete-event</action>
 </window>
 '
 

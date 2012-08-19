@@ -4,17 +4,17 @@ GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
 <window>
-  <vbox>
-    <frame Description>
-      <text>
-        <label>This is an example window.</label>
-      </text>
-    </frame>
-    <hbox>
-      <button ok></button>
-      <button cancel></button>
-    </hbox>
-  </vbox>
+	<vbox>
+		<frame Description>
+			<text>
+				<label>This is an example window.</label>
+			</text>
+		</frame>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
 </window>
 '
 

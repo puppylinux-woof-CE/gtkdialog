@@ -6,32 +6,34 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <frame Insert and Remove>
-    <tree rules-hint="true" headers-visible="false">
-      <label>This label is invisible but required</label>
-      <width>400</width><height>100</height>
-      <variable>TREE1</variable>
-    </tree>
-    <hbox>
-      <entry>
-        <variable>ENTRY</variable>
-      </entry>
-      <button>
-        <input file stock="gtk-add"></input>
-        <action type="insert">ENTRY,TREE</action>
-      </button>
-      <button>
-        <input file stock="gtk-remove"></input>
-        <action type="removeselected">TREE</action>
-      </button>
-    </hbox>    
-  </frame>
-  <hbox>
-    <button cancel></button>
-    <button ok></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Insert and Remove>
+			<tree rules-hint="true" headers-visible="false">
+				<label>This label is invisible but required</label>
+				<width>400</width><height>100</height>
+				<variable>TREE1</variable>
+			</tree>
+			<hbox>
+				<entry>
+					<variable>ENTRY</variable>
+				</entry>
+				<button>
+					<input file stock="gtk-add"></input>
+					<action type="insert">ENTRY,TREE</action>
+				</button>
+				<button>
+					<input file stock="gtk-remove"></input>
+					<action type="removeselected">TREE</action>
+				</button>
+			</hbox>    
+		</frame>
+		<hbox>
+			<button cancel></button>
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

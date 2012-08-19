@@ -3,110 +3,112 @@
 GTKDIALOG=gtkdialog
 
 export MAIN_DIALOG='
-<vbox>
-  <frame Stock ID examples>
-    <tree rules-hint="true">
-      <width>250</width><height>400</height>
-      <label>Stock ID</label>
-      <item stock-id="gtk-dialog-authentication">gtk-dialog-authentication</item>
-      <item stock-id="gtk-dialog-info">gtk-dialog-info</item>
-      <item stock-id="gtk-dialog-warning">gtk-dialog-warning</item>
-      <item stock-id="gtk-dialog-error">gtk-dialog-error</item>
-      <item stock-id="gtk-dialog-question">gtk-dialog-question</item>
-      <item stock-id="gtk-dnd">gtk-dnd</item>
-      <item stock-id="gtk-dnd-multiple">gtk-dnd-multiple</item>
-      <item stock-id="gtk-about">gtk-about</item>
-      <item stock-id="gtk-add">gtk-add</item>
-      <item stock-id="gtk-apply">gtk-apply</item>
-      <item stock-id="gtk-bold">gtk-bold</item>
-      <item stock-id="gtk-cancel">gtk-cancel</item>
-      <item stock-id="gtk-cdrom">gtk-cdrom</item>
-      <item stock-id="gtk-clear">gtk-clear</item>
-      <item stock-id="gtk-close">gtk-close</item>
-      <item stock-id="gtk-color-picker">gtk-color-picker</item>
-      <item stock-id="gtk-convert">gtk-convert</item>
-      <item stock-id="gtk-connect">gtk-connect</item>
-      <item stock-id="gtk-copy">gtk-copy</item>
-      <item stock-id="gtk-cut">gtk-cut</item>
-      <item stock-id="gtk-delete">gtk-delete</item>
-      <item stock-id="gtk-directory">gtk-directory</item>
-      <item stock-id="gtk-disconnect">gtk-disconnect</item>
-      <item stock-id="gtk-edit">gtk-edit</item>
-      <item stock-id="gtk-execute">gtk-execute</item>
-      <item stock-id="gtk-file">gtk-file</item>
-      <item stock-id="gtk-find">gtk-find</item>
-      <item stock-id="gtk-find-and-replace">gtk-find-and-replace</item>
-      <item stock-id="gtk-floppy">gtk-floppy</item>
-      <item stock-id="gtk-fullscreen">gtk-fullscreen</item>
-      <item stock-id="gtk-goto-bottom">gtk-goto-bottom</item>
-      <item stock-id="gtk-goto-first">gtk-goto-first</item>
-      <item stock-id="gtk-goto-last">gtk-goto-last</item>
-      <item stock-id="gtk-goto-top">gtk-goto-top</item>
-      <item stock-id="gtk-go-back">gtk-go-back</item>
-      <item stock-id="gtk-go-down">gtk-go-down</item>
-      <item stock-id="gtk-go-forward">gtk-go-forward</item>
-      <item stock-id="gtk-go-up">gtk-go-up</item>
-      <item stock-id="gtk-harddisk">gtk-harddisk</item>
-      <item stock-id="gtk-help">gtk-help</item>
-      <item stock-id="gtk-home">gtk-home</item>
-      <item stock-id="gtk-index">gtk-index</item>
-      <item stock-id="gtk-indent">gtk-indent</item>
-      <item stock-id="gtk-info">gtk-info</item>
-      <item stock-id="gtk-unindent">gtk-unindent</item>
-      <item stock-id="gtk-italic">gtk-italic</item>
-      <item stock-id="gtk-jump-to">gtk-jump-to</item>
-      <item stock-id="gtk-justify-center">gtk-justify-center</item>
-      <item stock-id="gtk-justify-fill">gtk-justify-fill</item>
-      <item stock-id="gtk-justify-left">gtk-justify-left</item>
-      <item stock-id="gtk-justify-right">gtk-justify-right</item>
-      <item stock-id="gtk-leave-fullscreen">gtk-leave-fullscreen</item>
-      <item stock-id="gtk-missing-image">gtk-missing-image</item>
-      <item stock-id="gtk-media-forward">gtk-media-forward</item>
-      <item stock-id="gtk-media-next">gtk-media-next</item>
-      <item stock-id="gtk-media-pause">gtk-media-pause</item>
-      <item stock-id="gtk-media-play">gtk-media-play</item>
-      <item stock-id="gtk-media-previous">gtk-media-previous</item>
-      <item stock-id="gtk-media-record">gtk-media-record</item>
-      <item stock-id="gtk-media-rewind">gtk-media-rewind</item>
-      <item stock-id="gtk-media-stop">gtk-media-stop</item>
-      <item stock-id="gtk-network">gtk-network</item>
-      <item stock-id="gtk-new">gtk-new</item>
-      <item stock-id="gtk-no">gtk-no</item>
-      <item stock-id="gtk-ok">gtk-ok</item>
-      <item stock-id="gtk-open">gtk-open</item>
-      <item stock-id="gtk-paste">gtk-paste</item>
-      <item stock-id="gtk-preferences">gtk-preferences</item>
-      <item stock-id="gtk-print">gtk-print</item>
-      <item stock-id="gtk-print-preview">gtk-print-preview</item>
-      <item stock-id="gtk-properties">gtk-properties</item>
-      <item stock-id="gtk-quit">gtk-quit</item>
-      <item stock-id="gtk-redo">gtk-redo</item>
-      <item stock-id="gtk-refresh">gtk-refresh</item>
-      <item stock-id="gtk-remove">gtk-remove</item>
-      <item stock-id="gtk-revert-to-saved">gtk-revert-to-saved</item>
-      <item stock-id="gtk-save">gtk-save</item>
-      <item stock-id="gtk-save-as">gtk-save-as</item>
-      <item stock-id="gtk-select-color">gtk-select-color</item>
-      <item stock-id="gtk-select-font">gtk-select-font</item>
-      <item stock-id="gtk-sort-ascending">gtk-sort-ascending</item>
-      <item stock-id="gtk-sort-descending">gtk-sort-descending</item>
-      <item stock-id="gtk-spell-check">gtk-spell-check</item>
-      <item stock-id="gtk-stop">gtk-stop</item>
-      <item stock-id="gtk-strikethrough">gtk-strikethrough</item>
-      <item stock-id="gtk-undelete">gtk-undelete</item>
-      <item stock-id="gtk-underline">gtk-underline</item>
-      <item stock-id="gtk-undo">gtk-undo</item>
-      <item stock-id="gtk-yes">gtk-yes</item>
-      <item stock-id="gtk-zoom-100">gtk-zoom-100</item>
-      <item stock-id="gtk-zoom-fit">gtk-zoom-fit</item>
-      <item stock-id="gtk-zoom-in">gtk-zoom-in</item>
-      <item stock-id="gtk-zoom-out">gtk-zoom-out</item>
-    </tree>
-  </frame>
-  <hbox homogeneous="true">
-    <button ok></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Stock ID examples>
+			<tree rules-hint="true">
+				<width>250</width><height>400</height>
+				<label>Stock ID</label>
+				<item stock-id="gtk-dialog-authentication">gtk-dialog-authentication</item>
+				<item stock-id="gtk-dialog-info">gtk-dialog-info</item>
+				<item stock-id="gtk-dialog-warning">gtk-dialog-warning</item>
+				<item stock-id="gtk-dialog-error">gtk-dialog-error</item>
+				<item stock-id="gtk-dialog-question">gtk-dialog-question</item>
+				<item stock-id="gtk-dnd">gtk-dnd</item>
+				<item stock-id="gtk-dnd-multiple">gtk-dnd-multiple</item>
+				<item stock-id="gtk-about">gtk-about</item>
+				<item stock-id="gtk-add">gtk-add</item>
+				<item stock-id="gtk-apply">gtk-apply</item>
+				<item stock-id="gtk-bold">gtk-bold</item>
+				<item stock-id="gtk-cancel">gtk-cancel</item>
+				<item stock-id="gtk-cdrom">gtk-cdrom</item>
+				<item stock-id="gtk-clear">gtk-clear</item>
+				<item stock-id="gtk-close">gtk-close</item>
+				<item stock-id="gtk-color-picker">gtk-color-picker</item>
+				<item stock-id="gtk-convert">gtk-convert</item>
+				<item stock-id="gtk-connect">gtk-connect</item>
+				<item stock-id="gtk-copy">gtk-copy</item>
+				<item stock-id="gtk-cut">gtk-cut</item>
+				<item stock-id="gtk-delete">gtk-delete</item>
+				<item stock-id="gtk-directory">gtk-directory</item>
+				<item stock-id="gtk-disconnect">gtk-disconnect</item>
+				<item stock-id="gtk-edit">gtk-edit</item>
+				<item stock-id="gtk-execute">gtk-execute</item>
+				<item stock-id="gtk-file">gtk-file</item>
+				<item stock-id="gtk-find">gtk-find</item>
+				<item stock-id="gtk-find-and-replace">gtk-find-and-replace</item>
+				<item stock-id="gtk-floppy">gtk-floppy</item>
+				<item stock-id="gtk-fullscreen">gtk-fullscreen</item>
+				<item stock-id="gtk-goto-bottom">gtk-goto-bottom</item>
+				<item stock-id="gtk-goto-first">gtk-goto-first</item>
+				<item stock-id="gtk-goto-last">gtk-goto-last</item>
+				<item stock-id="gtk-goto-top">gtk-goto-top</item>
+				<item stock-id="gtk-go-back">gtk-go-back</item>
+				<item stock-id="gtk-go-down">gtk-go-down</item>
+				<item stock-id="gtk-go-forward">gtk-go-forward</item>
+				<item stock-id="gtk-go-up">gtk-go-up</item>
+				<item stock-id="gtk-harddisk">gtk-harddisk</item>
+				<item stock-id="gtk-help">gtk-help</item>
+				<item stock-id="gtk-home">gtk-home</item>
+				<item stock-id="gtk-index">gtk-index</item>
+				<item stock-id="gtk-indent">gtk-indent</item>
+				<item stock-id="gtk-info">gtk-info</item>
+				<item stock-id="gtk-unindent">gtk-unindent</item>
+				<item stock-id="gtk-italic">gtk-italic</item>
+				<item stock-id="gtk-jump-to">gtk-jump-to</item>
+				<item stock-id="gtk-justify-center">gtk-justify-center</item>
+				<item stock-id="gtk-justify-fill">gtk-justify-fill</item>
+				<item stock-id="gtk-justify-left">gtk-justify-left</item>
+				<item stock-id="gtk-justify-right">gtk-justify-right</item>
+				<item stock-id="gtk-leave-fullscreen">gtk-leave-fullscreen</item>
+				<item stock-id="gtk-missing-image">gtk-missing-image</item>
+				<item stock-id="gtk-media-forward">gtk-media-forward</item>
+				<item stock-id="gtk-media-next">gtk-media-next</item>
+				<item stock-id="gtk-media-pause">gtk-media-pause</item>
+				<item stock-id="gtk-media-play">gtk-media-play</item>
+				<item stock-id="gtk-media-previous">gtk-media-previous</item>
+				<item stock-id="gtk-media-record">gtk-media-record</item>
+				<item stock-id="gtk-media-rewind">gtk-media-rewind</item>
+				<item stock-id="gtk-media-stop">gtk-media-stop</item>
+				<item stock-id="gtk-network">gtk-network</item>
+				<item stock-id="gtk-new">gtk-new</item>
+				<item stock-id="gtk-no">gtk-no</item>
+				<item stock-id="gtk-ok">gtk-ok</item>
+				<item stock-id="gtk-open">gtk-open</item>
+				<item stock-id="gtk-paste">gtk-paste</item>
+				<item stock-id="gtk-preferences">gtk-preferences</item>
+				<item stock-id="gtk-print">gtk-print</item>
+				<item stock-id="gtk-print-preview">gtk-print-preview</item>
+				<item stock-id="gtk-properties">gtk-properties</item>
+				<item stock-id="gtk-quit">gtk-quit</item>
+				<item stock-id="gtk-redo">gtk-redo</item>
+				<item stock-id="gtk-refresh">gtk-refresh</item>
+				<item stock-id="gtk-remove">gtk-remove</item>
+				<item stock-id="gtk-revert-to-saved">gtk-revert-to-saved</item>
+				<item stock-id="gtk-save">gtk-save</item>
+				<item stock-id="gtk-save-as">gtk-save-as</item>
+				<item stock-id="gtk-select-color">gtk-select-color</item>
+				<item stock-id="gtk-select-font">gtk-select-font</item>
+				<item stock-id="gtk-sort-ascending">gtk-sort-ascending</item>
+				<item stock-id="gtk-sort-descending">gtk-sort-descending</item>
+				<item stock-id="gtk-spell-check">gtk-spell-check</item>
+				<item stock-id="gtk-stop">gtk-stop</item>
+				<item stock-id="gtk-strikethrough">gtk-strikethrough</item>
+				<item stock-id="gtk-undelete">gtk-undelete</item>
+				<item stock-id="gtk-underline">gtk-underline</item>
+				<item stock-id="gtk-undo">gtk-undo</item>
+				<item stock-id="gtk-yes">gtk-yes</item>
+				<item stock-id="gtk-zoom-100">gtk-zoom-100</item>
+				<item stock-id="gtk-zoom-fit">gtk-zoom-fit</item>
+				<item stock-id="gtk-zoom-in">gtk-zoom-in</item>
+				<item stock-id="gtk-zoom-out">gtk-zoom-out</item>
+			</tree>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in

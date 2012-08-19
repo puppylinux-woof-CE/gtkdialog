@@ -8,83 +8,87 @@
 GTKDIALOG=gtkdialog
 
 export DIALOG='
-<variable>DIALOG</variable>
-<vbox>
-  <text>
-    <label>This is another dialog window.</label>
-  </text>
-  <button>
-    <label>Close</label>
-    <action type="closewindow">DIALOG</action>
-  </button>
-</vbox>
+<window>
+	<vbox>
+		<text>
+			<label>This is another dialog window.</label>
+		</text>
+		<button>
+			<label>Close</label>
+			<action type="closewindow">DIALOG</action>
+		</button>
+	</vbox>
+	<variable>DIALOG</variable>
+</window>
 '
 
 export MAIN_DIALOG='
-<vbox>
-  <frame Widgets>
-    <checkbox>
-      <label>This is a checkbox</label>
-      <variable>CHECKBOX</variable>
-    </checkbox>
-    <entry>
-      <input>date</input>
-      <variable>ENTRY</variable>
-    </entry>
-  </frame>
-  <frame Button actions>
-    <hbox>
-      <button>
-        <label>exit</label>
-        <action>echo You pressed the exit button</action>
-        <action type="exit">Exit by button</action>
-      </button>
-    </hbox>
-    <hbox>
-      <button>
-        <label>launch</label>
-        <action type="launch">DIALOG</action>
-      </button>
-      <button>
-        <label>closewindow</label>
-        <action type="closewindow">DIALOG</action>
-      </button>
-    </hbox>
-    <hbox>
-      <button>
-        <label>enable</label>
-        <action type="enable">ENTRY</action>
-        <action type="enable">CHECKBOX</action>
-      </button>
-      <button>
-        <label>disable</label>
-        <action type="disable">ENTRY</action>
-        <action type="disable">CHECKBOX</action>
-      </button>
-    </hbox>
-    <hbox>
-      <button>
-        <label>refresh</label>
-        <action type="refresh">ENTRY</action>
-      </button>
-      <button>
-        <label>clear</label>
-        <action type="clear">ENTRY</action>
-      </button>
-      <button>
-        <label>fileselect</label>
-        <action type="fileselect">ENTRY</action>
-      </button>
-    </hbox>
-  </frame>
-  <hbox>
-    <button ok></button>
-    <button cancel></button>
-  </hbox>
-</vbox>
+<window>
+	<vbox>
+		<frame Widgets>
+			<checkbox>
+				<label>This is a checkbox</label>
+				<variable>CHECKBOX</variable>
+			</checkbox>
+			<entry>
+				<input>date</input>
+				<variable>ENTRY</variable>
+			</entry>
+		</frame>
+		<frame Button actions>
+			<hbox>
+				<button>
+					<label>exit</label>
+					<action>echo You pressed the exit button</action>
+					<action type="exit">Exit by button</action>
+				</button>
+			</hbox>
+			<hbox>
+				<button>
+					<label>launch</label>
+					<action type="launch">DIALOG</action>
+				</button>
+				<button>
+					<label>closewindow</label>
+					<action type="closewindow">DIALOG</action>
+				</button>
+			</hbox>
+			<hbox>
+				<button>
+					<label>enable</label>
+					<action type="enable">ENTRY</action>
+					<action type="enable">CHECKBOX</action>
+				</button>
+				<button>
+					<label>disable</label>
+					<action type="disable">ENTRY</action>
+					<action type="disable">CHECKBOX</action>
+				</button>
+			</hbox>
+			<hbox>
+				<button>
+					<label>refresh</label>
+					<action type="refresh">ENTRY</action>
+				</button>
+				<button>
+					<label>clear</label>
+					<action type="clear">ENTRY</action>
+				</button>
+				<button>
+					<label>fileselect</label>
+					<action type="fileselect">ENTRY</action>
+				</button>
+			</hbox>
+		</frame>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
 '
 
 case $1 in
-	-d | --dump) echo "$MAIN_DIALOG" ;;
+	-d | --dump) echo "$DIALOG" "$MAIN_DIALOG" ;;
 	*) $GTKDIALOG --program=MAIN_DIALOG ;;
 esac
