@@ -122,6 +122,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkToggleButton.html">GtkToggleBu
 <tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> image-position<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Image position relative to label </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code> (left, right, top, bottom) </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> homogeneous<sup><a href="#note2">[2]</a></sup> </td><td class="wiki"> Horizontal uniformity of an image with label </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
 </table>
 
 <h2> Directives </h2>
@@ -137,13 +138,13 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkToggleButton.html">GtkToggleBu
 <tr><td class="wiki"> width </td><td class="wiki"> Image scaling dimension </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input file </td><td class="wiki"> Data input source </td><td class="wiki"> Image filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> input file icon="<i>image</i>"<sup><a href="#note2">[2]</a></sup> </td><td class="wiki"> GTK theme icon name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> input file stock="<i>gtk-image</i>"<sup><a href="#note3">[3]</a></sup> </td><td class="wiki"> GTK stock icon ID </td><td class="wiki"> <code>gtk-about</code>, <code>gtk-add</code>, ... <a href="http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS">(full list)</a> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> input file icon="<i>image</i>"<sup><a href="#note3">[3]</a></sup> </td><td class="wiki"> GTK theme icon name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> input file stock="<i>gtk-image</i>"<sup><a href="#note4">[4]</a></sup> </td><td class="wiki"> GTK stock icon ID </td><td class="wiki"> <code>gtk-about</code>, <code>gtk-add</code>, ... <a href="http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS">(full list)</a> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action </td><td class="wiki"> Execute command on default signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i><sup><a href="#note4">[4]</a></sup> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i><sup><a href="#note5">[5]</a></sup> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i><sup><a href="#note4">[4]</a></sup> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i><sup><a href="#note5">[5]</a></sup> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action type="<i>function</i>" </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 </table>
 
@@ -181,11 +182,13 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkToggleButton.html">GtkToggleBu
 
 <p><a name="note1"></a>1. The existing "<a href="http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position">image-position</a>" GTK+ property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.</p>
 
-<p><a name="note2"></a>2. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).</p>
+<p><a name="note2"></a>2. The existing "<a href="http://developer.gnome.org/gtk/2.24/GtkBox.html#GtkBox--homogeneous">homogeneous</a>" GTK+ property -- applicable to the hbox and vbox -- can be used here to effect the box inside the button when including an image and a label.</p>
 
-<p><a name="note3"></a>3. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "<a href="http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size">icon-size</a>" tag attribute can be used to adjust the size).</p>
+<p><a name="note3"></a>3. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).</p>
 
-<p><a name="note4"></a>4. This widget supports conditional function execution by prepending <i>function</i>:<i>parameter</i> with <code>if true</code> or <code>if false</code>.</p>
+<p><a name="note4"></a>4. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "<a href="http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size">icon-size</a>" tag attribute can be used to adjust the size).</p>
+
+<p><a name="note5"></a>5. This widget supports conditional function execution by prepending <i>function</i>:<i>parameter</i> with <code>if true</code> or <code>if false</code>.</p>
 
 <p>This widget was introduced in version 0.7.21.</p>
 
@@ -234,7 +237,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkToggleButton.html">GtkToggleBu
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-08-18 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-08-20 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
