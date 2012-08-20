@@ -3,6 +3,7 @@ SUBDIRS=src doc
 EXTRA_DIST = \
 	autogen.sh \
 	install.iss pango.modules pango.aliases gdk-pixbuf.loaders \
+	data/icons/hicolor/32x32/apps/gtkdialog.png \
 	doc/reference/* \
 	examples/button/* \
 	examples/checkbox/* \
@@ -12,6 +13,7 @@ EXTRA_DIST = \
 	examples/comboboxtext/* \
 	examples/edit/* \
 	examples/entry/* \
+	examples/fontbutton/* \
 	examples/frame/* \
 	examples/glade/* \
 	examples/hbox/* \

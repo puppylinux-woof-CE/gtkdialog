@@ -1,0 +1,65 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funcbtnCreate() {
+	echo '<button image-position="'$1'" homogeneous="'$2'">
+					<label>'$3'</label>
+					<input file stock="'$3'"></input>
+					<action>""</action>
+				</button>'
+}
+
+export MAIN_DIALOG='
+<window title="Button Image Horizontal Alignment">
+	<vbox>
+		<hbox homogeneous="true">
+			<vbox>
+				<text><label>"<button>"</label></text>
+				'"$(funcbtnCreate 0 false gtk-print)"'
+				'"$(funcbtnCreate 0 false gtk-orientation-landscape)"'
+				'"$(funcbtnCreate 0 false gtk-undelete)"'
+				'"$(funcbtnCreate 0 false gtk-select-color)"'
+				'"$(funcbtnCreate 0 false gtk-cut)"'
+			</vbox>
+			<vbox>
+				<text><label>"<button homogeneous='"'true'"'>"</label></text>
+				'"$(funcbtnCreate 0 true gtk-print)"'
+				'"$(funcbtnCreate 0 true gtk-orientation-landscape)"'
+				'"$(funcbtnCreate 0 true gtk-undelete)"'
+				'"$(funcbtnCreate 0 true gtk-select-color)"'
+				'"$(funcbtnCreate 0 true gtk-cut)"'
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<vbox>
+				<text><label>"<button image-position='"'1'"'>"</label></text>
+				'"$(funcbtnCreate 1 false gtk-print)"'
+				'"$(funcbtnCreate 1 false gtk-orientation-landscape)"'
+				'"$(funcbtnCreate 1 false gtk-undelete)"'
+				'"$(funcbtnCreate 1 false gtk-select-color)"'
+				'"$(funcbtnCreate 1 false gtk-cut)"'
+			</vbox>
+			<vbox>
+				<text><label>"<button image-position='"'1'"' homogeneous='"'true'"'>"</label></text>
+				'"$(funcbtnCreate 1 true gtk-print)"'
+				'"$(funcbtnCreate 1 true gtk-orientation-landscape)"'
+				'"$(funcbtnCreate 1 true gtk-undelete)"'
+				'"$(funcbtnCreate 1 true gtk-select-color)"'
+				'"$(funcbtnCreate 1 true gtk-cut)"'
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-quit">
+			</button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac
