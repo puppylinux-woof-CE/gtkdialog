@@ -4,6 +4,9 @@ for announcements.
 * Mon Aug 20 2012 Thunor <thunorsif@hotmail.com>
 - Added support for button horizontal image with label alignment: by
   default the alignment is centred but it can be optionally uniform.
+- Added examples/button/button_image_horizontal_alignment.
+- Added a default window title bar project icon gtkdialog.png.
+- Windows will now default to using icon-name="gtkdialog".
 
 * Sun Aug 19 2012 Thunor <thunorsif@hotmail.com>
 - Added window tags to a substantial number of old examples because they

@@ -98,6 +98,9 @@ GtkWidget *widget_window_create(
 	gtk_window_set_title(GTK_WINDOW(widget), 
 		attributeset_get_first(&element, Attr, ATTR_LABEL));
 
+	/* Set a default title bar theme icon */
+	gtk_window_set_icon_name(GTK_WINDOW(widget), PACKAGE);
+
 	/* If requested set a title bar image by filename */
 	if (attr) {
 		if ((value = get_tag_attribute(attr, "image-name")) ||
