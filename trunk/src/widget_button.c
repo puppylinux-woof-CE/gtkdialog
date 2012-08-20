@@ -77,6 +77,7 @@ GtkWidget *widget_button_create(
 	GError           *error = NULL;
 	GList            *element;
 	GtkIconTheme     *icon_theme;
+	GtkWidget        *boxouter = NULL;
 	GtkWidget        *box = NULL;
 	GtkWidget        *icon = NULL;
 	GtkWidget        *label = NULL;
@@ -87,7 +88,8 @@ GtkWidget *widget_button_create(
 	gchar            *labeldirective;
 	gchar            *stock_name = NULL;
 	gchar            *value;
-	gint              position = -1;
+	gint              homogeneous = FALSE;
+	gint              position = GTK_POS_LEFT;
 	gint              size = 20;
 	gint              buttontype = TYPE_BUTTON;
 	gint              width = -1, height = -1;
@@ -284,29 +286,47 @@ GtkWidget *widget_button_create(
 							}
 						}
 					}
-					/* Pack everything into a box inside the button */
-					if (position == -1) {
-						/* Thunor: This is the original code */
-						box = gtk_hbox_new(FALSE, 5);
-						gtk_container_add(GTK_CONTAINER(widget), box);
-						gtk_box_pack_end(GTK_BOX(box), label, TRUE, TRUE, 0);
-						gtk_box_pack_end(GTK_BOX(box), icon, TRUE, TRUE, 0);
+					/* Thunor: If the GTK+ property "homogeneous" is declared and
+					 * true (in this case being used as a custom attribute since
+					 * it'll have no effect otherwise) and position is GTK_POS_LEFT
+					 * or GTK_POS_RIGHT then apply it to the hbox inside the button */
+					if (attr) {
+						if ((value = get_tag_attribute(attr, "homogeneous"))) {
+							if ((strcasecmp(value, "true") == 0) ||
+								(strcasecmp(value, "yes") == 0) ||
+								(atoi(value) == 1)) {
+								homogeneous = TRUE;
+							} else {
+								homogeneous = FALSE;
+							}
+						}
+					}
+					/* To centre the contents of the button we need to place
+					 * a homogeneous=FALSE box inside a homogeneous=TRUE box */
+					if (position == GTK_POS_BOTTOM || position == GTK_POS_TOP) {
+						boxouter = gtk_vbox_new(TRUE, 0);
+						gtk_container_add(GTK_CONTAINER(widget), boxouter);
+						box = gtk_vbox_new(FALSE, 2);
+						gtk_box_pack_end(GTK_BOX(boxouter), box, FALSE, FALSE, 0);
 					} else {
-						/* Thunor: This code has been added to enable
-						 * positioning of the image relative to the label */
-						if (position == GTK_POS_BOTTOM || position == GTK_POS_TOP) {
-							box = gtk_vbox_new(FALSE, 5);
+						if (homogeneous) {
+							/* We're not centring so drop boxouter and
+							 * set homogeneous to TRUE on the box */
+							box = gtk_hbox_new(TRUE, 2);
+							gtk_container_add(GTK_CONTAINER(widget), box);
 						} else {
-							box = gtk_hbox_new(FALSE, 5);
+							boxouter = gtk_hbox_new(TRUE, 0);
+							gtk_container_add(GTK_CONTAINER(widget), boxouter);
+							box = gtk_hbox_new(FALSE, 2);
+							gtk_box_pack_end(GTK_BOX(boxouter), box, FALSE, FALSE, 0);
 						}
-						gtk_container_add(GTK_CONTAINER(widget), box);
-						if (position == GTK_POS_BOTTOM || position == GTK_POS_RIGHT) {
-							gtk_box_pack_end(GTK_BOX(box), icon, TRUE, TRUE, 0);
-							gtk_box_pack_end(GTK_BOX(box), label, TRUE, TRUE, 0);
-						} else {
-							gtk_box_pack_end(GTK_BOX(box), label, TRUE, TRUE, 0);
-							gtk_box_pack_end(GTK_BOX(box), icon, TRUE, TRUE, 0);
-						}
+					}
+					if (position == GTK_POS_BOTTOM || position == GTK_POS_RIGHT) {
+						gtk_box_pack_end(GTK_BOX(box), icon, FALSE, FALSE, 0);
+						gtk_box_pack_end(GTK_BOX(box), label, FALSE, FALSE, 0);
+					} else {
+						gtk_box_pack_end(GTK_BOX(box), label, FALSE, FALSE, 0);
+						gtk_box_pack_end(GTK_BOX(box), icon, FALSE, FALSE, 0);
 					}
 					break;
 			}
