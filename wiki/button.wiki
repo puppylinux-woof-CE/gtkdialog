@@ -38,6 +38,7 @@ The following custom tag attributes are available:
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || 0.7.21 ||
+|| homogeneous || Horizontal uniformity of an image with label || {{{true}}} or {{{false}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
