@@ -40,6 +40,7 @@ The following custom tag attributes are available:
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || ||
+|| homogeneous^[2]^ || Horizontal uniformity of an image with label || {{{true}}} or {{{false}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -55,13 +56,13 @@ Some of these may have tag attribute equivalents.
 || width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Image filename || || ||
-|| input file icon="_image_"^[2]^ || GTK theme icon name || || || ||
-|| input file stock="_gtk-image_"^[3]^ || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
+|| input file icon="_image_"^[3]^ || GTK theme icon name || || || ||
+|| input file stock="_gtk-image_"^[4]^ || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_^[4]^ || || ||
+|| action || Perform function on default signal || _function_:_parameter_^[5]^ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_^[4]^ || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_^[5]^ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
@@ -99,11 +100,13 @@ The following general functions can be performed by any widget capable of emitti
 
 1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK+ property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
 
-2. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
+2. The existing "[http://developer.gnome.org/gtk/2.24/GtkBox.html#GtkBox--homogeneous homogeneous]" GTK+ property -- applicable to the hbox and vbox -- can be used here to effect the box inside the button when including an image and a label.
 
-3. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+3. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
 
-4. This widget supports conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
+4. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+
+5. This widget supports conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
 
 This widget was introduced in version 0.7.21.
 
