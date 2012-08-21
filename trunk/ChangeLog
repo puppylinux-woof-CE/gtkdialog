@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Aug 21 2012 Thunor <thunorsif@hotmail.com>
+- Added examples/c_embedded/example01 and Makefile by sklimkin.
+
 * Mon Aug 20 2012 Thunor <thunorsif@hotmail.com>
 - Added support for button horizontal image with label alignment: by
   default the alignment is centred but it can be optionally uniform.
