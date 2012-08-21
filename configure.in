@@ -41,5 +41,14 @@ AC_CHECK_HEADERS([locale.h])
 AC_CHECK_FUNCS([setlocale])
 
 #AC_CONFIG_FILES([])
-AC_OUTPUT(Makefile gtkdialog.spec src/Makefile doc/Makefile)
-
+AC_OUTPUT(
+	Makefile
+	gtkdialog.spec
+	src/Makefile
+	doc/Makefile
+	data/Makefile
+	data/icons/Makefile
+	data/icons/hicolor/Makefile
+	data/icons/hicolor/32x32/Makefile
+	data/icons/hicolor/32x32/apps/Makefile
+)

@@ -1,9 +1,8 @@
-SUBDIRS=src doc
+SUBDIRS=src doc data
 
 EXTRA_DIST = \
 	autogen.sh \
 	install.iss pango.modules pango.aliases gdk-pixbuf.loaders \
-	data/icons/hicolor/32x32/apps/gtkdialog.png \
 	doc/reference/* \
 	examples/button/* \
 	examples/checkbox/* \
