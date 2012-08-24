@@ -35,11 +35,13 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
 #include "widget_vbox.h"
 #include "widget_window.h"
+#include "tag_attributes.h"
 
 extern gboolean option_no_warning;
 
@@ -371,6 +373,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_fileselect(toset, name, value);
 			break;
+		case WIDGET_TERMINAL:
+			widget_terminal_fileselect(toset, name, value);
+			break;
 		case WIDGET_TEXT:
 			widget_text_fileselect(toset, name, value);
 			break;
@@ -463,6 +468,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_save(var);
+			break;
+		case WIDGET_TERMINAL:
+			widget_terminal_save(var);
 			break;
 		case WIDGET_TEXT:
 			widget_text_save(var);
@@ -588,6 +596,9 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_refresh(var);
+			break;
+		case WIDGET_TERMINAL:
+			widget_terminal_refresh(var);
 			break;
 		case WIDGET_TEXT:
 			widget_text_refresh(var);
@@ -1397,6 +1408,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_clear(toclear);
 			break;
+		case WIDGET_TERMINAL:
+			widget_terminal_clear(toclear);
+			break;
 		case WIDGET_TEXT:
 			widget_text_clear(toclear);
 			break;
@@ -1529,6 +1543,9 @@ int remove_selected_variable(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_removeselected(toclear);
+			break;
+		case WIDGET_TERMINAL:
+			widget_terminal_removeselected(toclear);
 			break;
 		case WIDGET_TEXT:
 			widget_text_removeselected(toclear);

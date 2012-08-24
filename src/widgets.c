@@ -49,12 +49,14 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
 #include "widget_vbox.h"
 #include "widget_window.h"
 #include "signals.h"
+#include "tag_attributes.h"
 
 #undef DEBUG
 #undef WARNING
@@ -255,6 +257,10 @@ widget_get_text_value(
 			break;
 		case WIDGET_STATUSBAR:
 			string = widget_statusbar_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_TERMINAL:
+			string = widget_terminal_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_TEXT:
@@ -1367,6 +1373,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_STATUSBAR:
 			type = "STATUSBAR";
+			break;
+		case WIDGET_TERMINAL:
+			type = "TERMINAL";
 			break;
 		case WIDGET_TEXT:
 			type = "TEXT";

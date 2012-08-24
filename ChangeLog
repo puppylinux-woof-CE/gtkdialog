@@ -1,6 +1,13 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Fri Aug 24 2012 Thunor <thunorsif@hotmail.com>
+- New widget: <terminal> -- requires libvte but is not mandatory.
+
+* Thu Aug 23 2012 Thunor <thunorsif@hotmail.com>
+- Added examples/miscellaneous/conditional_widget_refreshing.
+- Modified ST_TAG_ATTR in the lexer to accommodate "0-9".
+
 * Tue Aug 21 2012 Thunor <thunorsif@hotmail.com>
 - Added examples/c_embedded/example01 and Makefile by sklimkin.
 

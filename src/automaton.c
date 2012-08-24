@@ -42,7 +42,6 @@
 #include "automaton.h"
 #include "stringman.h"
 #include "attributes.h"
-#include "tag_attributes.h"
 #include "widgets.h"
 #include "widget_button.h"
 #include "widget_checkbox.h"
@@ -57,12 +56,14 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
 #include "widget_vbox.h"
 #include "widget_window.h"
 #include "signals.h"
+#include "tag_attributes.h"
 
 #undef DEBUG
 #undef WARNING
@@ -325,6 +326,9 @@ void print_command(instruction command)
 			break;
 		case WIDGET_STATUSBAR:
 			printf("(new statusbar())");
+			break;
+		case WIDGET_TERMINAL:
+			printf("(new terminal())");
 			break;
 		case WIDGET_TEXT:
 			printf("(new text())");
@@ -622,6 +626,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_STATUSBAR:
 			printf("(STATUSBAR)");
+			break;
+		case WIDGET_TERMINAL:
+			printf("(TERMINAL)");
 			break;
 		case WIDGET_TEXT:
 			printf("(TEXT)");
@@ -1511,6 +1518,10 @@ instruction_execute_push(
 			break;
 		case WIDGET_STATUSBAR:
 			Widget = widget_statusbar_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+		case WIDGET_TERMINAL:
+			Widget = widget_terminal_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
 		case WIDGET_TEXT:

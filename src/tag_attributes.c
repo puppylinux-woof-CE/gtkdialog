@@ -24,8 +24,8 @@
 
 #include <string.h>
 #include "gtkdialog.h"
-#include "tag_attributes.h"
 #include "attributes.h"
+#include "tag_attributes.h"
 
 typedef struct property {
 	gchar *name;
@@ -191,10 +191,11 @@ try_set_property(GtkWidget *widget,
 	return TRUE;
 }
 
-gint
-widget_set_tag_attributes(
-		GtkWidget *widget,
-		tag_attr *attr)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+gint widget_set_tag_attributes(GtkWidget *widget, tag_attr *attr)
 {
 	gboolean	success;
 	gint 		q;
@@ -208,11 +209,119 @@ widget_set_tag_attributes(
 		return -1;
 	
 	for (q = 0; q < attr->n; ++q) {
-		success = try_set_property(widget, attr->pairs + q);
-		if (success)
-			++retval;
+		/* Thunor: killed tag attributes have null names */
+		if (attr->pairs[q].name[0] != 0) {
+			success = try_set_property(widget, attr->pairs + q);
+			if (success) ++retval;
+		}
 	}
 	
 	return retval;
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+char *get_tag_attribute(tag_attr *attr, const char *name)
+{
+	int q;
+	
+	g_assert(attr != NULL && name != NULL);
+#ifdef DEBUG
+	g_message("%s(): searching for name = '%s' in %p", 
+			__func__, name, attr);
+#endif
+	for (q = 0; q < attr->n; ++q) 
+		if (strcmp(attr->pairs[q].name, name) == 0)
+			return attr->pairs[q].value;
+
+	return NULL;
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+tag_attr *add_tag_attribute(tag_attr *attr, char *name, char *value)
+{
+	g_assert(attr != NULL);
+	g_assert(name != NULL && value != NULL);
+#ifdef DEBUG	
+	g_message("%s(): name = '%s' value = '%s'", __func__, name, value);
+#endif 
+		
+	if (name[strlen(name) - 1] == '=')
+		name[strlen(name) - 1] = '\0';
+	//
+	// If the store is full, we enlarge its size.
+	//
+	if (attr->n == attr->nmax){
+		attr->nmax += 32;
+		attr->pairs = g_realloc(attr->pairs,
+				attr->nmax * sizeof(namevalue));
+	}
+	/*
+	 * What if this tagattr is already exists?
+	 */
+	attr->pairs[attr->n].name = g_strdup(name);
+	attr->pairs[attr->n].value = g_strdup(value);
+	++attr->n;
+	return attr;
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/*
+ * Simple functions to handle attributesets, name/value pair list.
+ */
+
+tag_attr *new_tag_attributeset(char *name, char *value)
+{
+	tag_attr *New;
+
+	g_assert(name != NULL);
+	g_assert(value != NULL);
+	
+#ifdef DEBUG
+	g_message("%s(): Name: '%s' Value: '%s'.", __func__, name, value);
+#endif
+	if (name[strlen(name) - 1] == '=')
+		name[strlen(name) - 1] = '\0';
+	
+	New = g_malloc(sizeof(tag_attr));
+	
+	New->pairs = g_malloc(sizeof(namevalue) * 32);
+	New->nmax = 32;
+	New->n = 1;
+	
+	New->pairs[0].name = g_strdup(name);
+	New->pairs[0].value = g_strdup(value);
+	return New;
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+/* Thunor: The tag attribute utility functions are quite simple and
+ * sparse and I require a way to nullify/erase/kill a tag attribute
+ * that I don't want gtk applying on widget realization */
+
+void kill_tag_attribute(tag_attr *attr, const char *name)
+{
+	int q;
+	
+	g_assert(attr != NULL && name != NULL);
+#ifdef DEBUG
+	g_message("%s(): searching for name = '%s' in %p", 
+			__func__, name, attr);
+#endif
+	for (q = 0; q < attr->n; ++q) {
+		if (strcmp(attr->pairs[q].name, name) == 0) {
+			attr->pairs[q].name[0] = 0;
+		}
+	}
+
 }
 

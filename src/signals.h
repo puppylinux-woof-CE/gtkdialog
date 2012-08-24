@@ -58,6 +58,7 @@ void on_any_widget_icon_press_event(GtkWidget *widget,
 void on_any_widget_icon_release_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr);
 #endif
+void on_any_widget_child_exited_event(GtkWidget *widget, AttributeSet *Attr);
 gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	GdkEventKey *event, AttributeSet *Attr);
 gboolean on_any_widget_key_release_event(GtkWidget*widget,

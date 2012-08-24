@@ -71,7 +71,7 @@ gchar *Token;
 	/*
 	 * Attributes.
 	 */
-<ST_TAG_ATTR>[-a-zA-Z_]+ {
+<ST_TAG_ATTR>[-a-zA-Z0-9_]+ {
 	#ifdef DEBUG 
 	g_message(" -> TAG_ATTR_NAME: '%s'", yytext);
 	#endif
@@ -539,6 +539,11 @@ gchar *Token;
 					  return(PART_FONTBUTTON); }
 \<\/fontbutton\>			{ Token="</fontbutton>"; return(EFONTBUTTON); }
 
+\<terminal\>				{ Token="<terminal>"; return(TERMINAL); }
+\<terminal[ ]+				{ Token="<terminal>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_TERMINAL); }
+\<\/terminal\>				{ Token="</terminal>"; return(ETERMINAL); }
 
 
 

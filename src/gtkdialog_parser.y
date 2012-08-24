@@ -48,6 +48,7 @@
 #include "automaton.h"
 #include "attributes.h"
 #include "gtkdialog_parser.h"
+#include "tag_attributes.h"
 
 int linenumber = 1;
 extern gchar *Token;
@@ -153,6 +154,7 @@ start_up(void)
 %token         STATUSBAR PART_STATUSBAR ESTATUSBAR
 %token         COLORBUTTON PART_COLORBUTTON ECOLORBUTTON
 %token         FONTBUTTON PART_FONTBUTTON EFONTBUTTON
+%token         TERMINAL PART_TERMINAL ETERMINAL
 
 %% 
 window
@@ -258,6 +260,7 @@ widget
   | statusbar
   | colorbutton
   | fontbutton
+  | terminal
   ;
 
 entry
@@ -587,6 +590,15 @@ fontbutton
 	}
   | PART_FONTBUTTON tagattr '>' attr EFONTBUTTON {
 		token_store_attr(PUSH | WIDGET_FONTBUTTON, $2);
+	}
+  ;
+
+terminal
+  : TERMINAL attr ETERMINAL {
+		token_store(PUSH | WIDGET_TERMINAL);
+	}
+  | PART_TERMINAL tagattr '>' attr ETERMINAL {
+		token_store_attr(PUSH | WIDGET_TERMINAL, $2);
 	}
   ;
 
