@@ -25,6 +25,9 @@
 #include "gtkdialog.h"
 #include "attributes.h"
 #include "signals.h"
+#if HAVE_VTE
+#include <vte/vte.h>
+#endif
 
 /* Defines */
 //#define DEBUG_CONTENT
@@ -628,6 +631,23 @@ void on_any_widget_icon_release_event(GtkWidget *widget,
  *                                                                     *
  ***********************************************************************/
 
+void on_any_widget_child_exited_event(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "child-exited");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	GdkEventKey *event, AttributeSet *Attr)
 {
@@ -1122,6 +1142,11 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			} else if (GTK_IS_FONT_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "font-set") == 0)
 					execute = TRUE;
+#if HAVE_VTE
+			} else if (VTE_IS_TERMINAL(widget)) {
+				if (strcasecmp(signal_name, "child-exited") == 0)
+					execute = TRUE;
+#endif
 			}
 		}
 		if (execute) execute_action(widget, command, type);

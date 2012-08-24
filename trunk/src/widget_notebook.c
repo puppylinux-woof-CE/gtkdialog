@@ -27,6 +27,7 @@
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
+#include "tag_attributes.h"
 
 /* Defines */
 //#define DEBUG_CONTENT

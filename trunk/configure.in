@@ -25,12 +25,19 @@ AC_SUBST(GTHREAD_LIBS)
 
 glade_lib="libglade-2.0"
 PKG_CHECK_MODULES([GLADE_LIB], \
-		  [$glade_lib], \
-		  AC_SUBST(HAVE_GLADE_LIB, 1),\
-		  AC_SUBST(HAVE_GLADE_LIB, 0))
+	[$glade_lib], \
+	AC_SUBST(HAVE_GLADE_LIB, 1),\
+	AC_SUBST(HAVE_GLADE_LIB, 0))
 AC_SUBST(GLADE_LIB_CFLAGS)
 AC_SUBST(GLADE_LIB_LIBS)
 
+vte_lib="vte >= 0.24.3"
+PKG_CHECK_MODULES([VTE], \
+	[$vte_lib], \
+	AC_SUBST(HAVE_VTE, 1),\
+	AC_SUBST(HAVE_VTE, 0))
+AC_SUBST(VTE_CFLAGS)
+AC_SUBST(VTE_LIBS)
 
 # Checks for header files.
 AC_CHECK_HEADERS([locale.h])

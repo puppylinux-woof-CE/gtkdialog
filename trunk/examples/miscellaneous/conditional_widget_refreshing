@@ -1,0 +1,47 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+echo false > "$TMPDIR"/chkCheck
+
+export MAIN_DIALOG='
+<window title="Conditional Widget Refreshing">
+	<vbox>
+		<hbox>
+			<timer>
+				<action>refresh:chkCheck</action>
+			</timer>
+			<checkbox sensitive="false">
+				<variable>chkCheck</variable>
+				<input file>'"$TMPDIR"'/chkCheck</input>
+				<action>refresh:entDate</action>
+			</checkbox>
+		</hbox>
+		<entry editable="false">
+			<variable>entDate</variable>
+			<input>date</input>
+		</entry>
+		<button>
+			<label>"Write the inverse of the checkbox'"'"'s current state to its input
+file causing it to refresh the date and time via the timer."</label>
+			<action>"if [ $chkCheck = true ]; then
+						echo false > '"$TMPDIR"'/chkCheck
+					else
+						echo true > '"$TMPDIR"'/chkCheck
+					fi"</action>
+		</button>
+		<hseparator></hseparator>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac

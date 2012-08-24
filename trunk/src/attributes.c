@@ -23,6 +23,7 @@
 #include "attributes.h"
 #include "stringman.h"
 #include "automaton.h"
+#include "tag_attributes.h"
 
 /* Defines */
 //#define DEBUG_CONTENT

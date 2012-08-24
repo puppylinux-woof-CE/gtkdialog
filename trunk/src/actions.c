@@ -34,6 +34,7 @@
 #include "actions.h"
 #include "attributes.h"
 #include "variables.h"
+#include "tag_attributes.h"
 
 extern gchar *option_include_file;
 

@@ -99,9 +99,6 @@ char *find_pixmap( char *filename );
 list_t *linecutter(char *str, int fs );
 void list_t_free(list_t *ptr);
 char *str_default_name (int itype);
-char *get_tag_attribute(tag_attr *attr, const char *name);
-tag_attr *add_tag_attribute(tag_attr *attr, char *name, char *value);
-tag_attr *new_tag_attributeset(char *name, char *value);
 
 #endif
 
