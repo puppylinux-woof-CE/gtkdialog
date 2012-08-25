@@ -1,0 +1,106 @@
+#summary timer widget reference
+
+= terminal widget =
+
+A [http://developer.gnome.org/vte/unstable/VteTerminal.html VteTerminal]
+
+----
+
+== Definition ==
+
+{{{
+<terminal tag_attr="value"...>
+	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
+	<input>command</input>
+	<input file>filename</input>
+	<sensitive>state</sensitive>
+	<action>activity</action>...
+	<action signal="type">activity</action>...
+	<action type="function">parameter</action>...
+</terminal>
+}}}
+
+"..." denotes acceptance of multiples of the same thing.
+
+== Tag Attributes ==
+
+See the [http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal.object-hierarchy VteTerminal] widget and ancestor class properties.
+
+The following custom tag attributes are available:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| font-desc^[1]^ || Font description || eg. {{{Monospace Bold 14}}} || ||
+|| background-tint-color^[2]^ || Background tint colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| text-background-color || Text background colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| text-foreground-color || Text foreground colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| bold-foreground-color || Bold text foreground colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| dim-foreground-color || Dim text foreground colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| cursor-background-color || Cursor background colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| highlight-background-color || Highlighted text background colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| argv? || Arguments starting at argv0 (command) || eg. {{{/bin/sh}}} || ||
+|| envv? || Environment variables starting at envv0 || eg. {{{MESSAGE=Hello}}} || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+== Directives ==
+
+Some of these may have tag attribute equivalents.
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
+|| variable || Shell variable name || || || ||
+|| height || Initial height || An integer > {{{0}}} || || ||
+|| width || Initial width || An integer > {{{0}}} || || ||
+|| input || Data input source || Shell command || || ||
+|| input file || Data input source || Filename || || ||
+|| sensitive || Active state || {{{true}}} or {{{false}}} || || ||
+|| action || Execute command on default signal || Shell command || || ||
+|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+== Signals ==
+
+The default signal is "[http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal-child-exited child-exited]", emitted when the terminal detects that the child has exited. 
+
+== Functions ==
+
+The following functions can be performed upon this widget by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| enable || Reactivate timer || Shell variable name || ||
+|| disable || Deactivate timer || Shell variable name || ||
+|| show || Show widget || Shell variable name || ||
+|| hide || Hide widget || Shell variable name || ||
+|| refresh || Reload input data || Shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
+|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
+|| launch || Launch new dialog || New dialog's shell variable name || ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+== Notes ==
+
+1. There exists an equivalently named "[http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--font-desc font-desc]" VTE property but it doesn't accept strings so it's converted by Gtkdialog.
+
+2. There exists an equivalently named "[http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--background-tint-color background-tint-color]" VTE property but it doesn't accept strings so it's converted by Gtkdialog.
+
+This is a non-mandatory widget that requires [http://ftp.gnome.org/pub/gnome/sources/vte/ libvte] support be built into Gtkdialog at compile time.
+
+This widget was introduced in version 0.8.1.
+
+----
