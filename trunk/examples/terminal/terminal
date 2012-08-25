@@ -1,0 +1,80 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+# You may notice that the last line of this demo contains "qecho":
+# the "q" is actually quitting "top". I could've just put "q" on
+# a separate line but then it sends an unnecessary newline.
+echo "clear
+whoami
+hostname
+pwd
+ls --color=auto ~/
+date
+cal
+arch
+uname -a
+/bin/sh --version
+top
+qecho restarting..." > "$TMPDIR"/demo
+echo 0 > "$TMPDIR"/demoindex
+echo 12 > "$TMPDIR"/democount
+sed -n 1p "$TMPDIR"/demo > "$TMPDIR"/feed
+
+export MAIN_DIALOG='
+<window title="Terminal Widget" resizable="false">
+	<vbox>
+		<timer interval="2" visible="false">
+			<action>"read < '"$TMPDIR"'/demoindex; index=$REPLY
+				read < '"$TMPDIR"'/democount; count=$REPLY
+				index=$(($index + 1))
+				if [ $index -ge $count ]; then
+					index=0
+				fi
+				line=$(($index + 1))
+				sed -n ${line}p '"$TMPDIR"'/demo > '"$TMPDIR"'/feed
+				echo $index > '"$TMPDIR"'/demoindex
+			"</action>
+			<action>refresh:vte1</action>
+		</timer>
+		<notebook tab-labels="Interactive Shell|Input File Feed Demo">
+			<terminal argv0="/bin/sh" has-focus="true"
+				envv0="WELCOME=Welcome to the terminal (VteTerminal) widget :)"
+				pointer-autohide="true"
+				current-directory-uri="'$HOME'"
+				cursor-background-color="#ff0"
+				highlight-background-color="#660"
+				text-background-color="#332"
+				text-foreground-color="#fff">
+				<variable>vte0</variable>
+				<input>echo echo \$WELCOME</input>
+				<action>echo vte0 default signal</action>
+				<action signal="child-exited">echo vte0 child-exited signal</action>
+			</terminal>
+			<terminal argv0="/bin/sh" sensitive="false"
+				cursor-shape="2"
+				background-transparent="true"
+				background-saturation="0.2"
+				background-tint-color="#223"
+				text-foreground-color="#fff">
+				<variable>vte1</variable>
+				<input file>'"$TMPDIR"'/feed</input>
+				<action>echo vte1 default signal</action>
+				<action signal="child-exited">echo vte1 child-exited signal</action>
+			</terminal>
+		</notebook>
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit">
+			</button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

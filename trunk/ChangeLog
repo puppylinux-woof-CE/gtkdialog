@@ -3,6 +3,8 @@ for announcements.
 
 * Sat Aug 15 2012 Thunor <thunorsif@hotmail.com>
 - Added support for grabfocus to compatible widgets.
+- Added examples/terminal/terminal.
+- Updated the wiki and the reference docs.
 
 * Fri Aug 24 2012 Thunor <thunorsif@hotmail.com>
 - New widget: <terminal> -- requires libvte but is not mandatory.
