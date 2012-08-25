@@ -46,13 +46,14 @@ typedef enum {
 	CommandShow              = 6,
 	CommandHide              = 7,
 	CommandActivate          = 8,
-	CommandRefresh           = 9,
-	CommandSave              = 10,
-	CommandFileSelect        = 11,
-	CommandClear             = 12,
-	CommandRemoveSelected    = 13,
-	CommandInsert            = 14,
-	CommandAppend            = 15
+	CommandGrabFocus         = 9,
+	CommandRefresh           = 10,
+	CommandSave              = 11,
+	CommandFileSelect        = 12,
+	CommandClear             = 13,
+	CommandRemoveSelected    = 14,
+	CommandInsert            = 15,
+	CommandAppend            = 16
 } CommandType;
 
 #ifdef G_OS_WIN32

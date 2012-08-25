@@ -57,6 +57,7 @@ variable *variables_disable(const char *name);
 variable *variables_show(const char *name);
 variable *variables_hide(const char *name);
 variable *variables_activate(const char *name);
+variable *variables_grabfocus(const char *name);
 variable *variables_get_by_name(const char *name);
 gint variables_count_widgets(void);
 void variables_drop_by_window_id(variable *actual, gint window_id);

@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Aug 15 2012 Thunor <thunorsif@hotmail.com>
+- Added support for grabfocus to compatible widgets.
+
 * Fri Aug 24 2012 Thunor <thunorsif@hotmail.com>
 - New widget: <terminal> -- requires libvte but is not mandatory.
 
