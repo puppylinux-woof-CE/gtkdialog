@@ -776,6 +776,30 @@ variable *variables_activate(const char *name)
 }
 
 /***********************************************************************
+ * Variables grabfocus                                                 *
+ ***********************************************************************/
+
+variable *variables_grabfocus(const char *name)
+{
+	variable *var;
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): %s\n", __func__, name);
+	fflush(stderr);
+#endif
+
+	var = _tree_find(name, NULL);
+	if (var == NULL)
+		return (NULL);
+	if (var->Widget == NULL)
+		return (NULL);
+
+	gtk_widget_grab_focus(var->Widget);
+
+	return (var);
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 

@@ -308,6 +308,7 @@ static gchar *prefixes[] = {
 	"show",
 	"hide",
 	"activate",
+	"grabfocus",
 	"refresh",
 	"save",
 	"fileselect",

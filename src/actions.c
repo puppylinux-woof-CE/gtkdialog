@@ -594,6 +594,16 @@ int action_activate(GtkWidget *widget, char *string)
 }
 
 /***********************************************************************
+ * Action grabfocus                                                    *
+ ***********************************************************************/
+
+int action_grabfocus(GtkWidget *widget, char *string)
+{
+	variables_grabfocus(string);
+	return 0;
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 /* This fuction will export variables and run a shell command */
