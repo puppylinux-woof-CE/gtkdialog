@@ -9,6 +9,7 @@ mkdir -p "$TMPDIR"
 # the "q" is actually quitting "top". I could've just put "q" on
 # a separate line but then it sends an unnecessary newline.
 echo "clear
+echo pid=\$$
 whoami
 hostname
 pwd
@@ -21,7 +22,7 @@ uname -a
 top
 qecho restarting..." > "$TMPDIR"/demo
 echo 0 > "$TMPDIR"/demoindex
-echo 12 > "$TMPDIR"/democount
+echo 13 > "$TMPDIR"/democount
 sed -n 1p "$TMPDIR"/demo > "$TMPDIR"/feed
 
 export MAIN_DIALOG='
@@ -38,10 +39,16 @@ export MAIN_DIALOG='
 				sed -n ${line}p '"$TMPDIR"'/demo > '"$TMPDIR"'/feed
 				echo $index > '"$TMPDIR"'/demoindex
 			"</action>
-			<action>refresh:vte1</action>
+			<action>refresh:vte2</action>
 		</timer>
-		<notebook tab-labels="Interactive Shell|Input File Feed Demo">
-			<terminal argv0="/bin/sh" has-focus="true"
+		<notebook tab-labels="All Defaults|Colourful|Input File Feed Demo">
+			<terminal argv0="/bin/sh" has-focus="true">
+				<variable>vte0</variable>
+				<action>echo vte0=$vte0 - default signal</action>
+				<action signal="show">echo vte0=$vte0 - show signal</action>
+				<action signal="child-exited">echo vte0=$vte0 - child-exited signal</action>
+			</terminal>
+			<terminal argv0="/bin/sh"
 				envv0="WELCOME=Welcome to the terminal (VteTerminal) widget :)"
 				pointer-autohide="true"
 				current-directory-uri="'$HOME'"
@@ -49,10 +56,11 @@ export MAIN_DIALOG='
 				highlight-background-color="#660"
 				text-background-color="#332"
 				text-foreground-color="#fff">
-				<variable>vte0</variable>
+				<variable>vte1</variable>
 				<input>echo echo \$WELCOME</input>
-				<action>echo vte0 default signal</action>
-				<action signal="child-exited">echo vte0 child-exited signal</action>
+				<action>echo vte1=$vte1 - default signal</action>
+				<action signal="show">echo vte1=$vte1 - show signal</action>
+				<action signal="child-exited">echo vte1=$vte1 - child-exited signal</action>
 			</terminal>
 			<terminal argv0="/bin/sh" sensitive="false"
 				cursor-shape="2"
@@ -60,10 +68,11 @@ export MAIN_DIALOG='
 				background-saturation="0.2"
 				background-tint-color="#223"
 				text-foreground-color="#fff">
-				<variable>vte1</variable>
+				<variable>vte2</variable>
 				<input file>'"$TMPDIR"'/feed</input>
-				<action>echo vte1 default signal</action>
-				<action signal="child-exited">echo vte1 child-exited signal</action>
+				<action>echo vte2=$vte2 - default signal</action>
+				<action signal="show">echo vte2=$vte2 - show signal</action>
+				<action signal="child-exited">echo vte2=$vte2 - child-exited signal</action>
 			</terminal>
 		</notebook>
 		<hbox homogeneous="true">

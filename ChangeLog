@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Mon Aug 27 2012 Thunor <thunorsif@hotmail.com>
+- Updated the terminal widget: its variable now contains its pid.
+- Updated examples/terminal/terminal to output the pid with the signals.
+
 * Sun Aug 26 2012 Thunor <thunorsif@hotmail.com>
 - Updated the terminal widget so that when the user types exit or it is
   killed, the terminal resets and the command is forked again. This will
