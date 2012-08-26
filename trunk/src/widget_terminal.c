@@ -255,8 +255,9 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 #if VTE_CHECK_VERSION(0,26,0)
 	gboolean          retval;
 	GError           *error = NULL;
+	GPid              pid;
 #else
-	pid_t             retval;
+	pid_t             pid;
 #endif
 #endif
 
@@ -302,13 +303,13 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 		G_SPAWN_SEARCH_PATH,
 		NULL,
 		NULL,
-		NULL,
+		&pid,
 		&error));
 	if (!retval)
 		fprintf(stderr, "%s(): vte_terminal_fork_command_full(): %s\n",
 			__func__, error->message);
 #else
-	retval = (vte_terminal_fork_command(VTE_TERMINAL(widget),
+	pid = (vte_terminal_fork_command(VTE_TERMINAL(widget),
 		NULL,
 		argv,
 		envv,
@@ -320,6 +321,10 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 		fprintf(stderr, "%s(): vte_terminal_fork_command(): %s\n",
 			__func__, "error");
 #endif
+
+	/* Store "pid" as a piece of widget data (recreated if exists)  */
+	g_object_set_data(G_OBJECT(widget), "pid", (gpointer)pid);
+
 #endif
 
 #ifdef DEBUG_TRANSITS
@@ -358,13 +363,15 @@ gchar *widget_terminal_envvar_all_construct(variable *var)
 
 gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 {
+	gchar             envvar[32];
 	gchar            *string;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup("");
+	sprintf(envvar, "%i", (gint)g_object_get_data(G_OBJECT(widget), "pid"));
+	string = g_strdup(envvar);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
