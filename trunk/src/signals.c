@@ -637,6 +637,19 @@ void on_any_widget_child_exited_event(GtkWidget *widget, AttributeSet *Attr)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if HAVE_VTE
+	/* A dead terminal is useless in gtkdialog so the original command
+	 * is forked again before the application developer can perform an
+	 * action function on this signal. This turns out to be very useful
+	 * since the developer -- knowing that the user has finished with it
+	 * -- could hide it and has the option of reusing it later */
+	if (VTE_IS_TERMINAL(widget)) {
+		vte_terminal_reset(VTE_TERMINAL(widget), TRUE, TRUE);
+		widget_terminal_fork_command(widget, 
+			find_variable_by_widget(widget)->widget_tag_attr);
+	}
+#endif
+
 	widget_signal_executor(widget, Attr, "child-exited");
 
 #ifdef DEBUG_TRANSITS

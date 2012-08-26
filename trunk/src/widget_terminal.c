@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 #include "config.h"
 #include "gtkdialog.h"
+#include "widget_terminal.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -77,18 +78,9 @@ GtkWidget *widget_terminal_create(
 #if HAVE_VTE
 	GdkColor          color;
 	GList            *element;
-	gchar            *argv[128], *envv[128];
 	gchar             tagattribute[256];
 	gchar            *value;
-	gchar             working_directory[256];
-	gint              count;
 	gint              width = -1, height = -1;
-#if VTE_CHECK_VERSION(0,26,0)
-	gboolean          retval;
-	GError           *error = NULL;
-#else
-	pid_t             retval;
-#endif
 #endif
 
 #ifdef DEBUG_TRANSITS
@@ -96,11 +88,6 @@ GtkWidget *widget_terminal_create(
 #endif
 
 #if HAVE_VTE
-	/* Initialise strings */
-	for (count = 0; count < 128; count++)
-		argv[count] = envv[count] = NULL;
-	strcpy(working_directory, "");
-
 	/* Read declared directives */
 	if (attributeset_is_avail(Attr, ATTR_WIDTH))
 		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
@@ -148,36 +135,6 @@ GtkWidget *widget_terminal_create(
 				vte_terminal_set_background_tint_color(VTE_TERMINAL(widget), &color);
 			}
 			kill_tag_attribute(attr, tagattribute);
-		}
-
-		/* The "current-directory-uri" can only be set when we fork a
-		 * command and we can't wait until the gtk properties are set on
-		 * widget realization because by then it's too late, so we'll
-		 * copy it here and kill the tag attribute */
-		strcpy(tagattribute, "current-directory-uri");
-		if (!(value = get_tag_attribute(attr, tagattribute))) {
-			strcpy(tagattribute, "current_directory_uri");
-			value = get_tag_attribute(attr, tagattribute);
-		}
-		if (value) {
-			strcpy(working_directory, value);
-			kill_tag_attribute(attr, tagattribute);
-		}
-
-		/* Get custom tag attributes argv and envv */
-		for (count = 0; count < 128; count++) {
-			sprintf(tagattribute, "argv%i", count);
-			if ((value = get_tag_attribute(attr, tagattribute)))
-				argv[count] = value;
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s:() %s=%s\n", __func__, tagattribute, value);
-#endif
-			sprintf(tagattribute, "envv%i", count);
-			if ((value = get_tag_attribute(attr, tagattribute)))
-				envv[count] = value;
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s:() %s=%s\n", __func__, tagattribute, value);
-#endif
 		}
 
 		/* Get custom tag attribute "text-background-color" */
@@ -263,7 +220,6 @@ GtkWidget *widget_terminal_create(
 				vte_terminal_set_color_highlight(VTE_TERMINAL(widget), &color);
 			}
 		}
-
 	}
 
 	/* Set width and height if both supplied */
@@ -271,6 +227,72 @@ GtkWidget *widget_terminal_create(
 		vte_terminal_set_size(VTE_TERMINAL(widget), width, height);
 
 	/* And off we go... */
+	widget_terminal_fork_command(widget, attr);
+#else
+	/* If libvte support is missing then create a label instead */
+	widget = gtk_label_new(VTE_WARNING);
+#endif
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return widget;
+}
+
+/***********************************************************************
+ * Fork Command                                                        *
+ ***********************************************************************/
+
+void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
+{
+#if HAVE_VTE
+	gchar            *argv[128], *envv[128];
+	gchar             tagattribute[256];
+	gchar            *value;
+	gchar            *working_directory;
+	gint              count;
+#if VTE_CHECK_VERSION(0,26,0)
+	gboolean          retval;
+	GError           *error = NULL;
+#else
+	pid_t             retval;
+#endif
+#endif
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#if HAVE_VTE
+	/* Initialise strings */
+	for (count = 0; count < 128; count++)
+		argv[count] = envv[count] = NULL;
+
+	if (attr) {
+		/* The "current-directory-uri" can only be set when we fork a
+		 * command (there's no function for it) so we set it now */
+		if ((value = get_tag_attribute(attr, "current-directory-uri")) ||
+			(value = get_tag_attribute(attr, "current_directory_uri")))
+			working_directory = value;
+
+		/* Get custom tag attributes argv and envv */
+		for (count = 0; count < 128; count++) {
+			sprintf(tagattribute, "argv%i", count);
+			if ((value = get_tag_attribute(attr, tagattribute)))
+				argv[count] = value;
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s:() %s=%s\n", __func__, tagattribute, value);
+#endif
+			sprintf(tagattribute, "envv%i", count);
+			if ((value = get_tag_attribute(attr, tagattribute)))
+				envv[count] = value;
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s:() %s=%s\n", __func__, tagattribute, value);
+#endif
+		}
+	}
+
 #if VTE_CHECK_VERSION(0,26,0)
 	retval = (vte_terminal_fork_command_full(VTE_TERMINAL(widget),
 		VTE_PTY_DEFAULT,
@@ -298,16 +320,11 @@ GtkWidget *widget_terminal_create(
 		fprintf(stderr, "%s(): vte_terminal_fork_command(): %s\n",
 			__func__, "error");
 #endif
-#else
-	/* If libvte support is missing then create a label instead */
-	widget = gtk_label_new(VTE_WARNING);
 #endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
-
-	return widget;
 }
 
 /***********************************************************************

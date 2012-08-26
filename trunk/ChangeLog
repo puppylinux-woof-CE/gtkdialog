@@ -1,7 +1,12 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
-* Sat Aug 15 2012 Thunor <thunorsif@hotmail.com>
+* Sun Aug 26 2012 Thunor <thunorsif@hotmail.com>
+- Updated the terminal widget so that when the user types exit or it is
+  killed, the terminal resets and the command is forked again. This will
+  happen before the application receives the child-exited signal.
+
+* Sat Aug 25 2012 Thunor <thunorsif@hotmail.com>
 - Added support for grabfocus to compatible widgets.
 - Added examples/terminal/terminal.
 - Updated the wiki and the reference docs.
