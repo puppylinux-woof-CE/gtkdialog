@@ -38,8 +38,8 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
-#define VTE_WARNING "The terminal (VteTerminal) widget requires " \
-					"a version of gtkdialog built with libvte."
+#define VTE_WARNING "The terminal (VteTerminal) widget requires \
+a version of gtkdialog built with libvte."
 
 /* Local function prototypes, located at file bottom */
 static void widget_terminal_input_by_command(variable *var, char *command);
@@ -62,8 +62,6 @@ void widget_terminal_clear(variable *var)
 	/* This won't result in child-exited being emitted */
 	vte_terminal_reset(VTE_TERMINAL(var->Widget), TRUE, TRUE);
 	widget_terminal_fork_command(var->Widget, var->widget_tag_attr);
-#else
-	fprintf(stderr, "%s(): %s\n", __func__, VTE_WARNING);
 #endif
 
 #ifdef DEBUG_TRANSITS
@@ -250,6 +248,7 @@ GtkWidget *widget_terminal_create(
 void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 {
 #if HAVE_VTE
+	static gchar     *argv0 = "/bin/sh";
 	gchar            *argv[128], *envv[128];
 	gchar             tagattribute[256];
 	gchar            *value;
@@ -272,6 +271,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 	/* Initialise strings */
 	for (count = 0; count < 128; count++)
 		argv[count] = envv[count] = NULL;
+	argv[0] = argv0;	/* Set a default command otherwise it segfaults */
 
 	if (attr) {
 		/* The "current-directory-uri" can only be set when we fork a
@@ -313,14 +313,14 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 			__func__, error->message);
 #else
 	pid = (vte_terminal_fork_command(VTE_TERMINAL(widget),
-		NULL,
+		argv[0],
 		argv,
 		envv,
 		working_directory,
 		TRUE,
 		TRUE,
 		TRUE));
-	if (retval == -1)
+	if (pid == -1)
 		fprintf(stderr, "%s(): vte_terminal_fork_command(): %s\n",
 			__func__, "error");
 #endif
@@ -548,8 +548,6 @@ static void widget_terminal_input_by_command(variable *var, char *command)
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			command);
 	}
-#else
-	fprintf(stderr, "%s(): %s\n", __func__, VTE_WARNING);
 #endif
 
 #ifdef DEBUG_TRANSITS
@@ -589,8 +587,6 @@ static void widget_terminal_input_by_file(variable *var, char *filename)
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			filename);
 	}
-#else
-	fprintf(stderr, "%s(): %s\n", __func__, VTE_WARNING);
 #endif
 
 #ifdef DEBUG_TRANSITS
