@@ -5,6 +5,8 @@ for announcements.
 - Updated the terminal widget: its variable now contains its pid.
 - Updated examples/terminal/terminal to output the pid with the signals.
 - Added support for clear to the terminal widget.
+- Updated the terminal widget: argv0 now defaults to /bin/sh so a
+  terminal widget could simply be <terminal></terminal>.
 
 * Sun Aug 26 2012 Thunor <thunorsif@hotmail.com>
 - Updated the terminal widget so that when the user types exit or it is
