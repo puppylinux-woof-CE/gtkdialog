@@ -54,14 +54,17 @@ static void widget_terminal_input_by_items(variable *var);
 
 void widget_terminal_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
-
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
+#if HAVE_VTE
+	/* This won't result in child-exited being emitted */
+	vte_terminal_reset(VTE_TERMINAL(var->Widget), TRUE, TRUE);
+	widget_terminal_fork_command(var->Widget, var->widget_tag_attr);
+#else
+	fprintf(stderr, "%s(): %s\n", __func__, VTE_WARNING);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -363,15 +366,21 @@ gchar *widget_terminal_envvar_all_construct(variable *var)
 
 gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 {
+#if HAVE_VTE
 	gchar             envvar[32];
+#endif
 	gchar            *string;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if HAVE_VTE
 	sprintf(envvar, "%i", (gint)g_object_get_data(G_OBJECT(widget), "pid"));
 	string = g_strdup(envvar);
+#else
+	string = g_strdup("");
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
