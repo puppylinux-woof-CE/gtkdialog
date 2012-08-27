@@ -4,6 +4,7 @@ for announcements.
 * Mon Aug 27 2012 Thunor <thunorsif@hotmail.com>
 - Updated the terminal widget: its variable now contains its pid.
 - Updated examples/terminal/terminal to output the pid with the signals.
+- Added support for clear to the terminal widget.
 
 * Sun Aug 26 2012 Thunor <thunorsif@hotmail.com>
 - Updated the terminal widget so that when the user types exit or it is
