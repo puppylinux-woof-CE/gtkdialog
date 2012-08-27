@@ -1,4 +1,4 @@
-#summary timer widget reference
+#summary terminal widget reference
 
 = terminal widget =
 
@@ -81,6 +81,7 @@ The following functions can be performed upon this widget by any widget capable 
 || show || Show widget || Shell variable name || ||
 || hide || Hide widget || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
+|| clear || Reset terminal and rerun command || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
