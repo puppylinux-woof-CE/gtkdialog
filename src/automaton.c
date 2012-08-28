@@ -214,6 +214,10 @@ execute_action(GtkWidget *widget,
 				action_grabfocus(widget, command_string);
 				break;
 
+			case CommandPresentWindow:
+				action_presentwindow(widget, command_string);
+				break;
+
 			case CommandRefresh:
 				variables_export_all();
 				action_refreshwidget(widget, command_string);

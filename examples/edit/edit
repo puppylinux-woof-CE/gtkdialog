@@ -7,7 +7,8 @@ export MAIN_DIALOG='
 	<vbox>
 		<edit>
 			<variable>EDITOR</variable>
-			<width>350</width><height>150</height>
+			<height>150</height>
+			<width>350</width>
 			<default>
 "This is the default text of the editor."
 			</default>

@@ -6,7 +6,8 @@ export MAIN_DIALOG='
 <window>
 	<vbox>
 		<table>
-			<width>500</width><height>200</height>
+			<height>200</height>
+			<width>500</width>
 			<variable>TABLE</variable>
 			<label>Header of Column 1|Header of Column 2|Header of Column 3</label>
 			<item>First item |Row 1 Column 2 |Row 1 Column 3</item>

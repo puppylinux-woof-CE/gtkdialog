@@ -16,7 +16,8 @@ functreCreate() {
 	echo '<tree selection-mode="'$2'" stock-id="'$3'">
 			<variable>'$1'</variable>
 			<label>Items</label>
-			<width>300</width><height>200</height>
+			<height>200</height>
+			<width>300</width>
 			<input>cat '"$TMPDIR"'/file'$1'</input>
 		</tree>
 		<hbox homogeneous="true">

@@ -1,0 +1,94 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funcbtnCreate() {
+	echo '<button>
+			<label>presentwindow winLaunch'$1'</label>
+			<action type="presentwindow">winLaunch'$1'</action>
+		</button>'
+}
+
+# Currently (as of gtkdialog 0.8.1) program control is passed to the
+# newly launched window which causes the originating action list to
+# terminate i.e. if there are actions following the one that launched
+# the window then they won't be executed, so launching multiple windows
+# requires that each window launches the next.
+
+interval=250
+
+export winLaunch0='
+<window title="winLaunch0" width-request="250" resizable="false">
+	<vbox>
+		<timer milliseconds="true" interval="'$interval'" visible="false">
+			<variable>tmrLaunch0</variable>
+			<action>disable:tmrLaunch0</action>
+			<action>launch:winLaunch1</action>
+		</timer>
+		'"$(funcbtnCreate 1)"'
+		'"$(funcbtnCreate 2)"'
+		'"$(funcbtnCreate 3)"'
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+	<variable>winLaunch0</variable>
+</window>
+'
+
+export winLaunch1='
+<window title="winLaunch1" width-request="250" resizable="false">
+	<vbox>
+		<timer milliseconds="true" interval="'$interval'" visible="false">
+			<variable>tmrLaunch1</variable>
+			<action>disable:tmrLaunch1</action>
+			<action>launch:winLaunch2</action>
+		</timer>
+		'"$(funcbtnCreate 0)"'
+		'"$(funcbtnCreate 2)"'
+		'"$(funcbtnCreate 3)"'
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+	<variable>winLaunch1</variable>
+</window>
+'
+
+export winLaunch2='
+<window title="winLaunch2" width-request="250" resizable="false">
+	<vbox>
+		<timer milliseconds="true" interval="'$interval'" visible="false">
+			<variable>tmrLaunch2</variable>
+			<action>disable:tmrLaunch2</action>
+			<action>launch:winLaunch3</action>
+		</timer>
+		'"$(funcbtnCreate 0)"'
+		'"$(funcbtnCreate 1)"'
+		'"$(funcbtnCreate 3)"'
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+	<variable>winLaunch2</variable>
+</window>
+'
+
+export winLaunch3='
+<window title="winLaunch3" width-request="250" resizable="false">
+	<vbox>
+		'"$(funcbtnCreate 0)"'
+		'"$(funcbtnCreate 1)"'
+		'"$(funcbtnCreate 2)"'
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+	<variable>winLaunch3</variable>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$winLaunch0" "$winLaunch1" "$winLaunch2" "$winLaunch3" ;;
+	*) $GTKDIALOG --program=winLaunch0 ;;
+esac

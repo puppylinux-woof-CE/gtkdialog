@@ -19,7 +19,8 @@ export MAIN_DIALOG='
 		<frame With Rules, Without Headers>
 			<tree rules-hint="true" headers-visible="false">
 				<variable>TREE1</variable>
-				<width>400</width><height>260</height>
+				<height>260</height>
+				<width>400</width>
 				<label>Device                           | Directory | File</label>
 				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
 				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
@@ -32,7 +33,8 @@ export MAIN_DIALOG='
 		<frame Hover Mode>
 			<tree hover-expand="true" hover-selection="true">
 				<variable>TREE2</variable>
-				<width>400</width><height>260</height>
+				<height>260</height>
+				<width>400</width>
 				<label>Device                           | Directory | File</label>
 				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
 				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>

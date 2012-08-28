@@ -29,7 +29,8 @@ export MAIN_DIALOG='
 		<text label="Mixed data input sources"></text>
 		<tree>
 			<variable>TREE1</variable>
-			<width>400</width><height>400</height>
+			<height>400</height>
+			<width>400</width>
 			<label>Device                           | Directory | File</label>
 			<item>CD_ROM Drive                      | /cdrom/   | ak.iso</item>
 			<item>Floppy Disk                       | /floppy/  | ak.bin</item>

@@ -61,7 +61,7 @@ export winWindow='
 					<default>entry (GtkEntry)</default>
 					'"$(funcactCreate entEntry)"'
 				</entry>
-				<fontbutton use-font="false" use-size="false"
+				<fontbutton use-font="true" use-size="true"
 					tooltip-text="fontbutton (GtkFontButton)">
 					<variable>ftbFontbutton</variable>
 					<default>Liberation Serif Bold Italic 14</default>

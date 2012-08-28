@@ -800,6 +800,30 @@ variable *variables_grabfocus(const char *name)
 }
 
 /***********************************************************************
+ * Variables presentwindow                                             *
+ ***********************************************************************/
+
+variable *variables_presentwindow(const char *name)
+{
+	variable *var;
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): %s\n", __func__, name);
+	fflush(stderr);
+#endif
+
+	var = _tree_find(name, NULL);
+	if (var == NULL)
+		return (NULL);
+	if (var->Widget == NULL)
+		return (NULL);
+
+	gtk_window_present(GTK_WINDOW(var->Widget));
+
+	return (var);
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 
