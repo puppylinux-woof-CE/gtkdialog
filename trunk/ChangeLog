@@ -1,6 +1,13 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Aug 28 2012 Thunor <thunorsif@hotmail.com>
+- Added support for presentwindow.
+- Added examples/miscellaneous/presentwindow.
+- Added some code to action_launchwindow() to check that a program isn't
+  already being parsed as this process is not reetrant and it caused the
+  parser to quit with a nonsensical message; now it warns and continues.
+
 * Mon Aug 27 2012 Thunor <thunorsif@hotmail.com>
 - Updated the terminal widget: its variable now contains its pid.
 - Updated examples/terminal/terminal to output the pid with the signals.

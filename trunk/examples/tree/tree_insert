@@ -11,7 +11,8 @@ export MAIN_DIALOG='
 		<frame Insert and Remove>
 			<tree rules-hint="true" headers-visible="false">
 				<label>This label is invisible but required</label>
-				<width>400</width><height>100</height>
+				<height>100</height>
+				<width>400</width>
 				<variable>TREE1</variable>
 			</tree>
 			<hbox>

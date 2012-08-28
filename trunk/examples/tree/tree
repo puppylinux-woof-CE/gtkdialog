@@ -13,20 +13,23 @@ export MAIN_DIALOG='
 		<tree>
 			<label>Permissions|Filename</label>
 			<variable>TREE1</variable>
-			<width>400</width><height>150</height>
+			<height>150</height>
+			<width>400</width>
 			<input icon-column="0">list</input>
 		</tree>
 		<hseparator></hseparator>
 		<tree stock-id="gtk-file">
 			<label>Icon Name|Permissions|Filename</label>
 			<variable>TREE2</variable>
-			<height>150</height><width>400</width>
+			<height>150</height>
+			<width>400</width>
 			<input>list</input>
 		</tree>
 		<hseparator></hseparator>
 		<tree>
 			<variable>TREE3</variable>
-			<width>400</width><height>150</height>
+			<height>150</height>
+			<width>400</width>
 			<label>Device                           | Directory | File</label>
 			<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
 			<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>

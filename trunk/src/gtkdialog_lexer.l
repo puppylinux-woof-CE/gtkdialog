@@ -53,7 +53,7 @@ gchar *Token;
 	/**************************************************************
 	 * Thunor: Uncomment this to debug.
 	 **************************************************************
-	 * %option debug */
+	* %option debug */
 
 %x EMBEDDED
 %x ST_TAG_ATTR ST_QUOTED_TAGATTR

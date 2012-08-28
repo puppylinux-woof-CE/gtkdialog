@@ -94,7 +94,8 @@ int main(int argc, char *argv[]) {
 	"</frame>"
 	/* now without frame - add file-dialog at bottom window */
 	"<chooser>"
-		"<height>250</height><width>450</width>"
+		"<height>250</height>"
+		"<width>450</width>"
 		"<variable>FILE</variable>"
 		"<default>/home/</default>"
 		"<action>cat [ echo $FILE ] | zenity --text-info  --width=720 --height=400 --title $FILE</action>"

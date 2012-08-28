@@ -7,7 +7,8 @@ export MAIN_DIALOG='
 	<vbox>
 		<frame Stock ID examples>
 			<tree rules-hint="true">
-				<width>250</width><height>400</height>
+				<height>400</height>
+				<width>250</width>
 				<label>Stock ID</label>
 				<item stock-id="gtk-dialog-authentication">gtk-dialog-authentication</item>
 				<item stock-id="gtk-dialog-info">gtk-dialog-info</item>

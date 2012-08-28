@@ -7,7 +7,8 @@ export MAIN_DIALOG='
 	<vbox>
 		<frame Icon name examples>
 			<tree rules-hint="true">
-				<width>250</width><height>400</height>
+				<height>400</height>
+				<width>250</width>
 				<label>Icon Name</label>
 				<item icon-name="gimp">gimp</item>
 				<item icon-name="gnumeric">gnumeric</item>

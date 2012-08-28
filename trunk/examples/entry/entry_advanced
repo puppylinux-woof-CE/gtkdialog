@@ -99,7 +99,8 @@ export MAIN_DIALOG='
 						'"$(funcentCreate 16 0 1)"'
 					<entry>
 						<default>"<width>, <height> (equivalent to width-request and height-request)"</default>
-						<height>50</height><width>250</width>
+						<height>50</height>
+						<width>250</width>
 						'"$(funcentCreate 17 1 0)"'
 					<entry xalign="0.5">
 						<default>xalign</default>

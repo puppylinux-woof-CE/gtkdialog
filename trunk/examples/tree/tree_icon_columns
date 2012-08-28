@@ -44,7 +44,8 @@ export MAIN_DIALOG='
 			<frame Stock icons from input command>
 				<tree>
 					<variable>TREE1</variable>
-					<width>200</width><height>300</height>
+					<height>300</height>
+					<width>200</width>
 					<label>0 | 1 | 2</label>
 					<input stock-column="0">inputstock</input>
 				</tree>
@@ -52,7 +53,8 @@ export MAIN_DIALOG='
 			<frame Theme icons from input command>
 				<tree>
 					<variable>TREE2</variable>
-					<width>200</width><height>300</height>
+					<height>300</height>
+					<width>200</width>
 					<label>0 | 1 | 2</label>
 					<input icon-column="0">inputicon</input>
 				</tree>

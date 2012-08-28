@@ -49,6 +49,7 @@ int action_show(GtkWidget *widget, char *string);
 int action_hide(GtkWidget *widget, char *string);
 int action_activate(GtkWidget *widget, char *string);
 int action_grabfocus(GtkWidget *widget, char *string);
+int action_presentwindow(GtkWidget *widget, char *string);
 int action_shellcommand(GtkWidget *widget, char *string);
 
 #endif
