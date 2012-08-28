@@ -7,6 +7,7 @@ for announcements.
 - Added support for clear to the terminal widget.
 - Updated the terminal widget: argv0 now defaults to /bin/sh so a
   terminal widget could simply be <terminal></terminal>.
+- Added examples/miscellaneous/grabfocus.
 
 * Sun Aug 26 2012 Thunor <thunorsif@hotmail.com>
 - Updated the terminal widget so that when the user types exit or it is

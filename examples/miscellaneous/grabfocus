@@ -1,0 +1,146 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+funcbtnCreate() {
+	echo '<button active="true">
+					<label>'$1'</label>
+					<action>grabfocus:'$2'</action>
+				</button>'
+}
+
+funcactCreate() {
+	echo '<action signal="focus-out-event">echo "'$1' focus-out-event"</action>
+		<action signal="focus-in-event">echo "'$1' focus-in-event"</action>'
+}
+
+export winWindow='
+<window title="GrabFocus">
+	<vbox>
+		<hbox>
+			<vbox>
+				<button label="button (GtkButton)">
+					<variable>btnButton</variable>
+					<action>""</action>
+					'"$(funcactCreate btnButton)"'
+				</button>
+				<checkbox active="true" label="checkbox (GtkCheckButton)">
+					<variable>chkCheckbox</variable>
+					'"$(funcactCreate chkCheckbox)"'
+				</checkbox>
+				<colorbutton use-alpha="true"
+					tooltip-text="colorbutton (GtkColorButton)">
+					<variable>clbColorbutton</variable>
+					<default>#4488cc|32768</default>
+					'"$(funcactCreate clbColorbutton)"'
+				</colorbutton>
+				<comboboxentry>
+					<variable>cbeComboboxentry</variable>
+					<default>comboboxentry</default>
+					'"$(funcactCreate cbeComboboxentry)"'
+					<item>comboboxentry</item>
+					<item>(GtkComboBoxEntry)</item>
+				</comboboxentry>
+				<comboboxtext>
+					<variable>cbtComboboxtext</variable>
+					'"$(funcactCreate cbtComboboxtext)"'
+					<item>comboboxtext</item>
+					<item>(GtkComboBox)</item>
+				</comboboxtext>
+				<edit>
+					<variable>ediEdit</variable>
+					<default>"edit
+(GtkTextView)"</default>
+					'"$(funcactCreate ediEdit)"'
+				</edit>
+			</vbox>
+			<vseparator></vseparator>
+			<vbox>
+				<entry>
+					<variable>entEntry</variable>
+					<default>entry (GtkEntry)</default>
+					'"$(funcactCreate entEntry)"'
+				</entry>
+				<fontbutton use-font="false" use-size="false"
+					tooltip-text="fontbutton (GtkFontButton)">
+					<variable>ftbFontbutton</variable>
+					<default>Liberation Serif Bold Italic 14</default>
+					'"$(funcactCreate ftbFontbutton)"'
+				</fontbutton>
+				<hscale range-value="50" tooltip-text="hscale (GtkHScale)">
+					<variable>hscHscale</variable>
+					'"$(funcactCreate hscHscale)"'
+				</hscale>
+				<notebook tab-labels="radiobutton|spinbutton">
+					<radiobutton label="(GtkRadioButton)">
+						<variable>rdoRadiobutton</variable>
+						'"$(funcactCreate rdoRadiobutton)"'
+					</radiobutton>
+					<spinbutton value="50"
+						tooltip-text="spinbutton (GtkSpinButton)">
+						<variable>spbSpinbutton</variable>
+						'"$(funcactCreate spbSpinbutton)"'
+					</spinbutton>
+					<variable>ntbNotebook</variable>
+					'"$(funcactCreate ntbNotebook)"'
+				</notebook>
+			</vbox>
+			<vseparator></vseparator>
+			<vscale range-value="50" tooltip-text="vscale (GtkVScale)">
+				<variable>vscVscale</variable>
+				'"$(funcactCreate vscVscale)"'
+			</vscale>
+			<vbox>
+				<table>
+					<variable>tblTable</variable>
+					'"$(funcactCreate tblTable)"'
+					<item>table</item>
+					<item>(GtkCList)</item>
+				</table>
+				<togglebutton label="togglebutton (GtkToggleButton)">
+					<variable>tgbTogglebutton</variable>
+					'"$(funcactCreate tgbTogglebutton)"'
+				</togglebutton>
+				<tree>
+					<variable>treTree</variable>
+					'"$(funcactCreate treTree)"'
+					<item>tree</item>
+					<item>(GtkTreeView)</item>
+				</tree>
+			</vbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox>
+			<vbox>
+				'"$(funcbtnCreate button btnButton)"'
+				'"$(funcbtnCreate checkbox chkCheckbox)"'
+				'"$(funcbtnCreate colorbutton clbColorbutton)"'
+				'"$(funcbtnCreate comboboxentry cbeComboboxentry)"'
+				'"$(funcbtnCreate comboboxtext cbtComboboxtext)"'
+				'"$(funcbtnCreate edit ediEdit)"'
+			</vbox>
+			<vbox>
+				'"$(funcbtnCreate entry entEntry)"'
+				'"$(funcbtnCreate fontbutton ftbFontbutton)"'
+				'"$(funcbtnCreate hscale hscHscale)"'
+				'"$(funcbtnCreate notebook ntbNotebook)"'
+				'"$(funcbtnCreate radiobutton rdoRadiobutton)"'
+				'"$(funcbtnCreate spinbutton spbSpinbutton)"'
+			</vbox>
+			<vbox>
+				'"$(funcbtnCreate table tblTable)"'
+				'"$(funcbtnCreate togglebutton tgbTogglebutton)"'
+				'"$(funcbtnCreate tree treTree)"'
+				'"$(funcbtnCreate vscale vscVscale)"'
+			</vbox>
+		</hbox>
+	</vbox>
+	<variable>winWindow</variable>
+	'"$(funcactCreate winWindow)"'
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$winWindow" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=winWindow ;;
+esac
