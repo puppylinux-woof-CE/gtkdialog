@@ -91,8 +91,9 @@ The following general functions can be performed by any widget capable of emitti
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
-|| closewindow || Close launched dialog || Launched dialog's shell variable name || ||
-|| launch || Launch new dialog || New dialog's shell variable name || ||
+|| closewindow || Close dialog || Shell variable name || ||
+|| launch || Launch dialog || Shell variable name || ||
+|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
