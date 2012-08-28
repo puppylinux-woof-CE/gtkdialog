@@ -7,6 +7,7 @@ for announcements.
 - Added some code to action_launchwindow() to check that a program isn't
   already being parsed as this process is not reetrant and it caused the
   parser to quit with a nonsensical message; now it warns and continues.
+- Updated the wiki and the reference docs.
 
 * Mon Aug 27 2012 Thunor <thunorsif@hotmail.com>
 - Updated the terminal widget: its variable now contains its pid.
