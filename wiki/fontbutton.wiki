@@ -73,6 +73,7 @@ The following functions can be performed upon this widget by any widget capable 
 || show || Show widget || Shell variable name || ||
 || hide || Hide widget || Shell variable name || ||
 || activate || Activate widget || Shell variable name || ||
+|| grabfocus || Grab input focus || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
 || save || Save widget data || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
