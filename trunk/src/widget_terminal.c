@@ -138,6 +138,12 @@ GtkWidget *widget_terminal_create(
 			kill_tag_attribute(attr, tagattribute);
 		}
 
+		/* Get custom tag attribute "font-name" */
+		if ((value = get_tag_attribute(attr, "font-name")) ||
+			(value = get_tag_attribute(attr, "font_name"))) {
+			vte_terminal_set_font_from_string(VTE_TERMINAL(widget), value);
+		}
+
 		/* Get custom tag attribute "text-background-color" */
 		if ((value = get_tag_attribute(attr, "text-background-color")) ||
 			(value = get_tag_attribute(attr, "text_background_color"))) {
@@ -252,7 +258,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 	gchar            *argv[128], *envv[128];
 	gchar             tagattribute[256];
 	gchar            *value;
-	gchar            *working_directory;
+	gchar            *working_directory = NULL;
 	gint              count;
 #if VTE_CHECK_VERSION(0,26,0)
 	gboolean          retval;
@@ -269,8 +275,10 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 
 #if HAVE_VTE
 	/* Initialise strings */
-	for (count = 0; count < 128; count++)
-		argv[count] = envv[count] = NULL;
+	for (count = 0; count < 128; count++) {
+		argv[count] = NULL;
+		envv[count] = NULL;
+	}
 	argv[0] = argv0;	/* Set a default command otherwise it segfaults */
 
 	if (attr) {
@@ -296,6 +304,14 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 #endif
 		}
 	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s:() working_directory=%s\n", __func__, working_directory);
+	fprintf(stderr, "%s:() argv=%p *argv=%s argv[0]=%s argv[1]=%s\n",
+		__func__, argv, *argv, argv[0], argv[1]);
+	fprintf(stderr, "%s:() envv=%p *envv=%s envv[0]=%s envv[1]=%s\n",
+		__func__, envv, *envv, envv[0], envv[1]);
+#endif
 
 #if VTE_CHECK_VERSION(0,26,0)
 	retval = (vte_terminal_fork_command_full(VTE_TERMINAL(widget),
