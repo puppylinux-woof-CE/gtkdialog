@@ -3,6 +3,7 @@ for announcements.
 
 * Wed Aug 29 2012 Thunor <thunorsif@hotmail.com>
 - Added listing of the built-in extra libraries to argument --version.
+- Fixed working_directory not being initialised to NULL in terminal.
 
 * Tue Aug 28 2012 Thunor <thunorsif@hotmail.com>
 - Added support for presentwindow.
