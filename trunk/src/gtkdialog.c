@@ -351,11 +351,24 @@ get_program_from_stdin(void)
 
 static void 
 print_version_exit(int exitcode)
-{	
+{
+	gint extralibs = 0;
+
 	PIP_DEBUG("Start.");
 
-	printf("%s version %s (C) 2003-2007 Laszlo Pere, 2011 Thunor\n", 
-			PACKAGE_NAME, PACKAGE_VERSION);
+	printf("%s version %s (C) 2003-2007 Laszlo Pere, 2011-2012 Thunor\n", 
+		PACKAGE_NAME, PACKAGE_VERSION);
+	printf("Built with additional support for: ");
+#ifdef HAVE_GLADE_LIB
+	printf("Glade"); extralibs++;
+#endif
+#ifdef HAVE_VTE
+	if (extralibs) printf(", ");
+	printf("VTE"); extralibs++;
+#endif
+	if (!extralibs) printf("none");
+	printf(".\n");
+
 	exit(exitcode);
 }
 
