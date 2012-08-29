@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Wed Aug 29 2012 Thunor <thunorsif@hotmail.com>
+- Added listing of the built-in extra libraries to argument --version.
+
 * Tue Aug 28 2012 Thunor <thunorsif@hotmail.com>
 - Added support for presentwindow.
 - Added examples/miscellaneous/presentwindow.
