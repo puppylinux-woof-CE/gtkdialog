@@ -35,8 +35,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
-|| font-desc^[1]^ || Font description || Example: {{{Monospace Bold 14}}} || ||
-|| background-tint-color^[2]^ || Background tint colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
+|| font-name || Font description || Example: {{{Monospace Bold 14}}} || ||
+|| background-tint-color^[1]^ || Background tint colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
 || text-background-color || Text background colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
 || text-foreground-color || Text foreground colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
 || bold-foreground-color || Bold text foreground colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
@@ -82,7 +82,7 @@ The following functions can be performed upon this widget by any widget capable 
 || hide || Hide widget || Shell variable name || ||
 || grabfocus || Grab input focus || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
-|| clear^[3]^ || Reset terminal and rerun command || Shell variable name || ||
+|| clear^[2]^ || Reset terminal and rerun command || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
@@ -98,11 +98,9 @@ The following general functions can be performed by any widget capable of emitti
 
 == Notes ==
 
-1. There exists an equivalently named "[http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--font-desc font-desc]" VTE property but it doesn't accept strings so it's converted by Gtkdialog.
+1. There exists an equivalently named "[http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--background-tint-color background-tint-color]" VTE property but it doesn't accept strings so it's converted by Gtkdialog.
 
-2. There exists an equivalently named "[http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--background-tint-color background-tint-color]" VTE property but it doesn't accept strings so it's converted by Gtkdialog.
-
-3. Performing the "clear" action function upon this widget does not result in the emission of a "child-exited" signal, but it is possible to achieve the same result and receive a signal by killing the pid which is stored within the widget's variable -- for example if the widget's variable is named MYTERM then executing _kill -9 $MYTERM_ from within your application's script would reset the terminal, rerun the command and emit a signal.
+2. Performing the "clear" action function upon this widget does not result in the emission of a "child-exited" signal, but it is possible to achieve the same result and receive a signal by killing the pid which is stored within the widget's variable -- for example if the widget's variable is named MYTERM then executing _kill -9 $MYTERM_ from within your application's script would reset the terminal, rerun the command and emit a signal.
 
 This is a non-mandatory widget that requires [http://ftp.gnome.org/pub/gnome/sources/vte/ libvte] support be built into Gtkdialog at compile time.
 
