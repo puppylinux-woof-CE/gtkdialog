@@ -12,6 +12,8 @@ A [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox] optionally packed i
 <vbox tag_attr="value"...>
 	widget...
 	<variable>varname</variable>
+	<height>value</height>
+	<width>value</width>
 	<sensitive>state</sensitive>
 	<action signal="type">activity</action>...
 </vbox>
@@ -31,8 +33,8 @@ The following custom tag attributes are available:
 || space-fill^[1]^ || Pack this and nested widgets filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.8.1 ||
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
-|| height || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
-|| width || Scrolled window dimension || An integer > {{{0}}} || 0.7.21 ||
+|| height || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
+|| width || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -42,6 +44,8 @@ Some of these may have tag attribute equivalents.
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
 || variable || Shell variable name || || || 0.8.1 ||
+|| height^[2]^ || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.8.1 ||
+|| width^[2]^ || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.8.1 ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.8.1 ||
 || action signal="_type_" || Execute command on signal || Shell command || || 0.8.1 ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || 0.8.1 ||
@@ -79,6 +83,8 @@ The following general functions can be performed by any widget capable of emitti
 == Notes ==
 
 1. By default the frame widget and every widget automatically placed inside a scrolled window (edit, tree, list, table and optionally the h/vbox) are packed with expand and fill set to true, otherwise widgets are packed with expand and fill set to false. This rather quirky system constitutes the original Gtkdialog widget packing method and therefore must continue to be supported, but since 0.7.21 it's now possible to override this behaviour globally with the --space-expand=state and --space-fill=state command line options, at the h/vbox container level or at the individual widget level or a combination thereof.
+
+2. The scrolled window has a default dimension of 200x100 which can be overridden with the height and/or width directives.
 
 This widget has a default spacing of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkBox.html#GtkBox--spacing spacing]" tag attribute.
 
