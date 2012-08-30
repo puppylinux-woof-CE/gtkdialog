@@ -437,8 +437,11 @@ gchar *Token;
 					  return(PART_LIST); 					}
 \<\/list\>  				{ Token="</list>"; return(ELIST);  			}
 
-\<table\>    				{ Token="<table>"; return(TABLE);  			}
-\<\/table\>  				{ Token="</table>"; return(ETABLE);  			}
+\<table\>    				{ Token="<table>"; return(TABLE); }
+\<table[ ]+    				{ Token="<table>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_TABLE); }
+\<\/table\>  				{ Token="</table>"; return(ETABLE); }
 
 \<menubar\>    				{ Token="<menubar>"; return(MENUBAR); }
 \<menubar[ ]+    			{ Token="<menubar>"; 
