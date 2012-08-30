@@ -125,6 +125,8 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <tr><td class="wiki"> dim-foreground-color </td><td class="wiki"> Dim text foreground colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> cursor-background-color </td><td class="wiki"> Cursor background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> highlight-background-color </td><td class="wiki"> Highlighted text background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> hscrollbar-policy </td><td class="wiki"> Policy for the horizontal scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> vscrollbar-policy </td><td class="wiki"> Policy for the vertical scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> argv? </td><td class="wiki"> Arguments starting at argv0 (command) </td><td class="wiki"> Example: <code>/bin/sh</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> envv? </td><td class="wiki"> Environment variables starting at envv0 </td><td class="wiki"> Example: <code>MESSAGE=Hello</code> </td><td class="wiki"> </td></tr>
 </table>
@@ -135,9 +137,9 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Mandatory</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> height </td><td class="wiki"> Initial height </td><td class="wiki"> An integer &gt; <code>0</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> width </td><td class="wiki"> Initial width </td><td class="wiki"> An integer &gt; <code>0</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> Command's PID (<code>0</code> if dead) </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> height </td><td class="wiki"> Initial height </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> width </td><td class="wiki"> Initial width </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input file </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> sensitive </td><td class="wiki"> Active state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
@@ -150,7 +152,7 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 
 <h2> Signals </h2>
 
-<p>The default signal is "<a href="http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal-child-exited">child-exited</a>", emitted when the terminal detects that the child has exited. Prior to the gtkdialog application receiving this signal, the terminal is reset and the command rerun.</p>
+<p>The default signal is "<a href="http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal-child-exited">child-exited</a>", emitted when the terminal detects that the child has exited.</p>
 
 <h2> Functions </h2>
 
@@ -164,7 +166,7 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> grabfocus </td><td class="wiki"> Grab input focus </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> clear<sup><a href="#note2">[2]</a></sup> </td><td class="wiki"> Reset terminal and rerun command </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> clear </td><td class="wiki"> Reset terminal and re-execute command </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 </table>
 
 <p>The following general functions can be performed by any widget capable of emitting signals:</p>
@@ -181,8 +183,6 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <h2> Notes </h2>
 
 <p><a name="note1"></a>1. There exists an equivalently named "<a href="http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--background-tint-color">background-tint-color</a>" VTE property but it doesn't accept strings so it's converted by Gtkdialog.</p>
-
-<p><a name="note2"></a>2. Performing the "clear" action function upon this widget does not result in the emission of a "child-exited" signal, but it is possible to achieve the same result and receive a signal by killing the pid which is stored within the widget's variable -- for example if the widget's variable is named MYTERM then executing <i>kill -9 $MYTERM</i> from within your application's script would reset the terminal, rerun the command and emit a signal.</p>
 
 <p>This is a non-mandatory widget that requires <a href="http://ftp.gnome.org/pub/gnome/sources/vte/">libvte</a> support be built into Gtkdialog at compile time.</p>
 
@@ -234,7 +234,7 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-08-29 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-08-30 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

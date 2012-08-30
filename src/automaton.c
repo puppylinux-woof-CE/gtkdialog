@@ -69,6 +69,10 @@
 #undef WARNING
 #include "macros.h"
 
+#if HAVE_VTE
+#include <vte/vte.h>
+#endif
+
 #undef TOOLTIPS
 
 extern gboolean option_no_warning;
@@ -836,51 +840,147 @@ instruction_execute(instruction command)
 	return 0;
 }
 
-/*
- * Puts the widget into a scolled window. This function is similar to the
- * create_* functions we use to create various widgets as we execute the
- * internal representation of the dialog description.
- */
-static GtkWidget *
-put_in_the_scrolled_window(GtkWidget *widget,
-		AttributeSet *Attr,
-		tag_attr     *attr)
+/***********************************************************************
+ * Put in the Scrolled Window                                          *
+ ***********************************************************************/
+/* Places the widget into a scrolled window */
+
+static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
+	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
-	GList     *element;
-	GtkWidget *scrolledwindow;
-	#define SW_DEFAULT_WIDTH 200
-	#define SW_DEFAULT_HEIGHT 100
-	int        width = SW_DEFAULT_WIDTH;
-	int        height = SW_DEFAULT_HEIGHT;
-	gchar     *value;
+	GList            *element;
+	GtkWidget        *scrolledwindow;
+	gchar            *value;
+	gint              width = -1;
+	gint              height = -1;
+	gint              hscrollbar_policy = GTK_POLICY_AUTOMATIC;
+	gint              vscrollbar_policy = GTK_POLICY_AUTOMATIC;
+	gint              xpad;
+	gint              ypad;
+	glong             char_height;
+	glong             char_width;
+#if HAVE_VTE
+#if 0 //#if VTE_CHECK_VERSION(0,26,0)
+	GtkBorder         inner_border;
+#endif
+#endif
 
 	g_assert(widget != NULL);
-	/*
-	 * Creating the scrolled window.
-	 */
+
+	/* Create the scrolled window */
 	scrolledwindow = gtk_scrolled_window_new(NULL, NULL);
+
+	/* Set the scrollbar policy for the scrollbars */
+	if (Type == WIDGET_TERMINAL) {
+		/* Get scrollbar policy from custom tag attributes */
+		if (attr) {
+			if ((value = get_tag_attribute(attr, "hscrollbar-policy")) ||
+				(value = get_tag_attribute(attr, "hscrollbar_policy")))
+				hscrollbar_policy = atoi(value);
+			if ((value = get_tag_attribute(attr, "vscrollbar-policy")) ||
+				(value = get_tag_attribute(attr, "vscrollbar_policy")))
+				vscrollbar_policy = atoi(value);
+		}
+	}
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow), 
-			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	/*
-	 * Setting the size of the scolled window.
-	 */
+		hscrollbar_policy, vscrollbar_policy);
+
+	/* Get dimensions from directives */
+	if (attributeset_is_avail(Attr, ATTR_WIDTH))
+		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
+	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
+		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
+
+	/* Set scrolled window size */
+	switch (Type) {
+		case WIDGET_HBOX:
+		case WIDGET_VBOX:
+			/* Get dimensions from custom tag attributes */
+			if (attr) {
+				if (value = get_tag_attribute(attr, "width"))
+					width = atoi(value);
+				if (value = get_tag_attribute(attr, "height"))
+					height = atoi(value);
+			}
+			/* Set some defaults */
+			if (width == -1) width = 200;
+			if (height == -1) height = 100;
+			/* Set the size */
+			gtk_widget_set_usize(scrolledwindow, width, height);
+			/* Pack the widget */
+			gtk_scrolled_window_add_with_viewport(
+				GTK_SCROLLED_WINDOW(scrolledwindow), widget);
+			break;
+		case WIDGET_TERMINAL:
+#if HAVE_VTE
+			/* VTE is telling me that vte_terminal_get_padding() has been
+			 * deprecated since 0.26 and that I should get 'inner-border'
+			 * but GLib is telling me that 'VteTerminal' has no property
+			 * named 'inner-border' so I have to go with the deprecated
+			 * vte_terminal_get_padding() */
+#if 0 //#if VTE_CHECK_VERSION(0,26,0)
+			g_object_get(G_OBJECT(widget), "inner-border", &inner_border, NULL);
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s:() inner_border.left=%i inner_border.right=%i \
+inner_border.top=%i inner_border.bottom=%i\n", __func__, inner_border.left,
+				inner_border.right, inner_border.top, inner_border.bottom);
+#endif
+			xpad = inner_border.left + inner_border.right;
+			ypad = inner_border.top + inner_border.bottom;
+#else
+			vte_terminal_get_padding(VTE_TERMINAL(widget), &xpad, &ypad);
+#endif
+			char_width = vte_terminal_get_char_width(VTE_TERMINAL(widget));
+			char_height = vte_terminal_get_char_height(VTE_TERMINAL(widget));
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s:() xpad=%i ypad=%i char_width=%li char_height=%li\n",
+				__func__, xpad, ypad, char_width, char_height);
+#endif
+			if (width != -1) width = width * char_width + xpad;
+			if (height != -1) height = height * char_height + ypad;
+			/* Set some defaults */
+			if (width == -1) width = 80 * char_width + xpad;
+			if (height == -1) height = 25 * char_height + ypad;
+			/* Set the size */
+			gtk_widget_set_usize(scrolledwindow, width, height);
+			/* Pack the widget */
+			gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
+			break;
+#endif
+		default:
+			/* Set some defaults */
+			if (width == -1) width = 200;
+			if (height == -1) height = 100;
+			/* Set the size */
+			gtk_widget_set_usize(scrolledwindow, width, height);
+			/* Pack the widget */
+			if (Type == WIDGET_LIST || Type == WIDGET_TERMINAL) {
+				gtk_scrolled_window_add_with_viewport(
+					GTK_SCROLLED_WINDOW(scrolledwindow), widget);
+			} else {
+				gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
+			}
+			break;
+	}
+
+/* Redundant
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT) && 
-			attributeset_is_avail(Attr, ATTR_WIDTH))
+			attributeset_is_avail(Attr, ATTR_WIDTH)) {
 		gtk_widget_set_usize(scrolledwindow, 
-				atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
-				atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
-	else if (attributeset_is_avail(Attr, ATTR_HEIGHT))
+			atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
+			atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
+	} else if (attributeset_is_avail(Attr, ATTR_HEIGHT)) {
 		gtk_widget_set_usize(scrolledwindow, 
-				-1,
-				atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
-	else if (attributeset_is_avail(Attr, ATTR_WIDTH))
+			-1,
+			atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
+	} else if (attributeset_is_avail(Attr, ATTR_WIDTH)) {
 		gtk_widget_set_usize(scrolledwindow, 
-				atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
-				-1);
-	else if (GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget)) {
-		/* Thunor: hbox and vbox are containers and don't accept the
-		 * width/height directives, but we can access them if they are
-		 * set as tag attributes */
+			atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
+			-1);
+	} else if (GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget)) {
+		/$ These widgets before 0.8.1 didn't support directives so these
+		 * values had to come from custom tag atributes which application
+		 * developers will still be using $/
 		if (attr) {
 			if (value = get_tag_attribute(attr, "width"))
 				width = atoi(value);
@@ -888,16 +988,19 @@ put_in_the_scrolled_window(GtkWidget *widget,
 				height = atoi(value);
 		}
 		gtk_widget_set_usize(scrolledwindow, width, height);
-	}
-	else 
+	} else {
 		gtk_widget_set_usize(scrolledwindow, SW_DEFAULT_WIDTH, SW_DEFAULT_HEIGHT);
+	}
 
-	if (GTK_IS_LIST(widget) || GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget))
-		gtk_scrolled_window_add_with_viewport(
-				GTK_SCROLLED_WINDOW(scrolledwindow), 
-				widget);
-	else
+	/$ Packing the widget, possibly with a viewport $/
+	if (GTK_IS_LIST(widget) || GTK_IS_HBOX(widget) || GTK_IS_VBOX(widget)) {
+		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow), 
+			widget);
+	} else {
 		gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
+	}
+*/
+
 	return scrolledwindow;
 }
 
@@ -1492,7 +1595,7 @@ instruction_execute_push(
 				((strcasecmp(value, "true") == 0) ||
 				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
 				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
-					tag_attributes);
+					tag_attributes, Widget_Type);
 				push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			} else {
 				push_widget(Widget, Widget_Type);
@@ -1530,7 +1633,9 @@ instruction_execute_push(
 			break;
 		case WIDGET_TERMINAL:
 			Widget = widget_terminal_create(Attr, tag_attributes, Widget_Type);
-			push_widget(Widget, Widget_Type);
+			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+				tag_attributes, Widget_Type);
+			push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			break;
 		case WIDGET_TEXT:
 			Widget = widget_text_create(Attr, tag_attributes, Widget_Type);
@@ -1543,7 +1648,8 @@ instruction_execute_push(
 #if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_TREE:
 			Widget = widget_tree_create(Attr, tag_attributes, Widget_Type);
-			scrolled_window = put_in_the_scrolled_window(Widget, Attr, tag_attributes);
+			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+				tag_attributes, Widget_Type);
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			break;
 #endif
@@ -1556,7 +1662,7 @@ instruction_execute_push(
 				((strcasecmp(value, "true") == 0) ||
 				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
 				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
-					tag_attributes);
+					tag_attributes, Widget_Type);
 				push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			} else {
 				push_widget(Widget, Widget_Type);
@@ -1595,7 +1701,8 @@ instruction_execute_push(
 	case WIDGET_EDIT:
 #if GTK_CHECK_VERSION(2, 4, 0)
 		Widget = create_edit(Attr, tag_attributes);
-		scrolled_window = put_in_the_scrolled_window(Widget, Attr, tag_attributes);
+		scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+			tag_attributes, Widget_Type);
 		push_widget(scrolled_window, WIDGET_SCROLLEDW);
 		
 #else
@@ -1677,7 +1784,8 @@ instruction_execute_push(
 		 * stack, because this holds the list.
 		 */
 		Widget = create_list(Attr, tag_attributes);
-		scrolled_window = put_in_the_scrolled_window(Widget, Attr, tag_attributes);
+		scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+			tag_attributes, Widget_Type);
 		push_widget(scrolled_window, WIDGET_SCROLLEDW);
 		
 		/*
@@ -1699,7 +1807,8 @@ instruction_execute_push(
 		 * window_ into the stack, because this holds the list.  
 		 */
 		Widget = create_table(Attr, tag_attributes);
-		scrolled_window = put_in_the_scrolled_window(Widget, Attr, tag_attributes);
+		scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+			tag_attributes, Widget_Type);
 		push_widget(scrolled_window, WIDGET_SCROLLEDW);		
 		
 		/*

@@ -26,7 +26,7 @@ echo 13 > "$TMPDIR"/democount
 sed -n 1p "$TMPDIR"/demo > "$TMPDIR"/feed
 
 export MAIN_DIALOG='
-<window title="Terminal Widget" resizable="false">
+<window title="Terminal Widget" resizable="true">
 	<vbox>
 		<timer interval="2" visible="false">
 			<action>"read < '"$TMPDIR"'/demoindex; index=$REPLY
@@ -42,11 +42,13 @@ export MAIN_DIALOG='
 			<action>refresh:vte2</action>
 		</timer>
 		<notebook tab-labels="All Defaults|Colourful|Input File Feed Demo">
-			<terminal argv0="/bin/sh" has-focus="true">
+			<terminal has-focus="true">
 				<variable>vte0</variable>
-				<action>echo vte0=$vte0 - default signal</action>
-				<action signal="show">echo vte0=$vte0 - show signal</action>
-				<action signal="child-exited">echo vte0=$vte0 - child-exited signal</action>
+				<action>echo "vte0=$vte0 - Default child-exited signal"</action>
+				<action signal="child-exited">echo "vte0=$vte0 - Resetting and re-executing command"</action>
+				<action signal="child-exited">clear:vte0</action>
+				<action signal="child-exited">echo "vte0=$vte0 - New PID"</action>
+				<action signal="show">echo "vte0=$vte0 - show signal"</action>
 			</terminal>
 			<terminal argv0="/bin/sh"
 				envv0="WELCOME=Welcome to the terminal (VteTerminal) widget :)"
@@ -55,12 +57,17 @@ export MAIN_DIALOG='
 				cursor-background-color="#ff0"
 				highlight-background-color="#660"
 				text-background-color="#332"
-				text-foreground-color="#fff">
+				text-foreground-color="#fff"
+				hscrollbar-policy="2"
+				vscrollbar-policy="2">
 				<variable>vte1</variable>
 				<input>echo echo \$WELCOME</input>
-				<action>echo vte1=$vte1 - default signal</action>
-				<action signal="show">echo vte1=$vte1 - show signal</action>
-				<action signal="child-exited">echo vte1=$vte1 - child-exited signal</action>
+				<action>echo "vte1=$vte1 - Default child-exited signal"</action>
+				<action signal="child-exited">echo "vte1=$vte1 - Resetting and re-executing command"</action>
+				<action signal="child-exited">clear:vte1</action>
+				<action signal="child-exited">echo "vte1=$vte1 - New PID"</action>
+				<action signal="child-exited">refresh:vte1</action>
+				<action signal="show">echo "vte1=$vte1 - show signal"</action>
 			</terminal>
 			<terminal argv0="/bin/sh" sensitive="false"
 				cursor-shape="2"
@@ -70,12 +77,10 @@ export MAIN_DIALOG='
 				text-foreground-color="#fff">
 				<variable>vte2</variable>
 				<input file>'"$TMPDIR"'/feed</input>
-				<action>echo vte2=$vte2 - default signal</action>
-				<action signal="show">echo vte2=$vte2 - show signal</action>
-				<action signal="child-exited">echo vte2=$vte2 - child-exited signal</action>
+				<action signal="show">echo "vte2=$vte2 - show signal"</action>
 			</terminal>
 		</notebook>
-		<hbox homogeneous="true">
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
 			<button use-stock="true" label="gtk-quit">
 			</button>
 		</hbox>
@@ -85,5 +90,5 @@ export MAIN_DIALOG='
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
 esac
