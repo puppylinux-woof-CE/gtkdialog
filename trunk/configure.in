@@ -31,7 +31,7 @@ PKG_CHECK_MODULES([GLADE_LIB], \
 AC_SUBST(GLADE_LIB_CFLAGS)
 AC_SUBST(GLADE_LIB_LIBS)
 
-vte_lib="vte >= 0.24.3"
+vte_lib="vte >= 0.23.5"
 PKG_CHECK_MODULES([VTE], \
 	[$vte_lib], \
 	AC_SUBST(HAVE_VTE, 1),\

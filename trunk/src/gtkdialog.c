@@ -359,10 +359,10 @@ print_version_exit(int exitcode)
 	printf("%s version %s (C) 2003-2007 Laszlo Pere, 2011-2012 Thunor\n", 
 		PACKAGE_NAME, PACKAGE_VERSION);
 	printf("Built with additional support for: ");
-#ifdef HAVE_GLADE_LIB
+#if HAVE_GLADE_LIB
 	printf("Glade"); extralibs++;
 #endif
-#ifdef HAVE_VTE
+#if HAVE_VTE
 	if (extralibs) printf(", ");
 	printf("VTE"); extralibs++;
 #endif
