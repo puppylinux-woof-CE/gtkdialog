@@ -41,6 +41,8 @@ static void widget_statusbar_input_by_items(variable *var);
 static void widget_statusbar_update(variable *var, gchar *text);
 
 /* Local variables */
+/* Thunor: This needs looking at because it only deals with one status
+ * bar -- doh! -- so I'll mark it temp temp and look at it later */
 gchar current_message[MESSAGE_LENGTH_MAX];
 guint context_id;
 

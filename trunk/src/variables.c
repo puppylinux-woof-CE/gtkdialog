@@ -711,18 +711,36 @@ variable *variables_disable(const char *name)
 
 variable *variables_show(const char *name)
 {
-	variable *var;
+	GtkWidget        *parent, *grandparent;
+	variable         *var;
+
 #ifdef DEBUG
 	fprintf(stderr, "%s(): %s\n", __func__, name);
 	fflush(stderr);
 #endif
+
 	var = _tree_find(name, NULL);
 	if (var == NULL)
 		return (NULL);
 	if (var->Widget == NULL)
 		return (NULL);
 
-	gtk_widget_show(var->Widget);
+	/* The widget could be inside a scrolled window or inside a viewport
+	 * inside a scrolled window so we need to show the scrolled window */
+	parent = gtk_widget_get_parent(var->Widget);
+	if (parent != NULL) grandparent = gtk_widget_get_parent(parent);
+
+	if (parent != NULL && GTK_IS_SCROLLED_WINDOW(parent)) {
+		gtk_widget_show(parent);
+	} else if (parent != NULL && GTK_IS_VIEWPORT(parent)) {
+		/* A viewport will always be inside a scrolled window */
+		if (grandparent != NULL && GTK_IS_SCROLLED_WINDOW(grandparent)) {
+			gtk_widget_show(grandparent);
+		}
+	} else {
+		gtk_widget_show(var->Widget);
+	}
+
 	return (var);
 }
 
@@ -732,18 +750,36 @@ variable *variables_show(const char *name)
 
 variable *variables_hide(const char *name)
 {
-	variable *var;
+	GtkWidget        *parent, *grandparent;
+	variable         *var;
+
 #ifdef DEBUG
 	fprintf(stderr, "%s(): %s\n", __func__, name);
 	fflush(stderr);
 #endif
+
 	var = _tree_find(name, NULL);
 	if (var == NULL)
 		return (NULL);
 	if (var->Widget == NULL)
 		return (NULL);
 
-	gtk_widget_hide(var->Widget);
+	/* The widget could be inside a scrolled window or inside a viewport
+	 * inside a scrolled window so we need to hide the scrolled window */
+	parent = gtk_widget_get_parent(var->Widget);
+	if (parent != NULL) grandparent = gtk_widget_get_parent(parent);
+
+	if (parent != NULL && GTK_IS_SCROLLED_WINDOW(parent)) {
+		gtk_widget_hide(parent);
+	} else if (parent != NULL && GTK_IS_VIEWPORT(parent)) {
+		/* A viewport will always be inside a scrolled window */
+		if (grandparent != NULL && GTK_IS_SCROLLED_WINDOW(grandparent)) {
+			gtk_widget_hide(grandparent);
+		}
+	} else {
+		gtk_widget_hide(var->Widget);
+	}
+
 	return (var);
 }
 
