@@ -91,12 +91,13 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkCList.html">GtkCList</a> packe
 <h2> Definition </h2>
 
 <pre>
-&lt;table&gt;
+&lt;table tag_attr="value"...&gt;
 	&lt;label&gt;text&lt;/label&gt;
 	&lt;variable&gt;varname&lt;/variable&gt;
 	&lt;height&gt;value&lt;/height&gt;
 	&lt;width&gt;value&lt;/width&gt;
 	&lt;input&gt;command&lt;/input&gt;...
+	&lt;input file&gt;filename&lt;/input&gt;...
 	&lt;sensitive&gt;state&lt;/sensitive&gt;
 	&lt;action&gt;activity&lt;/action&gt;...
 	&lt;action type="function"&gt;parameter&lt;/action&gt;...
@@ -108,11 +109,16 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkCList.html">GtkCList</a> packe
 
 <h2> Tag Attributes </h2>
 
-<p>This widget does not accept tag attributes.</p>
+<p>See the <a href="http://developer.gnome.org/gtk/2.24/GtkCList.html#GtkCList.object-hierarchy">GtkCList</a> widget and ancestor class properties.</p>
 
 <p>The following custom tag attributes are available:</p>
 
-<p>None.</p>
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
+</table>
 
 <h2> Directives </h2>
 
@@ -125,6 +131,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkCList.html">GtkCList</a> packe
 <tr><td class="wiki"> height<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Initial minimum height </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> width<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Initial minimum width </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> input file </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action </td><td class="wiki"> Execute command on default signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
@@ -215,7 +222,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkCList.html">GtkCList</a> packe
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-08-29 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-08-30 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

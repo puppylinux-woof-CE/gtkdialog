@@ -5,6 +5,8 @@ for announcements.
 - Fixed an issue with hiding/showing widgets that are automatically
   wrapped inside a scrolled window or viewport inside a scrolled window
   not hiding/showing those additional components.
+- Refactored the table widget.
+- Added tag attribute and input file support to the table widget.
 
 * Wed Aug 29 2012 Thunor <thunorsif@hotmail.com>
 - Added listing of the built-in extra libraries to argument --version.

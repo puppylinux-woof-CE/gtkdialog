@@ -49,6 +49,7 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_table.h"
 #include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -96,34 +97,6 @@ next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
 
 	gtk_list_select_item(GTK_LIST(list), 0);
 }
-
-static void 
-fill_clist_by_items(AttributeSet *Attr,
-		         GtkWidget *list,
-			 int separator)
-{
-	GList *element;
-	char *text;
-	list_t *sliced;
-
-	g_assert(Attr != NULL && list != NULL);
-	
-	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
-	if (text == NULL)
-		return;
-	
-	while (text != NULL){
-		/* sliced = linecutter(text, separator);	Redundant: Bug */
-		sliced = linecutter(g_strdup(text), separator);
-		gtk_clist_append(GTK_CLIST(list), sliced->line);
-		/* Free linecutter memory */
-		list_t_free(sliced);
-next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
-	}
-
-	gtk_clist_select_row(GTK_CLIST(list), 0, 0);
-}
-
 
 static
 void fill_combo_by_items(AttributeSet *Attr,
@@ -259,6 +232,10 @@ widget_get_text_value(
 			string = widget_statusbar_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_TABLE:
+			string = widget_table_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_TERMINAL:
 			string = widget_terminal_envvar_construct(widget);
 			return string;
@@ -307,14 +284,6 @@ widget_get_text_value(
 				return (gtk_object_get_user_data(item->data));
 			else
 				return g_strdup("");
-			break;
-			
-		case WIDGET_TABLE:
-			/*
-			 ** I simply could not find a function to get the selected item,
-			 ** so managed the selected item by callback function.
-			 */
-			return NULL;
 			break;
 			
 		case WIDGET_EDIT:
@@ -878,39 +847,6 @@ void widget_list_refresh(variable * var)
 	gtk_widget_queue_draw(var->Widget);
 }
 
-/* Thunor: Using fill_clist_by_items leaves the top row selected but
- * fill_table_by_command doesn't. I can't change this behaviour because
- * it could break an existing application somewhere. I did notice that
- * there exists a function fill_clist_by_command which does select the
- * top row but this function isn't being used anywhere */
-
-void 
-widget_table_refresh(variable * var)
-{
-	GList *element;
-	char *act;
-	if (var == NULL || var->Attributes == NULL)
-		return;
-	/*
-	 ** The <input> tags.
-	 */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		if (input_is_shell_command(act))
-			fill_table_by_command(var->Widget, act + 8);
-		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-	}
-
-	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		fill_clist_by_items(var->Attributes, var->Widget, '|');
-
-	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
-		gtk_widget_set_sensitive(var->Widget, FALSE);
-}
-
 void 
 widget_combo_refresh(variable * var)
 {
@@ -1124,6 +1060,7 @@ widget_opencommand(
 	return infile;
 }
 
+/* Redundant: Not being used anywhere.
 void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 {
 	int c;
@@ -1131,9 +1068,9 @@ void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 	char *oneline = NULL;
 	list_t *thisline;
 	int size = 0;
-	/*
+	/$
 	 ** Opening pipe for reading...
-	 */
+	 $/
 	infile = widget_opencommand(command);
 	if (infile == NULL) {
 		fprintf(stderr, "%s(): command %s, %m\n", __func__,
@@ -1141,9 +1078,9 @@ void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 		return;
 	}
 
-	/*
+	/$
 	 ** Reading and filling the lines to the clist...
-	 */
+	 $/
 	while (getline(&oneline, &size, infile) != -1) {
 		thisline = linecutter(oneline, '|');
 		gtk_clist_append(GTK_CLIST(list), thisline->line);
@@ -1151,7 +1088,7 @@ void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 
 	pclose(infile);
 	gtk_clist_select_row(GTK_CLIST(list), 0, 0);
-}
+} */
 
 void 
 fill_list_by_command(GtkWidget * list, 
@@ -1207,43 +1144,6 @@ void fill_entry_by_command(GtkWidget * entry, char *command)
 		gtk_entry_set_text(GTK_ENTRY(entry), (const gchar *) line);
 	}
 
-	pclose(infile);
-}
-
-void 
-fill_table_by_command(
-	GtkWidget * list, 
-	char *command)
-{
-	FILE *infile;
-	char oneline[512];
-	int q, n, length;
-	char *c[32];
-	infile = widget_opencommand(command);
-	if (infile == NULL) {
-		fprintf(stderr, "%s(): command %s, %m\n", __func__,
-			command);
-		return;
-	}
-
-	while (fgets(oneline, 512, infile) != NULL) {
-		if (oneline[strlen(oneline) - 1] == '\n')
-			oneline[strlen(oneline) - 1] = '\0';
-		for (q = 0; q < 32; ++q)
-			c[q] = NULL;
-
-		c[0] = oneline;
-		n = 1;
-		length = strlen(oneline);
-		for (q = 0; q < length; ++q) {
-			if (oneline[q] == '|') {
-				oneline[q] = '\0';
-				c[n] = &oneline[q + 1];
-				n++;
-			}
-		}
-		gtk_clist_append((GtkCList *) list, c);
-	}
 	pclose(infile);
 }
 
@@ -1374,6 +1274,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_STATUSBAR:
 			type = "STATUSBAR";
 			break;
+		case WIDGET_TABLE:
+			type = "TABLE";
+			break;
 		case WIDGET_TERMINAL:
 			type = "TERMINAL";
 			break;
@@ -1407,9 +1310,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_LIST:
 		type = "LIST";
-		break;
-	case WIDGET_TABLE:
-		type = "TABLE";
 		break;
 	case WIDGET_COMBO:
 		type = "COMBO";

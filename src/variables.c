@@ -35,6 +35,7 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_table.h"
 #include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -597,6 +598,9 @@ variable *variables_refresh(const char *name)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_refresh(var);
 			break;
+		case WIDGET_TABLE:
+			widget_table_refresh(var);
+			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_refresh(var);
 			break;
@@ -624,9 +628,6 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_LIST:
 			widget_list_refresh(var);
-			break;
-		case WIDGET_TABLE:
-			widget_table_refresh(var);
 			break;
 		case WIDGET_COMBO:
 			widget_combo_refresh(var);
@@ -1192,13 +1193,13 @@ static void _variables_export(variable *actual)
 		//
 		value = widget_get_text_value(actual->Widget, actual->Type);
 
-		/* 
+		/* Redundant.
 		 ** FIXME: awfull
-		 */
+		 *
 		if (actual->Type == WIDGET_TABLE && actual->row != -1) {
 			gtk_clist_get_text(GTK_CLIST(actual->Widget),
 					   actual->row, 0, &value);
-		}
+		} */
 
 		if (value != NULL) {
 			line = g_strdup_printf("%s=%s", actual->Name, value);
@@ -1492,6 +1493,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_clear(toclear);
 			break;
+		case WIDGET_TABLE:
+			widget_table_clear(toclear);
+			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_clear(toclear);
 			break;
@@ -1516,9 +1520,6 @@ variable *variables_clear(const char *name)
 
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
-			break;
-		case WIDGET_TABLE:
-			gtk_clist_clear(GTK_CLIST(toclear->Widget));
 			break;
 		case WIDGET_LIST:
 			gtk_list_clear_items(GTK_LIST(toclear->Widget), 
@@ -1628,6 +1629,9 @@ int remove_selected_variable(const char *name)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_removeselected(toclear);
 			break;
+		case WIDGET_TABLE:
+			widget_table_removeselected(toclear);
+			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_removeselected(toclear);
 			break;
@@ -1660,11 +1664,6 @@ int remove_selected_variable(const char *name)
 			if (GTK_LIST(toclear->Widget)->children != NULL)
 				gtk_list_select_item(GTK_LIST(toclear->Widget), 0);
 			gtk_signal_emit_by_name(GTK_OBJECT(toclear->Widget), "selection-changed");
-			break;
-			
-		case WIDGET_TABLE:
-			if (toclear->row != -1)
-				gtk_clist_remove(GTK_CLIST(toclear->Widget), toclear->row);
 			break;
 			
 		case WIDGET_EDIT:

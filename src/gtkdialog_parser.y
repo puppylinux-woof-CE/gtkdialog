@@ -107,7 +107,7 @@ start_up(void)
 %token         RADIO ERADIO PART_RADIO
 %token         PROGRESS EPROGRESS PART_PROGRESS
 %token         LIST PART_LIST ELIST
-%token         TABLE ETABLE
+%token         TABLE ETABLE PART_TABLE
 %token         COMBO PART_COMBO ECOMBO
 %token         GVIM EGVIM
 %token         TEXT PART_TEXT ETEXT
@@ -382,7 +382,15 @@ list
   ;
 
 table
-  : TABLE attr ETABLE          {token_store(PUSH | WIDGET_TABLE);}
+  : TABLE attr ETABLE {
+		token_store(PUSH | WIDGET_TABLE); 
+	}
+  | PART_TABLE tagattr '>' attr ETABLE {
+		token_store_attr(PUSH | WIDGET_TABLE, $2); 
+    	}
+  | TABLE attr TABLE   {
+    		yyerror("</table> expected instead of <table>.");
+	}
   ;
 
 combo

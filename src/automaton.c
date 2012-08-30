@@ -56,6 +56,7 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
+#include "widget_table.h"
 #include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -339,6 +340,9 @@ void print_command(instruction command)
 		case WIDGET_STATUSBAR:
 			printf("(new statusbar())");
 			break;
+		case WIDGET_TABLE:
+			printf("(new table())");
+			break;
 		case WIDGET_TERMINAL:
 			printf("(new terminal())");
 			break;
@@ -375,9 +379,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_LIST:
 	    printf("(new list())");
-	    break;
-	case WIDGET_TABLE:
-	    printf("(new table())");
 	    break;
 	case WIDGET_COMBO:
 	    printf("(new combo())");
@@ -639,6 +640,9 @@ void print_token(token Token)
 		case WIDGET_STATUSBAR:
 			printf("(STATUSBAR)");
 			break;
+		case WIDGET_TABLE:
+			printf("(TABLE)");
+			break;
 		case WIDGET_TERMINAL:
 			printf("(TERMINAL)");
 			break;
@@ -675,9 +679,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_LIST:
 		printf("(LIST)");
-		break;
-	case WIDGET_TABLE:
-		printf("(TABLE)");
 		break;
 	case WIDGET_COMBO:
 		printf("(COMBO)");
@@ -1437,28 +1438,6 @@ create_list(AttributeSet   *Attr,
 }
 
 static GtkWidget *
-create_table(AttributeSet   *Attr,
-		tag_attr   *attr)
-{
-	GList *element;
-	GtkWidget *widget;
-	
-	list_t *table_header;
-	if (attributeset_is_avail(Attr, ATTR_LABEL)) {
-		table_header =
-		linecutter(attributeset_get_first(&element, Attr, ATTR_LABEL), '|');
-		widget=gtk_clist_new_with_titles
-				    (table_header->n_lines,
-				     table_header->line);
-	} else {
-		widget = gtk_clist_new(1);
-	}
-	
-	return widget;
-}
-
-
-static GtkWidget *
 create_edit(AttributeSet *Attr, 
 		tag_attr   *attr)
 {
@@ -1631,6 +1610,12 @@ instruction_execute_push(
 			Widget = widget_statusbar_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_TABLE:
+			Widget = widget_table_create(Attr, tag_attributes, Widget_Type);
+			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+				tag_attributes, Widget_Type);
+			push_widget(scrolled_window, WIDGET_SCROLLEDW);		
+			break;
 		case WIDGET_TERMINAL:
 			Widget = widget_terminal_create(Attr, tag_attributes, Widget_Type);
 			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
@@ -1797,27 +1782,6 @@ instruction_execute_push(
 						   (list_selection),
 						   (gpointer) Attr);
 
-		break;
-
-	case WIDGET_TABLE:
-		/*
-		 * When create a new TABLE (clist in gtk) widget, we 
-		 * also have to create a GtkScrolledWindow, because this is the 
-		 * only way we can scroll in the clist. We put the _scrolled 
-		 * window_ into the stack, because this holds the list.  
-		 */
-		Widget = create_table(Attr, tag_attributes);
-		scrolled_window = put_in_the_scrolled_window(Widget, Attr,
-			tag_attributes, Widget_Type);
-		push_widget(scrolled_window, WIDGET_SCROLLEDW);		
-		
-		/*
-		 ** We need connect the select_row to a function to store the
-		 ** selected row.
-		 */
-		g_signal_connect(G_OBJECT(Widget), "select-row",
-				 G_CALLBACK(table_selection),
-				 (gpointer) Attr);
 		break;
 
 	case WIDGET_HSEPARATOR:
