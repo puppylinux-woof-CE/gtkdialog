@@ -9,12 +9,13 @@ A [http://developer.gnome.org/gtk/2.24/GtkCList.html GtkCList] packed inside a [
 == Definition ==
 
 {{{
-<table>
+<table tag_attr="value"...>
 	<label>text</label>
 	<variable>varname</variable>
 	<height>value</height>
 	<width>value</width>
 	<input>command</input>...
+	<input file>filename</input>...
 	<sensitive>state</sensitive>
 	<action>activity</action>...
 	<action type="function">parameter</action>...
@@ -26,11 +27,16 @@ A [http://developer.gnome.org/gtk/2.24/GtkCList.html GtkCList] packed inside a [
 
 == Tag Attributes ==
 
-This widget does not accept tag attributes.
+See the [http://developer.gnome.org/gtk/2.24/GtkCList.html#GtkCList.object-hierarchy GtkCList] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 
-None.
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Name* || *Description* || *Value* || *Since* ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.8.1 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
 
@@ -43,6 +49,7 @@ Some of these may have tag attribute equivalents.
 || height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
 || width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
 || input || Data input source || Shell command || || ||
+|| input file || Data input source || Filename || || 0.8.1 ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
