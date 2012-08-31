@@ -123,17 +123,60 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 	gchar            *value;
-	variable         *var;
+	gint              column = 0;
+	gint              count;
+	gint              row;
+	gint              selectionmode = GTK_SELECTION_SINGLE;
+	variable         *var = find_variable_by_widget(widget);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	var = find_variable_by_widget(widget);
-	if (var->row != -1)
-		gtk_clist_get_text(GTK_CLIST(widget), var->row, 0, &value);
+	if (var->widget_tag_attr) {
+		/* Get current selection-mode (there's no function to do this) */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "selection_mode")))
+			selectionmode = atoi(value);
+		/* Get exported-column */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+			column = atoi(value);
+	}
 
-	string = g_strdup(value);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s:() widget=%p selectionmode=%i column=%i\n",
+		__func__, widget, selectionmode, column);
+#endif
+
+	if (selectionmode == GTK_SELECTION_NONE) {
+		/* The API says that this is OK but a critical error gets dumped
+		 * to the terminal and it doesn't actually prevent selection so
+		 * it's not a usable selection mode */
+		string = g_strdup("");	/* Nothing is selected */
+	} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
+
+		/*for (count = 0; count < g_list_length(GTK_CLIST(widget)->selection); count++) {
+			row = (gint)g_list_nth_data(GTK_CLIST(widget)->selection, count);
+			gtk_clist_get_text(GTK_CLIST(widget), row, column, &value);
+		}*/
+		string = g_strdup("GTK_SELECTION_MULTIPLE not yet implemented.");
+
+	} else {
+		/* Default GTK_SELECTION_SINGLE and GTK_SELECTION_BROWSE.
+		 * 
+		 * There does not appear to be a way to get the selected item(s)
+		 * outside of the select-row signal callback but I found this
+		 * recommended technique from here:
+		 * https://mail.gnome.org/archives/gtk-app-devel-list/1999-April/msg00033.html */
+		if (g_list_length(GTK_CLIST(widget)->selection)) {
+			row = (gint)g_list_nth_data(GTK_CLIST(widget)->selection, 0);
+			gtk_clist_get_text(GTK_CLIST(widget), row, column, &value);
+			string = g_strdup(value);
+		} else {
+			string = g_strdup("");
+		}
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -223,7 +266,7 @@ void widget_table_refresh(variable *var)
 
 		/* Connect signals */
 		g_signal_connect(G_OBJECT(var->Widget), "select-row",
-			G_CALLBACK(table_selection), (gpointer)var->Attributes);
+			G_CALLBACK(on_any_widget_select_row_event), (gpointer)var->Attributes);
 
 	}
 
@@ -238,12 +281,56 @@ void widget_table_refresh(variable *var)
 
 void widget_table_removeselected(variable *var)
 {
+	gchar            *string;
+	gchar            *value;
+	gint              column = 0;
+	gint              count;
+	gint              row;
+	gint              selectionmode = GTK_SELECTION_SINGLE;
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (var->row != -1)
-		gtk_clist_remove(GTK_CLIST(var->Widget), var->row);
+	if (var->widget_tag_attr) {
+		/* Get current selection-mode (there's no function to do this) */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "selection_mode")))
+			selectionmode = atoi(value);
+		/* Get exported-column */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+			column = atoi(value);
+	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s:() widget=%p selectionmode=%i column=%i\n",
+		__func__, var->Widget, selectionmode, column);
+#endif
+
+	if (selectionmode == GTK_SELECTION_NONE) {
+		/* Nothing to do */
+	} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
+
+		/*for (count = 0; count < g_list_length(GTK_CLIST(var->Widget)->selection); count++) {
+			row = (gint)g_list_nth_data(GTK_CLIST(var->Widget)->selection, count);
+			gtk_clist_remove(GTK_CLIST(var->Widget), row);
+		}*/
+		fprintf(stderr, "%s:() GTK_SELECTION_MULTIPLE not yet implemented.\n",
+		__func__);
+
+	} else {
+		/* Default GTK_SELECTION_SINGLE and GTK_SELECTION_BROWSE.
+		 * 
+		 * There does not appear to be a way to get the selected item(s)
+		 * outside of the select-row signal callback but I found this
+		 * recommended technique from here:
+		 * https://mail.gnome.org/archives/gtk-app-devel-list/1999-April/msg00033.html */
+		if (g_list_length(GTK_CLIST(var->Widget)->selection)) {
+			row = (gint)g_list_nth_data(GTK_CLIST(var->Widget)->selection, 0);
+			gtk_clist_remove(GTK_CLIST(var->Widget), row);
+		}
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

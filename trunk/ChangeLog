@@ -1,6 +1,12 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Fri Aug 31 2012 Thunor <thunorsif@hotmail.com>
+- Fixed the table widget's signal and action handling issues.
+- Added "exported-column" support to the table widget.
+- Added initial "selection-mode" support to the table widget but not yet
+  multiple selection mode.
+
 * Thu Aug 30 2012 Thunor <thunorsif@hotmail.com>
 - Fixed an issue with hiding/showing widgets that are automatically
   wrapped inside a scrolled window or viewport inside a scrolled window

@@ -873,14 +873,9 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
-void table_selection(GtkWidget *clist, gint row, gint column,
-	GdkEventButton *event, gpointer Attr)
+void on_any_widget_select_row_event(GtkWidget *widget, gint row,
+	gint column, GdkEvent *event, gpointer Attr)
 {
-	GList *element;
-	gchar *command;
-	gchar *signal;
-	gchar *type;
-
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
@@ -889,25 +884,33 @@ void table_selection(GtkWidget *clist, gint row, gint column,
 	fprintf(stderr, "%s(): row=%i column=%i\n", __func__, row, column);
 #endif
 
+	widget_signal_executor(widget, Attr, "select-row");
+
+/* Redundant.
+	GList *element;
+	gchar *command;
+	gchar *signal;
+	gchar *type;
+
 	if (Attr == NULL) return;
 
 	variables_set_row_column(
 		attributeset_get_first(&element, Attr, ATTR_VARIABLE),
 		row, column);
 
-	/* Thunor: This code does not support <action signal="type">.
+	/$ Thunor: This code does not support <action signal="type">.
 	 * This callback is connected to the "select-row" signal,
 	 * therefore if there exists an action directive specifying a
 	 * particular signal then that will be executed as well.
 	 * 
-	 * This widget was in fact deprecated in GTK+ 2.0 anyway */
+	 * This widget was in fact deprecated in GTK+ 2.0 anyway $/
 
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL){
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		execute_action(clist, command, type);
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
+	} */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -1103,40 +1106,8 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 #endif
 
 			/* There's a class hierarchy to be aware of here */
-			if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* Checkbox menuitems support conditional function execution */
-					is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-					if (strncasecmp(command, "if true ", 8) == 0) {
-						command += 8;
-						if (is_active) execute = TRUE;
-					} else if (strncasecmp(command, "if false ", 9) == 0) {
-						command += 9;
-						if (!is_active) execute = TRUE;
-					} else {
-						execute = TRUE;
-					}
-				}
-			} else if (GTK_IS_MENU_ITEM(widget)) {
-				if (strcasecmp(signal_name, "activate") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_SPIN_BUTTON(widget)) {
-				if (strcasecmp(signal_name, "value-changed") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_ENTRY(widget) || GTK_IS_COMBO_BOX(widget)) {
-				if (strcasecmp(signal_name, "changed") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_SCALE(widget)) {
-				if (strcasecmp(signal_name, "value-changed") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_LABEL(widget)) {
-				/* A GtkLabel that ticks is a timer */
-				if (strcasecmp(signal_name, "tick") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_COLOR_BUTTON(widget)) {
-				if (strcasecmp(signal_name, "color-set") == 0)
-					execute = TRUE;
-			} else if (GTK_IS_TOGGLE_BUTTON(widget)) {
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
+			if (GTK_IS_TOGGLE_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "toggled") == 0) {
 					/* togglebuttons support conditional function execution */
 					is_active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
@@ -1150,10 +1121,60 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 						execute = TRUE;
 					}
 				}
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkColorButton */
+			} else if (GTK_IS_COLOR_BUTTON(widget)) {
+				if (strcasecmp(signal_name, "color-set") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkFontButton */
 			} else if (GTK_IS_FONT_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "font-set") == 0)
 					execute = TRUE;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkCheckMenuItem */
+			} else if (GTK_IS_CHECK_MENU_ITEM(widget)) {
+				if (strcasecmp(signal_name, "toggled") == 0) {
+					/* Checkbox menuitems support conditional function execution */
+					is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
+					if (strncasecmp(command, "if true ", 8) == 0) {
+						command += 8;
+						if (is_active) execute = TRUE;
+					} else if (strncasecmp(command, "if false ", 9) == 0) {
+						command += 9;
+						if (!is_active) execute = TRUE;
+					} else {
+						execute = TRUE;
+					}
+				}
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem */
+			} else if (GTK_IS_MENU_ITEM(widget)) {
+				if (strcasecmp(signal_name, "activate") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkCombo */
+			} else if (GTK_IS_COMBO_BOX(widget)) {
+				if (strcasecmp(signal_name, "changed") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkContainer--->GtkCList */
+			} else if (GTK_IS_CLIST(widget)) {
+				if (strcasecmp(signal_name, "select-row") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkEntry-->GtkSpinButton */
+			} else if (GTK_IS_SPIN_BUTTON(widget)) {
+				if (strcasecmp(signal_name, "value-changed") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkEntry */
+			} else if (GTK_IS_ENTRY(widget)) {
+				if (strcasecmp(signal_name, "changed") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkMisc--->GtkLabel */
+			} else if (GTK_IS_LABEL(widget)) {
+				/* A GtkLabel that ticks is a timer */
+				if (strcasecmp(signal_name, "tick") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkRange--->GtkScale */
+			} else if (GTK_IS_SCALE(widget)) {
+				if (strcasecmp(signal_name, "value-changed") == 0)
+					execute = TRUE;
 #if HAVE_VTE
+/* GtkWidget--->VteTerminal */
 			} else if (VTE_IS_TERMINAL(widget)) {
 				if (strcasecmp(signal_name, "child-exited") == 0)
 					execute = TRUE;
