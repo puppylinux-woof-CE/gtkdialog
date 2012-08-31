@@ -1237,6 +1237,11 @@ static void _variables_export(variable *actual)
 				putenv(line);
 				break;
 
+			case WIDGET_TABLE:
+				tmp = widget_table_envvar_all_construct(actual);
+				putenv(tmp);
+				break;
+
 #if GTK_CHECK_VERSION(2,4,0)
 			case WIDGET_TREE:
 				tmp = widget_tree_envvar_all_construct(actual);
@@ -1316,6 +1321,12 @@ next_item:
 					++n;
 				}
 				printf("\"\n");
+				break;
+
+			case WIDGET_TABLE:
+				tmp = widget_table_envvar_all_construct(actual);
+				g_printf("%s", tmp);
+				g_free(tmp);
 				break;
 
 #if GTK_CHECK_VERSION(2,4,0)

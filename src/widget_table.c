@@ -96,17 +96,43 @@ GtkWidget *widget_table_create(
 
 gchar *widget_table_envvar_all_construct(variable *var)
 {
+	gchar            *line;
 	gchar            *string;
+	gchar            *text;
+	gchar            *value;
+	gint              column = 0;
+	gint              retval;
+	gint              row = 0;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* This function should not be connected-up by default */
-
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): Hello.\n", __func__);
-#endif
+	/* Which column should we export */
+	if (var->widget_tag_attr) {
+		/* Get exported-column */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+			column = atoi(value);
+	}
+	/* Where's the GtkCList row count? It's not such a problem as
+	 * gtk_clist_get_text() returns 0 if it's not available at which
+	 * point we'll stop */
+	line = g_strdup_printf("%s_ALL=\"", var->Name);
+	retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, column, &string);
+	while (retval) {
+		if (row == 0) {
+			text = g_strconcat(line, "'", string, "'", NULL);
+		} else {
+			text = g_strconcat(line, " '", string, "'", NULL);
+		}
+		g_free(line);
+		line = text;
+		row++;
+		retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, column, &string);
+	}
+	string = g_strconcat(line, "\"\n", NULL);
+	g_free(line);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -121,10 +147,13 @@ gchar *widget_table_envvar_all_construct(variable *var)
 
 gchar *widget_table_envvar_construct(GtkWidget *widget)
 {
+	gchar            *line;
 	gchar            *string;
+	gchar            *text;
 	gchar            *value;
 	gint              column = 0;
 	gint              count;
+	gint              initialrow;
 	gint              row;
 	gint              selectionmode = GTK_SELECTION_SINGLE;
 	variable         *var = find_variable_by_widget(widget);
@@ -155,13 +184,21 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 		 * it's not a usable selection mode */
 		string = g_strdup("");	/* Nothing is selected */
 	} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
-
-		/*for (count = 0; count < g_list_length(GTK_CLIST(widget)->selection); count++) {
+		initialrow = TRUE;
+		line = g_strdup("");
+		for (count = 0; count < g_list_length(GTK_CLIST(widget)->selection); count++) {
 			row = (gint)g_list_nth_data(GTK_CLIST(widget)->selection, count);
-			gtk_clist_get_text(GTK_CLIST(widget), row, column, &value);
-		}*/
-		string = g_strdup("GTK_SELECTION_MULTIPLE not yet implemented.");
-
+			gtk_clist_get_text(GTK_CLIST(widget), row, column, &string);
+			if (initialrow) {
+				text = g_strconcat(line, string, NULL);
+				initialrow = FALSE;
+			} else {
+				text = g_strconcat(line, "\n", string, NULL);
+			}
+			g_free(line);
+			line = text;
+		}
+		string = line;
 	} else {
 		/* Default GTK_SELECTION_SINGLE and GTK_SELECTION_BROWSE.
 		 * 
@@ -213,6 +250,8 @@ void widget_table_refresh(variable *var)
 {
 	GList            *element;
 	gchar            *act;
+	gchar            *value;
+	gint              selected_row = -1;
 	gint              initialised = FALSE;
 
 #ifdef DEBUG_TRANSITS
@@ -238,14 +277,15 @@ void widget_table_refresh(variable *var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		widget_table_input_by_items(var);
 
-
-
-
-	/* Select a default item
-	gtk_clist_select_row(GTK_CLIST(var->Widget), 0, 0); */
-
-
-
+	/* Are we selecting a row on initialisation or refresh? */
+	if (var->widget_tag_attr) {
+		/* selected-row */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "selected_row")))
+			selected_row = atoi(value);
+	}
+	if (selected_row >= 0)
+		gtk_clist_select_row(GTK_CLIST(var->Widget), selected_row, 0);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
@@ -306,14 +346,14 @@ void widget_table_removeselected(variable *var)
 	if (selectionmode == GTK_SELECTION_NONE) {
 		/* Nothing to do */
 	} else if (selectionmode == GTK_SELECTION_MULTIPLE) {
-
-		/*for (count = 0; count < g_list_length(GTK_CLIST(var->Widget)->selection); count++) {
-			row = (gint)g_list_nth_data(GTK_CLIST(var->Widget)->selection, count);
+		/* I'm assuming that selection is updated on row removal so
+		 * it's likely not a good idea to iterate in a for loop */
+		count = g_list_length(GTK_CLIST(var->Widget)->selection);
+		while (count) {
+			row = (gint)g_list_nth_data(GTK_CLIST(var->Widget)->selection, 0);
 			gtk_clist_remove(GTK_CLIST(var->Widget), row);
-		}*/
-		fprintf(stderr, "%s:() GTK_SELECTION_MULTIPLE not yet implemented.\n",
-		__func__);
-
+			count = g_list_length(GTK_CLIST(var->Widget)->selection);
+		}
 	} else {
 		/* Default GTK_SELECTION_SINGLE and GTK_SELECTION_BROWSE.
 		 * 
