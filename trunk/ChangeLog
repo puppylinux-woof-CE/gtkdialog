@@ -1,6 +1,13 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Sep 1 2012 Thunor <thunorsif@hotmail.com>
+- Added the "selected-row" tag attribute to the table widget to enable
+  selecting a default row on initialisation and refresh (the firing of
+  signals can be prevented with "block-function-signals").
+- Added multple selection mode to the table widget and updated the
+  envvar export functions and removeselected action to cope with it.
+
 * Fri Aug 31 2012 Thunor <thunorsif@hotmail.com>
 - Fixed the table widget's signal and action handling issues.
 - Added "exported-column" support to the table widget.
