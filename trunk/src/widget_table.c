@@ -223,14 +223,6 @@ void widget_table_refresh(variable *var)
 	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
-	/* We'll manage signals ourselves */
-	GTKD_FUNCTION_SIGNALS_BLOCK;
-
-	/* Clear the widget if it has been initialised */
-	if (initialised) {
-		gtk_clist_clear(GTK_CLIST(var->Widget));
-	}
-
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
@@ -246,11 +238,14 @@ void widget_table_refresh(variable *var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		widget_table_input_by_items(var);
 
-	/* Select a default item */
-	gtk_clist_select_row(GTK_CLIST(var->Widget), 0, 0);
 
-	/* We'll manage signals ourselves */
-	GTKD_FUNCTION_SIGNALS_UNBLOCK;
+
+
+	/* Select a default item
+	gtk_clist_select_row(GTK_CLIST(var->Widget), 0, 0); */
+
+
+
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
