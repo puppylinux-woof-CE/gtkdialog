@@ -36,6 +36,7 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.8.1 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.8.1 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| exported-column || The column to export data from || An integer >= {{{0}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
