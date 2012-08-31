@@ -885,6 +885,10 @@ void table_selection(GtkWidget *clist, gint row, gint column,
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): row=%i column=%i\n", __func__, row, column);
+#endif
+
 	if (Attr == NULL) return;
 
 	variables_set_row_column(

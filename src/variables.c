@@ -1284,13 +1284,13 @@ void print_variables(variable *actual)
 		//
 		value = widget_get_text_value(actual->Widget, actual->Type);
 
-		/* 
+		/* Redundant.
 		 ** FIXME: awfull
-		 */
+		 *
 		if (actual->Type == WIDGET_TABLE && actual->row != -1) {
 			gtk_clist_get_text(GTK_CLIST(actual->Widget),
 					   actual->row, 0, &value);
-		}
+		} */
 
 		if (value == NULL)
 			value = "";
