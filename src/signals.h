@@ -74,8 +74,8 @@ gboolean on_any_widget_unmap_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr);
 void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 
-void table_selection(GtkWidget *clist, gint row, gint column,
-	GdkEventButton *event, gpointer Attr);
+void on_any_widget_select_row_event(GtkWidget *widget, gint row,
+	gint column, GdkEvent *event, gpointer Attr);
 
 void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	GtkTreeViewColumn *column, AttributeSet *Attr);
