@@ -21,6 +21,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkCList.html GtkCList] packed inside a [
 	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
 	<item>data</item>...
+	<output file>filename</output>
 </table>
 }}}
 
@@ -60,6 +61,7 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || 0.8.1 ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data || _column0data_ {{{|}}} _column1data_ {{{|}}} ... || || ||
+|| output file || Data output target || Filename || || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
@@ -80,6 +82,7 @@ The following functions can be performed upon this widget by any widget capable 
 || hide || Hide widget || Shell variable name || 0.8.1 ||
 || grabfocus || Grab input focus || Shell variable name || 0.8.1 ||
 || refresh || Reload input data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || 0.8.1 ||
 || clear || Remove all widget data || Shell variable name || ||
 || removeselected || Remove selected widget data || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
