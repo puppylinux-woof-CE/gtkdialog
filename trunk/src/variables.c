@@ -1206,6 +1206,12 @@ static void _variables_export(variable *actual)
 			putenv(line);
 		}
 
+		/* Thunor: I've disabled this for performance reasons. Zigbert was
+		 * experiencing terrible table performance which I've tested too.
+		 * Initially it may have been practicable with simple dialogs to
+		 * dump the entire contents of a widget on every signal, but it
+		 * definitely isn't anymore */
+#if 0
 		//
 		// To export all of the elements in the list
 		//
@@ -1255,6 +1261,8 @@ static void _variables_export(variable *actual)
 				putenv(tmp);
 				break;
 		}
+#endif
+
 	}
 
 	if (actual->right != NULL)
@@ -1301,6 +1309,12 @@ void print_variables(variable *actual)
 			value = "";
 		printf("%s=\"%s\"\n", actual->Name, value);
 
+		/* Thunor: I've disabled this for performance reasons. Zigbert was
+		 * experiencing terrible table performance which I've tested too.
+		 * Initially it may have been practicable with simple dialogs to
+		 * dump the entire contents of a widget on every signal, but it
+		 * definitely isn't anymore */
+#if 0
 		//
 		// To print all of the elements in the list
 		//
@@ -1344,6 +1358,8 @@ next_item:
 				g_free(tmp);
 				break;
 		}
+#endif
+
 	}
 
 	if (actual->right != NULL)
