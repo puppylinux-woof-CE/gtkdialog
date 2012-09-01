@@ -5,8 +5,9 @@ for announcements.
 - Added the "selected-row" tag attribute to the table widget to enable
   selecting a default row on initialisation and refresh (the firing of
   signals can be prevented with "block-function-signals").
-- Added multple selection mode to the table widget and updated the
+- Added multiple selection mode to the table widget and updated the
   envvar export functions and removeselected action to cope with it.
+- Fixed linecutter: the parts array needed to be initialised to null.
 
 * Fri Aug 31 2012 Thunor <thunorsif@hotmail.com>
 - Fixed the table widget's signal and action handling issues.

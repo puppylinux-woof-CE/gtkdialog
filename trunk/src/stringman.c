@@ -455,10 +455,15 @@ list_t *linecutter(char *str, int fs)
 #endif
 
 	parts = g_malloc(sizeof(list_t));
-	parts->line = g_malloc(sizeof(char *) * 128);
-	parts->maxlines = 128;
-	parts->line[0] = str;
 	parts->n_lines = 1;
+	parts->maxlines = 128;
+	parts->line = g_malloc(sizeof(char *) * 128);
+
+	/* Thunor: These need to be nullified because some functions may
+	 * require more parts than were found and they will expect NULL */
+	for (n = 0; n < 128; n++) parts->line[n] = NULL;
+
+	parts->line[0] = str;
 	
 	for(n = 0; n <= strlen(str); ++n){
 		if (str[n] == fs){
