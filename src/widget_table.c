@@ -378,14 +378,64 @@ void widget_table_removeselected(variable *var)
 
 void widget_table_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *outfile;
+	GList            *element;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gchar            *string;
+	gchar            *value;
+	gint              column = 0;
+	gint              retval;
+	gint              row = 0;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+
+			/* Which column should we export */
+			if (var->widget_tag_attr) {
+				/* Get exported-column */
+				if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
+					(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+					column = atoi(value);
+			}
+			/* Where's the GtkCList row count? It's not such a problem as
+			 * gtk_clist_get_text() returns 0 if it's not available at which
+			 * point we'll stop */
+			retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, column, &string);
+			while (retval) {
+				if (row == 0) {
+					fprintf(outfile, "%s", string);
+				} else {
+					fprintf(outfile, "\n%s", string);
+				}
+				row++;
+				retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, column, &string);
+			}
+
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
