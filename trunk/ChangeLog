@@ -10,6 +10,9 @@ for announcements.
 - Fixed linecutter: the parts array needed to be initialised to null.
 - Disabled the exporting of the entire contents of a few widgets on a
   signal for performance reasons; these are/were the *_ALL variables.
+- Stopped variables_export_all() from exporting autonamed variables as
+  it's pointless and would affect performance; this must be a bug.
+- Added support for the save action function to the table widget.
 
 * Fri Aug 31 2012 Thunor <thunorsif@hotmail.com>
 - Fixed the table widget's signal and action handling issues.

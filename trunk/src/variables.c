@@ -374,6 +374,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_STATUSBAR:
 			widget_statusbar_fileselect(toset, name, value);
 			break;
+		case WIDGET_TABLE:
+			widget_table_fileselect(toset, name, value);
+			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_fileselect(toset, name, value);
 			break;
@@ -469,6 +472,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_save(var);
+			break;
+		case WIDGET_TABLE:
+			widget_table_save(var);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_save(var);
@@ -1164,12 +1170,13 @@ void variables_export_all(void)
 
 static void _variables_export(variable *actual)
 {
+	gchar            *line;
 	gchar            *value;
+/* Redundant.
 	GList            *itemlist;
 	gint              n;
 	gchar            *tmp;
-	gchar            *text;
-	gchar            *line;
+	gchar            *text; */
 
 #ifdef DEBUG
 	g_message("%s(%p)", __func__, actual);
@@ -1187,7 +1194,12 @@ static void _variables_export(variable *actual)
 	if (actual->left != NULL)
 		_variables_export(actual->left);
 
-	if (actual->Widget != NULL) {
+	/* Thunor: I've stopped this from exporting autonamed variables
+	 * because it's pointless and will affect performance. There's no
+	 * reason why this should export them when print_variables() doesn't
+	 * so it's a bug -- the developer wouldn't even know they existed.
+	if (actual->Widget != NULL) { */
+	if (actual->Widget != NULL && !actual->autonamed) {
 		//
 		// To export only the active element
 		//
@@ -1278,9 +1290,10 @@ static void _variables_export(variable *actual)
 void print_variables(variable *actual)
 {
 	gchar            *value;
+/* Redundant.
 	GList            *itemlist;
 	gint              n;
-	gchar            *tmp;
+	gchar            *tmp; */
 
 	if (actual == NULL)
 		actual = root;
