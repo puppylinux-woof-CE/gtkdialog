@@ -8,6 +8,8 @@ for announcements.
 - Added multiple selection mode to the table widget and updated the
   envvar export functions and removeselected action to cope with it.
 - Fixed linecutter: the parts array needed to be initialised to null.
+- Disabled the exporting of the entire contents of a few widgets on a
+  signal for performance reasons; these are/were the *_ALL variables.
 
 * Fri Aug 31 2012 Thunor <thunorsif@hotmail.com>
 - Fixed the table widget's signal and action handling issues.
