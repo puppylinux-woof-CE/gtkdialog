@@ -78,7 +78,7 @@ GtkWidget *widget_table_create(
 			&element, Attr, ATTR_LABEL)), '|');
 		widget = gtk_clist_new_with_titles(table_header->n_lines,
 			table_header->line);
-		list_t_free(table_header);	/* Free linecutter memory */
+		if (table_header) list_t_free(table_header);	/* Free linecutter memory */
 	} else {
 		widget = gtk_clist_new(1);	/* 1 column */
 	}
@@ -423,11 +423,9 @@ static void widget_table_input_by_command(variable *var, char *filename,
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-
 			sliced = linecutter(g_strdup(line), '|');
 			gtk_clist_append(GTK_CLIST(var->Widget), sliced->line);
-			list_t_free(sliced);	/* Free linecutter memory */
-
+			if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 		}
 		/* Close the file */
 		pclose(infile);
@@ -478,7 +476,7 @@ static void widget_table_input_by_items(variable *var)
 	while (text != NULL) {
 		sliced = linecutter(g_strdup(text), '|');
 		gtk_clist_append(GTK_CLIST(var->Widget), sliced->line);
-		list_t_free(sliced);	/* Free linecutter memory */
+		if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 
