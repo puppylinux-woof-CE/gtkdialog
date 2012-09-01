@@ -18,6 +18,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkCList.html GtkCList] packed inside a [
 	<input file>filename</input>...
 	<sensitive>state</sensitive>
 	<action>activity</action>...
+	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
 	<item>data</item>...
 </table>
@@ -55,6 +56,8 @@ Some of these may have tag attribute equivalents.
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
 || action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Execute command on signal || Shell command || || 0.8.1 ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || 0.8.1 ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
 || item || Input data || _column0data_ {{{|}}} _column1data_ {{{|}}} ... || || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
