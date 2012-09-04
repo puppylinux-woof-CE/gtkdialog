@@ -39,6 +39,15 @@ static void widget_table_input_by_command(variable *var, char *filename,
 	gint command_or_file);
 static void widget_table_input_by_file(variable *var, char *filename);
 static void widget_table_input_by_items(variable *var);
+gboolean widget_table_click_column_callback(GtkWidget *widget,
+	gint column, variable *var);
+gint widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
+	gconstpointer ptr2);
+gint widget_table_natcasecmp(GtkCList *clist, gconstpointer ptr1,
+	gconstpointer ptr2);
+gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
+	gconstpointer ptr2, gint sensitive);
+static gint strnatcmp(gchar *c1, gchar *c2, gint sensitive);
 
 /* Notes: */
 
@@ -67,6 +76,8 @@ GtkWidget *widget_table_create(
 {
 	GList            *element;
 	GtkWidget        *widget;
+	gchar            *value;
+	gint              sort_function;
 	list_t           *table_header;
 
 #ifdef DEBUG_TRANSITS
@@ -81,6 +92,38 @@ GtkWidget *widget_table_create(
 		if (table_header) list_t_free(table_header);	/* Free linecutter memory */
 	} else {
 		widget = gtk_clist_new(1);	/* 1 column */
+	}
+
+	if (attr) {
+		/* Get sort-function (custom) */
+		if ((value = get_tag_attribute(attr, "sort-function")) ||
+			(value = get_tag_attribute(attr, "sort_function"))) {
+			sort_function = atoi(value);
+			if (sort_function == 1) {
+				gtk_clist_set_compare_func(GTK_CLIST(widget), widget_table_natcmp);
+			} else if (sort_function == 2) {
+				gtk_clist_set_compare_func(GTK_CLIST(widget), widget_table_natcasecmp);
+			}
+		}
+		/* Get sort-type (auto-sort will require this preset) */
+		if ((value = get_tag_attribute(attr, "sort-type")) ||
+			(value = get_tag_attribute(attr, "sort_type"))) {
+			gtk_clist_set_sort_type(GTK_CLIST(widget), atoi(value));
+		}
+		/* Get sort-column (custom) */
+		if ((value = get_tag_attribute(attr, "sort-column")) ||
+			(value = get_tag_attribute(attr, "sort_column"))) {
+			gtk_clist_set_sort_column(GTK_CLIST(widget), atoi(value));
+		}
+		/* Get auto-sort (custom) */
+		if (((value = get_tag_attribute(attr, "auto-sort")) ||
+			(value = get_tag_attribute(attr, "auto_sort"))) &&
+			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
+			(atoi(value) == 1))) {
+			gtk_clist_set_auto_sort(GTK_CLIST(widget), TRUE);
+		} else {
+			gtk_clist_set_auto_sort(GTK_CLIST(widget), FALSE);
+		}
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -251,7 +294,7 @@ void widget_table_refresh(variable *var)
 	GList            *element;
 	gchar            *act;
 	gchar            *value;
-	gint              selected_row = -1;
+	gint              selected_row;
 	gint              initialised = FALSE;
 
 #ifdef DEBUG_TRANSITS
@@ -277,15 +320,22 @@ void widget_table_refresh(variable *var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		widget_table_input_by_items(var);
 
-	/* Are we selecting a row on initialisation or refresh? */
 	if (var->widget_tag_attr) {
-		/* selected-row */
+		/* Get columns-autosize (custom)	Redundant: Works weirdly on initialisation.
+		if (((value = get_tag_attribute(var->widget_tag_attr, "columns-autosize")) ||
+			(value = get_tag_attribute(var->widget_tag_attr, "columns_autosize"))) &&
+			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
+			(atoi(value) == 1))) {
+			gtk_clist_columns_autosize(GTK_CLIST(var->Widget));
+		} */
+		/* Get selected-row (custom) */
 		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "selected_row")))
+			(value = get_tag_attribute(var->widget_tag_attr, "selected_row"))) {
 			selected_row = atoi(value);
+			if (selected_row >= 0)
+				gtk_clist_select_row(GTK_CLIST(var->Widget), selected_row, 0);
+		}
 	}
-	if (selected_row >= 0)
-		gtk_clist_select_row(GTK_CLIST(var->Widget), selected_row, 0);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
@@ -302,6 +352,8 @@ void widget_table_refresh(variable *var)
 		/* Connect signals */
 		g_signal_connect(G_OBJECT(var->Widget), "select-row",
 			G_CALLBACK(on_any_widget_select_row_event), (gpointer)var->Attributes);
+		g_signal_connect(G_OBJECT(var->Widget), "click-column",
+			G_CALLBACK(widget_table_click_column_callback), (gpointer)var);
 
 	}
 
@@ -533,4 +585,237 @@ static void widget_table_input_by_items(variable *var)
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
+}
+
+/***********************************************************************
+ * Click Column Callback                                               *
+ ***********************************************************************/
+/* Table Widget Behaviour
+ * ----------------------
+ * Assuming that the default sort direction is ascending:
+ * 
+ * Click column 0 and it'll sort ascending.
+ * Click column 1 and it'll sort ascending.
+ * Click column 1 and it'll sort descending having flipped.
+ * Click column 0 and it'll sort descending.
+ * Click column 1 and it'll sort descending.
+ * 
+ * Tree Widget Behaviour
+ * ---------------------
+ * Assuming that the default sort direction is ascending:
+ * 
+ * Click column 0 and it'll sort ascending.
+ * Click column 1 and it'll sort ascending.
+ * Click column 1 and it'll sort descending having flipped.
+ * Click column 0 and it'll sort ascending.
+ * Click column 1 and it'll sort ascending.
+ * 
+ * A descending column will not be in that same state when it is clicked
+ * at a later time therefore tree defaults to ascending */
+
+gboolean widget_table_click_column_callback(GtkWidget *widget,
+	gint column, variable *var)
+{
+	gint              last_column = -1;
+	gint              sort_type;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	/* Set sort column to the clicked column */
+	gtk_clist_set_sort_column(GTK_CLIST(widget), column);
+
+	/* Get last recorded column if it exists */
+	if (g_object_get_data(G_OBJECT(widget), "last-column") != NULL) {
+		last_column = (gint)g_object_get_data(G_OBJECT(widget), "last-column");
+		last_column--;
+	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): column=%i last-column=%i\n", __func__,
+		column, last_column);
+#endif
+
+	/* If last recorded column matches column then flip sort direction */
+	if (last_column == column) {
+		/* Get sort-type (direction) and flip it */
+		g_object_get(G_OBJECT(widget), "sort-type", &sort_type, NULL);
+		sort_type = 1 - sort_type;
+		gtk_clist_set_sort_type(GTK_CLIST(widget), sort_type);
+	}
+
+	/* Store "last-column" as a piece of widget data (recreated if exists) */
+	/* Warning: Storing zero kills the piece of data so we have to
+	 * maintain it with +1 on set, -1 on get */
+	column++;
+	g_object_set_data(G_OBJECT(widget), "last-column", (gpointer)column);
+
+	/* Sit back and be amazed */
+	gtk_clist_sort(GTK_CLIST(widget));
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return TRUE;
+}
+
+/***********************************************************************
+ * Natural Compare                                                     *
+ ***********************************************************************/
+/* I found a useful example at:
+ * 
+ *   https://mail.gnome.org/archives/gtk-list/2000-April/msg00234.html
+ * 
+ * which explained how to get at the text in the rows */
+
+gint widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
+	gconstpointer ptr2)
+{
+	return _widget_table_natcmp(clist, ptr1, ptr2, TRUE);
+}
+
+gint widget_table_natcasecmp(GtkCList *clist, gconstpointer ptr1,
+	gconstpointer ptr2)
+{
+	return _widget_table_natcmp(clist, ptr1, ptr2, FALSE);
+}
+
+gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
+	gconstpointer ptr2, gint sensitive)
+{
+	const GtkCListRow *row1 = (const GtkCListRow *) ptr1;
+	const GtkCListRow *row2 = (const GtkCListRow *) ptr2;
+	gchar            *r1 = NULL;
+	gchar            *r2 = NULL;
+	gint              retval;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	r1 = GTK_CELL_TEXT(row1->cell[clist->sort_column])->text;
+	r2 = GTK_CELL_TEXT(row2->cell[clist->sort_column])->text;
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): r1=\"%s\" r2=\"%s\"\n", __func__, r1, r2);
+#endif
+
+	retval = strnatcmp(r1, r2, sensitive);
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return retval;
+}
+
+/***********************************************************************
+ * strnatcmp                                                           *
+ ***********************************************************************/
+
+static gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
+{
+	gint              c1val;
+	gint              c2val;
+	gint              retval;
+
+	if (c1 == c2) {		/* Deals with both NULL, both empty, both equal */
+		retval = 0;
+	} else if (!c1) {
+		retval = -1;
+	} else if (!c2) {
+		retval = 1;
+	} else if (!*c1) {
+		retval = -1;
+	} else if (!*c2) {
+		retval = 1;
+	} else {
+		/* There's definitely something different to compare */
+		while (TRUE) {
+
+			/* Ignore whitespace */
+			while ((*c1 == ' ' || *c1 == '\t') && *(c1 + 1)) c1++;
+			while ((*c2 == ' ' || *c2 == '\t') && *(c2 + 1)) c2++;
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): c1='%s' c2='%s'\n", __func__, c1, c2);
+#endif
+
+			/* Evaluate data being pointed to */
+			if ((*c1 >= '0' && *c1 <= '9')) {
+				/* Evaluate consecutive numbers */
+				c1val = 100;
+				while (*c1 >= '0' && *c1 <= '9') {
+					/* This is Unicode safe */
+					c1val = c1val * 10 + *c1 - '0';
+					*c1++;
+				}
+			} else {
+				/* Evaluate single chars */
+				if (sensitive) {
+					c1val = *c1;
+				} else {
+					/* tolower() determines what is upper
+					 * and lower case dependent upon locale */
+					c1val = tolower(*c1);
+				}
+				*c1++;
+			}
+			if ((*c2 >= '0' && *c2 <= '9')) {
+				/* Evaluate consecutive numbers */
+				c2val = 100;
+				while (*c2 >= '0' && *c2 <= '9') {
+					/* This is Unicode safe */
+					c2val = c2val * 10 + *c2 - '0';
+					*c2++;
+				}
+			} else {
+				/* Evaluate single chars */
+				if (sensitive) {
+					c2val = *c2;
+				} else {
+					/* tolower() determines what is upper
+					 * and lower case dependent upon locale */
+					c2val = tolower(*c2);
+				}
+				*c2++;
+			}
+
+			/* At this point both c1 and c2 will be pointing to the next
+			 * character to process which could be the terminating zero */
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): c1val=%i c2val=%i c1='%s' c2='%s'\n", __func__, c1val, c2val, c1, c2);
+#endif
+
+			/* Not equal? */
+			if (c1val < c2val) {
+				retval = -1;
+				break;
+			} else if (c1val > c2val) {
+				retval = 1;
+				break;
+			}
+
+			/* End of data? */
+			if (!*c1 && !*c2) {
+				retval = 0;
+				break;
+			} else if (!*c1) {
+				retval = -1;
+				break;
+			} else if (!*c2) {
+				retval = 1;
+				break;
+			}
+		}
+	}
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): retval=%i\n", __func__, retval);
+#endif
+
+	return retval;
 }
