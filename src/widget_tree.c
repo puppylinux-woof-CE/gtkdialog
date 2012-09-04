@@ -184,8 +184,7 @@ gchar *widget_tree_envvar_all_construct(variable *var)
 
 	/* Which column should we export
 	 * variable *variables_get_by_name( const char *name ); */
-	if ((string = g_object_get_data(G_OBJECT(var->Widget), "exported-column")) ||
-		(string = g_object_get_data(G_OBJECT(var->Widget), "exported_column"))) {
+	if ((string = g_object_get_data(G_OBJECT(var->Widget), "exported-column"))) {
 		column = atoi(string) + FirstDataColumn;
 	} else {
 		column = FirstDataColumn;
@@ -267,8 +266,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 		 * warning so I used (GtkTreePath*) instead */
 
 		/* Which column should we print? */
-		if ((text = g_object_get_data(G_OBJECT(widget), "exported-column")) ||
-			(text = g_object_get_data(G_OBJECT(widget), "exported_column"))) {
+		if ((text = g_object_get_data(G_OBJECT(widget), "exported-column"))) {
 			column = atoi(text) + FirstDataColumn;
 		} else {
 			column = FirstDataColumn;
@@ -322,8 +320,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 		 gtk_tree_selection_get_selected(selection, &model, &iter);
 		 if (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
 			/* Let's find the first column storing text type data */
-			if ((text = g_object_get_data(G_OBJECT(widget), "exported-column")) ||
-				(text = g_object_get_data(G_OBJECT(widget), "exported_column"))) {
+			if ((text = g_object_get_data(G_OBJECT(widget), "exported-column"))) {
 				index = atoi(text) + FirstDataColumn;
 			} else {
 				index = FirstDataColumn;
