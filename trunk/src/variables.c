@@ -320,8 +320,7 @@ variable *variables_set_value(const char *name, const char *value)
 	/* If the custom attribute "block-function-signals" is true
 	 * then block signals whilst performing this function */
 	if (toset->widget_tag_attr &&
-		((string = get_tag_attribute(toset->widget_tag_attr, "block_function_signals")) ||
-		(string = get_tag_attribute(toset->widget_tag_attr, "block-function-signals"))) &&
+		((string = get_tag_attribute(toset->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
 		GTKD_FUNCTION_SIGNALS_BLOCK;
@@ -550,8 +549,7 @@ variable *variables_refresh(const char *name)
 	/* If the custom attribute "block-function-signals" is true
 	 * then block signals whilst performing this function */
 	if (var->widget_tag_attr &&
-		((string = get_tag_attribute(var->widget_tag_attr, "block_function_signals")) ||
-		(string = get_tag_attribute(var->widget_tag_attr, "block-function-signals"))) &&
+		((string = get_tag_attribute(var->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
 		GTKD_FUNCTION_SIGNALS_BLOCK;
@@ -1479,8 +1477,7 @@ variable *variables_clear(const char *name)
 	/* If the custom attribute "block-function-signals" is true
 	 * then block signals whilst performing this function */
 	if (toclear->widget_tag_attr &&
-		((string = get_tag_attribute(toclear->widget_tag_attr, "block_function_signals")) ||
-		(string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
+		((string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
 		GTKD_FUNCTION_SIGNALS_BLOCK;
@@ -1612,8 +1609,7 @@ int remove_selected_variable(const char *name)
 	/* If the custom attribute "block-function-signals" is true
 	 * then block signals whilst performing this function */
 	if (toclear->widget_tag_attr &&
-		((string = get_tag_attribute(toclear->widget_tag_attr, "block_function_signals")) ||
-		(string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
+		((string = get_tag_attribute(toclear->widget_tag_attr, "block-function-signals"))) &&
 		((strcasecmp(string, "true") == 0) || (strcasecmp(string, "yes") == 0) ||
 		(atoi(string) == 1))) {
 		GTKD_FUNCTION_SIGNALS_BLOCK;

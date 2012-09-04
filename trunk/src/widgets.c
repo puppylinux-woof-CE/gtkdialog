@@ -943,9 +943,7 @@ void widget_menuitem_refresh(variable *var)
 		 * original image when a new one is set) */
 		if (initialised && GTK_IS_IMAGE_MENU_ITEM(var->Widget)) {
 			if (var->widget_tag_attr &&
-				((image_name = get_tag_attribute(var->widget_tag_attr, "image_name")) ||
-				(image_name = get_tag_attribute(var->widget_tag_attr, "image-name")) ||
-				(image_name = get_tag_attribute(var->widget_tag_attr, "image_file")) ||
+				((image_name = get_tag_attribute(var->widget_tag_attr, "image-name")) ||
 				(image_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
 				if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 					width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));

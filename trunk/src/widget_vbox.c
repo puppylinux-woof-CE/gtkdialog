@@ -102,8 +102,7 @@ GtkWidget *widget_vbox_create(
 	/* Calculate values for expand and fill at the container level */
 	space_expand = project_space_expand;
 	if (attr &&
-		((value = get_tag_attribute(attr, "space-expand")) ||
-		(value = get_tag_attribute(attr, "space_expand")))) {
+		((value = get_tag_attribute(attr, "space-expand")))) {
 		if ((strcasecmp(value, "true") == 0) ||
 			(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
 			space_expand = TRUE;
@@ -113,8 +112,7 @@ GtkWidget *widget_vbox_create(
 	}
 	space_fill = project_space_fill;
 	if (attr &&
-		((value = get_tag_attribute(attr, "space-fill")) ||
-		(value = get_tag_attribute(attr, "space_fill")))) {
+		((value = get_tag_attribute(attr, "space-fill")))) {
 		if ((strcasecmp(value, "true") == 0) ||
 			(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
 			space_fill = TRUE;
@@ -130,8 +128,7 @@ GtkWidget *widget_vbox_create(
 		/* Calculate values for expand and fill at the widget level */
 		var = find_variable_by_widget(s.widgets[n]);
 		if (var && var->widget_tag_attr &&
-			((value = get_tag_attribute(var->widget_tag_attr, "space-expand")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "space_expand")))) {
+			((value = get_tag_attribute(var->widget_tag_attr, "space-expand")))) {
 			if ((strcasecmp(value, "true") == 0) ||
 				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
 				space_expand = TRUE;
@@ -140,8 +137,7 @@ GtkWidget *widget_vbox_create(
 			}
 		}
 		if (var && var->widget_tag_attr &&
-			((value = get_tag_attribute(var->widget_tag_attr, "space-fill")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "space_fill")))) {
+			((value = get_tag_attribute(var->widget_tag_attr, "space-fill")))) {
 			if ((strcasecmp(value, "true") == 0) ||
 				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
 				space_fill = TRUE;

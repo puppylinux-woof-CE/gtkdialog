@@ -875,11 +875,9 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	if (Type == WIDGET_TERMINAL) {
 		/* Get scrollbar policy from custom tag attributes */
 		if (attr) {
-			if ((value = get_tag_attribute(attr, "hscrollbar-policy")) ||
-				(value = get_tag_attribute(attr, "hscrollbar_policy")))
+			if ((value = get_tag_attribute(attr, "hscrollbar-policy")))
 				hscrollbar_policy = atoi(value);
-			if ((value = get_tag_attribute(attr, "vscrollbar-policy")) ||
-				(value = get_tag_attribute(attr, "vscrollbar_policy")))
+			if ((value = get_tag_attribute(attr, "vscrollbar-policy")))
 				vscrollbar_policy = atoi(value);
 		}
 	}
@@ -1047,18 +1045,14 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 	 * when the menu end tag is detected the menu and accelerator group
 	 * are created and finally the menuitems are appended to the menu */
 	if (attr) {
-		if (!(value = get_tag_attribute(attr, "accel_key")))
-			value = get_tag_attribute(attr, "accel-key");
-		if (value) {
+		if ((value = get_tag_attribute(attr, "accel-key"))) {
 			/* Read accel-key as a decimal integer or hex value */
 			if (strncasecmp(value, "0x", 2) == 0) {
 				sscanf(value, "%x", &accel_key);
 			} else {
 				sscanf(value, "%u", &accel_key);
 			}
-			if (!(value = get_tag_attribute(attr, "accel_mods")))
-				value = get_tag_attribute(attr, "accel-mods");
-			if (value) {
+			if ((value = get_tag_attribute(attr, "accel-mods"))) {
 				/* Read accel-mods as a decimal integer or hex value */
 				if (strncasecmp(value, "0x", 2) == 0) {
 					sscanf(value, "%x", &accel_mods);
@@ -1095,22 +1089,16 @@ GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
 		((stock_id = get_tag_attribute(attr, "stock")) ||
-		(stock_id = get_tag_attribute(attr, "stock_id")) ||
 		(stock_id = get_tag_attribute(attr, "stock-id")) ||
-		(stock_id = get_tag_attribute(attr, "image_stock")) ||	/* I don't want to keep this temp temp */
 		(stock_id = get_tag_attribute(attr, "image-stock")))) {	/* I don't want to keep this temp temp */
 		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
 	} else if (attr &&
 		((icon_name = get_tag_attribute(attr, "icon")) ||
-		(icon_name = get_tag_attribute(attr, "icon_name")) ||
 		(icon_name = get_tag_attribute(attr, "icon-name")) ||
-		(icon_name = get_tag_attribute(attr, "image_icon")) ||	/* I don't want to keep this temp temp */
 		(icon_name = get_tag_attribute(attr, "image-icon")))) {	/* I don't want to keep this temp temp */
 		menuitemtype = TYPE_MENUITEM_IMAGE_ICON;
 	} else if (attr &&
-		((image_name = get_tag_attribute(attr, "image_name")) ||
-		(image_name = get_tag_attribute(attr, "image-name")) ||
-		(image_name = get_tag_attribute(attr, "image_file")) ||	/* I don't want to keep this temp temp */
+		((image_name = get_tag_attribute(attr, "image-name")) ||
 		(image_name = get_tag_attribute(attr, "image-file")))) {	/* I don't want to keep this temp temp */
 		menuitemtype = TYPE_MENUITEM_IMAGE_FILE;
 	} else if (attr &&
@@ -1475,27 +1463,19 @@ create_scale(AttributeSet * Attr, tag_attr *attr, gint horv)
 
 	/* Thunor: These "range-*" names are consistent with the spinbutton widget */
 	if (attr) {
-		if (!(value = get_tag_attribute(attr, "range_min")) &&
-			!(value = get_tag_attribute(attr, "range-min")) &&
-			!(value = get_tag_attribute(attr, "scale_min")))
+		if (!(value = get_tag_attribute(attr, "range-min")))
 			value = get_tag_attribute(attr, "scale-min");
 		if (value) range_min = atof(value);
 
-		if (!(value = get_tag_attribute(attr, "range_max")) &&
-			!(value = get_tag_attribute(attr, "range-max")) &&
-			!(value = get_tag_attribute(attr, "scale_max")))
+		if (!(value = get_tag_attribute(attr, "range-max")))
 			value = get_tag_attribute(attr, "scale-max");
 		if (value) range_max = atof(value);
 
-		if (!(value = get_tag_attribute(attr, "range_step")) &&
-			!(value = get_tag_attribute(attr, "range-step")) &&
-			!(value = get_tag_attribute(attr, "scale_step")))
+		if (!(value = get_tag_attribute(attr, "range-step")))
 			value = get_tag_attribute(attr, "scale-step");
 		if (value) range_step = atof(value);
 
-		if (!(value = get_tag_attribute(attr, "range_value")) &&
-			!(value = get_tag_attribute(attr, "range-value")) &&
-			!(value = get_tag_attribute(attr, "scale_value")))
+		if (!(value = get_tag_attribute(attr, "range-value")))
 			value = get_tag_attribute(attr, "scale-value");
 		if (value) range_value = atof(value);
 	}
@@ -1938,8 +1918,33 @@ int
 token_store_attr(token command, 
 		tag_attr *attributes)
 {
-	instruction inst;
-	
+	gint             count;
+	gint             index;
+	instruction      inst;
+
+	/* Thunor: I've added this to convert underscores within tag
+	 * attributes to hyphens so that we can deal exclusively in
+	 * hyphenated strings throughout the remainder of this program */
+	for (count = 0; count < attributes->n; count++) {
+#ifdef DEBUG
+		fprintf(stderr, "%s: Before: pairs[%i].name=%s  pairs[%i].value=%s\n",
+			__func__, count, attributes->pairs[count].name,
+			count, attributes->pairs[count].value);
+#endif
+		index = 0;
+		while (attributes->pairs[count].name[index]) {
+			if (attributes->pairs[count].name[index] == '_') {
+				attributes->pairs[count].name[index] = '-';
+			}
+			index++;
+		}
+#ifdef DEBUG
+		fprintf(stderr, "%s:  After: pairs[%i].name=%s  pairs[%i].value=%s\n",
+			__func__, count, attributes->pairs[count].name,
+			count, attributes->pairs[count].value);
+#endif
+	}
+
 	inst.command = command;
 	inst.argument = NULL;
 	inst.tag_attributes = attributes;

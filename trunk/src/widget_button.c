@@ -254,8 +254,7 @@ GtkWidget *widget_button_create(
 					/* Create the label supporting mnemonics if the
 					 * GTK+ property "use-underline" is true */
 					if (attr &&
-						((value = get_tag_attribute(attr, "use-underline")) ||
-						(value = get_tag_attribute(attr, "use_underline"))) &&
+						(value = get_tag_attribute(attr, "use-underline")) &&
 						((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
 						(atoi(value) == 1))) {
 						label = gtk_label_new_with_mnemonic(labeldirective);
@@ -267,9 +266,7 @@ GtkWidget *widget_button_create(
 					 * have no effect otherwise) then position the image relative
 					 * to the label */
 					if (attr) {
-						if (!(value = get_tag_attribute(attr, "image_position")))
-							value = get_tag_attribute(attr, "image-position");
-						if (value) {
+						if ((value = get_tag_attribute(attr, "image-position"))) {
 							if (strcasecmp(value, "bottom") == 0 ||
 								atoi(value) == GTK_POS_BOTTOM) {
 								position = GTK_POS_BOTTOM;

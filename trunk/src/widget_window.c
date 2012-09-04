@@ -104,8 +104,7 @@ GtkWidget *widget_window_create(
 
 	/* If requested set a title bar image by filename */
 	if (attr) {
-		if ((value = get_tag_attribute(attr, "image-name")) ||
-			(value = get_tag_attribute(attr, "image_name")))
+		if ((value = get_tag_attribute(attr, "image-name")))
 			gtk_window_set_icon_from_file(GTK_WINDOW(widget),
 				find_pixmap(value), &error);
 	}

@@ -87,15 +87,11 @@ GtkWidget *widget_notebook_create(
 	/* Read the tag attributes */
 	if (attr) {
 		if ((value = get_tag_attribute(attr, "tab-labels")) ||
-			(value = get_tag_attribute(attr, "tab_labels")) ||
 			(value = get_tag_attribute(attr, "labels")))	/* Deprecated */
 			labels = linecutter(strdup(value), '|');
-		if (!(tab_prefix = get_tag_attribute(attr, "tab-prefix")))
-			tab_prefix = get_tag_attribute(attr, "tab_prefix");
-		if (!(tab_suffix = get_tag_attribute(attr, "tab-suffix")))
-			tab_suffix = get_tag_attribute(attr, "tab_suffix");
-		if ((value = get_tag_attribute(attr, "tab-base-index")) ||
-			(value = get_tag_attribute(attr, "tab_base_index")))
+		tab_prefix = get_tag_attribute(attr, "tab-prefix");
+		tab_suffix = get_tag_attribute(attr, "tab-suffix");
+		if ((value = get_tag_attribute(attr, "tab-base-index")))
 			tab_base_index = atoi(value);
 	}
 

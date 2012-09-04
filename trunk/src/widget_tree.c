@@ -133,9 +133,7 @@ GtkWidget *widget_tree_create(
 	 * is GTK_SELECTION_SINGLE so we'll leave that alone and only set a
 	 * different mode if the user requests it */
 	if (attr) {
-		if (!(value = get_tag_attribute(attr, "selection_mode")))
-			value = get_tag_attribute(attr, "selection-mode");
-		if (value) {
+		if ((value = get_tag_attribute(attr, "selection-mode"))) {
 			/* Get a pointer to the selection object and set the requested mode */
 			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
 			if (strcasecmp(value, "multiple") == 0 ||
@@ -387,12 +385,10 @@ void widget_tree_refresh(variable *var)
 	icon_name = stock_id = NULL;
 	if (var->widget_tag_attr) {
 		if ((value = get_tag_attribute(var->widget_tag_attr, "stock")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "stock-id")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "stock_id")))
+			(value = get_tag_attribute(var->widget_tag_attr, "stock-id")))
 			stock_id = value;
 		if ((value = get_tag_attribute(var->widget_tag_attr, "icon")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "icon-name")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "icon_name")))
+			(value = get_tag_attribute(var->widget_tag_attr, "icon-name")))
 			icon_name = value;
 	}
 
