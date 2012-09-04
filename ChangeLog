@@ -3,6 +3,8 @@ for announcements.
 
 * Tue Sep 4 2012 Thunor <thunorsif@hotmail.com>
 - Added support for column sorting to the table widget.
+- Added the "column-header-active" and "column-visible" tag attributes
+  to the table widget enabling column-header locking and column hiding.
 
 * Sat Sep 1 2012 Thunor <thunorsif@hotmail.com>
 - Added the "selected-row" tag attribute to the table widget to enable
