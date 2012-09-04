@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Sep 4 2012 Thunor <thunorsif@hotmail.com>
+- Added support for column sorting to the table widget.
+
 * Sat Sep 1 2012 Thunor <thunorsif@hotmail.com>
 - Added the "selected-row" tag attribute to the table widget to enable
   selecting a default row on initialisation and refresh (the firing of
