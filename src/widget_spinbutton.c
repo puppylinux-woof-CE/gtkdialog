@@ -80,21 +80,14 @@ GtkWidget *widget_spinbutton_create(
 
 	/* These "range-*" names are consistent with the h/vscale widgets */
 	if (attr) {
-		if (!(value = get_tag_attribute(attr, "range_min")))
-			value = get_tag_attribute(attr, "range-min");
-		if (value) range_min = atof(value);
-
-		if (!(value = get_tag_attribute(attr, "range_max")))
-			value = get_tag_attribute(attr, "range-max");
-		if (value) range_max = atof(value);
-
-		if (!(value = get_tag_attribute(attr, "range_step")))
-			value = get_tag_attribute(attr, "range-step");
-		if (value) range_step = atof(value);
-
-		if (!(value = get_tag_attribute(attr, "range_value")))
-			value = get_tag_attribute(attr, "range-value");
-		if (value) range_value = atof(value);
+		if ((value = get_tag_attribute(attr, "range-min")))
+			range_min = atof(value);
+		if ((value = get_tag_attribute(attr, "range-max")))
+			range_max = atof(value);
+		if ((value = get_tag_attribute(attr, "range-step")))
+			range_step = atof(value);
+		if ((value = get_tag_attribute(attr, "range-value")))
+			range_value = atof(value);
 	}
 
 	widget = gtk_spin_button_new_with_range(range_min, range_max, range_step);

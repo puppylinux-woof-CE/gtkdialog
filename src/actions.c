@@ -297,8 +297,7 @@ int action_fileselect(GtkWidget *widget, char *string)
 
 		if (var->widget_tag_attr) {
 			/* Set title if present */
-			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-title")) ||
-				(value = get_tag_attribute(var->widget_tag_attr, "fs_title"))) {
+			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-title"))) {
 				title = value;
 #ifdef DEBUG
 				fprintf(stderr, "%s(): title='%s' from tag attribute\n",
@@ -307,7 +306,6 @@ int action_fileselect(GtkWidget *widget, char *string)
 			}
 			/* Set file chooser action if present */
 			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-action")) ||
-				(value = get_tag_attribute(var->widget_tag_attr, "fs_action")) ||
 				(value = get_tag_attribute(var->widget_tag_attr, "accept"))) {	/* Deprecated */				
 				if ((strcasecmp(value, "file") == 0) ||
 					(strcasecmp(value, "filename") == 0)) {			/* Deprecated */
@@ -335,8 +333,7 @@ int action_fileselect(GtkWidget *widget, char *string)
 
 		/* Set current folder if present */
 		if (var->widget_tag_attr &&
-			((value = get_tag_attribute(var->widget_tag_attr, "fs-folder")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "fs_folder")))) {
+			((value = get_tag_attribute(var->widget_tag_attr, "fs-folder")))) {
 			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), value);
 #ifdef DEBUG
 			fprintf(stderr, "%s(): current folder='%s'\n", __func__, value);
@@ -346,8 +343,7 @@ int action_fileselect(GtkWidget *widget, char *string)
 		/* Add file filters */
 		if (var->widget_tag_attr) {
 			/* Filters of type pattern */
-			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-filters")) ||
-				(value = get_tag_attribute(var->widget_tag_attr, "fs_filters"))) {
+			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-filters"))) {
 				patterns = linecutter(g_strdup(value), '|');
 				for (count = 0; count < patterns->n_lines; count++) {
 					filter = gtk_file_filter_new();
@@ -361,8 +357,7 @@ int action_fileselect(GtkWidget *widget, char *string)
 				}
 			}
 			/* Filters of type mime */
-			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-filters-mime")) ||
-				(value = get_tag_attribute(var->widget_tag_attr, "fs_filters_mime"))) {
+			if ((value = get_tag_attribute(var->widget_tag_attr, "fs-filters-mime"))) {
 				mime_types = linecutter(g_strdup(value), '|');
 				for (count = 0; count < mime_types->n_lines; count++) {
 					filter = gtk_file_filter_new();

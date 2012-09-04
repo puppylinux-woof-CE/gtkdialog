@@ -5,6 +5,8 @@ for announcements.
 - Added support for column sorting to the table widget.
 - Added the "column-header-active" and "column-visible" tag attributes
   to the table widget enabling column-header locking and column hiding.
+- Modified token_store_attr() to convert tag attribute names passed
+  in from the XML separated with underscores to hyphenated strings.
 
 * Sat Sep 1 2012 Thunor <thunorsif@hotmail.com>
 - Added the "selected-row" tag attribute to the table widget to enable

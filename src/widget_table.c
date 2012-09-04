@@ -97,8 +97,7 @@ GtkWidget *widget_table_create(
 
 	if (attr) {
 		/* Get sort-function (custom) */
-		if ((value = get_tag_attribute(attr, "sort-function")) ||
-			(value = get_tag_attribute(attr, "sort_function"))) {
+		if ((value = get_tag_attribute(attr, "sort-function"))) {
 			sort_function = atoi(value);
 			if (sort_function == 1) {
 				gtk_clist_set_compare_func(GTK_CLIST(widget), widget_table_natcmp);
@@ -107,18 +106,15 @@ GtkWidget *widget_table_create(
 			}
 		}
 		/* Get sort-type (auto-sort will require this preset) */
-		if ((value = get_tag_attribute(attr, "sort-type")) ||
-			(value = get_tag_attribute(attr, "sort_type"))) {
+		if ((value = get_tag_attribute(attr, "sort-type"))) {
 			gtk_clist_set_sort_type(GTK_CLIST(widget), atoi(value));
 		}
 		/* Get sort-column (custom) */
-		if ((value = get_tag_attribute(attr, "sort-column")) ||
-			(value = get_tag_attribute(attr, "sort_column"))) {
+		if ((value = get_tag_attribute(attr, "sort-column"))) {
 			gtk_clist_set_sort_column(GTK_CLIST(widget), atoi(value));
 		}
 		/* Get auto-sort (custom) */
-		if (((value = get_tag_attribute(attr, "auto-sort")) ||
-			(value = get_tag_attribute(attr, "auto_sort"))) &&
+		if ((value = get_tag_attribute(attr, "auto-sort")) &&
 			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
 			(atoi(value) == 1))) {
 			gtk_clist_set_auto_sort(GTK_CLIST(widget), TRUE);
@@ -126,8 +122,7 @@ GtkWidget *widget_table_create(
 			gtk_clist_set_auto_sort(GTK_CLIST(widget), FALSE);
 		}
 		/* Get column-header-active (custom) */
-		if ((value = get_tag_attribute(attr, "column-header-active")) ||
-			(value = get_tag_attribute(attr, "column_header_active"))) {
+		if ((value = get_tag_attribute(attr, "column-header-active"))) {
 			sliced = linecutter(g_strdup(value), '|');
 			for (column = 0; column < sliced->n_lines; column++) {
 				if ((strcasecmp(sliced->line[column], "true") == 0) ||
@@ -141,8 +136,7 @@ GtkWidget *widget_table_create(
 			if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 		}
 		/* Get column-visible (custom) */
-		if ((value = get_tag_attribute(attr, "column-visible")) ||
-			(value = get_tag_attribute(attr, "column_visible"))) {
+		if ((value = get_tag_attribute(attr, "column-visible"))) {
 			sliced = linecutter(g_strdup(value), '|');
 			for (column = 0; column < sliced->n_lines; column++) {
 				if ((strcasecmp(sliced->line[column], "true") == 0) ||
@@ -187,8 +181,7 @@ gchar *widget_table_envvar_all_construct(variable *var)
 	/* Which column should we export */
 	if (var->widget_tag_attr) {
 		/* Get exported-column */
-		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")))
 			column = atoi(value);
 	}
 	/* Where's the GtkCList row count? It's not such a problem as
@@ -240,12 +233,10 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 
 	if (var->widget_tag_attr) {
 		/* Get current selection-mode (there's no function to do this) */
-		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "selection_mode")))
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")))
 			selectionmode = atoi(value);
 		/* Get exported-column */
-		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")))
 			column = atoi(value);
 	}
 
@@ -355,15 +346,13 @@ void widget_table_refresh(variable *var)
 
 	if (var->widget_tag_attr) {
 		/* Get columns-autosize (custom)	Redundant: Works weirdly on initialisation.
-		if (((value = get_tag_attribute(var->widget_tag_attr, "columns-autosize")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "columns_autosize"))) &&
+		if ((value = get_tag_attribute(var->widget_tag_attr, "columns-autosize")) &&
 			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
 			(atoi(value) == 1))) {
 			gtk_clist_columns_autosize(GTK_CLIST(var->Widget));
 		} */
 		/* Get selected-row (custom) */
-		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "selected_row"))) {
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row"))) {
 			selected_row = atoi(value);
 			if (selected_row >= 0)
 				gtk_clist_select_row(GTK_CLIST(var->Widget), selected_row, 0);
@@ -414,12 +403,10 @@ void widget_table_removeselected(variable *var)
 
 	if (var->widget_tag_attr) {
 		/* Get current selection-mode (there's no function to do this) */
-		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "selection_mode")))
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")))
 			selectionmode = atoi(value);
 		/* Get exported-column */
-		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
-			(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+		if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")))
 			column = atoi(value);
 	}
 
@@ -495,8 +482,7 @@ void widget_table_save(variable *var)
 			/* Which column should we export */
 			if (var->widget_tag_attr) {
 				/* Get exported-column */
-				if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")) ||
-					(value = get_tag_attribute(var->widget_tag_attr, "exported_column")))
+				if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")))
 					column = atoi(value);
 			}
 			/* Where's the GtkCList row count? It's not such a problem as

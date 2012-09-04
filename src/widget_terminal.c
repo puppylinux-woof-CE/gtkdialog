@@ -109,11 +109,7 @@ GtkWidget *widget_terminal_create(
 		 * a dedicated gtk function and then kill the tag attribute else
 		 * widget_set_tag_attributes() will try to set it later */
 		strcpy(tagattribute, "font-desc");
-		if (!(value = get_tag_attribute(attr, tagattribute))) {
-			strcpy(tagattribute, "font_desc");
-			value = get_tag_attribute(attr, tagattribute);
-		}
-		if (value) {
+		if ((value = get_tag_attribute(attr, tagattribute))) {
 			vte_terminal_set_font_from_string(VTE_TERMINAL(widget), value);
 			kill_tag_attribute(attr, tagattribute);
 		}
@@ -121,11 +117,7 @@ GtkWidget *widget_terminal_create(
 		/* Again, "background-tint-color" requires a pointer to a
 		 * GdkColor struct but we can convert a string like "#ff00ff" */
 		strcpy(tagattribute, "background-tint-color");
-		if (!(value = get_tag_attribute(attr, tagattribute))) {
-			strcpy(tagattribute, "background_tint_color");
-			value = get_tag_attribute(attr, tagattribute);
-		}
-		if (value) {
+		if ((value = get_tag_attribute(attr, tagattribute))) {
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
@@ -139,14 +131,12 @@ GtkWidget *widget_terminal_create(
 		}
 
 		/* Get custom tag attribute "font-name" */
-		if ((value = get_tag_attribute(attr, "font-name")) ||
-			(value = get_tag_attribute(attr, "font_name"))) {
+		if ((value = get_tag_attribute(attr, "font-name"))) {
 			vte_terminal_set_font_from_string(VTE_TERMINAL(widget), value);
 		}
 
 		/* Get custom tag attribute "text-background-color" */
-		if ((value = get_tag_attribute(attr, "text-background-color")) ||
-			(value = get_tag_attribute(attr, "text_background_color"))) {
+		if ((value = get_tag_attribute(attr, "text-background-color"))) {
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
@@ -159,8 +149,7 @@ GtkWidget *widget_terminal_create(
 		}
 
 		/* Get custom tag attribute "text-foreground-color" */
-		if ((value = get_tag_attribute(attr, "text-foreground-color")) ||
-			(value = get_tag_attribute(attr, "text_foreground_color"))) {
+		if ((value = get_tag_attribute(attr, "text-foreground-color"))) {
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
@@ -173,8 +162,7 @@ GtkWidget *widget_terminal_create(
 		}
 
 		/* Get custom tag attribute "bold-foreground-color" */
-		if ((value = get_tag_attribute(attr, "bold-foreground-color")) ||
-			(value = get_tag_attribute(attr, "bold_foreground_color"))) {
+		if ((value = get_tag_attribute(attr, "bold-foreground-color"))) {
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
@@ -187,8 +175,7 @@ GtkWidget *widget_terminal_create(
 		}
 
 		/* Get custom tag attribute "dim-foreground-color" */
-		if ((value = get_tag_attribute(attr, "dim-foreground-color")) ||
-			(value = get_tag_attribute(attr, "dim_foreground_color"))) {
+		if ((value = get_tag_attribute(attr, "dim-foreground-color"))) {
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
@@ -201,8 +188,7 @@ GtkWidget *widget_terminal_create(
 		}
 
 		/* Get custom tag attribute "cursor-background-color" */
-		if ((value = get_tag_attribute(attr, "cursor-background-color")) ||
-			(value = get_tag_attribute(attr, "cursor_background_color"))) {
+		if ((value = get_tag_attribute(attr, "cursor-background-color"))) {
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
@@ -215,8 +201,7 @@ GtkWidget *widget_terminal_create(
 		}
 
 		/* Get custom tag attribute "highlight-background-color" */
-		if ((value = get_tag_attribute(attr, "highlight-background-color")) ||
-			(value = get_tag_attribute(attr, "highlight_background_color"))) {
+		if ((value = get_tag_attribute(attr, "highlight-background-color"))) {
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
@@ -284,8 +269,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 	if (attr) {
 		/* The "current-directory-uri" can only be set when we fork a
 		 * command (there's no function for it) so we set it now */
-		if ((value = get_tag_attribute(attr, "current-directory-uri")) ||
-			(value = get_tag_attribute(attr, "current_directory_uri")))
+		if ((value = get_tag_attribute(attr, "current-directory-uri")))
 			working_directory = value;
 
 		/* Get custom tag attributes argv and envv */
