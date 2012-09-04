@@ -43,7 +43,8 @@ The following custom tag attributes are available:
 || auto-sort || Automatically sort whilst loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
 || sort-column || The initial sort column when auto-sorting || An integer >= {{{0}}} || 0.8.1 ||
 || sort-function || The algorithm to use when sorting || {{{0}}}, {{{1}}}, {{{2}}} (ASCII, strnatcmp, strcasenatcmp) || 0.8.1 ||
-
+|| column-header-active || Active state of column header(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
+|| column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -64,7 +65,7 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Execute command on signal || Shell command || || 0.8.1 ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || 0.8.1 ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| item || Input data || _column0data_ {{{|}}} _column1data_ {{{|}}} ... || || ||
+|| item || Input data || _data0_ {{{|}}} _data1_ {{{|}}} ... || || ||
 || output file || Data output target || Filename || || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 

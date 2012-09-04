@@ -71,9 +71,9 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| item || Input data || _column0data_ {{{|}}} _column1data_ {{{|}}} ... || || ||
-|| item icon-name="_image_" || Input data || _column0data_ {{{|}}} _column1data_  {{{|}}} ... || || ||
-|| item stock-id="_gtk-image_" || Input data || _column0data_ {{{|}}} _column1data_  {{{|}}} ... || || ||
+|| item || Input data || _data0_ {{{|}}} _data1_ {{{|}}} ... || || ||
+|| item icon-name="_image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || || ||
+|| item stock-id="_gtk-image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
