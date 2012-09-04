@@ -77,19 +77,20 @@ GtkWidget *widget_table_create(
 	GList            *element;
 	GtkWidget        *widget;
 	gchar            *value;
+	gint              column;
 	gint              sort_function;
-	list_t           *table_header;
+	list_t           *sliced;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
 	if (attributeset_is_avail(Attr, ATTR_LABEL)) {
-		table_header = linecutter(g_strdup(attributeset_get_first(
+		sliced = linecutter(g_strdup(attributeset_get_first(
 			&element, Attr, ATTR_LABEL)), '|');
-		widget = gtk_clist_new_with_titles(table_header->n_lines,
-			table_header->line);
-		if (table_header) list_t_free(table_header);	/* Free linecutter memory */
+		widget = gtk_clist_new_with_titles(sliced->n_lines,
+			sliced->line);
+		if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 	} else {
 		widget = gtk_clist_new(1);	/* 1 column */
 	}
@@ -123,6 +124,38 @@ GtkWidget *widget_table_create(
 			gtk_clist_set_auto_sort(GTK_CLIST(widget), TRUE);
 		} else {
 			gtk_clist_set_auto_sort(GTK_CLIST(widget), FALSE);
+		}
+		/* Get column-header-active (custom) */
+		if ((value = get_tag_attribute(attr, "column-header-active")) ||
+			(value = get_tag_attribute(attr, "column_header_active"))) {
+			sliced = linecutter(g_strdup(value), '|');
+			for (column = 0; column < sliced->n_lines; column++) {
+				if ((strcasecmp(sliced->line[column], "true") == 0) ||
+					(strcasecmp(sliced->line[column], "yes") == 0) ||
+					(atoi(sliced->line[column]) == 1)) {
+					gtk_clist_column_title_active(GTK_CLIST(widget), column);
+				} else {
+					gtk_clist_column_title_passive(GTK_CLIST(widget), column);
+				}
+			}
+			if (sliced) list_t_free(sliced);	/* Free linecutter memory */
+		}
+		/* Get column-visible (custom) */
+		if ((value = get_tag_attribute(attr, "column-visible")) ||
+			(value = get_tag_attribute(attr, "column_visible"))) {
+			sliced = linecutter(g_strdup(value), '|');
+			for (column = 0; column < sliced->n_lines; column++) {
+				if ((strcasecmp(sliced->line[column], "true") == 0) ||
+					(strcasecmp(sliced->line[column], "yes") == 0) ||
+					(atoi(sliced->line[column]) == 1)) {
+					gtk_clist_set_column_visibility(GTK_CLIST(widget),
+						column, TRUE);
+				} else {
+					gtk_clist_set_column_visibility(GTK_CLIST(widget),
+						column, FALSE);
+				}
+			}
+			if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 		}
 	}
 
