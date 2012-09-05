@@ -2,7 +2,7 @@
 
 = hbox widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] optionally packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+A [http://developer.gnome.org/gtk/2.24/GtkHBox.html GtkHBox] optionally packed inside a [http://developer.gnome.org/gtk/2.24/GtkViewport.html GtkViewport] inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
 
 ----
 
@@ -37,6 +37,7 @@ The following custom tag attributes are available:
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
 || width || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
+|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (none, in, out, etched-in, etched-out) || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==

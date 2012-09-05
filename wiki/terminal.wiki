@@ -2,7 +2,7 @@
 
 = terminal widget =
 
-A [http://developer.gnome.org/vte/unstable/VteTerminal.html VteTerminal]
+A [http://developer.gnome.org/vte/unstable/VteTerminal.html VteTerminal] packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
 
 ----
 
@@ -35,6 +35,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || ||
+|| vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || ||
 || font-name || Font description || Example: {{{Monospace Bold 14}}} || ||
 || background-tint-color^[1]^ || Background tint colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
 || text-background-color || Text background colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
@@ -43,8 +45,6 @@ The following custom tag attributes are available:
 || dim-foreground-color || Dim text foreground colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
 || cursor-background-color || Cursor background colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
 || highlight-background-color || Highlighted text background colour || A standard name,  _#rgb _ or  _#rrggbb _ || ||
-|| hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || ||
-|| vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || ||
 || argv? || Arguments starting at argv0 (command) || Example: {{{/bin/sh}}} || ||
 || envv? || Environment variables starting at envv0 || Example: {{{MESSAGE=Hello}}} || ||
 <wiki:comment>ExportTableEnd</wiki:comment>

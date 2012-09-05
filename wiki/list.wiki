@@ -2,7 +2,7 @@
 
 = list widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkList.html GtkList] packed inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+A [http://developer.gnome.org/gtk/2.24/GtkList.html GtkList] packed inside a [http://developer.gnome.org/gtk/2.24/GtkViewport.html GtkViewport] inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
 
 ----
 
@@ -36,6 +36,7 @@ The following custom tag attributes are available:
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
+|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (none, in, out, etched-in, etched-out) || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
