@@ -555,14 +555,67 @@ void widget_tree_removeselected(variable *var)
 
 void widget_tree_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *outfile;
+	GList            *element;
+	GtkTreeIter       iter;
+	GtkTreeModel     *model;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gchar            *text;
+	gchar            *value;
+	gint              column;
+	gint              index;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+/* ------------------------------------------------------------------ */
+			model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
+			gtk_tree_model_get_iter_first(model, &iter);
+
+			/* Which column should we export
+			 * variable *variables_get_by_name( const char *name ); */
+			if ((value = g_object_get_data(G_OBJECT(var->Widget), "exported-column"))) {
+				column = atoi(value) + FirstDataColumn;
+			} else {
+				column = FirstDataColumn;
+			}
+
+			index = 0;
+			while (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
+				gtk_tree_model_get(model, &iter, column, &text, -1);
+				if (index == 0) {
+					fprintf(outfile, "%s", text);
+				} else {
+					fprintf(outfile, "\n%s", text);
+				}
+				if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter)) break;
+				index++;
+			}
+/* ------------------------------------------------------------------ */
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
