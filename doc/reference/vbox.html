@@ -84,7 +84,7 @@
 
 <h1> vbox widget </h1>
 
-A <a href="http://developer.gnome.org/gtk/2.24/GtkVBox.html">GtkVBox</a> optionally packed inside a <a href="http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html">GtkScrolledWindow</a>
+A <a href="http://developer.gnome.org/gtk/2.24/GtkVBox.html">GtkVBox</a> optionally packed inside a <a href="http://developer.gnome.org/gtk/2.24/GtkViewport.html">GtkViewport</a> inside a <a href="http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html">GtkScrolledWindow</a>
 
 <hr>
 
@@ -114,9 +114,12 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkVBox.html">GtkVBox</a> optiona
 <tr><td class="wiki"> space-expand<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Pack this and nested widgets expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> space-fill<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Pack this and nested widgets filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> hscrollbar-policy </td><td class="wiki"> Policy for the horizontal scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> vscrollbar-policy </td><td class="wiki"> Policy for the vertical scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> scrollable </td><td class="wiki"> Scrolled window capability </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> height </td><td class="wiki"> Scrolled window dimension </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> width </td><td class="wiki"> Scrolled window dimension </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> shadow-type </td><td class="wiki"> Viewport shadow type </td><td class="wiki"> <code>0</code> to <code>4</code> (none, in, out, etched-in, etched-out) </td><td class="wiki"> 0.8.1 </td></tr>
 </table>
 
 <h2> Directives </h2>
@@ -216,7 +219,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkVBox.html">GtkVBox</a> optiona
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-08-30 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-09-05 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

@@ -850,6 +850,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GList            *element;
+	GtkWidget        *parent;
 	GtkWidget        *scrolledwindow;
 	gchar            *value;
 	gint              width = -1;
@@ -872,14 +873,12 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	scrolledwindow = gtk_scrolled_window_new(NULL, NULL);
 
 	/* Set the scrollbar policy for the scrollbars */
-	if (Type == WIDGET_TERMINAL) {
-		/* Get scrollbar policy from custom tag attributes */
-		if (attr) {
-			if ((value = get_tag_attribute(attr, "hscrollbar-policy")))
-				hscrollbar_policy = atoi(value);
-			if ((value = get_tag_attribute(attr, "vscrollbar-policy")))
-				vscrollbar_policy = atoi(value);
-		}
+	/* Get scrollbar policy from custom tag attributes */
+	if (attr) {
+		if ((value = get_tag_attribute(attr, "hscrollbar-policy")))
+			hscrollbar_policy = atoi(value);
+		if ((value = get_tag_attribute(attr, "vscrollbar-policy")))
+			vscrollbar_policy = atoi(value);
 	}
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow), 
 		hscrollbar_policy, vscrollbar_policy);
@@ -960,6 +959,18 @@ inner_border.top=%i inner_border.bottom=%i\n", __func__, inner_border.left,
 				gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
 			}
 			break;
+	}
+
+	/* The default shadow-type for the scrolledwindow is GTK_SHADOW_NONE
+	 * but for the viewport it's GTK_SHADOW_IN which should be modifiable */
+	/* Get shadow-type */
+	if (attr) {
+		if (value = get_tag_attribute(attr, "shadow-type")) {
+			parent = gtk_widget_get_parent(widget);
+			if (GTK_IS_VIEWPORT(parent)) {
+				gtk_viewport_set_shadow_type(GTK_VIEWPORT(parent), atoi(value));
+			}
+		}
 	}
 
 /* Redundant
