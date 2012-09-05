@@ -27,6 +27,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkTreeView.html GtkTreeView] packed insi
 	<item>data</item>...
 	<item icon-name="image">data</item>...
 	<item stock-id="gtk-image">data</item>...
+	<output file>filename</output>
 </tree>
 }}}
 
@@ -74,6 +75,7 @@ Some of these may have tag attribute equivalents.
 || item || Input data || _data0_ {{{|}}} _data1_ {{{|}}} ... || || ||
 || item icon-name="_image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || || ||
 || item stock-id="_gtk-image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || || ||
+|| output file || Data output target || Filename || || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
@@ -94,6 +96,7 @@ The following functions can be performed upon this widget by any widget capable 
 || hide || Hide widget || Shell variable name || 0.8.1 ||
 || grabfocus || Grab input focus || Shell variable name || 0.8.1 ||
 || refresh || Reload input data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || 0.8.1 ||
 || clear || Remove all widget data || Shell variable name || 0.7.21 ||
 || removeselected || Remove selected widget data || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>

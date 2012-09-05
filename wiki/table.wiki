@@ -45,6 +45,7 @@ The following custom tag attributes are available:
 || sort-function || The algorithm to use when sorting || {{{0}}}, {{{1}}}, {{{2}}} (ASCII, strnatcmp, strcasenatcmp) || 0.8.1 ||
 || column-header-active || Active state of column header(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
+|| freeze-thaw || Freeze rendering whilst loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
