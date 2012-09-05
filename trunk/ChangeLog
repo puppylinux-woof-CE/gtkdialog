@@ -5,6 +5,10 @@ for announcements.
 - Updated examples/table/table.
 - Moved the table widget's selected-row check to after signal connection
   as it wasn't firing on initial refresh.
+- Fixed leading zero issue with strnatcmp.
+- Added the "freeze-thaw" tag attribute to the table widget to stop
+  rendering when adding data and to resume rendering when finished.
+- Added save action function support to the tree widget.
 
 * Tue Sep 4 2012 Thunor <thunorsif@hotmail.com>
 - Added support for column sorting to the table widget.

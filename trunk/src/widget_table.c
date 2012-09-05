@@ -318,6 +318,7 @@ void widget_table_refresh(variable *var)
 	GList            *element;
 	gchar            *act;
 	gchar            *value;
+	gint              freeze_thaw = FALSE;
 	gint              selected_row;
 	gint              initialised = FALSE;
 
@@ -328,6 +329,16 @@ void widget_table_refresh(variable *var)
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+
+	if (var->widget_tag_attr) {
+		/* Get freeze-thaw (custom) */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "freeze-thaw")) &&
+			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
+			(atoi(value) == 1))) {
+			freeze_thaw = TRUE;
+			gtk_clist_freeze(GTK_CLIST(var->Widget));
+		}
+	}
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -363,6 +374,9 @@ void widget_table_refresh(variable *var)
 			G_CALLBACK(widget_table_click_column_callback), (gpointer)var);
 
 	}
+
+	/* Thaw a freeze? */
+	if (freeze_thaw) gtk_clist_thaw(GTK_CLIST(var->Widget));
 
 	if (var->widget_tag_attr) {
 		/* Get columns-autosize (custom)	Redundant: Works weirdly on initialisation.
@@ -765,12 +779,14 @@ static gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 			/* Evaluate data being pointed to */
 			if ((*c1 >= '0' && *c1 <= '9')) {
 				/* Evaluate consecutive numbers */
-				c1val = 100;
+				c1val = 0;
 				while (*c1 >= '0' && *c1 <= '9') {
+					/* Note: All leading zeroes evaluate as 0 */
 					/* This is Unicode safe */
 					c1val = c1val * 10 + *c1 - '0';
 					*c1++;
 				}
+				c1val += 1000;	/* Add some weight */
 			} else {
 				/* Evaluate single chars */
 				if (sensitive) {
@@ -784,12 +800,14 @@ static gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 			}
 			if ((*c2 >= '0' && *c2 <= '9')) {
 				/* Evaluate consecutive numbers */
-				c2val = 100;
+				c2val = 0;
 				while (*c2 >= '0' && *c2 <= '9') {
+					/* Note: All leading zeroes evaluate as 0 */
 					/* This is Unicode safe */
 					c2val = c2val * 10 + *c2 - '0';
 					*c2++;
 				}
+				c2val += 1000;	/* Add some weight */
 			} else {
 				/* Evaluate single chars */
 				if (sensitive) {
