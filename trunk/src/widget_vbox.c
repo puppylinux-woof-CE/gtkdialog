@@ -278,12 +278,6 @@ void widget_vbox_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
 			fprintf(stderr, "%s(): <default> not implemented for this widget.\n",
 				__func__);
-		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
-				__func__);
-		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
-				__func__);
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||

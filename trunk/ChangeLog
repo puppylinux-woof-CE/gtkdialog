@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Sep 6 2012 Thunor <thunorsif@hotmail.com>
+- Added support for the "shadow-type" tag attribute to widgets that
+  are placed inside a viewport as the default is GTK_SHADOW_IN.
+
 * Wed Sep 5 2012 Thunor <thunorsif@hotmail.com>
 - Updated examples/table/table.
 - Moved the table widget's selected-row check to after signal connection
@@ -9,6 +13,8 @@ for announcements.
 - Added the "freeze-thaw" tag attribute to the table widget to stop
   rendering when adding data and to resume rendering when finished.
 - Added save action function support to the tree widget.
+- Added support for the tag attributes "h/vscrollbar-policy" to all
+  scrolled window widgets (edit, h/vbox, list, table, terminal, tree).
 
 * Tue Sep 4 2012 Thunor <thunorsif@hotmail.com>
 - Added support for column sorting to the table widget.

@@ -84,7 +84,7 @@
 
 <h1> terminal widget </h1>
 
-A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal</a>
+A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal</a> packed inside a <a href="http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html">GtkScrolledWindow</a>
 
 <hr>
 
@@ -117,6 +117,8 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> hscrollbar-policy </td><td class="wiki"> Policy for the horizontal scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> vscrollbar-policy </td><td class="wiki"> Policy for the vertical scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> font-name </td><td class="wiki"> Font description </td><td class="wiki"> Example: <code>Monospace Bold 14</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> background-tint-color<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Background tint colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> text-background-color </td><td class="wiki"> Text background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
@@ -125,8 +127,6 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <tr><td class="wiki"> dim-foreground-color </td><td class="wiki"> Dim text foreground colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> cursor-background-color </td><td class="wiki"> Cursor background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> highlight-background-color </td><td class="wiki"> Highlighted text background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> hscrollbar-policy </td><td class="wiki"> Policy for the horizontal scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> vscrollbar-policy </td><td class="wiki"> Policy for the vertical scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> argv? </td><td class="wiki"> Arguments starting at argv0 (command) </td><td class="wiki"> Example: <code>/bin/sh</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> envv? </td><td class="wiki"> Environment variables starting at envv0 </td><td class="wiki"> Example: <code>MESSAGE=Hello</code> </td><td class="wiki"> </td></tr>
 </table>
@@ -234,7 +234,7 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-08-30 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-09-05 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
