@@ -32,6 +32,8 @@ The following custom tag attributes are available:
 || space-expand^[1]^ || Pack this and nested widgets expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill^[1]^ || Pack this and nested widgets filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
+|| vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
 || width || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||

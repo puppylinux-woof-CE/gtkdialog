@@ -44,6 +44,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
+|| vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || exported-column || The column to export data from || An integer >= {{{0}}} || ||
 || icon-name || Default GTK theme icon name for all rows || || ||
 || stock-id || Default GTK stock icon ID for all rows || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || ||

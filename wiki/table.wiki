@@ -38,6 +38,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.8.1 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.8.1 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
+|| vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || exported-column || The column to export data from || An integer >= {{{0}}} || 0.8.1 ||
 || selected-row || The row to select on initialisation and refresh || An integer >= {{{0}}} || 0.8.1 ||
 || auto-sort || Automatically sort whilst loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
