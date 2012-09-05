@@ -344,21 +344,6 @@ void widget_table_refresh(variable *var)
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
 		widget_table_input_by_items(var);
 
-	if (var->widget_tag_attr) {
-		/* Get columns-autosize (custom)	Redundant: Works weirdly on initialisation.
-		if ((value = get_tag_attribute(var->widget_tag_attr, "columns-autosize")) &&
-			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
-			(atoi(value) == 1))) {
-			gtk_clist_columns_autosize(GTK_CLIST(var->Widget));
-		} */
-		/* Get selected-row (custom) */
-		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row"))) {
-			selected_row = atoi(value);
-			if (selected_row >= 0)
-				gtk_clist_select_row(GTK_CLIST(var->Widget), selected_row, 0);
-		}
-	}
-
 	/* Initialise these only once at start-up */
 	if (!initialised) {
 		/* Apply directives */
@@ -377,6 +362,21 @@ void widget_table_refresh(variable *var)
 		g_signal_connect(G_OBJECT(var->Widget), "click-column",
 			G_CALLBACK(widget_table_click_column_callback), (gpointer)var);
 
+	}
+
+	if (var->widget_tag_attr) {
+		/* Get columns-autosize (custom)	Redundant: Works weirdly on initialisation.
+		if ((value = get_tag_attribute(var->widget_tag_attr, "columns-autosize")) &&
+			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
+			(atoi(value) == 1))) {
+			gtk_clist_columns_autosize(GTK_CLIST(var->Widget));
+		} */
+		/* Get selected-row (custom) */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row"))) {
+			selected_row = atoi(value);
+			if (selected_row >= 0)
+				gtk_clist_select_row(GTK_CLIST(var->Widget), selected_row, 0);
+		}
 	}
 
 #ifdef DEBUG_TRANSITS

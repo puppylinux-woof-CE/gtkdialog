@@ -2,22 +2,61 @@
 
 GTKDIALOG=gtkdialog
 
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+funcinputfileCreate() {
+	printf "" > "$TMPDIR"/inputfile
+	f=1
+	while [ $f -le 1001 ]; do
+		echo "$f|$RANDOM|$((1002 - $f))|$RANDOM" >> "$TMPDIR"/inputfile
+		f=$(($f + 1))
+	done
+}; funcinputfileCreate
+
+funcbtnCreate() {
+	echo '<button>
+			<label>'$2'</label>
+			<input file stock="'$3'"></input>
+			<action>echo "'$1' - '$4'"</action>
+			<action>'$2':'$1'</action>
+		</button>'
+}
+
 export MAIN_DIALOG='
-<window>
+<window title="Table">
 	<vbox>
-		<table>
+		<text justify="2">
+			<label>"exported-column='"'2'"' selected-row='"'1'"' sort-function='"'1'"'
+column-header-active='"'true|true|true|false'"'"</label>
+		</text>
+		<table exported-column="2" selected-row="1" sort-function="1"
+			column-header-active="true|true|true|false">
 			<height>200</height>
-			<width>500</width>
-			<variable>TABLE</variable>
-			<label>Header of Column 1|Header of Column 2|Header of Column 3</label>
-			<item>First item |Row 1 Column 2 |Row 1 Column 3</item>
-			<item>Second item|Row 2 Column 2 |Row 2 Column 3</item>
-			<item>Third item |Row 3 Column 2 |Row 3 Column 3</item>
-			<action>echo $TABLE</action>
+			<width>400</width>
+			<variable>tbl0</variable>
+			<label>Column 0    |Column 1    |Column 2    |Column 3</label>
+			<input>echo "0|$RANDOM|1002|$RANDOM"</input>
+			<input file>'"$TMPDIR"'/inputfile</input>
+			<item>1002|'$RANDOM'|0|'$RANDOM'</item>
+			<action>echo "tbl0=$tbl0"</action>
 		</table>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<vbox>
+				'"$(funcbtnCreate tbl0 Disable gtk-no Disabling)"'
+				'"$(funcbtnCreate tbl0 Hide gtk-cancel Hiding)"'
+				'"$(funcbtnCreate tbl0 Clear gtk-clear Clearing)"'
+			</vbox>
+			<vbox>
+				'"$(funcbtnCreate tbl0 Enable gtk-yes Enabling)"'
+				'"$(funcbtnCreate tbl0 Show gtk-apply Showing)"'
+				'"$(funcbtnCreate tbl0 Refresh gtk-refresh Refreshing)"'
+			</vbox>
+			<vbox>
+				'"$(funcbtnCreate tbl0 Grabfocus gtk-index Focusing)"'
+				'"$(funcbtnCreate tbl0 Removeselected gtk-delete Removing)"'
+				<button use-stock="true" label="gtk-quit"></button>
+			</vbox>
 		</hbox>
 	</vbox>
 </window>
@@ -25,5 +64,5 @@ export MAIN_DIALOG='
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
 esac
