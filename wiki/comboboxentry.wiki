@@ -38,7 +38,7 @@ The following custom tag attributes are available:
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 || fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || ||
 || fs-filters || fileselect function pattern file filters || _pattern_{{{|}}}_pattern_{{{|}}}... || ||
-|| fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... [http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types (common types)] || ||
+|| fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... ([http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types common types]) || ||
 || fs-folder || fileselect function current folder || || ||
 || fs-title || fileselect function dialog title || || ||
 <wiki:comment>ExportTableEnd</wiki:comment>

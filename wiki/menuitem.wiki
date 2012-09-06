@@ -35,10 +35,10 @@ The following custom tag attributes are available:
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
-|| accel-key || Accelerator key || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h (full list)] || 0.7.21 ||
-|| accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value [http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h (full list)] || 0.7.21 ||
+|| accel-key || Accelerator key || A decimal or hexadecimal value ([http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h full list]) || 0.7.21 ||
+|| accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value ([http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h full list]) || 0.7.21 ||
 || icon-name^[2]^ || GTK theme icon name ||  || 0.7.21 ||
-|| stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... [http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS (full list)] || 0.7.21 ||
+|| stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || 0.7.21 ||
 || image-name || Image filename ||  || 0.7.21 ||
 || checkbox || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
 || radiobutton || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
