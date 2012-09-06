@@ -4,6 +4,8 @@ for announcements.
 * Thu Sep 6 2012 Thunor <thunorsif@hotmail.com>
 - Added support for the "shadow-type" tag attribute to widgets that
   are placed inside a viewport as the default is GTK_SHADOW_IN.
+- Added the "theme-icon-size" tag attribute to the button widget.
+- Added the "stock-icon-size" tag attribute to the button widget.
 
 * Wed Sep 5 2012 Thunor <thunorsif@hotmail.com>
 - Updated examples/table/table.
