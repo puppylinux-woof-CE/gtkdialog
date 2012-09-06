@@ -91,7 +91,8 @@ GtkWidget *widget_button_create(
 	gchar            *value;
 	gint              homogeneous = FALSE;
 	gint              position = GTK_POS_LEFT;
-	gint              size = 20;
+	gint              theme_icon_size = 20;
+	gint              stock_icon_size = GTK_ICON_SIZE_BUTTON;
 	gint              buttontype = TYPE_BUTTON;
 	gint              width = -1, height = -1;
 
@@ -171,16 +172,23 @@ GtkWidget *widget_button_create(
 					stock_name = attributeset_get_this_tagattr(&element,
 						Attr, ATTR_INPUT, "stock");
 					if (stock_name != NULL) {
-						icon = gtk_image_new_from_stock(stock_name,
-							GTK_ICON_SIZE_BUTTON);
+						/* Get stock-icon-size (custom) */
+						if (attr &&
+							(value = get_tag_attribute(attr, "stock-icon-size")))
+							stock_icon_size = atoi(value);
+						icon = gtk_image_new_from_stock(stock_name, stock_icon_size);
 					} else if (icon_name != NULL) {
 						icon_theme = gtk_icon_theme_get_default();
 						/* Use the height or width dimension to override
 						 * the default size */
-						if (height > -1) size = height;
-						else if (width > -1) size = width;
+						if (height > -1) theme_icon_size = height;
+						else if (width > -1) theme_icon_size = width;
+						/* Get theme-icon-size (custom) */
+						if (attr &&
+							(value = get_tag_attribute(attr, "theme-icon-size")))
+							theme_icon_size = atoi(value);
 						pixbuf = gtk_icon_theme_load_icon(icon_theme,
-							icon_name, size, 0, &error);
+							icon_name, theme_icon_size, 0, &error);
 						if (pixbuf) {
 							icon = gtk_image_new_from_pixbuf(pixbuf);	
 							/* pixbuf is no longer required and should be unreferenced */
