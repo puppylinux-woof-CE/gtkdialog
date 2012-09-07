@@ -10,7 +10,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkEventBox.html GtkEventBox]
 
 {{{
 <eventbox tag_attr="value"...>
-	widget...
+	widget
 	<variable>varname</variable>
 	<sensitive>state</sensitive>
 	<action signal="type">activity</action>...

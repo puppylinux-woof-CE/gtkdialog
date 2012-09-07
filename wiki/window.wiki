@@ -10,7 +10,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkWindow.html GtkWindow]
 
 {{{
 <window tag_attr="value"...>
-	widget...
+	widget
 	<label>title</label>
 	<variable>varname</variable>
 	<input>command</input>
