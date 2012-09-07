@@ -650,6 +650,9 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 /* NOTE: <comboboxtext> is actually a combobox and not a comboboxtext */
 	else if (GTK_IS_COMBO_BOX(widget))
 		retval = WIDGET_COMBOBOXTEXT;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkEventBox */
+	else if (GTK_IS_EVENT_BOX(widget))
+		retval = WIDGET_EVENTBOX;
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkFrame */
 	else if (GTK_IS_FRAME(widget))
 		retval = WIDGET_FRAME;

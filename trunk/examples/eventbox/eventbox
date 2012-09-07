@@ -1,0 +1,102 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+## Create a custom style for specific widgets.
+funcgtkrcCreate() {
+	IMAGEFILE="$(find /usr/share/pixmaps -maxdepth 1 -type f | head -1)"
+
+	echo '
+style "styleBgGreen" {
+	bg[NORMAL] = "#00a000"
+}
+style "styleBgBlue" {
+	bg[NORMAL] = "#0000a0"
+}
+
+pixmap_path "'"$(dirname $IMAGEFILE)"'"
+
+style "styleBgPixmap" {
+	bg_pixmap[NORMAL] = "'"$(basename $IMAGEFILE)"'"
+}
+widget "*BgGreen" style "styleBgGreen"
+widget "*BgBlue" style "styleBgBlue"
+widget "*BgPixmap" style "styleBgPixmap"
+' > "$TMPDIR"/.gtkrc-2.0
+
+	GTK2_RC_FILES="$TMPDIR"/.gtkrc-2.0:~/.gtkrc-2.0
+	export GTK2_RC_FILES
+
+}; funcgtkrcCreate
+
+funcSignalsCreate() {
+	echo '<action signal="button-press-event">echo "'$1' - button-press-event"</action>
+		<action signal="button-release-event">echo "'$1' - button-release-event"</action>
+		<action signal="configure-event">echo "'$1' - configure-event"</action>
+		<action signal="enter-notify-event">echo "'$1' - enter-notify-event"</action>
+		<action signal="leave-notify-event">echo "'$1' - leave-notify-event"</action>
+		<action signal="focus-in-event">echo "'$1' - focus-in-event"</action>
+		<action signal="focus-out-event">echo "'$1' - focus-out-event"</action>
+		<action signal="hide">echo "'$1' - hide"</action>
+		<action signal="key-press-event">echo "'$1' - key-press-event"</action>
+		<action signal="key-release-event">echo "'$1' - key-release-event"</action>
+		<action signal="map-event">echo "'$1' - map-event"</action>
+		<action signal="unmap-event">echo "'$1' - unmap-event"</action>
+		<action signal="show">echo "'$1' - show"</action>'
+}
+
+export MAIN_DIALOG='
+<window title="EventBox">
+	<vbox>
+		<hbox homogeneous="true">
+			<eventbox name="BgGreen" above-child="false" visible-window="true">
+				<button image-position="2" stock-icon-size="5"
+					border-width="50" can-focus="false">
+					<label>"Move the mouse,
+click around and
+watch events in
+the terminal."</label>
+					<input file stock="gtk-dialog-info"></input>
+					<action>echo "Button - click"</action>
+					'$(funcSignalsCreate Button0)'
+				</button>
+				'$(funcSignalsCreate EventBox0)'
+			</eventbox>
+			<eventbox name="BgBlue" above-child="true" visible-window="true">
+				<button image-position="2" stock-icon-size="5"
+					border-width="50" can-focus="false">
+					<label>"above-child=true
+causes all events
+to be received
+by the eventbox."</label>
+					<input file stock="gtk-dialog-authentication"></input>
+					<action>echo "Button - click"</action>
+					'$(funcSignalsCreate Button1)'
+				</button>
+				'$(funcSignalsCreate EventBox1)'
+			</eventbox>
+		</hbox>
+		<hbox>
+			<eventbox name="BgPixmap" above-child="false" visible-window="true">
+				<text xpad="50" ypad="50" use-markup="true">
+					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'>The eventbox widget has its own window which
+you can paint with colour or tile with pixmaps.</span>"</label>
+				</text>
+				'$(funcSignalsCreate EventBox2)'
+			</eventbox>
+		</hbox>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-quit">
+			</button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac

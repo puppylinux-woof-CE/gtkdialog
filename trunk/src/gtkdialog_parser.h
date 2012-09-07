@@ -188,7 +188,10 @@
      EFONTBUTTON = 404,
      TERMINAL = 405,
      PART_TERMINAL = 406,
-     ETERMINAL = 407
+     ETERMINAL = 407,
+     EVENTBOX = 408,
+     PART_EVENTBOX = 409,
+     EEVENTBOX = 410
    };
 #endif
 /* Tokens.  */
@@ -342,6 +345,9 @@
 #define TERMINAL 405
 #define PART_TERMINAL 406
 #define ETERMINAL 407
+#define EVENTBOX 408
+#define PART_EVENTBOX 409
+#define EEVENTBOX 410
 
 
 
@@ -362,7 +368,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 366 "gtkdialog_parser.h"
+#line 372 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
