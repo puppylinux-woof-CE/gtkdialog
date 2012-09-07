@@ -1,11 +1,17 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Fri Sep 7 2012 Thunor <thunorsif@hotmail.com>
+- Added examples/eventbox/eventbox.
+
 * Thu Sep 6 2012 Thunor <thunorsif@hotmail.com>
 - Added support for the "shadow-type" tag attribute to widgets that
   are placed inside a viewport as the default is GTK_SHADOW_IN.
 - Added the "theme-icon-size" tag attribute to the button widget.
 - Added the "stock-icon-size" tag attribute to the button widget.
+- Added the "theme-icon-size" tag attribute to the pixmap widget.
+- Added the "stock-icon-size" tag attribute to the pixmap widget.
+- New widget: <eventbox>.
 
 * Wed Sep 5 2012 Thunor <thunorsif@hotmail.com>
 - Updated examples/table/table.

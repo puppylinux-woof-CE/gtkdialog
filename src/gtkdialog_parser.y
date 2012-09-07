@@ -155,6 +155,7 @@ start_up(void)
 %token         COLORBUTTON PART_COLORBUTTON ECOLORBUTTON
 %token         FONTBUTTON PART_FONTBUTTON EFONTBUTTON
 %token         TERMINAL PART_TERMINAL ETERMINAL
+%token         EVENTBOX PART_EVENTBOX EEVENTBOX
 
 %% 
 window
@@ -171,6 +172,8 @@ window
 		start_up();
 	}
   ;
+
+// Containers.
 
 wlist
   : widget
@@ -205,6 +208,20 @@ wlist
 	}
   | wlist PART_HBOX tagattr '>' wlist attr EHBOX {
 		token_store_attr(PUSH | WIDGET_HBOX, $3); 
+		token_store(SUM);      
+	}
+  | EVENTBOX wlist attr EEVENTBOX   { 
+		token_store(PUSH | WIDGET_EVENTBOX); 
+	}
+  | wlist EVENTBOX wlist attr EEVENTBOX   { 
+		token_store(PUSH | WIDGET_EVENTBOX); 
+		token_store(SUM);      
+	}
+  | PART_EVENTBOX tagattr '>' wlist attr EEVENTBOX {
+		token_store_attr(PUSH | WIDGET_EVENTBOX, $2); 
+	}
+  | wlist PART_EVENTBOX tagattr '>' wlist attr EEVENTBOX {
+		token_store_attr(PUSH | WIDGET_EVENTBOX, $3); 
 		token_store(SUM);      
 	}
   | NOTEBOOK wlist attr ENOTEBOOK   { 

@@ -548,6 +548,12 @@ gchar *Token;
 					  return(PART_TERMINAL); }
 \<\/terminal\>				{ Token="</terminal>"; return(ETERMINAL); }
 
+\<eventbox\>				{ Token="<eventbox>"; return(EVENTBOX); }
+\<eventbox[ ]+				{ Token="<eventbox>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_EVENTBOX); }
+\<\/eventbox\>				{ Token="</eventbox>"; return(EEVENTBOX); }
+
 
 
 \<label\>    				{ Token="<label>"; return(LABEL);    			}

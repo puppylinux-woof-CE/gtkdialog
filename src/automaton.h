@@ -92,6 +92,7 @@ typedef struct actioncommand {
 #define WIDGET_COLORBUTTON       0x00AE0000
 #define WIDGET_FONTBUTTON        0x00AF0000
 #define WIDGET_TERMINAL          0x00B00000
+#define WIDGET_EVENTBOX          0x00B10000
 
 /*
  * Imperative stuff.
