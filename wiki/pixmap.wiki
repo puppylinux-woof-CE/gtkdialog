@@ -33,6 +33,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| theme-icon-size || The size of the GTK theme icon || An integer > {{{0}}} or {{{-1}}} to ignore || 0.8.1 ||
+|| stock-icon-size || The size of the GTK stock icon || {{{0}}} to {{{6}}} (see [http://developer.gnome.org/gtk/2.24/gtk-Themeable-Stock-Images.html#GtkIconSize GtkIconSize]) || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -71,8 +73,8 @@ The following functions can be performed upon this widget by any widget capable 
 
 == Notes ==
 
-1. Theme icons default to 32 and do not scale or refresh (the height or width directives can be used to request a size).
+1. Theme icons default to 32 and do not scale or refresh (the "theme-icon-size" custom tag attribute can be used to request a size).
 
-2. Stock icons default to GTK_ICON_SIZE_DND and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+2. Stock icons default to GTK_ICON_SIZE_DND and do not scale or refresh (the "stock-icon-size" custom tag attribute can be used to request a size).
 
 ----

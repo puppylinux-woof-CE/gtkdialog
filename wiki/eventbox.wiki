@@ -1,38 +1,35 @@
-#summary window widget reference
+#summary eventbox widget reference
 
-= window widget =
+= eventbox widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkWindow.html GtkWindow]
+A [http://developer.gnome.org/gtk/2.24/GtkEventBox.html GtkEventBox]
 
 ----
 
 == Definition ==
 
 {{{
-<window tag_attr="value"...>
+<eventbox tag_attr="value"...>
 	widget...
-	<label>title</label>
 	<variable>varname</variable>
-	<input>command</input>
-	<input file>filename</input>
 	<sensitive>state</sensitive>
 	<action signal="type">activity</action>...
-	<output file>filename</output>
-</window>
+</eventbox>
 }}}
 
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
 
-See the [http://developer.gnome.org/gtk/2.24/GtkWindow.html#GtkWindow.object-hierarchy GtkWindow] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkEventBox.html#GtkEventBox.object-hierarchy GtkEventBox] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
-|| image-name || Image filename ||  || 0.8.1 ||
-|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
+|| space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
+|| block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -41,14 +38,10 @@ Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| label || Initial title || || || ||
 || variable || Shell variable name || || || ||
-|| input || Data input source || Shell command || || 0.8.1 ||
-|| input file || Data input source || Filename || || 0.8.1 ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.8.1 ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
-|| output file || Data output target || Filename || || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
@@ -65,11 +58,8 @@ The following functions can be performed upon this widget by any widget capable 
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
-|| show || Show widget || Shell variable name || 0.8.1 ||
-|| hide || Hide widget || Shell variable name || 0.8.1 ||
-|| refresh || Reload input data^[1]^ || Shell variable name || 0.8.1 ||
-|| save || Save widget data || Shell variable name || 0.8.1 ||
-|| clear || Remove all widget data || Shell variable name || 0.8.1 ||
+|| show || Show widget || Shell variable name || ||
+|| hide || Hide widget || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
@@ -80,13 +70,11 @@ The following general functions can be performed by any widget capable of emitti
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close dialog || Shell variable name || ||
 || launch || Launch dialog || Shell variable name || ||
-|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Shell variable name || 0.8.1 ||
+|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
 
-1. The "title" property constitutes the data for this widget.
-
-This widget has a default border width of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkContainer.html#GtkContainer--border-width border-width]" tag attribute.
+This widget was introduced in version 0.8.1.
 
 ----

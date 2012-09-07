@@ -66,7 +66,7 @@ The following functions can be performed upon this widget by any widget capable 
 || disable || Deactivate timer || Shell variable name || ||
 || show || Show widget || Shell variable name || 0.8.1 ||
 || hide || Hide widget || Shell variable name || 0.8.1 ||
-|| refresh || Reload input data || Shell variable name || 0.8.1 ||
+|| refresh || Reload input data^[3]^ || Shell variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
@@ -85,6 +85,8 @@ The following general functions can be performed by any widget capable of emitti
 1. The "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget--visible visible]" tag attribute will be required to hide the timer widget as it is visible by default.
 
 2. The default precision is seconds using a default interval of 1 second.
+
+3. The "sensitive" property i.e. its active state constitutes the data for this widget.
 
 This widget was introduced in version 0.7.21.
 
