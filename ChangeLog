@@ -1,6 +1,14 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Sep 8 2012 Thunor <thunorsif@hotmail.com>
+- Fixed launching from a timer causing the timer to stop functioning:
+  because launching doesn't return I've put in place a check and if a
+  timer executes the launch then it is cancelled with a warning message.
+  It's easily resolved: simply make the timer activate a checkbox which
+  launches outside of the timer callback.
+  Fixed timers not being destroyed along with their widgets.
+
 * Fri Sep 7 2012 Thunor <thunorsif@hotmail.com>
 - Added examples/eventbox/eventbox.
 

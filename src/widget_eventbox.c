@@ -244,11 +244,57 @@ void widget_eventbox_removeselected(variable *var)
 
 void widget_eventbox_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *outfile;
+	GList            *element;
+	gboolean          above_child;
+	gboolean          visible_window;
+	gchar            *act;
+	gchar            *filename = NULL;
+	gchar             string[32];
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#if 0	/* Pointless since loading doesn't work at run-time */
+	/* We'll use the output file filename if available */
+	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
+	while (act) {
+		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			filename = act + 5;
+			break;
+		}
+		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
+	}
+
+	/* If we have a valid filename then open it and dump the
+	 * widget's data to it */
+	if (filename) {
+		if ((outfile = fopen(filename, "w"))) {
+
+			above_child = gtk_event_box_get_above_child(GTK_EVENT_BOX(var->Widget));
+			if (above_child) {
+				strcpy(string, "true");
+			} else {
+				strcpy(string, "false");
+			}
+			visible_window = gtk_event_box_get_visible_window(GTK_EVENT_BOX(var->Widget));
+			if (visible_window) {
+				strcat(string, "|true");
+			} else {
+				strcat(string, "|false");
+			}
+			fprintf(outfile, "%s", string);
+
+			/* Close the file */
+			fclose(outfile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
+				__func__, filename);
+		}
+	} else {
+		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
+	}
 #endif
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
@@ -284,11 +330,79 @@ static void widget_eventbox_input_by_command(variable *var, char *command)
 
 static void widget_eventbox_input_by_file(variable *var, char *filename)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
+	list_t           *sliced;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#if 0	/* At run-time this has no effect -- shame */
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+
+			sliced = linecutter(g_strdup(line), '|');
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): line=%s\n", __func__, line);
+			fprintf(stderr, "%s(): sliced->n_lines=%i\n", __func__,
+				sliced->n_lines);
+			fprintf(stderr, "%s(): sliced->line[0]=%s\n", __func__,
+				sliced->line[0]);
+			fprintf(stderr, "%s(): sliced->line[1]=%s\n", __func__,
+				sliced->line[1]);
+#endif
+			for (count = 0; count < sliced->n_lines; count++) {
+				if ((strcasecmp(sliced->line[count], "true") == 0) ||
+					(strcasecmp(sliced->line[count], "yes") == 0) ||
+					(atoi(sliced->line[count]) == 1)) {
+					if (count == 0) {
+#ifdef DEBUG_CONTENT
+fprintf(stderr, "%s(): setting count=%i TRUE\n", __func__, count);
+#endif
+						gtk_event_box_set_above_child(GTK_EVENT_BOX(
+							var->Widget), TRUE);
+					} else {
+#ifdef DEBUG_CONTENT
+fprintf(stderr, "%s(): setting count=%i TRUE\n", __func__, count);
+#endif
+						gtk_event_box_set_visible_window(GTK_EVENT_BOX(
+							var->Widget), TRUE);
+					}
+				} else if ((strcasecmp(sliced->line[count], "false") == 0) ||
+					(strcasecmp(sliced->line[count], "no") == 0) ||
+					(strcasecmp(sliced->line[count], "0") == 0)) {
+					if (count == 0) {
+#ifdef DEBUG_CONTENT
+fprintf(stderr, "%s(): setting count=%i FALSE\n", __func__, count);
+#endif
+						gtk_event_box_set_above_child(GTK_EVENT_BOX(
+							var->Widget), FALSE);
+					} else {
+#ifdef DEBUG_CONTENT
+fprintf(stderr, "%s(): setting count=%i FALSE\n", __func__, count);
+#endif
+						gtk_event_box_set_visible_window(GTK_EVENT_BOX(
+							var->Widget), FALSE);
+					}
+				}
+			}
+			if (sliced) list_t_free(sliced);	/* Free linecutter memory */
+		}
+
+		/* Close the file */
+		fclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			filename);
+	}
 #endif
 
 	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);

@@ -432,6 +432,7 @@ static void widget_timer_input_by_items(variable *var)
 
 gboolean widget_timer_timer_callback(gpointer data)
 {
+	gchar             retval = TRUE;
 	GList            *element;
 	variable         *var = (variable*)data;
 
@@ -439,26 +440,33 @@ gboolean widget_timer_timer_callback(gpointer data)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	if (var && var->Widget) {
+
 #ifdef DEBUG_CONTENT
-	/* ATTR_VARIABLE and "timer_id" will definitely exist */
-	fprintf(stderr, "%s(): ATTR_VARIABLE=%s  timer-id=%u\n", __func__,
-		attributeset_get_first(&element, var->Attributes, ATTR_VARIABLE),
-		(guint)g_object_get_data(G_OBJECT(var->Widget), "timer-id"));
+		/* ATTR_VARIABLE and "timer_id" will definitely exist */
+		fprintf(stderr, "%s(): ATTR_VARIABLE=%s  timer-id=%u\n", __func__,
+			attributeset_get_first(&element, var->Attributes, ATTR_VARIABLE),
+			(guint)g_object_get_data(G_OBJECT(var->Widget), "timer-id"));
 #endif
 
-	/* Generate a custom signal if sensitive is true */
+		/* Generate a custom signal if sensitive is true */
 #if GTK_CHECK_VERSION(2,18,0)
-	if (gtk_widget_get_sensitive(var->Widget))
+		if (gtk_widget_get_sensitive(var->Widget))
 #else
-	if (GTK_WIDGET_SENSITIVE(var->Widget))
+		if (GTK_WIDGET_SENSITIVE(var->Widget))
 #endif
-	{
-		widget_signal_executor(var->Widget, var->Attributes, "tick");
+		{
+			widget_signal_executor(var->Widget, var->Attributes, "tick");
+		}
+
+	} else {
+		/* The widget has been dropped/destroyed so kill the callback */
+		retval = FALSE;
 	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
 
-	return TRUE;
+	return retval;
 }
