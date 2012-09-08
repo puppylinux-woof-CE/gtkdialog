@@ -9,11 +9,22 @@ funcbtnCreate() {
 		</button>'
 }
 
-# Currently (as of gtkdialog 0.8.1) program control is passed to the
-# newly launched window which causes the originating action list to
-# terminate i.e. if there are actions following the one that launched
-# the window then they won't be executed, so launching multiple windows
-# requires that each window launches the next.
+# I'm automatically launching these windows and I'll describe how the
+# launch system works to help you understand at least this example:
+# 
+# Firstly you should be aware that launching is a one way trip in that a
+# launched window will not return to the window that launched it so for
+# example any actions following a launch action will not be executed and
+# launching directly from within a timer is definitely a no-no although
+# gtkdialog checks for that and dumps a warning message to the terminal.
+# 
+# So, knowing the above you will understand that we can't launch three
+# new windows successively within the same list of actions and we can't
+# do it directly from within a timer, but we can make the timer activate
+# other widgets which will indirectly launch the windows so this is why
+# the timer within the following example is activating checkboxes with
+# each launching one window. This is just one way to launch multiple
+# windows at start-up -- feel free to design your own if you'd like.
 
 interval=250
 
@@ -23,8 +34,25 @@ export winLaunch0='
 		<timer milliseconds="true" interval="'$interval'" visible="false">
 			<variable>tmrLaunch0</variable>
 			<action>disable:tmrLaunch0</action>
-			<action>launch:winLaunch1</action>
+			<action>activate:chkLaunch1</action>
+			<action>activate:chkLaunch2</action>
+			<action>activate:chkLaunch3</action>
 		</timer>
+		<checkbox visible="false">
+			<variable>chkLaunch1</variable>
+			<action>launch:winLaunch1</action>
+			<action>echo "chkLaunch1 - You'"'"'ll never see this message."</action>
+		</checkbox>
+		<checkbox visible="false">
+			<variable>chkLaunch2</variable>
+			<action>launch:winLaunch2</action>
+			<action>echo "chkLaunch2 - You'"'"'ll never see this message."</action>
+		</checkbox>
+		<checkbox visible="false">
+			<variable>chkLaunch3</variable>
+			<action>launch:winLaunch3</action>
+			<action>echo "chkLaunch3 - You'"'"'ll never see this message."</action>
+		</checkbox>
 		'"$(funcbtnCreate 1)"'
 		'"$(funcbtnCreate 2)"'
 		'"$(funcbtnCreate 3)"'
@@ -39,11 +67,6 @@ export winLaunch0='
 export winLaunch1='
 <window title="winLaunch1" width-request="250" resizable="false">
 	<vbox>
-		<timer milliseconds="true" interval="'$interval'" visible="false">
-			<variable>tmrLaunch1</variable>
-			<action>disable:tmrLaunch1</action>
-			<action>launch:winLaunch2</action>
-		</timer>
 		'"$(funcbtnCreate 0)"'
 		'"$(funcbtnCreate 2)"'
 		'"$(funcbtnCreate 3)"'
@@ -52,17 +75,13 @@ export winLaunch1='
 		</hbox>
 	</vbox>
 	<variable>winLaunch1</variable>
+	<action signal="show">echo "winLaunch1 - I'"'"'ve been launched!"</action>
 </window>
 '
 
 export winLaunch2='
 <window title="winLaunch2" width-request="250" resizable="false">
 	<vbox>
-		<timer milliseconds="true" interval="'$interval'" visible="false">
-			<variable>tmrLaunch2</variable>
-			<action>disable:tmrLaunch2</action>
-			<action>launch:winLaunch3</action>
-		</timer>
 		'"$(funcbtnCreate 0)"'
 		'"$(funcbtnCreate 1)"'
 		'"$(funcbtnCreate 3)"'
@@ -71,6 +90,7 @@ export winLaunch2='
 		</hbox>
 	</vbox>
 	<variable>winLaunch2</variable>
+	<action signal="show">echo "winLaunch2 - I'"'"'ve been launched!"</action>
 </window>
 '
 
@@ -85,6 +105,7 @@ export winLaunch3='
 		</hbox>
 	</vbox>
 	<variable>winLaunch3</variable>
+	<action signal="show">echo "winLaunch3 - I'"'"'ve been launched!"</action>
 </window>
 '
 
