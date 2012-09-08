@@ -7,7 +7,9 @@ for announcements.
   timer executes the launch then it is cancelled with a warning message.
   It's easily resolved: simply make the timer activate a checkbox which
   launches outside of the timer callback.
-  Fixed timers not being destroyed along with their widgets.
+- Fixed timer callbacks not being destroyed along with their widgets.
+- Fixed examples/miscellaneous/presentwindow because it was launching
+  directly from within a timer when only indirectly is now possible.
 
 * Fri Sep 7 2012 Thunor <thunorsif@hotmail.com>
 - Added examples/eventbox/eventbox.
