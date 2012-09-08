@@ -145,68 +145,81 @@ int action_launchwindow(GtkWidget *widget, char *string)
 	extern int        instruction_counter;
 	GtkWidget        *window;
 	variable         *existing;
+	variable         *var;
 
 #ifdef DEBUG
 	fprintf(stderr, "%s(): string=%s\n", __func__, string);
 #endif
 
-	/* Thunor: Added to check that a program isn't already being parsed
-	 * as run_program() is not reentrant and it'll error with a parser
-	 * message that actually relates to the newly launched program
-	 * (see Issue16 on the gtkdialog website) */
-	if (instruction_counter == 0) {
+	/* Thunor: Added to check that a program isn't being launched from a
+	 * timer because this won't return and the timer stops functioning */
+	var = find_variable_by_widget(widget);
 
-		/* Check if a variable already exists with the same name as that
-		 * passed as the parameter to launch to establish if the window
-		 * has already been launched (it's not foolproof but it works) */
-		existing = variables_get_by_name(string);
+	if (var->Type != WIDGET_TIMER) {
 
-		if (existing != NULL && existing->Widget != NULL) {
+		/* Thunor: Added to check that a program isn't already being parsed
+		 * as run_program() is not reentrant and it'll error with a parser
+		 * message that actually relates to the newly launched program
+		 * (see Issue16 on the gtkdialog website) */
+		if (instruction_counter == 0) {
 
-			/* The window has already been launched so just give it the focus */
+			/* Check if a variable already exists with the same name as that
+			 * passed as the parameter to launch to establish if the window
+			 * has already been launched (it's not foolproof but it works) */
+			existing = variables_get_by_name(string);
+
+			if (existing != NULL && existing->Widget != NULL) {
+
+				/* The window has already been launched so just give it the focus */
 #ifdef DEBUG
-			fprintf(stderr, "%s(): existing=%p Name=%s\n", __func__,
-				existing, existing->Name);
+				fprintf(stderr, "%s(): existing=%p Name=%s\n", __func__,
+					existing, existing->Name);
 #endif
 
-			/**
-			* Patriot Oct 2009: Fixing the issue above [in action_closewindow]
-			* also requires a minor adjustment to this section.
-			**/
-			//Redundant: parent = gtk_widget_get_toplevel(existing->Widget);
-			window = gtk_widget_get_ancestor(existing->Widget, GTK_TYPE_WINDOW);
-			gtk_window_present(GTK_WINDOW(window));
+				/**
+				* Patriot Oct 2009: Fixing the issue above [in action_closewindow]
+				* also requires a minor adjustment to this section.
+				**/
+				//Redundant: parent = gtk_widget_get_toplevel(existing->Widget);
+				window = gtk_widget_get_ancestor(existing->Widget, GTK_TYPE_WINDOW);
+				gtk_window_present(GTK_WINDOW(window));
+
+			} else {
+
+				/* Get the program source from the envvar and initialise
+				 * everything necessary ready for a new parse */
+				//Redundant: set_program_source(string);
+				get_program_from_variable(string);
+
+#ifdef DEBUG
+				fprintf(stderr, "%s():\ncharsreaded=%i\nprogram_src=%s\n",
+					__func__, charsreaded, program_src);
+#endif
+
+				/* Export all variables */
+				variables_export_all();
+
+#ifdef DEBUG
+				fprintf(stderr, "%s():\ncharsreaded=%i\nprogram_src=%s\n",
+					__func__, charsreaded, program_src);
+#endif
+
+				/* Call the parser to interpret the new code (it won't return) */
+				gtkdialog_parse();
+
+				g_warning("%s(): This won't be reached.", __func__);
+
+			}
 
 		} else {
-
-			/* Get the program source from the envvar and initialise
-			 * everything necessary ready for a new parse */
-			//Redundant: set_program_source(string);
-			get_program_from_variable(string);
-
-#ifdef DEBUG
-			fprintf(stderr, "%s():\ncharsreaded=%i\nprogram_src=%s\n",
-				__func__, charsreaded, program_src);
-#endif
-
-			/* Export all variables */
-			variables_export_all();
-
-#ifdef DEBUG
-			fprintf(stderr, "%s():\ncharsreaded=%i\nprogram_src=%s\n",
-				__func__, charsreaded, program_src);
-#endif
-
-			/* Call the parser to interpret the new code (it won't return) */
-			gtkdialog_parse();
-
-			g_warning("%s(): This won't be reached.", __func__);
-
+			fprintf(stderr, "%s(): It's not possible to launch %s at this time: \
+try launching after the originating window has fully loaded.\n",
+				__func__, string);
 		}
 
 	} else {
-		fprintf(stderr, "%s(): It's not possible to launch %s at this time: \
-try launching after the originating window has fully loaded.\n",
+		fprintf(stderr, "%s(): It's not possible to launch %s from within a timer: \
+try launching from a checkbox which is activated by the timer.\n",
 			__func__, string);
 	}
 
