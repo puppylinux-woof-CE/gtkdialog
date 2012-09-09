@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Sep 9 2012 Thunor <thunorsif@hotmail.com>
+- Refactored the list widget although I don't recommend using it as you
+  can't auto-select a row in browse mode and multiple mode doesn't work.
+  At least its code is all in one file now which tidies things up a bit.
+
 * Sat Sep 8 2012 Thunor <thunorsif@hotmail.com>
 - Fixed launching from a timer causing the timer to stop functioning:
   because launching doesn't return I've put in place a check and if a

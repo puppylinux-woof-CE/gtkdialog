@@ -244,42 +244,6 @@ void button_released_attr(GtkWidget *button, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
-void list_selection(GtkWidget *list, gpointer Attr)
-{
-	GList *element;
-	gchar *command;
-	gchar *signal;
-	gchar *type;
-
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
-
-	if (Attr == NULL) return;
-
-	/* Thunor: This code does not support <action signal="type">.
-	 * This callback is connected to the "selection-changed" signal,
-	 * therefore if there exists an action directive specifying a
-	 * particular signal then that will be executed as well.
-	 * 
-	 * This widget was in fact deprecated in GTK+ 2.0 anyway */
-
-	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
-		execute_action(list, command, type);
-		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
-}
-
-/***********************************************************************
- *                                                                     *
- ***********************************************************************/
-
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 {
 #ifdef DEBUG_TRANSITS
@@ -921,6 +885,23 @@ void on_any_widget_select_row_event(GtkWidget *widget, gint row,
  *                                                                     *
  ***********************************************************************/
 
+void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "selection-changed");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	GtkTreeViewColumn *column, AttributeSet *Attr)
 {
@@ -1155,6 +1136,10 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 /* GtkWidget--->GtkContainer--->GtkCList */
 			} else if (GTK_IS_CLIST(widget)) {
 				if (strcasecmp(signal_name, "select-row") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkContainer--->GtkList */
+			} else if (GTK_IS_LIST(widget)) {
+				if (strcasecmp(signal_name, "selection-changed") == 0)
 					execute = TRUE;
 /* GtkWidget--->GtkEntry-->GtkSpinButton */
 			} else if (GTK_IS_SPIN_BUTTON(widget)) {

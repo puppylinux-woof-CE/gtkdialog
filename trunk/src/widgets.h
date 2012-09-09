@@ -54,7 +54,6 @@ typedef struct _progr_descr progr_descr;
  * incredibly time consuming. Another job for another [rainy] day :) */
 static void fill_combo_by_items(AttributeSet *Attr, GtkWidget *combo);
 static void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale);
-static void fill_list_by_items(AttributeSet *Attr, GtkWidget *list);
 
 char *widget_get_text_value(GtkWidget *widget, int type);
 
@@ -68,7 +67,6 @@ void widget_scale_refresh(variable *var);
 void widget_menuitem_refresh(variable *var);
 int widget_edit_refresh(variable *var);
 void widget_entry_refresh(variable *var);
-void widget_list_refresh(variable *var);
 
 void widget_edit_save(variable *var);
 static void save_edit_to_file(GtkWidget *widget, char *filename);
@@ -81,7 +79,6 @@ FILE *widget_opencommand(const char *command);
 void fill_scale_by_command(GtkWidget *widget, char *command);
 void fill_menuitem_by_command(GtkWidget *widget, char *command);
 void fill_entry_by_command(GtkWidget *entry, char *command);
-void fill_list_by_command(GtkWidget *list, char *command);
 
 char *widgets_to_str(int itype);
 

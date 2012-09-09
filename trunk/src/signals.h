@@ -29,8 +29,6 @@ void button_pressed(GtkWidget *button, const gchar *str);
 void button_pressed_attr(GtkWidget *button, AttributeSet *Attr);
 void button_released_attr(GtkWidget *button, AttributeSet *Attr);
 
-void list_selection(GtkWidget *list, gpointer Attr);
-
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet  *Attr);
 gboolean on_any_widget_button_pressed(GtkWidget *widget,
 	GdkEventButton *event, AttributeSet *Attr);
@@ -76,6 +74,7 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 
 void on_any_widget_select_row_event(GtkWidget *widget, gint row,
 	gint column, GdkEvent *event, gpointer Attr);
+void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr);
 
 void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	GtkTreeViewColumn *column, AttributeSet *Attr);

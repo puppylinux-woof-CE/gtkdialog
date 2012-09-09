@@ -30,6 +30,7 @@
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_list.h"
 #include "widget_menubar.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
@@ -359,6 +360,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_HBOX:
 			widget_hbox_fileselect(toset, name, value);
 			break;
+		case WIDGET_LIST:
+			widget_list_fileselect(toset, name, value);
+			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_fileselect(toset, name, value);
 			break;
@@ -460,6 +464,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_HBOX:
 			widget_hbox_save(var);
+			break;
+		case WIDGET_LIST:
+			widget_list_save(var);
 			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_save(var);
@@ -594,6 +601,9 @@ variable *variables_refresh(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_refresh(var);
 			break;
+		case WIDGET_LIST:
+			widget_list_refresh(var);
+			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_refresh(var);
 			break;
@@ -639,9 +649,6 @@ variable *variables_refresh(const char *name)
 
 		case WIDGET_ENTRY:
 			widget_entry_refresh(var);
-			break;
-		case WIDGET_LIST:
-			widget_list_refresh(var);
 			break;
 		case WIDGET_COMBO:
 			widget_combo_refresh(var);
@@ -1525,6 +1532,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_clear(toclear);
 			break;
+		case WIDGET_LIST:
+			widget_list_clear(toclear);
+			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_clear(toclear);
 			break;
@@ -1570,10 +1580,6 @@ variable *variables_clear(const char *name)
 
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
-			break;
-		case WIDGET_LIST:
-			gtk_list_clear_items(GTK_LIST(toclear->Widget), 
-					0, -1);
 			break;
 		case WIDGET_COMBO:
 			empty = g_list_append(empty, "");
@@ -1663,6 +1669,9 @@ int remove_selected_variable(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_removeselected(toclear);
 			break;
+		case WIDGET_LIST:
+			widget_list_removeselected(toclear);
+			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_removeselected(toclear);
 			break;
@@ -1710,14 +1719,6 @@ int remove_selected_variable(const char *name)
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
 			break;
 
-		case WIDGET_LIST:
-			if (GTK_LIST(toclear->Widget)->selection != NULL)
-				gtk_widget_destroy(GTK_WIDGET (GTK_LIST(toclear->Widget)-> selection->data));
-			if (GTK_LIST(toclear->Widget)->children != NULL)
-				gtk_list_select_item(GTK_LIST(toclear->Widget), 0);
-			gtk_signal_emit_by_name(GTK_OBJECT(toclear->Widget), "selection-changed");
-			break;
-			
 		case WIDGET_EDIT:
 			gtk_text_buffer_delete_selection(gtk_text_view_get_buffer(GTK_TEXT_VIEW(toclear->Widget)), 
 					FALSE, TRUE);
