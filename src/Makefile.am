@@ -31,6 +31,7 @@ gtkdialog_SOURCES = \
 	widget_fontbutton.c widget_fontbutton.h \
 	widget_frame.c widget_frame.h \
 	widget_hbox.c widget_hbox.h \
+	widget_list.c widget_list.h \
 	widget_menubar.c widget_menubar.h \
 	widget_notebook.c widget_notebook.h \
 	widget_pixmap.c widget_pixmap.h \

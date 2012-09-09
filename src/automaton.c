@@ -51,6 +51,7 @@
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_list.h"
 #include "widget_menubar.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
@@ -326,6 +327,9 @@ void print_command(instruction command)
 		case WIDGET_HBOX:
 			printf("(new hbox(pop()))");
 			break;
+		case WIDGET_LIST:
+			printf("(new list())");
+			break;
 		case WIDGET_MENUBAR:
 			printf("(new menubar(pop()))");
 			break;
@@ -380,9 +384,6 @@ void print_command(instruction command)
 	    break;
 	case WIDGET_PROGRESS:
 	    printf("(new progressbar())");
-	    break;
-	case WIDGET_LIST:
-	    printf("(new list())");
 	    break;
 	case WIDGET_COMBO:
 	    printf("(new combo())");
@@ -629,6 +630,9 @@ void print_token(token Token)
 		case WIDGET_HBOX:
 			printf("(HBOX)");
 			break;
+		case WIDGET_LIST:
+			printf("(LIST)");
+			break;
 		case WIDGET_MENUBAR:
 			printf("(MENUBAR)");
 			break;
@@ -683,9 +687,6 @@ void print_token(token Token)
 		break;
 	case WIDGET_PROGRESS:
 		printf("(PROGRESSBAR)");
-		break;
-	case WIDGET_LIST:
-		printf("(LIST)");
 		break;
 	case WIDGET_COMBO:
 		printf("(COMBO)");
@@ -1428,21 +1429,6 @@ create_chooser(AttributeSet *Attr)
 }
 #endif
 
-
-/*****************************************************************************
- * List handling functions.                                                  *
- *                                                                           *
- *****************************************************************************/
-static GtkWidget *
-create_list(AttributeSet   *Attr,
-		tag_attr   *attr)
-{
-	GtkWidget *widget;
-	
-	widget = gtk_list_new();
-	return widget;
-}
-
 static GtkWidget *
 create_edit(AttributeSet *Attr, 
 		tag_attr   *attr)
@@ -1585,6 +1571,12 @@ instruction_execute_push(
 			}
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
+			break;
+		case WIDGET_LIST:
+			Widget = widget_list_create(Attr, tag_attributes, Widget_Type);
+			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+				tag_attributes, Widget_Type);
+			push_widget(scrolled_window, WIDGET_SCROLLEDW);		
 			break;
 		case WIDGET_MENUBAR:
 			Widget = widget_menubar_create(Attr, tag_attributes, Widget_Type);
@@ -1763,29 +1755,6 @@ instruction_execute_push(
 				(gpointer) Attr);
 
 		push_widget(Widget, WIDGET_PROGRESS);
-		break;
-
-	case WIDGET_LIST:
-		/* 
-		 * When we have create a new LIST widget, we also have to make
-		 * GtkScrolledWindow, because this is the only way we can 
-		 * scroll in the list. We put the _scrolled window_ into the 
-		 * stack, because this holds the list.
-		 */
-		Widget = create_list(Attr, tag_attributes);
-		scrolled_window = put_in_the_scrolled_window(Widget, Attr,
-			tag_attributes, Widget_Type);
-		push_widget(scrolled_window, WIDGET_SCROLLEDW);
-		
-		/*
-		 ** The LIST widget can handle actions...
-		 */
-		gtk_signal_connect(GTK_OBJECT(Widget),
-						   "selection-changed",
-						   GTK_SIGNAL_FUNC
-						   (list_selection),
-						   (gpointer) Attr);
-
 		break;
 
 	case WIDGET_HSEPARATOR:

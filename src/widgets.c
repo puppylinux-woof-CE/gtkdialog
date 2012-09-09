@@ -44,6 +44,7 @@
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_list.h"
 #include "widget_menubar.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
@@ -65,39 +66,6 @@
 #include "macros.h"
 
 extern gboolean option_no_warning;
-
-static void 
-fill_list_by_items(AttributeSet *Attr, 
-		GtkWidget * list)
-{
-	GList     *element;
-	GtkWidget *item;
-	char      *text;
-	g_assert(Attr != NULL && list != NULL);
-	
-	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
-	if (text == NULL)
-		return;
-	
-	while (text != NULL) {
-		item = gtk_list_item_new_with_label(text);
-		/* Thunor: 2001-09-08: Refreshing items should work the same way
-		 * as refreshing data from a command but there is an instruction
-		 * missing here and it is this:
-		 * 
-		 * gtk_widget_show(item);
-		 * 
-		 * The problem is that if I add it then it could uncover errors
-		 * in people's applications or there may exist applications that
-		 * are designed around the fact that cleared items won't reappear
-		 * but data from a command will. Therefore I'm not fixing it */
-		gtk_object_set_user_data(GTK_OBJECT(item), (gpointer) text);
-		gtk_container_add(GTK_CONTAINER(list), item);
-next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
-	}
-
-	gtk_list_select_item(GTK_LIST(list), 0);
-}
 
 static
 void fill_combo_by_items(AttributeSet *Attr,
@@ -159,7 +127,6 @@ widget_get_text_value(
 {
 	GtkTextBuffer    *text_buffer;
 	GtkTextIter       start, end;		
-	GList            *item;
 	gchar            *string;
 	gchar             value[32];
 	gint              digits;
@@ -211,6 +178,10 @@ widget_get_text_value(
 			break;
 		case WIDGET_HBOX:
 			string = widget_hbox_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_LIST:
+			string = widget_list_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_MENUBAR:
@@ -283,14 +254,6 @@ widget_get_text_value(
 			return (char *) gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(widget)->entry));
 			break;
 
-		case WIDGET_LIST:
-			item = GTK_LIST(widget)->selection;
-			if (item != NULL)
-				return (gtk_object_get_user_data(item->data));
-			else
-				return g_strdup("");
-			break;
-			
 		case WIDGET_EDIT:
 			text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
 			gtk_text_buffer_get_start_iter(text_buffer, &start);
@@ -818,40 +781,6 @@ widget_entry_refresh(variable *var)
 	}
 }
 
-void widget_list_refresh(variable * var)
-{
-	GList *element;
-	char *act;
-
-	if (var == NULL || var->Attributes == NULL)
-		return;
-#ifdef DEBUG
-	g_message("%s(): entering.", __func__);
-#endif
-	/* 
-	 ** The <input> tag... 
-	 */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		if (input_is_shell_command(act))
-			fill_list_by_command(var->Widget, act + 8);
-		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-	}			/*while */
-	/*
-	 ** The <item> tags...
-	 */
-	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		fill_list_by_items(var->Attributes, var->Widget);
-
-	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
-		gtk_widget_set_sensitive(var->Widget, FALSE);
-
-	gtk_widget_queue_draw(var->Widget);
-}
-
 void 
 widget_combo_refresh(variable * var)
 {
@@ -1093,41 +1022,6 @@ void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 	gtk_clist_select_row(GTK_CLIST(list), 0, 0);
 } */
 
-void 
-fill_list_by_command(GtkWidget * list, 
-		char *command)
-{
-	FILE *infile;
-	char oneline[512];
-	char *saved;
-	GtkWidget *item;
-#ifdef DEBUG
-	g_message("%s(): command: '%s'", __func__, command);
-#endif
-
-	infile = widget_opencommand(command);
-	if (infile == NULL) {
-		fprintf(stderr, "%s(): command %s, %m\n", __func__,
-			command);
-		return;
-	}
-	while (fgets(oneline, 512, infile) != NULL) {
-		if (oneline[strlen(oneline) - 1] == '\n')
-			oneline[strlen(oneline) - 1] = '\0';
-		/* Who the hell will free this memory? */
-		saved = g_strdup(oneline);
-		item = gtk_list_item_new_with_label(oneline);
-		gtk_widget_show(item);
-		gtk_object_set_user_data(GTK_OBJECT(item),
-					 (gpointer) saved);
-		gtk_container_add(GTK_CONTAINER(list), item);
-	}
-	pclose(infile);
-
-	gtk_list_select_item(GTK_LIST(list), 0);
-}
-
-
 void fill_entry_by_command(GtkWidget * entry, char *command)
 {
 	FILE *infile;
@@ -1262,6 +1156,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_HBOX:
 			type = "HBOX";
 			break;
+		case WIDGET_LIST:
+			type = "LIST";
+			break;
 		case WIDGET_MENUBAR:
 			type = "MENUBAR";
 			break;
@@ -1313,9 +1210,6 @@ char *widgets_to_str(int itype)
 		break;
 	case WIDGET_EDIT:
 		type = "EDIT";
-		break;
-	case WIDGET_LIST:
-		type = "LIST";
 		break;
 	case WIDGET_COMBO:
 		type = "COMBO";
