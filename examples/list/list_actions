@@ -2,19 +2,46 @@
 
 GTKDIALOG=gtkdialog
 
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+printf "First item\nSecond item\nThird item" > "$TMPDIR"/inputfile
+
+funcbtnCreate() {
+	echo '<button>
+				<label>'$2'</label>
+				<action>echo "'$3' '$1'"</action>
+				<action type="'$2'">'$1'</action>
+			</button>'
+}
+
 export MAIN_DIALOG='
 <window>
 	<vbox>
 		<list>
 			<variable>LIST</variable>
-			<item>First item</item>
-			<item>Second item</item>
-			<item>Third item</item>
-			<action>echo Chosen item is $LIST</action>
+			<width>350</width>
+			<height>150</height>
+			<input file>'"$TMPDIR"'/inputfile</input>
+			<output file>'"$TMPDIR"'/outputfile</output>
+			<action>echo "The chosen item is \"$LIST\""</action>
 		</list>
 		<hbox>
-			<button ok></button>
+			'"$(funcbtnCreate LIST Disable Disabling)"'
+			'"$(funcbtnCreate LIST Enable Enabling)"'
+			'"$(funcbtnCreate LIST Hide Hiding)"'
+			'"$(funcbtnCreate LIST Show Showing)"'
+		</hbox>
+		<hbox>
+			'"$(funcbtnCreate LIST Save Saving)"'
+			'"$(funcbtnCreate LIST Refresh Refreshing)"'
+			'"$(funcbtnCreate LIST Clear Clearing)"'
+			'"$(funcbtnCreate LIST Removeselected Deleting)"'
+		</hbox>
+		<hseparator space-expand="false" space-fill="false"></hseparator>
+		<hbox space-expand="false" space-fill="false">
 			<button cancel></button>
+			<button ok></button>
 		</hbox>
 	</vbox>
 </window>
@@ -22,5 +49,5 @@ export MAIN_DIALOG='
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
 esac

@@ -1,6 +1,12 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Mon Sep 10 2012 Thunor <thunorsif@hotmail.com>
+- Updated examples/list/*.
+- Updated the list widget's save function as it wasn't saving all items.
+- Rewrote the widget hiding and showing functions to hide/show all of
+  the components of widgets in viewports and scrolled windows.
+
 * Sun Sep 9 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the list widget although I don't recommend using it as you
   can't auto-select a row in browse mode and multiple mode doesn't work.
