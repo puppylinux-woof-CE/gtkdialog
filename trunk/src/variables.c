@@ -733,7 +733,8 @@ variable *variables_disable(const char *name)
 
 variable *variables_show(const char *name)
 {
-	GtkWidget        *parent, *grandparent;
+	GtkWidget        *grandparent = NULL;
+	GtkWidget        *parent = NULL;
 	variable         *var;
 
 #ifdef DEBUG
@@ -748,20 +749,49 @@ variable *variables_show(const char *name)
 		return (NULL);
 
 	/* The widget could be inside a scrolled window or inside a viewport
-	 * inside a scrolled window so we need to show the scrolled window */
+	 * inside a scrolled window so we need to show all of the widgets */
+	parent = gtk_widget_get_parent(var->Widget);
+	if (parent) grandparent = gtk_widget_get_parent(parent);
+
+	if (!(parent && ((GTK_IS_SCROLLED_WINDOW(parent)) ||
+		(GTK_IS_VIEWPORT(parent))))) parent = NULL;
+
+	if (!(parent && (GTK_IS_VIEWPORT(parent)) && grandparent &&
+		GTK_IS_SCROLLED_WINDOW(grandparent))) grandparent = NULL;
+
+	if (grandparent) {
+#ifdef DEBUG
+		fprintf(stderr, "%s(): Showing grandparent\n", __func__);
+#endif
+		gtk_widget_show(grandparent);
+	}
+
+	if (parent) {
+#ifdef DEBUG
+		fprintf(stderr, "%s(): Showing parent\n", __func__);
+#endif
+		gtk_widget_show(parent);
+	}
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Showing widget\n", __func__);
+#endif
+	gtk_widget_show(var->Widget);
+
+/* Redundant
 	parent = gtk_widget_get_parent(var->Widget);
 	if (parent != NULL) grandparent = gtk_widget_get_parent(parent);
 
 	if (parent != NULL && GTK_IS_SCROLLED_WINDOW(parent)) {
 		gtk_widget_show(parent);
 	} else if (parent != NULL && GTK_IS_VIEWPORT(parent)) {
-		/* A viewport will always be inside a scrolled window */
+		/$ A viewport will always be inside a scrolled window $/
 		if (grandparent != NULL && GTK_IS_SCROLLED_WINDOW(grandparent)) {
 			gtk_widget_show(grandparent);
 		}
 	} else {
 		gtk_widget_show(var->Widget);
-	}
+	}*/
 
 	return (var);
 }
@@ -772,7 +802,8 @@ variable *variables_show(const char *name)
 
 variable *variables_hide(const char *name)
 {
-	GtkWidget        *parent, *grandparent;
+	GtkWidget        *grandparent = NULL;
+	GtkWidget        *parent = NULL;
 	variable         *var;
 
 #ifdef DEBUG
@@ -787,20 +818,49 @@ variable *variables_hide(const char *name)
 		return (NULL);
 
 	/* The widget could be inside a scrolled window or inside a viewport
-	 * inside a scrolled window so we need to hide the scrolled window */
+	 * inside a scrolled window so we need to hide all of the widgets */
+	parent = gtk_widget_get_parent(var->Widget);
+	if (parent) grandparent = gtk_widget_get_parent(parent);
+
+	if (!(parent && ((GTK_IS_SCROLLED_WINDOW(parent)) ||
+		(GTK_IS_VIEWPORT(parent))))) parent = NULL;
+
+	if (!(parent && (GTK_IS_VIEWPORT(parent)) && grandparent &&
+		GTK_IS_SCROLLED_WINDOW(grandparent))) grandparent = NULL;
+
+#ifdef DEBUG
+	fprintf(stderr, "%s(): Hiding widget\n", __func__);
+#endif
+	gtk_widget_hide(var->Widget);
+
+	if (parent) {
+#ifdef DEBUG
+		fprintf(stderr, "%s(): Hiding parent\n", __func__);
+#endif
+		gtk_widget_hide(parent);
+	}
+
+	if (grandparent) {
+#ifdef DEBUG
+		fprintf(stderr, "%s(): Hiding grandparent\n", __func__);
+#endif
+		gtk_widget_hide(grandparent);
+	}
+
+/* Redundant
 	parent = gtk_widget_get_parent(var->Widget);
 	if (parent != NULL) grandparent = gtk_widget_get_parent(parent);
 
 	if (parent != NULL && GTK_IS_SCROLLED_WINDOW(parent)) {
 		gtk_widget_hide(parent);
 	} else if (parent != NULL && GTK_IS_VIEWPORT(parent)) {
-		/* A viewport will always be inside a scrolled window */
+		/$ A viewport will always be inside a scrolled window $/
 		if (grandparent != NULL && GTK_IS_SCROLLED_WINDOW(grandparent)) {
 			gtk_widget_hide(grandparent);
 		}
 	} else {
 		gtk_widget_hide(var->Widget);
-	}
+	}*/
 
 	return (var);
 }

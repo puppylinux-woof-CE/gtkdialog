@@ -34,10 +34,14 @@ typedef struct property {
 
 extern gboolean option_no_warning;
 
-static gboolean
-try_set_property(GtkWidget *widget,
-		namevalue  *nameval)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+static gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
 {
+	GtkWidget        *grandparent = NULL;
+	GtkWidget        *parent = NULL;
 	GParamSpec       *paramspec;
 	gint              n = 0;
 
@@ -47,6 +51,47 @@ try_set_property(GtkWidget *widget,
 	g_message("%s(): Start on '%s' = '%s'", __func__, 
 			nameval->name, nameval->value);
 #endif
+
+	/* Some widgets are automatically placed inside a scrolled window or
+	 * inside a viewport inside a scrolled window which results in these
+	 * enveloping widgets being inaccessible and in most situations this
+	 * is fine but a widget's visible property needs to apply to all of
+	 * the widgets and so it's dealt with here; the show and hide actions
+	 * are already aware of this situation.
+	 * 
+	 * THIS SHOULD WORK BUT IT DOESN'T: THE WIDGET REMAINS AS AN ARTIFACT
+	 * SO I'VE DISABLED IT. I HAVE A FEELING THAT IT HAS SOMETHING TO DO
+	 * WITH THIS FUNCTION BEING CALLED ON WIDGET REALIZATION.
+	 * 
+	 * The best thing to do is to place widgets like this in a notebook
+	 * on page one and hide the notebook [page] because I've tried it */
+#if 0
+	if ((strcasecmp(nameval->name, "visible") == 0)) {
+
+		parent = gtk_widget_get_parent(widget);
+		if (parent) grandparent = gtk_widget_get_parent(parent);
+
+		if (!(parent && ((GTK_IS_SCROLLED_WINDOW(parent)) ||
+			(GTK_IS_VIEWPORT(parent))))) parent = NULL;
+
+		if (!(parent && (GTK_IS_VIEWPORT(parent)) && grandparent &&
+			GTK_IS_SCROLLED_WINDOW(grandparent))) grandparent = NULL;
+
+		g_object_set(G_OBJECT(widget), "visible",
+			!strcasecmp(nameval->value, "true"), NULL);
+
+		if (parent) {
+			g_object_set(G_OBJECT(parent), "visible",
+				!strcasecmp(nameval->value, "true"), NULL);
+		}
+
+		if (grandparent) {
+			g_object_set(G_OBJECT(grandparent), "visible",
+				!strcasecmp(nameval->value, "true"), NULL);
+		}
+	}
+#endif
+
 	/*
 	 * If the widget -- or its parents -- has not got this property
 	 * we set this as data.
@@ -98,7 +143,10 @@ try_set_property(GtkWidget *widget,
 			 * a guint. I wonder how many things this has affected! Up until
 			 * now I've found "border_width" to have always been about 50
 			 * and now I understand why ;) I think that this entire function
-			 * might benefit from a review so I'll mark it temp temp */
+			 * might benefit from a review so I'll mark it temp temp
+			 * 
+			 * [UPDATE] 2012-09-10
+			 * No further problems have been discovered */
 			g_object_set(G_OBJECT(widget),
 				nameval->name,
 				/* g_utf8_get_char(nameval->value),	Redundant: Bug */
@@ -181,6 +229,8 @@ try_set_property(GtkWidget *widget,
 					__func__, nameval->name, 
 					(paramspec->value_type));
 			#endif
+			/* Thunor: I don't know why unknown Gtk properties are copied
+			 * as widget data because they still exist as tag attributes */
 			g_object_set(G_OBJECT(widget),
 					nameval->name,
 					atoi(nameval->value),

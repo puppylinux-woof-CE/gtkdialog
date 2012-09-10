@@ -1,0 +1,39 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export MAIN_DIALOG='
+<window>
+	<vbox>
+		<list>
+			<variable>LIST</variable>
+			<item>First item</item>
+			<item>Second item</item>
+			<item>Third item</item>
+			<action signal="selection-changed">echo "LIST=\"$LIST\" - selection-changed"</action>
+			<action signal="button-press-event">echo "LIST=\"$LIST\" - button-press-event"</action>
+			<action signal="button-release-event">echo "LIST=\"$LIST\" - button-release-event"</action>
+			<action signal="configure-event">echo "LIST=\"$LIST\" - configure-event"</action>
+			<action signal="enter-notify-event">echo "LIST=\"$LIST\" - enter-notify-event"</action>
+			<action signal="leave-notify-event">echo "LIST=\"$LIST\" - leave-notify-event"</action>
+			<action signal="focus-in-event">echo "LIST=\"$LIST\" - focus-in-event"</action>
+			<action signal="focus-out-event">echo "LIST=\"$LIST\" - focus-out-event"</action>
+			<action signal="hide">echo "LIST=\"$LIST\" - hide"</action>
+			<action signal="key-press-event">echo "LIST=\"$LIST\" - key-press-event"</action>
+			<action signal="key-release-event">echo "LIST=\"$LIST\" - key-release-event"</action>
+			<action signal="map-event">echo "LIST=\"$LIST\" - map-event"</action>
+			<action signal="unmap-event">echo "LIST=\"$LIST\" - unmap-event"</action>
+			<action signal="show">echo "LIST=\"$LIST\" - show"</action>
+		</list>
+		<hbox>
+			<button cancel></button>
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

@@ -295,11 +295,13 @@ void widget_list_removeselected(variable *var)
 void widget_list_save(variable *var)
 {
 	FILE             *outfile;
+	GList            *child;
 	GList            *element;
+	GList            *listchildren = NULL;
 	gchar            *act;
 	gchar            *filename = NULL;
-	GList            *item;
 	gchar            *string;
+	gint              count = 0;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -320,13 +322,32 @@ void widget_list_save(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 
-			item = GTK_LIST(var->Widget)->selection;
-			if (item != NULL) {
-				string = gtk_object_get_user_data(item->data);
-			} else {
-				string = "";
+			/* A GtkList is simply a container full of GtkListItems with
+			 * each GtkListItem containing a label. The item text is also
+			 * attached to the GtkListItem widget as a piece of user data
+			 * presumably because it's easier to access than digging out
+			 * from the label within the GtkListItem */
+			listchildren = gtk_container_get_children(GTK_CONTAINER(var->Widget));
+			child = g_list_first(listchildren);
+			while (child) {
+				if (GTK_IS_LIST_ITEM(child->data)) {
+					string = gtk_object_get_user_data(child->data);
+#ifdef DEBUG_CONTENT
+					fprintf(stderr, "%s(): child->data='%s'\n", __func__, string);
+#endif
+					if (count == 0) {
+						fprintf(outfile, "%s", string);
+					} else {
+						fprintf(outfile, "\n%s", string);
+					}
+					count++;
+				}
+				child = child->next;
 			}
-			fprintf(outfile, "%s", string);
+			if (listchildren) {
+				g_list_free(listchildren);
+				listchildren = NULL;
+			}
 
 			/* Close the file */
 			fclose(outfile);
@@ -448,7 +469,8 @@ static void widget_list_input_by_items(variable *var)
 		 * are designed around the fact that cleared items won't reappear
 		 * but data from a command will. Therefore I'm not fixing it.
 		 * 
-		 * UPDATE 2012-09-08 (exactly a year later!) I've added it */
+		 * [UPDATE] 2012-09-08 (exactly a year later!)
+		 * I've added it */
 		gtk_widget_show(item);
 		gtk_object_set_user_data(GTK_OBJECT(item), (gpointer)text);
 		gtk_container_add(GTK_CONTAINER(var->Widget), item);

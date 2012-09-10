@@ -937,8 +937,9 @@ void widget_menuitem_refresh(variable *var)
 			 * Note that I'm applying this after any sensitive directive which
 			 * would be the normal sequence of things.
 			 * 
-			 * [UPDATE] Menuitems are realized when the menu is opened which could
-			 * be a problem since then tag attributes that are GTK properties will
+			 * [UPDATE]
+			 * Menuitems are realized when the menu is opened which could be a
+			 * problem since then tag attributes that are GTK properties will
 			 * sit there waiting to be applied at some later time. Something is
 			 * going to have to be done about the on_any_widget_realized method
 			 * of setting tag attributes because it will be affecting other widgets

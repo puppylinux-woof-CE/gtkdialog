@@ -5,15 +5,14 @@ GTKDIALOG=gtkdialog
 export MAIN_DIALOG='
 <window>
 	<vbox>
-		<list selection-mode="3">
+		<list selected-row="1" shadow-type="0" vscrollbar-policy="0">
 			<variable>LIST</variable>
-			<item>First item</item>
-			<item>Second item</item>
-			<item>Third item</item>
+			<input>printf "First item\nSecond item\nThird item"</input>
+			<action>echo "The chosen item is \"$LIST\""</action>
 		</list>
 		<hbox>
-			<button ok></button>
 			<button cancel></button>
+			<button ok></button>
 		</hbox>
 	</vbox>
 </window>
