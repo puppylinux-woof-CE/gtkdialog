@@ -902,6 +902,21 @@ void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr
  *                                                                     *
  ***********************************************************************/
 
+void on_any_widget_row_activated_event(GtkWidget *widget,
+	GtkTreePath *path, GtkTreeViewColumn *column, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "row-activated");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/* Redundant
 void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	GtkTreeViewColumn *column, AttributeSet *Attr)
 {
@@ -929,12 +944,26 @@ next_command:
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
-}
+}*/
 
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
 
+void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "cursor-changed");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/* Redundant
 gboolean tree_cursor_changed(GtkTreeView *tree_view, AttributeSet *Attr)
 {
 	GList *element;
@@ -963,7 +992,7 @@ next_command:
 #endif
 
 	return TRUE;
-}
+}*/
 
 /***********************************************************************
  *                                                                     *
@@ -1140,6 +1169,10 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 /* GtkWidget--->GtkContainer--->GtkList */
 			} else if (GTK_IS_LIST(widget)) {
 				if (strcasecmp(signal_name, "selection-changed") == 0)
+					execute = TRUE;
+/* GtkWidget--->GtkContainer--->GtkTreeView */
+			} else if (GTK_IS_TREE_VIEW(widget)) {
+				if (strcasecmp(signal_name, "row-activated") == 0)
 					execute = TRUE;
 /* GtkWidget--->GtkEntry-->GtkSpinButton */
 			} else if (GTK_IS_SPIN_BUTTON(widget)) {

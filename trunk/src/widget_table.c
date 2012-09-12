@@ -319,8 +319,8 @@ void widget_table_refresh(variable *var)
 	gchar            *act;
 	gchar            *value;
 	gint              freeze_thaw = FALSE;
-	gint              selected_row;
 	gint              initialised = FALSE;
+	gint              selected_row;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
