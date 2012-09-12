@@ -75,10 +75,13 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet  *Attr);
 void on_any_widget_select_row_event(GtkWidget *widget, gint row,
 	gint column, GdkEvent *event, gpointer Attr);
 void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr);
+void on_any_widget_row_activated_event(GtkWidget *widget,
+	GtkTreePath *path, GtkTreeViewColumn *column, AttributeSet *Attr);
+void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr);
 
-void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
-	GtkTreeViewColumn *column, AttributeSet *Attr);
-gboolean tree_cursor_changed(GtkTreeView *tree_view, AttributeSet *Attr);
+/*void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
+	GtkTreeViewColumn *column, AttributeSet *Attr); Redundant */
+/*gboolean tree_cursor_changed(GtkTreeView *tree_view, AttributeSet *Attr); Redundant */
 
 gint window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data);

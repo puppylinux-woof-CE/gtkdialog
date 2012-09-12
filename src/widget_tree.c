@@ -38,9 +38,10 @@
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes, located at file bottom */
-static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr);
+static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr,
+	tag_attr *attr);
 static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
-	GtkTreeStore *store);
+	tag_attr *attr, GtkTreeStore *store);
 static void widget_tree_input_by_command(variable *var, char *command,
 	gint command_or_file);
 static void widget_tree_input_by_file(variable *var, char *filename);
@@ -48,6 +49,8 @@ static void widget_tree_input_by_items(variable *var);
 static void widget_tree_pixmap_column_cell_layout_function(
 	GtkCellLayout *cell_layout, GtkCellRenderer *cell,
 	GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeView *treeview);
+gboolean widget_tree_changed_callback(GtkTreeSelection *treeselection,
+	variable *var);
 
 /* Local variables */
 typedef enum {
@@ -126,8 +129,8 @@ GtkWidget *widget_tree_create(
 
 	/* Creating the tree store to hold the data and the tree view to
 	 * represent it */
-	store = widget_tree_create_tree_store(Attr);
-	widget = widget_tree_create_tree_view(Attr, store);
+	store = widget_tree_create_tree_store(Attr, attr);
+	widget = widget_tree_create_tree_view(Attr, attr, store);
 
 	/* Thunor: Now we deal with setting the selection mode. The default
 	 * is GTK_SELECTION_SINGLE so we'll leave that alone and only set a
@@ -226,13 +229,17 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 	GtkTreeModel      *model;
 	GtkTreePath       *path;
 	GtkTreeSelection  *selection;
+	GType              coltype;
 	gchar             *line;
 	gchar             *string;
 	gchar             *text;
+	gdouble            valdouble;
 	gint               column;
 	gint               index;
 	gint               initialrow;
 	gint               selectionmode;
+	gint64             valint64;
+	guint64            valuint64;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -264,23 +271,48 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 		 * gtk_tree_model_get reads the data from the column.
 		 * The cast GTK_TREE_PATH threw up an undefined reference
 		 * warning so I used (GtkTreePath*) instead */
-
-		/* Which column should we print? */
+		/* Get exported-column (custom) */
 		if ((text = g_object_get_data(G_OBJECT(widget), "exported-column"))) {
-			column = atoi(text) + FirstDataColumn;
+			index = atoi(text) + FirstDataColumn;
 		} else {
-			column = FirstDataColumn;
+			index = FirstDataColumn;
 		}
-
 		line = g_strdup("");
 		if (gtk_tree_selection_count_selected_rows(selection)) {
-			selectedrows = gtk_tree_selection_get_selected_rows(selection, &model);
+			selectedrows = gtk_tree_selection_get_selected_rows(selection,
+				&model);
+			coltype = gtk_tree_model_get_column_type(GTK_TREE_MODEL(model),
+				index);
 			initialrow = TRUE;
 			row = selectedrows;
 			while (row) {
 				path = (GtkTreePath*)(row->data);
 				gtk_tree_model_get_iter(model, &iter, path);
-				gtk_tree_model_get(model, &iter, column, &string, -1);
+				switch (coltype) {
+					case G_TYPE_STRING:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							index, &string, -1);
+						break;
+					case G_TYPE_INT64:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							index, &valint64, -1);
+						string = g_strdup_printf("%lli", valint64);
+						break;
+					case G_TYPE_UINT64:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							index, &valuint64, -1);
+						string = g_strdup_printf("%llu", valuint64);
+						break;
+					case G_TYPE_DOUBLE:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							index, &valdouble, -1);
+						string = g_strdup_printf("%f", valdouble);
+						break;
+					default:
+						fprintf(stderr, "%s(): Unsupported column-type %i\n",
+							__func__, coltype);
+						string = g_strdup("");
+				}
 				if (initialrow) {
 					//text = g_strconcat(line, "'", string, "'", NULL);
 					text = g_strconcat(line, string, NULL);
@@ -319,15 +351,39 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 		 * either none or one row and I don't want to break anything ;) */
 		 gtk_tree_selection_get_selected(selection, &model, &iter);
 		 if (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
-			/* Let's find the first column storing text type data */
+			/* Get exported-column (custom) */
 			if ((text = g_object_get_data(G_OBJECT(widget), "exported-column"))) {
 				index = atoi(text) + FirstDataColumn;
 			} else {
 				index = FirstDataColumn;
 			}
-
-			/* Returning the text from the selected row */
-			gtk_tree_model_get(model, &iter, index, &string, -1);
+			coltype = gtk_tree_model_get_column_type(GTK_TREE_MODEL(model),
+				index);
+			switch (coltype) {
+				case G_TYPE_STRING:
+					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+						index, &string, -1);
+					break;
+				case G_TYPE_INT64:
+					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+						index, &valint64, -1);
+					string = g_strdup_printf("%lli", valint64);
+					break;
+				case G_TYPE_UINT64:
+					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+						index, &valuint64, -1);
+					string = g_strdup_printf("%llu", valuint64);
+					break;
+				case G_TYPE_DOUBLE:
+					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+						index, &valdouble, -1);
+					string = g_strdup_printf("%f", valdouble);
+					break;
+				default:
+					fprintf(stderr, "%s(): Unsupported column-type %i\n",
+						__func__, coltype);
+					string = g_strdup("");
+			}
 		} else {
 			string = g_strdup("");
 		}
@@ -368,11 +424,16 @@ void widget_tree_fileselect(
 void widget_tree_refresh(variable *var)
 {
 	GList            *element;
+	GtkTreeIter       iter;
+	GtkTreeSelection *selection;
 	GtkTreeModel     *model;
 	gchar            *act;
 	gchar            *tmp;
 	gchar            *value;
+	gint              index;
 	gint              initialised = FALSE;
+	gint              selected_row;
+	gint              selectionmode;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -394,6 +455,11 @@ void widget_tree_refresh(variable *var)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
 
 	/* We drop all the lines here */
+	/* Thunor: I'd like to stop doing this but some applications (pbackup,
+	 * pcd, petget, pfind, pmusic, pprocess, psip) are refreshing without
+	 * clearing first so I'll leave it as is. It's no big deal but giving
+	 * the application developer the choice of clearing could make refresh
+	 * behave as though it's appending data which is musch more useful */
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 	gtk_tree_store_clear(GTK_TREE_STORE(model));
 
@@ -420,18 +486,18 @@ void widget_tree_refresh(variable *var)
 		}
 
 		if (input_is_shell_command(act)) {
-#ifdef DEBUG
+#ifdef DEBUG_CONTENT
 			printf("%s(): 2: command='%s'\n", __func__, act);
 #endif
 			widget_tree_input_by_command(var, act + 8, TRUE);
 		} else if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 		/* input file stock = "File:", input file = "File:/path/to/file" */
-#ifdef DEBUG
+#ifdef DEBUG_CONTENT
 			printf("%s(): 1: command='%s'\n", __func__, act);
 #endif
 			widget_tree_input_by_file(var, act + 5);
 		} else {
-#ifdef DEBUG
+#ifdef DEBUG_CONTENT
 			printf("%s(): 3: command='%s'\n", __func__, act);
 #endif
 			/* Thunor: These are shell commands without the "Command:",
@@ -465,10 +531,42 @@ void widget_tree_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-		gtk_signal_connect(GTK_OBJECT(var->Widget), "row-activated",
-			GTK_SIGNAL_FUNC(tree_row_activated_attr), (gpointer)var->Attributes);
-		gtk_signal_connect(GTK_OBJECT(var->Widget), "cursor-changed",
-			GTK_SIGNAL_FUNC(tree_cursor_changed), (gpointer)var->Attributes);
+		/* The default signal */
+		g_signal_connect(GTK_OBJECT(var->Widget), "row-activated",
+			G_CALLBACK(on_any_widget_row_activated_event), (gpointer)var->Attributes);
+		/* This was also connected-up but I don't know if anyone is using it */
+		g_signal_connect(GTK_OBJECT(var->Widget), "cursor-changed",
+			G_CALLBACK(on_any_widget_cursor_changed_event), (gpointer)var->Attributes);
+		/* This signal originates from the selection object which is useful
+		 * but we need to route it through a local callback first */
+		selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(var->Widget));
+		g_signal_connect(selection, "changed",
+			G_CALLBACK(widget_tree_changed_callback), (gpointer)var);
+	}
+
+	if (var->widget_tag_attr) {
+		/* Get selected-row (custom) */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row"))) {
+			selected_row = atoi(value);
+			if (selected_row >= 0) {
+				selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(var->Widget));
+				selectionmode = gtk_tree_selection_get_mode(selection);
+				if (selectionmode != GTK_SELECTION_NONE) {
+					model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
+					gtk_tree_model_get_iter_first(model, &iter);
+					index = 0;
+					while (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
+						if (selected_row == index) {
+							gtk_tree_selection_select_iter(selection, &iter);
+							break;
+						}
+						if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter))
+							break;
+						index++;
+					}
+				}
+			}
+		}
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -559,12 +657,16 @@ void widget_tree_save(variable *var)
 	GList            *element;
 	GtkTreeIter       iter;
 	GtkTreeModel     *model;
+	GType             coltype;
+	gdouble           valdouble;
 	gchar            *act;
 	gchar            *filename = NULL;
 	gchar            *text;
 	gchar            *value;
 	gint              column;
 	gint              index;
+	gint64            valint64;
+	guint64           valuint64;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -584,30 +686,54 @@ void widget_tree_save(variable *var)
 	 * widget's data to it */
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
-/* ------------------------------------------------------------------ */
+
 			model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 			gtk_tree_model_get_iter_first(model, &iter);
-
-			/* Which column should we export
-			 * variable *variables_get_by_name( const char *name ); */
+			/* Which column should we export */
 			if ((value = g_object_get_data(G_OBJECT(var->Widget), "exported-column"))) {
 				column = atoi(value) + FirstDataColumn;
 			} else {
 				column = FirstDataColumn;
 			}
-
+			coltype = gtk_tree_model_get_column_type(GTK_TREE_MODEL(model),
+				column);
 			index = 0;
 			while (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
-				gtk_tree_model_get(model, &iter, column, &text, -1);
+				switch (coltype) {
+					case G_TYPE_STRING:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							column, &text, -1);
+						break;
+					case G_TYPE_INT64:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							column, &valint64, -1);
+						text = g_strdup_printf("%lli", valint64);
+						break;
+					case G_TYPE_UINT64:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							column, &valuint64, -1);
+						text = g_strdup_printf("%llu", valuint64);
+						break;
+					case G_TYPE_DOUBLE:
+						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+							column, &valdouble, -1);
+						text = g_strdup_printf("%f", valdouble);
+						break;
+					default:
+						fprintf(stderr, "%s(): Unsupported column-type %i\n",
+							__func__, coltype);
+						text = g_strdup("");
+				}
 				if (index == 0) {
 					fprintf(outfile, "%s", text);
 				} else {
 					fprintf(outfile, "\n%s", text);
 				}
+				g_free(text);
 				if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter)) break;
 				index++;
 			}
-/* ------------------------------------------------------------------ */
+
 			fclose(outfile);
 		} else {
 			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
@@ -627,15 +753,19 @@ void widget_tree_save(variable *var)
  ***********************************************************************/
 /* Creating tree store from <label></label> tags */
 
-static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr)
+static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr,
+	tag_attr *attr)
 {
-	list_t           *columns = NULL;
 	GList            *element;
 	GtkTreeStore     *treestore;
 	GType            *types;
 	gchar            *label;
+	gchar            *value;
 	gint              index;
 	gint              ncolumns;
+	gint              user_type;
+	list_t           *columns = NULL;
+	list_t           *column_type = NULL;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -646,18 +776,51 @@ static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr)
 	columns = linecutter(label, '|');
 	ncolumns = columns->n_lines;
 
+	/* Set type for image columns */
 	types = g_new(GType, ncolumns + FirstDataColumn);
 	types[ColumnPixbuf]   = G_TYPE_POINTER;
 	types[ColumnIconName] = G_TYPE_STRING;
 	types[ColumnStockId]  = G_TYPE_STRING;
 
-	for (index = FirstDataColumn; index < ncolumns + FirstDataColumn; ++index)
+	if (attr) {
+		/* Get column-type (custom) */
+		if ((value = get_tag_attribute(attr, "column-type"))) {
+			column_type = linecutter(g_strdup(value), '|');
+		}
+	}
+
+	/* Set type for user columns */
+	for (index = FirstDataColumn; index < ncolumns + FirstDataColumn; ++index) {
+		/* Set a default type */
 		types[index] = G_TYPE_STRING;
+		/* Set a user requested type? */
+		if (column_type && column_type->n_lines > index - FirstDataColumn) {
+			if (strcasecmp(column_type->line[index - FirstDataColumn],
+				"int64") == 0) {
+				user_type = G_TYPE_INT64;
+			} else if (strcasecmp(column_type->line[index - FirstDataColumn],
+				"uint64") == 0) {
+				user_type = G_TYPE_UINT64;
+			} else if (strcasecmp(column_type->line[index - FirstDataColumn],
+				"double") == 0) {
+				user_type = G_TYPE_DOUBLE;
+			} else {
+				user_type = G_TYPE_STRING;
+			}
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): column_type=%p column_type->n_lines=%i \
+index-FirstDataColumn=%i user_type=%i\n", __func__, column_type,
+				column_type->n_lines, index - FirstDataColumn, user_type);
+#endif
+			types[index] = user_type;
+		}
+	}
 
 	treestore = gtk_tree_store_newv(ncolumns + FirstDataColumn, types);
 
 	/* Free linecutter memory */
 	if (columns) list_t_free(columns);
+	if (column_type) list_t_free(column_type);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -671,15 +834,18 @@ static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr)
  ***********************************************************************/
 
 static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
-	GtkTreeStore *store)
+	tag_attr *attr, GtkTreeStore *store)
 {
-	list_t             *columns = NULL;
-	GList              *element;
-	GtkCellRenderer    *renderer;
-	GtkTreeViewColumn  *column;
-	GtkWidget          *tree_view;
-	gchar              *headline = NULL;
-	gint                n;
+	GList             *element;
+	GtkCellRenderer   *renderer;
+	GtkTreeViewColumn *column;
+	GtkWidget         *tree_view;
+	gchar             *headline = NULL;
+	gint               index;
+	gchar             *value;
+	list_t            *column_header_active = NULL;
+	list_t            *column_visible = NULL;
+	list_t            *columns = NULL;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -687,47 +853,72 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 
 	headline = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
 	columns = linecutter(headline, '|');
-	
+
+	if (attr) {
+		/* Get column-visible (custom) */
+		if ((value = get_tag_attribute(attr, "column-visible")))
+			column_visible = linecutter(g_strdup(value), '|');
+		/* Get column-header-active (custom) */
+		if ((value = get_tag_attribute(attr, "column-header-active")))
+			column_header_active = linecutter(g_strdup(value), '|');
+	}
+
 	/* We create the TreeView here */
 	tree_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
 
-	/* The first column will hold two cell renderer. One for the pixmap
-	 * with a complex cell data function and one text renderer with the
-	 * first real data column given by the user */
-	column = gtk_tree_view_column_new();
-	gtk_tree_view_column_set_title(column, columns->line[0]);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
-	gtk_tree_view_column_set_sort_column_id(column, FirstDataColumn);
+	/* Remove the default indentation in column 0 */
+	gtk_tree_view_set_show_expanders(GTK_TREE_VIEW(tree_view), FALSE);
 
-	renderer = gtk_cell_renderer_pixbuf_new();
-	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(column),
-		renderer,
-		(GtkCellLayoutDataFunc)widget_tree_pixmap_column_cell_layout_function,
-		tree_view,
-		NULL);
-
-	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute(column, renderer, "text",
-		FirstDataColumn);
-
-	/* Now creating the other columns holding text style data from the
-	 * user */
-	for (n = 1; n < columns->n_lines; ++n) {
+	/* Create the columns */
+	for (index = 0; index < columns->n_lines; ++index) {
 		column = gtk_tree_view_column_new();
-		gtk_tree_view_column_set_title(column, columns->line[n]);
+		gtk_tree_view_column_set_title(column, columns->line[index]);
 		gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
-		gtk_tree_view_column_set_sort_column_id(column,
-			n + FirstDataColumn);
+		gtk_tree_view_column_set_sort_column_id(column, index + FirstDataColumn);
+		
+		if (index == 0) {
+			/* The first column will hold two cell renderer. One for the
+			 * pixmap with a complex cell data function and one text
+			 * renderer with the first real data column given by the user */
+			renderer = gtk_cell_renderer_pixbuf_new();
+			gtk_tree_view_column_pack_start(column, renderer, FALSE);
+			gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(column),
+				renderer,
+				(GtkCellLayoutDataFunc)widget_tree_pixmap_column_cell_layout_function,
+				tree_view, NULL);
+			renderer = gtk_cell_renderer_text_new();
+			gtk_tree_view_column_pack_start(column, renderer, FALSE);
+			gtk_tree_view_column_add_attribute(column, renderer, "text",
+				index + FirstDataColumn);
+		} else {
+			/* Create the other columns holding data from the user */
+			renderer = gtk_cell_renderer_text_new ();
+			gtk_tree_view_column_pack_start(column, renderer, TRUE);
+			gtk_tree_view_column_add_attribute(column, renderer, "text",
+				index + FirstDataColumn);
+		}
 
-		renderer = gtk_cell_renderer_text_new ();
-		gtk_tree_view_column_pack_start(column, renderer, TRUE);
-		gtk_tree_view_column_add_attribute(column, renderer,
-			"text", n + FirstDataColumn);
+		/* Deactivate column header? (the default is active) */
+		if (column_header_active && index < column_header_active->n_lines) {
+			if ((strcasecmp(column_header_active->line[index], "false") == 0) ||
+				(strcasecmp(column_header_active->line[index], "no") == 0) ||
+				(strcasecmp(column_header_active->line[index], "0") == 0)) {
+				gtk_tree_view_column_set_clickable(column, FALSE);
+			}
+		}
+		/* Hide column? (the default is shown) */
+		if (column_visible && index < column_visible->n_lines) {
+			if ((strcasecmp(column_visible->line[index], "false") == 0) ||
+				(strcasecmp(column_visible->line[index], "no") == 0) ||
+				(strcasecmp(column_visible->line[index], "0") == 0)) {
+				gtk_tree_view_column_set_visible(column, FALSE);
+			}
+		}
 	}
 
 	/* Free linecutter memory */
+	if (column_header_active) list_t_free(column_header_active);
+	if (column_visible) list_t_free(column_visible);
 	if (columns) list_t_free(columns);
 
 #ifdef DEBUG_TRANSITS
@@ -825,11 +1016,27 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 					switch (coltype) {
 						case G_TYPE_STRING:
 							gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
-								n + FirstDataColumn - hiddencolumns, columns[n], -1);
+								n + FirstDataColumn - hiddencolumns,
+								columns[n], -1);
+							break;
+						case G_TYPE_INT64:
+							gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
+								n + FirstDataColumn - hiddencolumns,
+								strtoll(columns[n], NULL, 0), -1);
+							break;
+						case G_TYPE_UINT64:
+							gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
+								n + FirstDataColumn - hiddencolumns,
+								strtoull(columns[n], NULL, 0), -1);
+							break;
+						case G_TYPE_DOUBLE:
+							gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
+								n + FirstDataColumn - hiddencolumns,
+								strtod(columns[n], NULL), -1);
 							break;
 						default:
-							fprintf(stderr, "%s(): Unhandled column type.\n",
-								__func__);
+							fprintf(stderr, "%s(): Unsupported column-type %i\n",
+								__func__, coltype);
 					}
 				}
 			}
@@ -942,17 +1149,30 @@ static void widget_tree_input_by_items(variable *var)
 				break;
 			g_strstrip(columns[n]);
 			coltype = gtk_tree_model_get_column_type(model, n + FirstDataColumn);
-			
 			switch (coltype) {
 				case G_TYPE_STRING:
-					gtk_tree_store_set(
-						GTK_TREE_STORE(model),
-						&iter,
-						n + FirstDataColumn, columns[n],
-						-1);
+					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
+						n + FirstDataColumn,
+						columns[n], -1);
+					break;
+				case G_TYPE_INT64:
+					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
+						n + FirstDataColumn,
+						strtoll(columns[n], NULL, 0), -1);
+					break;
+				case G_TYPE_UINT64:
+					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
+						n + FirstDataColumn,
+						strtoull(columns[n], NULL, 0), -1);
+					break;
+				case G_TYPE_DOUBLE:
+					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
+						n + FirstDataColumn,
+						strtod(columns[n], NULL), -1);
 					break;
 				default:
-					fprintf(stderr, "%s(): Unhandled column type.\n", __func__);
+					fprintf(stderr, "%s(): Unsupported column-type %i\n",
+						__func__, coltype);
 			}
 		}
 		g_strfreev(columns);
@@ -1009,6 +1229,32 @@ static void widget_tree_pixmap_column_cell_layout_function(
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
+}
+
+/***********************************************************************
+ * Changed Callback                                                    *
+ ***********************************************************************/
+
+gboolean widget_tree_changed_callback(GtkTreeSelection *treeselection,
+	variable *var)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): treeselection=%p var->Widget=%p\n", __func__,
+		treeselection, var->Widget);
+#endif
+
+	/* Pass the correct var->Widget which will be the GtkTreeView */
+	on_any_widget_changed_event(var->Widget, var->Attributes);
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return TRUE;
 }
 
 #endif

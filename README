@@ -32,11 +32,17 @@ like to copy them somewhere.
 Support for using Glade generated user interfaces is very old and I'd
 rather not encourage folk to create Gtkdialog applications in this way.
 
+VTE
+---
+Gtkdialog's configure script will compile-in support for the Virtual
+Terminal Emulator if it finds libvte and its development headers.
+libvte source package -> http://ftp.gnome.org/pub/GNOME/sources/vte/
+
 ARM
 ---
 A problem was encountered when compiling on the ARM platform whereby the
 widgets were being packed in the wrong order and I have applied a fix for
-this wrapped in an #ifdef __arm__ preprocessor macro in automaton.c:2149.
+this wrapped in an #ifdef __arm__ preprocessor macro in automaton.c:1827.
 
 Contacting Us
 =============
@@ -44,4 +50,4 @@ Contacting Us
 http://code.google.com/p/gtkdialog/
 
 
-2012-07-24
+2012-09-10
