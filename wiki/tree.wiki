@@ -47,9 +47,13 @@ The following custom tag attributes are available:
 || hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || exported-column || The column to export data from || An integer >= {{{0}}} || ||
+|| selected-row || The row to select on initialisation and refresh || An integer >= {{{0}}} || 0.8.1 ||
+|| column-header-active || Active state of column header(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
+|| column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
+|| column-type || Data type of column(s) || _type0_ {{{|}}} _type1_ {{{|}}} ... ({{{string}}}, {{{int64}}}, {{{uint64}}} or {{{double}}}) || 0.8.1 ||
+|| selection-mode || Selection method || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (none, single, browse, multiple) || 0.7.21 ||
 || icon-name || Default GTK theme icon name for all rows || || ||
 || stock-id || Default GTK stock icon ID for all rows || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || ||
-|| selection-mode || Selection method || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (none, single, browse, multiple) || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -83,6 +87,10 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView-row-activated row-activated]", emitted when the user double-clicks a row and also when a row is selected and one of the keys Space, Shift+Space, Return or Enter is pressed.
+
+"[http://developer.gnome.org/gtk/2.24/GtkTreeSelection.html#GtkTreeSelection-changed changed]", emitted when the selection has changed (please see link about this).
+
+"[http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView-cursor-changed cursor-changed]", emitted when the position of the cursor (focused cell) has changed.
 
 See also the [http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView.signals GtkTreeView] widget and ancestor class signals.
 
