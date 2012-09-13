@@ -1,16 +1,17 @@
-#summary comboboxentry widget reference
+#summary expander widget reference
 
-= comboboxentry widget =
+= expander widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html GtkComboBoxEntry]
+A [http://developer.gnome.org/gtk/2.24/GtkExpander.html GtkExpander]
 
 ----
 
 == Definition ==
 
 {{{
-<comboboxentry tag_attr="value"...>
-	<default>text</default>
+<expander tag_attr="value"...>
+	widget
+	<label>text</label>
 	<variable>varname</variable>
 	<input>command</input>...
 	<input file>filename</input>...
@@ -18,16 +19,15 @@ A [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html GtkComboBoxEntry]
 	<action>activity</action>...
 	<action signal="type">activity</action>...
 	<action type="function">parameter</action>...
-	<item>data</item>...
 	<output file>filename</output>
-</comboboxentry>
+</expander>
 }}}
 
 "..." denotes acceptance of multiples of the same thing.
 
 == Tag Attributes ==
 
-See the [http://developer.gnome.org/gtk/2.24/GtkComboBoxEntry.html#GtkComboBoxEntry.object-hierarchy GtkComboBoxEntry] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk/2.24/GtkExpander.html#GtkExpander.object-hierarchy GtkExpander] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 
@@ -36,11 +36,6 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
-|| fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || ||
-|| fs-filters || fileselect function pattern file filters || _pattern_{{{|}}}_pattern_{{{|}}}... || ||
-|| fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... ([http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types common types]) || ||
-|| fs-folder || fileselect function current folder || || ||
-|| fs-title || fileselect function dialog title || || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -49,25 +44,22 @@ Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| default || Initial selection or entry text if unmatched || Text || || ||
+|| label || Initial text || || || ||
 || variable || Shell variable name || || || ||
 || input || Data input source || Shell command || || ||
 || input file || Data input source || Filename || || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
 || action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
+|| action || Perform function on default signal || _function_:_parameter_^[1]^ || || ||
 || action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_^[1]^ || || ||
 || action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| item || Input data || || || ||
 || output file || Data output target || Filename || || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
 
-The default signal is "[http://developer.gnome.org/gtk/2.24/GtkComboBox.html#GtkComboBox-changed changed]", emitted when the active item is changed and when typing into the entry.
-
-The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activate]" signal is emitted when the user activates the entry with the Enter key.
+The default signal is "[http://developer.gnome.org/gtk/2.24/GtkExpander.html#GtkExpander-activate activate]", emitted when the expander is activated.
 
 The following GtkWidget signals are connected-up for all widgets:
 "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]"
@@ -80,14 +72,12 @@ The following functions can be performed upon this widget by any widget capable 
 || *Type* || *Description* || *Parameter* || *Since* ||
 || enable || Sensitise widget || Shell variable name || ||
 || disable || Desensitise widget || Shell variable name || ||
-|| show || Show widget || Shell variable name || 0.8.1 ||
-|| hide || Hide widget || Shell variable name || 0.8.1 ||
-|| grabfocus || Grab input focus || Shell variable name || 0.8.1 ||
+|| show || Show widget || Shell variable name || ||
+|| hide || Hide widget || Shell variable name || ||
+|| activate || Activate widget || Shell variable name || ||
+|| grabfocus || Grab input focus || Shell variable name || ||
 || refresh || Reload input data || Shell variable name || ||
-|| save^[1]^ || Save widget data || Shell variable name || ||
-|| fileselect || Launch file selection dialog || Shell variable name || ||
-|| clear || Remove all widget data || Shell variable name || ||
-|| removeselected || Remove selected widget data || Shell variable name || ||
+|| save || Save widget data || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
@@ -98,13 +88,15 @@ The following general functions can be performed by any widget capable of emitti
 || exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
 || closewindow || Close dialog || Shell variable name || ||
 || launch || Launch dialog || Shell variable name || ||
-|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Shell variable name || 0.8.1 ||
+|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
 
-1. The save function will write the entry text to the output file if it is unique and non-null.
+1. This widget supports conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
 
-This widget was introduced in version 0.7.21.
+This widget was introduced in version 0.8.1.
+
+This widget is a container which accepts only one child widget so you may require that to be an hbox or vbox.
 
 ----

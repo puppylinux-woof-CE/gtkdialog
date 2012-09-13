@@ -67,7 +67,8 @@ Some of these may have tag attribute equivalents.
 
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkList.html#GtkList-selection-changed selection-changed]", emitted when the selection has just changed.
 
-See also the [http://developer.gnome.org/gtk/2.24/GtkList.html#GtkList.signals GtkList] widget and ancestor class signals.
+The following GtkWidget signals are connected-up for all widgets:
+"[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]"
 
 == Functions ==
 
