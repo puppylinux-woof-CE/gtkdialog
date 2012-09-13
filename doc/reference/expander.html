@@ -5,7 +5,7 @@
 <html>
 <head>
 
-<title>gtkdialog: tree widget reference</title>
+<title>gtkdialog: expander widget reference</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" >
 
@@ -82,60 +82,42 @@
 					<tr>
 						<td>
 
-<h1> tree widget </h1>
+<h1> expander widget </h1>
 
-A <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html">GtkTreeView</a> packed inside a <a href="http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html">GtkScrolledWindow</a>
+A <a href="http://developer.gnome.org/gtk/2.24/GtkExpander.html">GtkExpander</a>
 
 <hr>
 
 <h2> Definition </h2>
 
 <pre>
-&lt;tree tag_attr="value"...&gt;
+&lt;expander tag_attr="value"...&gt;
+	widget
 	&lt;label&gt;text&lt;/label&gt;
 	&lt;variable&gt;varname&lt;/variable&gt;
-	&lt;height&gt;value&lt;/height&gt;
-	&lt;width&gt;value&lt;/width&gt;
 	&lt;input&gt;command&lt;/input&gt;...
-	&lt;input icon-column="index"&gt;command&lt;/input&gt;...
-	&lt;input stock-column="index"&gt;command&lt;/input&gt;...
 	&lt;input file&gt;filename&lt;/input&gt;...
-	&lt;input file icon-column="index"&gt;filename&lt;/input&gt;...
-	&lt;input file stock-column="index"&gt;filename&lt;/input&gt;...
 	&lt;sensitive&gt;state&lt;/sensitive&gt;
 	&lt;action&gt;activity&lt;/action&gt;...
 	&lt;action signal="type"&gt;activity&lt;/action&gt;...
 	&lt;action type="function"&gt;parameter&lt;/action&gt;...
-	&lt;item&gt;data&lt;/item&gt;...
-	&lt;item icon-name="image"&gt;data&lt;/item&gt;...
-	&lt;item stock-id="gtk-image"&gt;data&lt;/item&gt;...
 	&lt;output file&gt;filename&lt;/output&gt;
-&lt;/tree&gt;
+&lt;/expander&gt;
 </pre>
 
 <p>"..." denotes acceptance of multiples of the same thing.</p>
 
 <h2> Tag Attributes </h2>
 
-<p>See the <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView.object-hierarchy">GtkTreeView</a> widget and ancestor class properties.</p>
+<p>See the <a href="http://developer.gnome.org/gtk/2.24/GtkExpander.html#GtkExpander.object-hierarchy">GtkExpander</a> widget and ancestor class properties.</p>
 
 <p>The following custom tag attributes are available:</p>
 
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
-<tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
-<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
-<tr><td class="wiki"> hscrollbar-policy </td><td class="wiki"> Policy for the horizontal scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> vscrollbar-policy </td><td class="wiki"> Policy for the vertical scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> exported-column </td><td class="wiki"> The column to export data from </td><td class="wiki"> An integer &gt;= <code>0</code> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> selected-row </td><td class="wiki"> The row to select on initialisation and refresh </td><td class="wiki"> An integer &gt;= <code>0</code> </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> column-header-active </td><td class="wiki"> Active state of column header(s) </td><td class="wiki"> <i>state0</i> <code>|</code> <i>state1</i> <code>|</code> ... </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> column-visible </td><td class="wiki"> Visible state of column(s) </td><td class="wiki"> <i>state0</i> <code>|</code> <i>state1</i> <code>|</code> ... </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> column-type </td><td class="wiki"> Data type of column(s) </td><td class="wiki"> <i>type0</i> <code>|</code> <i>type1</i> <code>|</code> ... (<code>string</code>, <code>int64</code>, <code>uint64</code> or <code>double</code>) </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> selection-mode </td><td class="wiki"> Selection method </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code> (none, single, browse, multiple) </td><td class="wiki"> 0.7.21 </td></tr>
-<tr><td class="wiki"> icon-name </td><td class="wiki"> Default GTK theme icon name for all rows </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> stock-id </td><td class="wiki"> Default GTK stock icon ID for all rows </td><td class="wiki"> <code>gtk-about</code>, <code>gtk-add</code>, ... (<a href="http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS">full list</a>) </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 </table>
 
 <h2> Directives </h2>
@@ -144,35 +126,22 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html">GtkTreeView</a>
 
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Mandatory</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> label </td><td class="wiki"> Column header labels </td><td class="wiki"> <i>label0</i> <code>|</code> <i>label1</i> <code>|</code> ... </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> label </td><td class="wiki"> Initial text </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> height<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Initial minimum height </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> width<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Initial minimum width </td><td class="wiki"> An integer &gt; <code>0</code> or <code>-1</code> to ignore </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> input icon-column="<i>index</i>" </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> input stock-column="<i>index</i>" </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input file </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> input file icon-column="<i>index</i>" </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> input file stock-column="<i>index</i>" </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action </td><td class="wiki"> Execute command on default signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i><sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i><sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action type="<i>function</i>" </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> item </td><td class="wiki"> Input data </td><td class="wiki"> <i>data0</i> <code>|</code> <i>data1</i> <code>|</code> ... </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> item icon-name="<i>image</i>" </td><td class="wiki"> Input data </td><td class="wiki"> <i>data0</i> <code>|</code> <i>data1</i>  <code>|</code> ... </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> item stock-id="<i>gtk-image</i>" </td><td class="wiki"> Input data </td><td class="wiki"> <i>data0</i> <code>|</code> <i>data1</i>  <code>|</code> ... </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> output file </td><td class="wiki"> Data output target </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> output file </td><td class="wiki"> Data output target </td><td class="wiki"> Filename </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 </table>
 
 <h2> Signals </h2>
 
-<p>The default signal is "<a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView-row-activated">row-activated</a>", emitted when the user double-clicks a row and also when a row is selected and one of the keys Space, Shift+Space, Return or Enter is pressed.</p>
-
-<p>The "<a href="http://developer.gnome.org/gtk/2.24/GtkTreeSelection.html#GtkTreeSelection-changed">changed</a>" signal is emitted when the selection has changed (please see link about this).</p>
-
-<p>The "<a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView-cursor-changed">cursor-changed</a>" signal is emitted when the position of the cursor (focused cell) has changed.</p>
+<p>The default signal is "<a href="http://developer.gnome.org/gtk/2.24/GtkExpander.html#GtkExpander-activate">activate</a>", emitted when the expander is activated.</p>
 
 <p>The following GtkWidget signals are connected-up for all widgets:</p>
 <p>"<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide">hide</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show">show</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a>"</p>
@@ -185,13 +154,12 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html">GtkTreeView</a>
 <tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
 <tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> show </td><td class="wiki"> Show widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> grabfocus </td><td class="wiki"> Grab input focus </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> show </td><td class="wiki"> Show widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> activate </td><td class="wiki"> Activate widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> grabfocus </td><td class="wiki"> Grab input focus </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> save </td><td class="wiki"> Save widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> clear </td><td class="wiki"> Remove all widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.7.21 </td></tr>
-<tr><td class="wiki"> removeselected </td><td class="wiki"> Remove selected widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> save </td><td class="wiki"> Save widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 </table>
 
 <p>The following general functions can be performed by any widget capable of emitting signals:</p>
@@ -202,12 +170,16 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html">GtkTreeView</a>
 <tr><td class="wiki"> exit </td><td class="wiki"> Exit dialog </td><td class="wiki"> A value for the <code>EXIT</code> shell variable </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> closewindow </td><td class="wiki"> Close dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> launch </td><td class="wiki"> Launch dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> presentwindow </td><td class="wiki"> <a href="http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present">Present</a> dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> presentwindow </td><td class="wiki"> <a href="http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present">Present</a> dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 </table>
 
 <h2> Notes </h2>
 
-<p><a name="note1"></a>1. This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.</p>
+<p><a name="note1"></a>1. This widget supports conditional function execution by prepending <i>function</i>:<i>parameter</i> with <code>if true</code> or <code>if false</code>.</p>
+
+<p>This widget was introduced in version 0.8.1.</p>
+
+<p>This widget is a container which accepts only one child widget so you may require that to be an hbox or vbox.</p>
 
 <hr>
 <p>

@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Sep 13 2012 Thunor <thunorsif@hotmail.com>
+- New widget: <expander>.
+- Added examples/expander/expander.
+
 * Wed Sep 12 2012 Thunor <thunorsif@hotmail.com>
 - Added the "column-type" tag attribute to the tree widget to support
   setting int64, uint64, double and string data types.

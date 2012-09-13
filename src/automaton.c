@@ -48,6 +48,7 @@
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_eventbox.h"
+#include "widget_expander.h"
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
@@ -317,6 +318,9 @@ void print_command(instruction command)
 			break;
 		case WIDGET_EVENTBOX:
 			printf("(new eventbox())");
+			break;
+		case WIDGET_EXPANDER:
+			printf("(new expander())");
 			break;
 		case WIDGET_FONTBUTTON:
 			printf("(new fontbutton())");
@@ -620,6 +624,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_EVENTBOX:
 			printf("(EVENTBOX)");
+			break;
+		case WIDGET_EXPANDER:
+			printf("(EXPANDER)");
 			break;
 		case WIDGET_FONTBUTTON:
 			printf("(FONTBUTTON)");
@@ -1541,6 +1548,12 @@ instruction_execute_push(
 			break;
 		case WIDGET_EVENTBOX:
 			Widget = widget_eventbox_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
+			break;
+		case WIDGET_EXPANDER:
+			Widget = widget_expander_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;

@@ -41,6 +41,7 @@
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_eventbox.h"
+#include "widget_expander.h"
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
@@ -166,6 +167,10 @@ widget_get_text_value(
 			break;
 		case WIDGET_EVENTBOX:
 			string = widget_eventbox_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_EXPANDER:
+			string = widget_expander_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_FONTBUTTON:
@@ -1147,6 +1152,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_EVENTBOX:
 			type = "EVENTBOX";
+			break;
+		case WIDGET_EXPANDER:
+			type = "EXPANDER";
 			break;
 		case WIDGET_FONTBUTTON:
 			type = "FONTBUTTON";

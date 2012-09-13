@@ -1,0 +1,71 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+echo "false" > "$TMPDIR"/inoutfile
+
+funcbtnCreate() {
+	echo '<button>
+				<label>'$2'</label>
+				<action>echo "'$3' '$1'"</action>
+				<action type="'$2'">'$1'</action>
+			</button>'
+}
+
+export MAIN_DIALOG='
+<window title="Expander">
+	<vbox>
+		<expander expanded="true" use-underline="true">
+			<vbox>
+				<hbox>
+					<checkbox active="false"></checkbox><entry>
+					<default>entry</default></entry>
+				</hbox>
+				<hbox>
+					<checkbox active="true"></checkbox><entry>
+					<default>entry</default></entry>
+				</hbox>
+				<hbox>
+					<checkbox active="false"></checkbox><entry>
+					<default>entry</default></entry>
+				</hbox>
+				<hbox>
+					<checkbox active="true"></checkbox><entry>
+					<default>entry</default></entry>
+				</hbox>
+			</vbox>
+			<label>e_xpander</label>
+			<variable>exp0</variable>
+			<input file>'"$TMPDIR"'/inoutfile</input>
+			<output file>'"$TMPDIR"'/inoutfile</output>
+			<action>echo "exp0=\"$exp0\" - activate signal"</action>
+			<action>if true echo "exp0 is true"</action>
+			<action>if false echo "exp0 is false"</action>
+		</expander>
+		<hbox homogeneous="true">
+			'"$(funcbtnCreate exp0 Disable Disabling)"'
+			'"$(funcbtnCreate exp0 Enable Enabling)"'
+			'"$(funcbtnCreate exp0 Hide Hiding)"'
+			'"$(funcbtnCreate exp0 Show Showing)"'
+		</hbox>
+		<hbox homogeneous="true">
+			'"$(funcbtnCreate exp0 Activate Activating)"'
+			'"$(funcbtnCreate exp0 GrabFocus Focusing)"'
+			'"$(funcbtnCreate exp0 Refresh Refreshing)"'
+			'"$(funcbtnCreate exp0 Save Saving)"'
+		</hbox>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-quit">
+			</button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac
