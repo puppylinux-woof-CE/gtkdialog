@@ -12,6 +12,8 @@ EXTRA_DIST = \
 	examples/comboboxtext/* \
 	examples/edit/* \
 	examples/entry/* \
+	examples/eventbox/* \
+	examples/expander/* \
 	examples/fontbutton/* \
 	examples/frame/* \
 	examples/glade/* \

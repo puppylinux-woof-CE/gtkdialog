@@ -156,6 +156,7 @@ start_up(void)
 %token         FONTBUTTON PART_FONTBUTTON EFONTBUTTON
 %token         TERMINAL PART_TERMINAL ETERMINAL
 %token         EVENTBOX PART_EVENTBOX EEVENTBOX
+%token         EXPANDER PART_EXPANDER EEXPANDER
 
 %% 
 window
@@ -222,6 +223,20 @@ wlist
 	}
   | wlist PART_EVENTBOX tagattr '>' wlist attr EEVENTBOX {
 		token_store_attr(PUSH | WIDGET_EVENTBOX, $3); 
+		token_store(SUM);      
+	}
+  | EXPANDER wlist attr EEXPANDER   { 
+		token_store(PUSH | WIDGET_EXPANDER); 
+	}
+  | wlist EXPANDER wlist attr EEXPANDER   { 
+		token_store(PUSH | WIDGET_EXPANDER); 
+		token_store(SUM);      
+	}
+  | PART_EXPANDER tagattr '>' wlist attr EEXPANDER {
+		token_store_attr(PUSH | WIDGET_EXPANDER, $2); 
+	}
+  | wlist PART_EXPANDER tagattr '>' wlist attr EEXPANDER {
+		token_store_attr(PUSH | WIDGET_EXPANDER, $3); 
 		token_store(SUM);      
 	}
   | NOTEBOOK wlist attr ENOTEBOOK   { 

@@ -1077,7 +1077,14 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 			/* Some widgets support conditional function execution on certain signals */
 			if (strncasecmp(command, "if true ", 8) == 0) {
-				if (strcasecmp(signal_name, "toggled") == 0) {
+				if (strcasecmp(signal_name, "activate") == 0) {
+					/* There's a class hierarchy to be aware of here */
+					if (GTK_IS_EXPANDER(widget)) {
+						is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
+						command += 8;
+						if (is_active) execute = TRUE;
+					}
+				} else if (strcasecmp(signal_name, "toggled") == 0) {
 					/* There's a class hierarchy to be aware of here */
 					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
 						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
@@ -1090,7 +1097,14 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 					}
 				}
 			} else if (strncasecmp(command, "if false ", 9) == 0) {
-				if (strcasecmp(signal_name, "toggled") == 0) {
+				if (strcasecmp(signal_name, "activate") == 0) {
+					/* There's a class hierarchy to be aware of here */
+					if (GTK_IS_EXPANDER(widget)) {
+						is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
+						command += 9;
+						if (!is_active) execute = TRUE;
+					}
+				} else if (strcasecmp(signal_name, "toggled") == 0) {
 					/* There's a class hierarchy to be aware of here */
 					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
 						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
@@ -1139,6 +1153,21 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			} else if (GTK_IS_FONT_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "font-set") == 0)
 					execute = TRUE;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
+			} else if (GTK_IS_EXPANDER(widget)) {
+				if (strcasecmp(signal_name, "activate") == 0) {
+					/* expanders support conditional function execution */
+					is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
+					if (strncasecmp(command, "if true ", 8) == 0) {
+						command += 8;
+						if (is_active) execute = TRUE;
+					} else if (strncasecmp(command, "if false ", 9) == 0) {
+						command += 9;
+						if (!is_active) execute = TRUE;
+					} else {
+						execute = TRUE;
+					}
+				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkCheckMenuItem */
 			} else if (GTK_IS_CHECK_MENU_ITEM(widget)) {
 				if (strcasecmp(signal_name, "toggled") == 0) {

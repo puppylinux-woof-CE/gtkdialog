@@ -191,7 +191,10 @@
      ETERMINAL = 407,
      EVENTBOX = 408,
      PART_EVENTBOX = 409,
-     EEVENTBOX = 410
+     EEVENTBOX = 410,
+     EXPANDER = 411,
+     PART_EXPANDER = 412,
+     EEXPANDER = 413
    };
 #endif
 /* Tokens.  */
@@ -348,6 +351,9 @@
 #define EVENTBOX 408
 #define PART_EVENTBOX 409
 #define EEVENTBOX 410
+#define EXPANDER 411
+#define PART_EXPANDER 412
+#define EEXPANDER 413
 
 
 
@@ -368,7 +374,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 372 "gtkdialog_parser.h"
+#line 378 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

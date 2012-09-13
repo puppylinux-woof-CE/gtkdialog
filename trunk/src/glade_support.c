@@ -653,6 +653,9 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkEventBox */
 	else if (GTK_IS_EVENT_BOX(widget))
 		retval = WIDGET_EVENTBOX;
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
+	else if (GTK_IS_EXPANDER(widget))
+		retval = WIDGET_EXPANDER;
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkFrame */
 	else if (GTK_IS_FRAME(widget))
 		retval = WIDGET_FRAME;
