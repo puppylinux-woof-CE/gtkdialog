@@ -41,10 +41,6 @@ static void widget_statusbar_input_by_items(variable *var);
 static void widget_statusbar_update(variable *var, gchar *text);
 
 /* Local variables */
-/* Thunor: This needs looking at because it only deals with one status
- * bar -- doh! -- so I'll mark it temp temp and look at it later */
-gchar current_message[MESSAGE_LENGTH_MAX];
-guint context_id;
 
 /* Notes: */
 
@@ -69,10 +65,12 @@ void widget_statusbar_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
+
 GtkWidget *widget_statusbar_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GtkWidget        *widget;
+	guint             context_id;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -95,7 +93,8 @@ GtkWidget *widget_statusbar_create(
 
 	/* Record the current message because otherwise it'll have to be
 	 * dug out from the label inside the box that is the statusbar */
-	strcpy(current_message, "");
+	g_object_set_data(G_OBJECT(widget), "last_push", g_strdup(""));
+	
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -131,13 +130,15 @@ gchar *widget_statusbar_envvar_all_construct(variable *var)
 
 gchar *widget_statusbar_envvar_construct(GtkWidget *widget)
 {
+	gchar            *last_push;
 	gchar            *string;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup(current_message);
+	last_push = g_object_get_data(G_OBJECT(widget), "last_push");
+	string = g_strdup(last_push);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -172,6 +173,7 @@ void widget_statusbar_fileselect(
 /***********************************************************************
  * Refresh                                                             *
  ***********************************************************************/
+
 void widget_statusbar_refresh(variable *var)
 {
 	GList            *element;
@@ -206,12 +208,10 @@ void widget_statusbar_refresh(variable *var)
 	if (!initialised) {
 		/* Apply directives */
 		if (attributeset_is_avail(var->Attributes, ATTR_LABEL)) {
-			gtk_statusbar_pop(GTK_STATUSBAR(var->Widget), context_id);
 			text = attributeset_get_first(&element, var->Attributes, ATTR_LABEL);
 			widget_statusbar_update(var, text);
 		}
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
-			gtk_statusbar_pop(GTK_STATUSBAR(var->Widget), context_id);
 			text = attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT);
 			widget_statusbar_update(var, text);
 		}
@@ -267,6 +267,7 @@ void widget_statusbar_save(variable *var)
 	GList            *element;
 	gchar            *act;
 	gchar            *filename = NULL;
+	gchar            *last_push;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -286,7 +287,10 @@ void widget_statusbar_save(variable *var)
 	 * widget's data to it */
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
-			fprintf(outfile, "%s", current_message);
+
+			last_push = g_object_get_data(G_OBJECT(var->Widget), "last_push");
+			fprintf(outfile, "%s", last_push);
+
 			fclose(outfile);
 		} else {
 			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
@@ -328,7 +332,9 @@ static void widget_statusbar_input_by_command(variable *var, char *command)
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+
 			widget_statusbar_update(var, line);
+
 		}
 		/* Close the file */
 		pclose(infile);
@@ -364,7 +370,9 @@ static void widget_statusbar_input_by_file(variable *var, char *filename)
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+
 			widget_statusbar_update(var, line);
+
 		}
 		/* Close the file */
 		fclose(infile);
@@ -404,14 +412,19 @@ static void widget_statusbar_input_by_items(variable *var)
 
 static void widget_statusbar_update(variable *var, gchar *text)
 {
+	guint             context_id;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	/* A context ID is required to push and pop the messages */
+	context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(var->Widget),
+		"General");
+
 	gtk_statusbar_pop(GTK_STATUSBAR(var->Widget), context_id);
 	gtk_statusbar_push(GTK_STATUSBAR(var->Widget), context_id, text);
-	strcpy(current_message, text);
+	g_object_set_data(G_OBJECT(var->Widget), "last_push", g_strdup(text));
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
