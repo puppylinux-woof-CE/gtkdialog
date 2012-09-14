@@ -21,20 +21,20 @@ export MAIN_DIALOG='
 		<expander expanded="true" use-underline="true">
 			<vbox>
 				<hbox>
-					<checkbox active="false"></checkbox><entry>
-					<default>entry</default></entry>
+					<checkbox active="false"></checkbox>
+					<entry><default>entry</default></entry>
 				</hbox>
 				<hbox>
-					<checkbox active="true"></checkbox><entry>
-					<default>entry</default></entry>
+					<checkbox active="true"></checkbox>
+					<entry><default>entry</default></entry>
 				</hbox>
 				<hbox>
-					<checkbox active="false"></checkbox><entry>
-					<default>entry</default></entry>
+					<checkbox active="false"></checkbox>
+					<entry><default>entry</default></entry>
 				</hbox>
 				<hbox>
-					<checkbox active="true"></checkbox><entry>
-					<default>entry</default></entry>
+					<checkbox active="true"></checkbox>
+					<entry><default>entry</default></entry>
 				</hbox>
 			</vbox>
 			<label>e_xpander</label>

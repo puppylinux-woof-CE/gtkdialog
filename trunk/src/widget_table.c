@@ -28,6 +28,7 @@
 #include "automaton.h"
 #include "widgets.h"
 #include "signals.h"
+#include "stringman.h"
 #include "tag_attributes.h"
 
 /* Defines */
@@ -45,9 +46,8 @@ gint widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2);
 gint widget_table_natcasecmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2);
-gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
+static gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2, gint sensitive);
-static gint strnatcmp(gchar *c1, gchar *c2, gint sensitive);
 
 /* Notes: */
 
@@ -715,7 +715,7 @@ gint widget_table_natcasecmp(GtkCList *clist, gconstpointer ptr1,
 	return _widget_table_natcmp(clist, ptr1, ptr2, FALSE);
 }
 
-gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
+static gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2, gint sensitive)
 {
 	const GtkCListRow *row1 = (const GtkCListRow *) ptr1;
@@ -739,119 +739,6 @@ gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
-
-	return retval;
-}
-
-/***********************************************************************
- * strnatcmp                                                           *
- ***********************************************************************/
-
-static gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
-{
-	gint              c1val;
-	gint              c2val;
-	gint              retval;
-
-	if (c1 == c2) {		/* Deals with both NULL, both empty, both equal */
-		retval = 0;
-	} else if (!c1) {
-		retval = -1;
-	} else if (!c2) {
-		retval = 1;
-	} else if (!*c1) {
-		retval = -1;
-	} else if (!*c2) {
-		retval = 1;
-	} else {
-		/* There's definitely something different to compare */
-		while (TRUE) {
-
-			/* Ignore whitespace */
-			while ((*c1 == ' ' || *c1 == '\t') && *(c1 + 1)) c1++;
-			while ((*c2 == ' ' || *c2 == '\t') && *(c2 + 1)) c2++;
-
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): c1='%s' c2='%s'\n", __func__, c1, c2);
-#endif
-
-			/* Evaluate data being pointed to */
-			if ((*c1 >= '0' && *c1 <= '9')) {
-				/* Evaluate consecutive numbers */
-				c1val = 0;
-				while (*c1 >= '0' && *c1 <= '9') {
-					/* Note: All leading zeroes evaluate as 0 */
-					/* This is Unicode safe */
-					c1val = c1val * 10 + *c1 - '0';
-					*c1++;
-				}
-				c1val += 1000;	/* Add some weight */
-			} else {
-				/* Evaluate single chars */
-				if (sensitive) {
-					c1val = *c1;
-				} else {
-					/* tolower() determines what is upper
-					 * and lower case dependent upon locale */
-					c1val = tolower(*c1);
-				}
-				*c1++;
-			}
-			if ((*c2 >= '0' && *c2 <= '9')) {
-				/* Evaluate consecutive numbers */
-				c2val = 0;
-				while (*c2 >= '0' && *c2 <= '9') {
-					/* Note: All leading zeroes evaluate as 0 */
-					/* This is Unicode safe */
-					c2val = c2val * 10 + *c2 - '0';
-					*c2++;
-				}
-				c2val += 1000;	/* Add some weight */
-			} else {
-				/* Evaluate single chars */
-				if (sensitive) {
-					c2val = *c2;
-				} else {
-					/* tolower() determines what is upper
-					 * and lower case dependent upon locale */
-					c2val = tolower(*c2);
-				}
-				*c2++;
-			}
-
-			/* At this point both c1 and c2 will be pointing to the next
-			 * character to process which could be the terminating zero */
-
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): c1val=%i c2val=%i c1='%s' c2='%s'\n", __func__, c1val, c2val, c1, c2);
-#endif
-
-			/* Not equal? */
-			if (c1val < c2val) {
-				retval = -1;
-				break;
-			} else if (c1val > c2val) {
-				retval = 1;
-				break;
-			}
-
-			/* End of data? */
-			if (!*c1 && !*c2) {
-				retval = 0;
-				break;
-			} else if (!*c1) {
-				retval = -1;
-				break;
-			} else if (!*c2) {
-				retval = 1;
-				break;
-			}
-		}
-	}
-
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): retval=%i\n", __func__, retval);
 #endif
 
 	return retval;
