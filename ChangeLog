@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Fri Sep 14 2012 Thunor <thunorsif@hotmail.com>
+- Added the "column-sort-function" tag attribute to the tree widget to
+  support natural sorting algorithms on columns of type string.
+
 * Thu Sep 13 2012 Thunor <thunorsif@hotmail.com>
 - New widget: <expander>.
 - Added examples/expander/expander.

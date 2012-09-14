@@ -101,6 +101,7 @@ char *find_pixmap( char *filename );
 list_t *linecutter(char *str, int fs );
 void list_t_free(list_t *ptr);
 char *str_default_name (int itype);
+gint strnatcmp(gchar *c1, gchar *c2, gint sensitive);
 
 #endif
 

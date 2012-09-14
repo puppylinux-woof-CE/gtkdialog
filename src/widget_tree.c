@@ -31,6 +31,7 @@
 #include "automaton.h"
 #include "widgets.h"
 #include "signals.h"
+#include "stringman.h"
 #include "tag_attributes.h"
 
 /* Defines */
@@ -51,6 +52,12 @@ static void widget_tree_pixmap_column_cell_layout_function(
 	GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeView *treeview);
 gboolean widget_tree_changed_callback(GtkTreeSelection *treeselection,
 	variable *var);
+gint widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
+	GtkTreeIter *b, gpointer user_data);
+gint widget_tree_natcasecmp(GtkTreeModel *model, GtkTreeIter *a,
+	GtkTreeIter *b, gpointer user_data);
+static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
+	GtkTreeIter *b, gpointer user_data, gint sensitive);
 
 /* Local variables */
 typedef enum {
@@ -843,9 +850,11 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	GtkTreeViewColumn *column;
 	GtkWidget         *tree_view;
 	gchar             *headline = NULL;
-	gint               index;
 	gchar             *value;
+	gint               index;
+	gint               function;
 	list_t            *column_header_active = NULL;
+	list_t            *column_sort_function = NULL;
 	list_t            *column_visible = NULL;
 	list_t            *columns = NULL;
 
@@ -863,6 +872,9 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 		/* Get column-header-active (custom) */
 		if ((value = get_tag_attribute(attr, "column-header-active")))
 			column_header_active = linecutter(g_strdup(value), '|');
+		/* Get column-sort-function (custom) */
+		if ((value = get_tag_attribute(attr, "column-sort-function")))
+			column_sort_function = linecutter(g_strdup(value), '|');
 	}
 
 	/* We create the TreeView here */
@@ -877,7 +889,7 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 		gtk_tree_view_column_set_title(column, columns->line[index]);
 		gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
 		gtk_tree_view_column_set_sort_column_id(column, index + FirstDataColumn);
-		
+
 		if (index == 0) {
 			/* The first column will hold two cell renderer. One for the
 			 * pixmap with a complex cell data function and one text
@@ -916,10 +928,32 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 				gtk_tree_view_column_set_visible(column, FALSE);
 			}
 		}
+		/* Set custom sort function for column? */
+		if (column_sort_function && index < column_sort_function->n_lines) {
+			function = atoi(column_sort_function->line[index]);
+			if (function == 1 || function == 2) {
+				if ((gtk_tree_model_get_column_type(GTK_TREE_MODEL(store),
+					index + FirstDataColumn) == G_TYPE_STRING)) {
+					if (function == 1) {
+						gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(store),
+							index + FirstDataColumn, widget_tree_natcmp,
+							(gpointer)(index + FirstDataColumn), NULL);
+					} else {
+						gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(store),
+							index + FirstDataColumn, widget_tree_natcasecmp,
+							(gpointer)(index + FirstDataColumn), NULL);
+					}
+				} else {
+					fprintf(stderr, "%s(): column-sort-function: natural \
+sorting is compatible only with columns of type string.\n", __func__);
+				}
+			}
+		}
 	}
 
 	/* Free linecutter memory */
 	if (column_header_active) list_t_free(column_header_active);
+	if (column_sort_function) list_t_free(column_sort_function);
 	if (column_visible) list_t_free(column_visible);
 	if (columns) list_t_free(columns);
 
@@ -1257,6 +1291,49 @@ gboolean widget_tree_changed_callback(GtkTreeSelection *treeselection,
 #endif
 
 	return TRUE;
+}
+
+/***********************************************************************
+ * Natural Compare                                                     *
+ ***********************************************************************/
+
+gint widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
+	GtkTreeIter *b, gpointer user_data)
+{
+	return _widget_tree_natcmp(model, a, b, user_data, TRUE);
+}
+
+gint widget_tree_natcasecmp(GtkTreeModel *model, GtkTreeIter *a,
+	GtkTreeIter *b, gpointer user_data)
+{
+	return _widget_tree_natcmp(model, a, b, user_data, FALSE);
+}
+
+static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
+	GtkTreeIter *b, gpointer user_data, gint sensitive)
+{
+	gchar            *r1 = NULL;
+	gchar            *r2 = NULL;
+	gint              retval;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	gtk_tree_model_get(model, a, (gint)user_data, &r1, -1);
+	gtk_tree_model_get(model, b, (gint)user_data, &r2, -1);
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): r1=\"%s\" r2=\"%s\"\n", __func__, r1, r2);
+#endif
+
+	retval = strnatcmp(r1, r2, sensitive);
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return retval;
 }
 
 #endif
