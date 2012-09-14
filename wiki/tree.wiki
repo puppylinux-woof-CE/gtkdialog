@@ -50,6 +50,9 @@ The following custom tag attributes are available:
 || selected-row || The row to select on initialisation and refresh || An integer >= {{{0}}} || 0.8.1 ||
 || column-header-active || Active state of column header(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
+|| auto-sort || Automatically sort after loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| sort-column || The initial sort column when auto-sorting || An integer >= {{{0}}} || 0.8.1 ||
+|| sort-type || The initial sort direction when auto-sorting || {{{0}}}, {{{1}}} (ascending, descending) || 0.8.1 ||
 || column-type || Data type of column(s) || _type0_ {{{|}}} _type1_ {{{|}}} ... ({{{string}}}, {{{int64}}}, {{{uint64}}} or {{{double}}}) || 0.8.1 ||
 || column-sort-function || The sorting algorithm for each column || _func0_ {{{|}}} _func1_ {{{|}}} ... ({{{0}}} default, {{{1}}} strnatcmp or {{{2}}} strcasenatcmp) || 0.8.1 ||
 || selection-mode || Selection method || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (none, single, browse, multiple) || 0.7.21 ||
