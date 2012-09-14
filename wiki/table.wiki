@@ -46,7 +46,7 @@ The following custom tag attributes are available:
 || column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || auto-sort || Automatically sort whilst loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
 || sort-column || The initial sort column when auto-sorting || An integer >= {{{0}}} || 0.8.1 ||
-|| sort-function || The algorithm to use when sorting || {{{0}}}, {{{1}}}, {{{2}}} (ASCII, strnatcmp, strcasenatcmp) || 0.8.1 ||
+|| sort-function || The sorting algorithm for all columns || {{{0}}}, {{{1}}}, {{{2}}} (default, strnatcmp, strcasenatcmp) || 0.8.1 ||
 || freeze-thaw || Freeze rendering whilst loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 

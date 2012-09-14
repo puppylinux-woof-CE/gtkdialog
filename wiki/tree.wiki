@@ -51,6 +51,7 @@ The following custom tag attributes are available:
 || column-header-active || Active state of column header(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || column-type || Data type of column(s) || _type0_ {{{|}}} _type1_ {{{|}}} ... ({{{string}}}, {{{int64}}}, {{{uint64}}} or {{{double}}}) || 0.8.1 ||
+|| column-sort-function || The sorting algorithm for each column || _func0_ {{{|}}} _func1_ {{{|}}} ... ({{{0}}} default, {{{1}}} strnatcmp or {{{2}}} strcasenatcmp) || 0.8.1 ||
 || selection-mode || Selection method || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (none, single, browse, multiple) || 0.7.21 ||
 || icon-name || Default GTK theme icon name for all rows || || ||
 || stock-id || Default GTK stock icon ID for all rows || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || ||
