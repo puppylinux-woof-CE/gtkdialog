@@ -4,6 +4,11 @@ for announcements.
 * Fri Sep 14 2012 Thunor <thunorsif@hotmail.com>
 - Added the "column-sort-function" tag attribute to the tree widget to
   support natural sorting algorithms on columns of type string.
+- Stopped widget_tree_input_by_command/items stripping space from the
+  input data: if space was input then it was the app. dev's choice.
+- Added the "auto-sort", "sort-column" and "sort-type" tag attributes
+  to the tree widget to manage auto-sorting after filling.
+- Re-engineered the statusbar last message retrieval code.
 
 * Thu Sep 13 2012 Thunor <thunorsif@hotmail.com>
 - New widget: <expander>.

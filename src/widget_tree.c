@@ -97,6 +97,9 @@ void widget_tree_clear(variable *var)
 	/* We drop all the lines here */
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 	gtk_tree_store_clear(GTK_TREE_STORE(model));
+	/* Reset the current sort column to unsorted ascending */
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
+		GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -441,6 +444,8 @@ void widget_tree_refresh(variable *var)
 	gint              initialised = FALSE;
 	gint              selected_row;
 	gint              selectionmode;
+	gint              sort_column;
+	gint              sort_type;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -466,9 +471,9 @@ void widget_tree_refresh(variable *var)
 	 * pcd, petget, pfind, pmusic, pprocess, psip) are refreshing without
 	 * clearing first so I'll leave it as is. It's no big deal but giving
 	 * the application developer the choice of clearing could make refresh
-	 * behave as though it's appending data which is musch more useful */
-	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
-	gtk_tree_store_clear(GTK_TREE_STORE(model));
+	 * behave as though it's appending data which is much more useful */
+	/*gtk_tree_store_clear(GTK_TREE_STORE(model));	Redundant */
+	widget_tree_clear(var);
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -554,6 +559,24 @@ void widget_tree_refresh(variable *var)
 	}
 
 	if (var->widget_tag_attr) {
+		/* Get auto-sort (custom) */
+		if ((value = get_tag_attribute(var->widget_tag_attr, "auto-sort")) &&
+			((strcasecmp(value, "true") == 0) || (strcasecmp(value, "yes") == 0) ||
+			(atoi(value) == 1))) {
+			/* Get sort-column (custom) */
+			sort_column = 0;
+			if ((value = get_tag_attribute(var->widget_tag_attr, "sort-column")))
+				sort_column = atoi(value);
+			sort_type = 0;
+			/* Get sort-type (custom) */
+			sort_type = 0;	/* 0=ascending, 1=descending  -- GtkSortType */
+			if ((value = get_tag_attribute(var->widget_tag_attr, "sort-type")))
+				sort_type = atoi(value);
+			/* Sort! */
+			model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
+			gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
+				sort_column + FirstDataColumn, sort_type);
+		}
 		/* Get selected-row (custom) */
 		if ((value = get_tag_attribute(var->widget_tag_attr, "selected-row"))) {
 			selected_row = atoi(value);
@@ -883,9 +906,16 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	/* Remove the default indentation in column 0 */
 	gtk_tree_view_set_show_expanders(GTK_TREE_VIEW(tree_view), FALSE);
 
+	/* This makes no difference to performance in my tests (see below)
+	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(tree_view), TRUE); */
+
 	/* Create the columns */
 	for (index = 0; index < columns->n_lines; ++index) {
 		column = gtk_tree_view_column_new();
+		/* This makes no difference to performance in my tests (see above)
+		gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
+		gtk_tree_view_column_set_fixed_width(column, 50); */
+		gtk_tree_view_column_set_resizable(column, TRUE);
 		gtk_tree_view_column_set_title(column, columns->line[index]);
 		gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
 		gtk_tree_view_column_set_sort_column_id(column, index + FirstDataColumn);
@@ -1001,7 +1031,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 
 		while (fgets(oneline, 512, infile) != NULL) {
 			hiddencolumns = 0;
-			g_strstrip(oneline);
+			/*g_strstrip(oneline);	Redundant: don't do this */
 			columns = g_strsplit(oneline, "|", 128);
 
 			gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
@@ -1026,7 +1056,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 
 				if (n - hiddencolumns >= ncolumns) break;
 
-				g_strstrip(columns[n]);
+				/*g_strstrip(columns[n]);	Redundant: don't do this */
 
 				if (n == stock_column) {
 					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
@@ -1183,7 +1213,7 @@ static void widget_tree_input_by_items(variable *var)
 		for (n = 0; columns[n] != NULL; ++n) {
 			if (n >= ncolumns)
 				break;
-			g_strstrip(columns[n]);
+			/*g_strstrip(columns[n]);	Redundant: don't do this */
 			coltype = gtk_tree_model_get_column_type(model, n + FirstDataColumn);
 			switch (coltype) {
 				case G_TYPE_STRING:
