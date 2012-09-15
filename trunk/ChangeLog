@@ -4,6 +4,12 @@ for announcements.
 * Sat Sep 15 2012 Thunor <thunorsif@hotmail.com>
 - Added support for auto-refreshing of images from files on
   G_FILE_MONITOR_EVENT_CHANGED to the pixmap widget.
+- Changed "auto-refresh" to "file-monitor" to make it more generic as
+  I'd like to extend this functionality to other widgets.
+- Changed the way file monitoring works: instead of auto-refreshing an
+  image it now solely generates a custom "file-changed" signal and it's
+  now up to the application developer to do what he wants with that.
+- Renamed all internally used items of data attached to widgets to "_*".
 
 * Fri Sep 14 2012 Thunor <thunorsif@hotmail.com>
 - Added the "column-sort-function" tag attribute to the tree widget to

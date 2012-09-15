@@ -463,8 +463,8 @@ void widget_tree_refresh(variable *var)
 	}
 
 	/* Get initialised state of widget */
-	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* We drop all the lines here */
 	/* Thunor: I'd like to stop doing this but some applications (pbackup,

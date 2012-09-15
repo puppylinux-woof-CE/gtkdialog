@@ -327,8 +327,8 @@ void widget_table_refresh(variable *var)
 #endif
 
 	/* Get initialised state of widget */
-	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	if (var->widget_tag_attr) {
 		/* Get freeze-thaw (custom) */
@@ -660,8 +660,8 @@ gboolean widget_table_click_column_callback(GtkWidget *widget,
 	gtk_clist_set_sort_column(GTK_CLIST(widget), column);
 
 	/* Get last recorded column if it exists */
-	if (g_object_get_data(G_OBJECT(widget), "last-column") != NULL) {
-		last_column = (gint)g_object_get_data(G_OBJECT(widget), "last-column");
+	if (g_object_get_data(G_OBJECT(widget), "_last-column") != NULL) {
+		last_column = (gint)g_object_get_data(G_OBJECT(widget), "_last-column");
 		last_column--;
 	}
 
@@ -682,7 +682,7 @@ gboolean widget_table_click_column_callback(GtkWidget *widget,
 	/* Warning: Storing zero kills the piece of data so we have to
 	 * maintain it with +1 on set, -1 on get */
 	column++;
-	g_object_set_data(G_OBJECT(widget), "last-column", (gpointer)column);
+	g_object_set_data(G_OBJECT(widget), "_last-column", (gpointer)column);
 
 	/* Sit back and be amazed */
 	gtk_clist_sort(GTK_CLIST(widget));

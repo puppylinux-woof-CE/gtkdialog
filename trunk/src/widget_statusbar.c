@@ -93,7 +93,7 @@ GtkWidget *widget_statusbar_create(
 
 	/* Record the current message because otherwise it'll have to be
 	 * dug out from the label inside the box that is the statusbar */
-	g_object_set_data(G_OBJECT(widget), "last_push", g_strdup(""));
+	g_object_set_data(G_OBJECT(widget), "_last_push", g_strdup(""));
 	
 
 #ifdef DEBUG_TRANSITS
@@ -137,7 +137,7 @@ gchar *widget_statusbar_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	last_push = g_object_get_data(G_OBJECT(widget), "last_push");
+	last_push = g_object_get_data(G_OBJECT(widget), "_last_push");
 	string = g_strdup(last_push);
 
 #ifdef DEBUG_TRANSITS
@@ -186,8 +186,8 @@ void widget_statusbar_refresh(variable *var)
 #endif
 
 	/* Get initialised state of widget */
-	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -288,7 +288,7 @@ void widget_statusbar_save(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 
-			last_push = g_object_get_data(G_OBJECT(var->Widget), "last_push");
+			last_push = g_object_get_data(G_OBJECT(var->Widget), "_last_push");
 			fprintf(outfile, "%s", last_push);
 
 			fclose(outfile);
@@ -424,7 +424,7 @@ static void widget_statusbar_update(variable *var, gchar *text)
 
 	gtk_statusbar_pop(GTK_STATUSBAR(var->Widget), context_id);
 	gtk_statusbar_push(GTK_STATUSBAR(var->Widget), context_id, text);
-	g_object_set_data(G_OBJECT(var->Widget), "last_push", g_strdup(text));
+	g_object_set_data(G_OBJECT(var->Widget), "_last_push", g_strdup(text));
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

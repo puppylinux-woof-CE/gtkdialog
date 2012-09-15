@@ -326,7 +326,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 #endif
 
 	/* Store "pid" as a piece of widget data (recreated if exists)  */
-	g_object_set_data(G_OBJECT(widget), "pid", (gpointer)pid);
+	g_object_set_data(G_OBJECT(widget), "_pid", (gpointer)pid);
 
 #endif
 
@@ -376,7 +376,7 @@ gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 #endif
 
 #if HAVE_VTE
-	sprintf(envvar, "%i", (gint)g_object_get_data(G_OBJECT(widget), "pid"));
+	sprintf(envvar, "%i", (gint)g_object_get_data(G_OBJECT(widget), "_pid"));
 	string = g_strdup(envvar);
 #else
 	string = g_strdup("");
@@ -424,8 +424,8 @@ void widget_terminal_refresh(variable *var)
 #endif
 
 	/* Get initialised state of widget */
-	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
