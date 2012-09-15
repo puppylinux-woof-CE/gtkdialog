@@ -193,8 +193,8 @@ void widget_timer_refresh(variable *var)
 #endif
 
 	/* Get initialised state of widget */
-	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -235,7 +235,7 @@ void widget_timer_refresh(variable *var)
 				interval, widget_timer_timer_callback, (gpointer)var);
 		}
 		/* Store the timer_id as a piece of widget data */
-		g_object_set_data(G_OBJECT(var->Widget), "timer-id", (gpointer)timer_id);
+		g_object_set_data(G_OBJECT(var->Widget), "_timer-id", (gpointer)timer_id);
 		/* Set the text of the label to its variable name */
 		sprintf(text,
 			"<span fgcolor='white' bgcolor='darkred'> %s </span>",
@@ -446,7 +446,7 @@ gboolean widget_timer_timer_callback(gpointer data)
 		/* ATTR_VARIABLE and "timer_id" will definitely exist */
 		fprintf(stderr, "%s(): ATTR_VARIABLE=%s  timer-id=%u\n", __func__,
 			attributeset_get_first(&element, var->Attributes, ATTR_VARIABLE),
-			(guint)g_object_get_data(G_OBJECT(var->Widget), "timer-id"));
+			(guint)g_object_get_data(G_OBJECT(var->Widget), "_timer-id"));
 #endif
 
 		/* Generate a custom signal if sensitive is true */

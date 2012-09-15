@@ -25,6 +25,7 @@
 #include "gtkdialog.h"
 #include "attributes.h"
 #include "signals.h"
+#include "tag_attributes.h"
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
@@ -604,7 +605,7 @@ void on_any_widget_child_exited_event(GtkWidget *widget, AttributeSet *Attr)
 #if HAVE_VTE
 	if (VTE_IS_TERMINAL(widget)) {
 		/* The pid will now be invalid so set widget's variable to 0 */
-		g_object_set_data(G_OBJECT(widget), "pid", (gpointer)0);
+		g_object_set_data(G_OBJECT(widget), "_pid", (gpointer)0);
 	}
 #endif
 
@@ -997,6 +998,45 @@ next_command:
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
+/* Events occur in this sequence when a file is recreated using rox:
+ * 
+ * G_FILE_MONITOR_EVENT_DELETED (2)
+ * G_FILE_MONITOR_EVENT_CREATED (3)
+ * G_FILE_MONITOR_EVENT_CHANGED (0)
+ * G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (1)
+ * G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED (4)
+ * G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (1)
+ * 
+ * And from rxvt:
+ * 
+ * G_FILE_MONITOR_EVENT_CHANGED (0)
+ * G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (1)
+ * 
+ */
+
+void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
+	GFile *other_file, GFileMonitorEvent event_type, variable *var)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): event_type=%i filename=%s\n", __func__,
+		event_type, g_file_get_path(file));
+#endif
+
+	if (event_type == G_FILE_MONITOR_EVENT_CHANGED)
+		widget_signal_executor(var->Widget, var->Attributes, "file-changed");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
 gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data)
@@ -1235,4 +1275,59 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
+}
+
+/***********************************************************************
+ * Widget File Monitor Create                                          *
+ ***********************************************************************/
+
+gboolean widget_file_monitor_create(GtkWidget *widget,
+	tag_attr *tag_attributes, gchar *filename)
+{
+	GError           *error = NULL;
+	GFile            *file;
+	GFileMonitor     *monitor;
+	gchar            *value;
+	gint              retval = TRUE;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	/* GIO Reference states this function will never fail */
+	if ((file = g_file_new_for_path(find_pixmap(filename)))) {
+
+		/* I can't make this return NULL although if the
+		 * file doesn't exist then it just doesn't work */
+		monitor = g_file_monitor_file(file, G_FILE_MONITOR_NONE, FALSE,
+			&error);
+
+#ifdef DEBUG_CONTENT
+		fprintf(stderr, "%s(): file=%p monitor=%p\n", __func__, file,
+			monitor);
+#endif
+
+		if (monitor) {
+			/* Get rate-limit (custom) */
+			if ((value = get_tag_attribute(tag_attributes, "rate-limit"))) {
+				/* I tested this and couldn't detect a change */
+				g_file_monitor_set_rate_limit(monitor, atoi(value));
+			}
+			/* Store monitor as a piece of widget data */
+			g_object_set_data(G_OBJECT(widget), "_monitor",
+				(gpointer)monitor);
+		} else {
+			if (file) g_object_unref(file);
+			retval = FALSE;
+		}
+
+	} else {
+		retval = FALSE;
+	}
+
+	if (!retval)
+		fprintf(stderr, "%s(): Couldn't create file monitor for '%s'.\n",
+			__func__, filename);
+
+	return retval;
 }

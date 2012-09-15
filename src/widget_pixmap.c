@@ -26,6 +26,7 @@
 #include "gtkdialog.h"
 #include "attributes.h"
 #include "automaton.h"
+#include "signals.h"
 #include "tag_attributes.h"
 
 /* Defines */
@@ -36,8 +37,6 @@
 static void widget_pixmap_input_by_command(variable *var, char *command);
 static void widget_pixmap_input_by_file(variable *var, char *filename);
 static void widget_pixmap_input_by_items(variable *var);
-void widget_pixmap_monitor_callback(GFileMonitor *monitor, GFile *file,
-	GFile *other_file, GFileMonitorEvent event_type, variable *var);
 
 /* Local variables */
 
@@ -71,8 +70,6 @@ GtkWidget *widget_pixmap_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GError           *error = NULL;
-	GFile            *file;
-	GFileMonitor     *monitor;
 	GList            *element;
 	GtkIconTheme     *icon_theme;
 	GtkWidget        *widget;
@@ -154,35 +151,14 @@ GtkWidget *widget_pixmap_create(
 						widget = gtk_image_new_from_file("");
 					}
 				}
-				/* Are we auto-refreshing this pixmap? */
+				/* Is this file going to be monitored? */
 				if (attr) {
-					/* Get auto-refresh (custom) */
-					if ((value = get_tag_attribute(attr, "auto-refresh")) &&
+					/* Get file-monitor (custom) */
+					if ((value = get_tag_attribute(attr, "file-monitor")) &&
 						((strcasecmp(value, "true") == 0) ||
 						(strcasecmp(value, "yes") == 0) ||
 						(atoi(value) == 1))) {
-						/* GIO Reference states this will never fail */
-						file = g_file_new_for_path(find_pixmap(file_name));
-						/* I can't make this return NULL although if the
-						 * file doesn't exist then it just doesn't work */
-						monitor = g_file_monitor_file(file, G_FILE_MONITOR_NONE,
-							FALSE, &error);
-#ifdef DEBUG_CONTENT
-						fprintf(stderr, "%s(): file=%p monitor=%p\n", __func__,
-							file, monitor);
-#endif
-						if (monitor) {
-							/* Get rate-limit (custom) */
-							if ((value = get_tag_attribute(attr, "rate-limit"))) {
-								/* I tested this and couldn't detect a change */
-								g_file_monitor_set_rate_limit(monitor, atoi(value));
-							}
-							/* Store monitor as a piece of widget data */
-							g_object_set_data(G_OBJECT(widget), "monitor",
-								(gpointer)monitor);
-						} else {
-							if (file) g_object_unref(file);
-						}
+						widget_file_monitor_create(widget, attr, file_name);
 					}
 				}
 				break;	/* Only one image is required */
@@ -277,8 +253,8 @@ void widget_pixmap_refresh(variable *var)
 #endif
 
 	/* Get initialised state of widget */
-	if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -315,9 +291,9 @@ void widget_pixmap_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-		if ((monitor = g_object_get_data(G_OBJECT(var->Widget), "monitor"))) {
+		if ((monitor = g_object_get_data(G_OBJECT(var->Widget), "_monitor"))) {
 			g_signal_connect(monitor, "changed",
-				G_CALLBACK(widget_pixmap_monitor_callback), (gpointer)var);
+				G_CALLBACK(on_any_widget_file_changed_event), (gpointer)var);
 		}
 	}
 
@@ -443,56 +419,6 @@ static void widget_pixmap_input_by_items(variable *var)
 #endif
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
-
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
-}
-
-/***********************************************************************
- * Auto-Refresh File Monitor Callback                                  *
- ***********************************************************************/
-/* Events occur in this sequence when a file is recreated using rox:
- * 
- * G_FILE_MONITOR_EVENT_DELETED (2)
- * G_FILE_MONITOR_EVENT_CREATED (3)
- * G_FILE_MONITOR_EVENT_CHANGED (0)
- * G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (1)
- * G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED (4)
- * G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (1)
- * 
- * And from rxvt:
- * 
- * G_FILE_MONITOR_EVENT_CHANGED (0)
- * G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (1)
- * 
- */
-
-void widget_pixmap_monitor_callback(GFileMonitor *monitor, GFile *file,
-	GFile *other_file, GFileMonitorEvent event_type, variable *var)
-{
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
-
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): event_type=%i filename=%s\n", __func__,
-		event_type, g_file_get_path(file));
-#endif
-
-	if (var && var->Widget) {
-		if (event_type == G_FILE_MONITOR_EVENT_CHANGED) {
-			/* Refresh the image from file */
-			widget_pixmap_input_by_file(var, g_file_get_path(file));
-			/* Make the "changed" signal available to the app. developer */
-			on_any_widget_changed_event(var->Widget, var->Attributes);
-		}
-	} else {
-		/* The widget has been dropped/destroyed so kill the monitor */
-		if (monitor) g_file_monitor_cancel(monitor);
-		if (monitor) g_object_unref(monitor);
-		if (file) g_object_unref(file);
-	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

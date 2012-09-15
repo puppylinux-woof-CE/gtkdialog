@@ -732,8 +732,8 @@ widget_entry_refresh(variable *var)
 #endif
 
 		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+		if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 		/* The <input> tag... */
 		act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -817,8 +817,8 @@ void widget_scale_refresh(variable *var)
 #endif
 
 		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+		if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 		/* The <input> tag... */
 		act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -875,8 +875,8 @@ void widget_menuitem_refresh(variable *var)
 #endif
 
 		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "initialised");
+		if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
+			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 		/* Image menuitems from file can be refreshed (GTK+ destroys the
 		 * original image when a new one is set) */
