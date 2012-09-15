@@ -1010,6 +1010,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 	GType             coltype;
 	gchar           **columns;
 	gchar             oneline[512];
+	gint              count;
 	gint              hiddencolumns;
 	gint              n, ncolumns;
 
@@ -1031,7 +1032,14 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 
 		while (fgets(oneline, 512, infile) != NULL) {
 			hiddencolumns = 0;
-			g_strstrip(oneline);
+			/*g_strstrip(oneline);	Redundant */
+
+			/* Enforce end of string in case of max chars read */
+			oneline[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(oneline) - 1; count >= 0; count--)
+				if (oneline[count] == 13 || oneline[count] == 10) oneline[count] = 0;
+
 			columns = g_strsplit(oneline, "|", 128);
 
 			gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
@@ -1056,9 +1064,10 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 
 				if (n - hiddencolumns >= ncolumns) break;
 
-				g_strstrip(columns[n]);
+				/*g_strstrip(columns[n]);	Redundant: only needed for icon names */
 
 				if (n == stock_column) {
+					g_strstrip(columns[n]);	/* Required */
 					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 						ColumnStockId, columns[n], -1);
 					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
@@ -1068,6 +1077,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 #endif
 					++hiddencolumns;
 				} else if (n == icon_column) {
+					g_strstrip(columns[n]);	/* Required */
 					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 						ColumnStockId, NULL, -1);
 					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
@@ -1167,6 +1177,8 @@ static void widget_tree_input_by_items(variable *var)
 
 	ncolumns = gtk_tree_model_get_n_columns(model) - FirstDataColumn;
 
+	/* act points to the original string so we can't remove [CR]LFs
+	 * although it's not going to be likely within <item>"..."</item> */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
 	while (act != NULL) {
 		gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
@@ -1213,7 +1225,7 @@ static void widget_tree_input_by_items(variable *var)
 		for (n = 0; columns[n] != NULL; ++n) {
 			if (n >= ncolumns)
 				break;
-			g_strstrip(columns[n]);
+			/*g_strstrip(columns[n]);	Redundant */
 			coltype = gtk_tree_model_get_column_type(model, n + FirstDataColumn);
 			switch (coltype) {
 				case G_TYPE_STRING:

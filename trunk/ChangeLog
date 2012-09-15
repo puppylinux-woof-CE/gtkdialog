@@ -10,6 +10,8 @@ for announcements.
   image it now solely generates a custom "file-changed" signal and it's
   now up to the application developer to do what he wants with that.
 - Renamed all internally used items of data attached to widgets to "_*".
+- Tweaked the string stripping code in the tree widget: now it'll only
+  remove [CR]LFs, will strip icon names, won't strip anything else.
 
 * Fri Sep 14 2012 Thunor <thunorsif@hotmail.com>
 - Added the "column-sort-function" tag attribute to the tree widget to
