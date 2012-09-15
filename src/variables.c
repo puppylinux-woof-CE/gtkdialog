@@ -1092,6 +1092,8 @@ gint variables_count_widgets(void)
 
 void variables_drop_by_window_id(variable *actual, gint window_id)
 {
+	GFileMonitor     *monitor;
+
 #ifdef DEBUG
 	GtkWidget *ancestor;
 #endif
@@ -1130,6 +1132,19 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 			//Redundant: if (gtk_widget_get_toplevel(actual->Widget) == Parent) {
 			//Redundant: if (gtk_widget_get_ancestor(actual->Widget, GTK_TYPE_WINDOW) == Parent) {
 			if (actual->window_id == window_id) {
+
+				/* Timer callbacks cancel themselves when they
+				 * detect that var and var widget are NULL */
+
+				/* Cancel file monitors on pixmap widgets */
+				if (actual->Type == WIDGET_PIXMAP) {
+					if ((monitor = g_object_get_data(
+						G_OBJECT(actual->Widget), "monitor"))) {
+						g_file_monitor_cancel(monitor);
+						g_object_unref(monitor);
+						/* I don't have access to file to unref it */
+					}
+				}
 
 				actual->Widget = NULL;
 
