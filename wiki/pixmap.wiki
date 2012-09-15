@@ -33,10 +33,10 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || theme-icon-size || The size of the GTK theme icon || An integer > {{{0}}} or {{{-1}}} to ignore || 0.8.1 ||
 || stock-icon-size || The size of the GTK stock icon || {{{0}}} to {{{6}}} (see [http://developer.gnome.org/gtk/2.24/gtk-Themeable-Stock-Images.html#GtkIconSize GtkIconSize]) || 0.8.1 ||
-|| auto-refresh || Auto-refresh images from files on change || {{{true}}} or {{{false}}} || 0.8.1 ||
-|| rate-limit || The auto-refresh monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -58,7 +58,7 @@ Some of these may have tag attribute equivalents.
 
 There is no default signal for this widget.
 
-The "[http://developer.gnome.org/gio/2.32/GFileMonitor.html#GFileMonitor-changed changed]" signal is emitted if auto-refresh="true" and the image file being monitored has changed.
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following GtkWidget signals are connected-up for all widgets:
 "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]"
