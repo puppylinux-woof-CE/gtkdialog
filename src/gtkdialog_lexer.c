@@ -2154,19 +2154,19 @@ YY_RULE_SETUP
 case 75:
 YY_RULE_SETUP
 #line 428 "gtkdialog_lexer.l"
-{ Token="<combobox>"; return(COMBO);  	  		}
+{ Token="<combobox>"; return(COMBOBOX);		}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
 #line 429 "gtkdialog_lexer.l"
 { Token="<combobox>"; 
 					  BEGIN(ST_TAG_ATTR);
-					  return(PART_COMBO); 					}
+					  return(PART_COMBOBOX); 					}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
 #line 432 "gtkdialog_lexer.l"
-{ Token="</combobox>"; return(ECOMBO);    		}
+{ Token="</combobox>"; return(ECOMBOBOX);	}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP

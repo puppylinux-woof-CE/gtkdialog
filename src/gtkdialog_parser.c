@@ -248,9 +248,9 @@ start_up(void)
      TABLE = 321,
      ETABLE = 322,
      PART_TABLE = 323,
-     COMBO = 324,
-     PART_COMBO = 325,
-     ECOMBO = 326,
+     COMBOBOX = 324,
+     PART_COMBOBOX = 325,
+     ECOMBOBOX = 326,
      GVIM = 327,
      EGVIM = 328,
      TEXT = 329,
@@ -407,9 +407,9 @@ start_up(void)
 #define TABLE 321
 #define ETABLE 322
 #define PART_TABLE 323
-#define COMBO 324
-#define PART_COMBO 325
-#define ECOMBO 326
+#define COMBOBOX 324
+#define PART_COMBOBOX 325
+#define ECOMBOBOX 326
 #define GVIM 327
 #define EGVIM 328
 #define TEXT 329
@@ -966,11 +966,11 @@ static const char *const yytname[] =
   "EBUTTON", "BUTTONOK", "BUTTONCANCEL", "BUTTONHELP", "BUTTONYES",
   "BUTTONNO", "CHECKBOX", "ECHECKBOX", "PART_CHECKBOX", "RADIO", "ERADIO",
   "PART_RADIO", "PROGRESS", "EPROGRESS", "PART_PROGRESS", "LIST",
-  "PART_LIST", "ELIST", "TABLE", "ETABLE", "PART_TABLE", "COMBO",
-  "PART_COMBO", "ECOMBO", "GVIM", "EGVIM", "TEXT", "PART_TEXT", "ETEXT",
-  "PIXMAP", "PART_PIXMAP", "EPIXMAP", "DEFAULT", "EDEFAULT", "SENSITIVE",
-  "ESENSITIVE", "VARIABLE", "EVARIABLE", "WIDTH", "EWIDTH", "HEIGHT",
-  "EHEIGHT", "INPUT", "INPUTFILE", "EINPUT", "PART_INPUT",
+  "PART_LIST", "ELIST", "TABLE", "ETABLE", "PART_TABLE", "COMBOBOX",
+  "PART_COMBOBOX", "ECOMBOBOX", "GVIM", "EGVIM", "TEXT", "PART_TEXT",
+  "ETEXT", "PIXMAP", "PART_PIXMAP", "EPIXMAP", "DEFAULT", "EDEFAULT",
+  "SENSITIVE", "ESENSITIVE", "VARIABLE", "EVARIABLE", "WIDTH", "EWIDTH",
+  "HEIGHT", "EHEIGHT", "INPUT", "INPUTFILE", "EINPUT", "PART_INPUT",
   "PART_INPUTFILE", "OUTPUT", "OUTPUTFILE", "EOUTPUT", "ACTION", "EACTION",
   "PART_ACTION", "COMM", "ENDCOMM", "IF", "ENDIF", "WHILE", "EWHILE",
   "SHOW_WIDGETS", "EMB_VARIABLE", "EMB_NUMBER", "END_OF_FILE", "NUMBER",
@@ -987,7 +987,7 @@ static const char *const yytname[] =
   "PART_EVENTBOX", "EEVENTBOX", "EXPANDER", "PART_EXPANDER", "EEXPANDER",
   "'>'", "':'", "'!'", "$accept", "window", "wlist", "widget", "entry",
   "edit", "tree", "chooser", "text", "button", "checkbox", "radiobutton",
-  "progressbar", "list", "table", "combo", "gvim", "pixmap", "menubar",
+  "progressbar", "list", "table", "combobox", "gvim", "pixmap", "menubar",
   "menuwlist", "menu", "menuitem", "menuitemseparator", "hseparator",
   "vseparator", "comboboxtext", "comboboxentry", "hscale", "vscale",
   "spinbutton", "timer", "togglebutton", "statusbar", "colorbutton",
@@ -3471,7 +3471,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 429 "gtkdialog_parser.y"
     {
-    		token_store(PUSH | WIDGET_COMBO);
+    		token_store(PUSH | WIDGET_COMBOBOX);
 	}
     break;
 
@@ -3480,7 +3480,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 432 "gtkdialog_parser.y"
     {
-    		token_store_attr(PUSH | WIDGET_COMBO, (yyvsp[(2) - (5)].nvval));
+    		token_store_attr(PUSH | WIDGET_COMBOBOX, (yyvsp[(2) - (5)].nvval));
 	}
     break;
 

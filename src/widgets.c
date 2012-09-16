@@ -39,7 +39,9 @@
 #include "widget_button.h"
 #include "widget_checkbox.h"
 #include "widget_colorbutton.h"
+#include "widget_combobox.h"
 #include "widget_comboboxtext.h"
+#include "widget_edit.h"
 #include "widget_eventbox.h"
 #include "widget_expander.h"
 #include "widget_fontbutton.h"
@@ -67,27 +69,6 @@
 #include "macros.h"
 
 extern gboolean option_no_warning;
-
-static
-void fill_combo_by_items(AttributeSet *Attr,
-		         GtkWidget *combo)
-{
-	GList *element;
-	GList *glist = NULL;
-	char *text;
-	
-	g_assert(Attr != NULL && combo != NULL);
-	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
-	if (text == NULL)
-		return;
-	
-	while (text != NULL) {
-		glist = g_list_append(glist, text);
-next_line:	text = attributeset_get_next(&element, Attr, ATTR_ITEM);
-	}
-	
-	gtk_combo_set_popdown_strings(GTK_COMBO(combo), glist);
-}
 
 static
 void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale)
@@ -126,8 +107,6 @@ widget_get_text_value(
 		GtkWidget *widget, 
 		int type)
 {
-	GtkTextBuffer    *text_buffer;
-	GtkTextIter       start, end;		
 	gchar            *string;
 	gchar             value[32];
 	gint              digits;
@@ -160,9 +139,17 @@ widget_get_text_value(
 			string = widget_colorbutton_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_COMBOBOX:
+			string = widget_combobox_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			string = widget_comboboxtext_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_EDIT:
+			string = widget_edit_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_EVENTBOX:
@@ -255,17 +242,6 @@ widget_get_text_value(
 			return (char *) gtk_entry_get_text(GTK_ENTRY(widget));
 			break;
 			
-		case WIDGET_COMBO:
-			return (char *) gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(widget)->entry));
-			break;
-
-		case WIDGET_EDIT:
-			text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
-			gtk_text_buffer_get_start_iter(text_buffer, &start);
-			gtk_text_buffer_get_end_iter(text_buffer, &end);
-			return gtk_text_buffer_get_text(text_buffer, &start, &end, TRUE);
-			break;
-			
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
 			digits = gtk_scale_get_digits(GTK_SCALE(widget));
@@ -348,45 +324,6 @@ widget_get_text_value(
 			return NULL;
 	}
 	g_error("%s(): this should not be reached", __func__);
-}
-
-static
-void fill_edit_by_file(GtkWidget * widget, char *filename)
-{
-	struct stat st;
-	char *filebuffer;
-	int infile, result;
-	GtkTextBuffer *buffer;
-	char *message;	
-
-	// FIXME: this is stupid, I really should correct this
-	//
-	if (strncasecmp(filename, "File: ", 6) == 0)
-		filename += 6;
-	if (strncasecmp(filename, "File:", 5) == 0)
-		filename += 5;
-
-	if (stat(filename, &st) != 0) {
-		message = g_strdup_printf("Could not stat '%s'.", filename);
-		yywarning(message);
-		g_free(message);
-		return;
-	}
-
-	filebuffer = g_malloc(st.st_size);
-	infile = open(filename, O_RDONLY);
-	if (infile == -1) {
-		message = g_strdup_printf("Could not open '%s' for reading.", filename);
-		yywarning(message);
-		g_free(message);
-		return;
-	}
-
-	result = read(infile, filebuffer, st.st_size);
-	close(infile);
-
-	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
-	gtk_text_buffer_set_text(buffer, filebuffer, st.st_size);
 }
 
 static
@@ -474,21 +411,6 @@ void fill_entry_by_file(GtkWidget *widget, char *filename)
 
 }
 
-int widget_edit_refresh(variable * var)
-{
-	GList *element;
-	char *act;
-	if (var == NULL || var->Attributes == NULL)
-		return FALSE;
-
-	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-	while (act != NULL) {
-		fill_edit_by_file(var->Widget, act);
-		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-	}
-}
-
-
 void save_entry_to_file(variable *var)
 {
 	GList            *element;
@@ -521,74 +443,6 @@ void save_entry_to_file(variable *var)
 	} else {
 		yywarning("No output file directive found");
 	}
-}
-
-void widget_edit_save(variable * var)
-{
-	GList *element;
-	char *filename;
-#ifdef DEBUG
-	fprintf(stderr, "%s(): Start.\n", __func__);
-	fflush(stderr);
-#endif
-	g_assert(var != NULL);
-	
-	filename = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
-	if (filename == NULL){
-		yywarning("Save activated but no output is given. "
-			"Trying to save to the input file...");
-		goto try_input;
-	}
-
-	while (filename != NULL) {
-		save_edit_to_file(var->Widget, filename);
-		filename = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
-	}
-	return;
-
-	//
-	// If there is no <output>, we try to use <input> file.
-	//
-try_input:
-	filename = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-	if (filename == NULL){
-		yywarning("No input file either.");
-		return;
-	}
-	save_edit_to_file(var->Widget, filename);
-}
-
-static
-void save_edit_to_file(GtkWidget * widget, char *filename)
-{
-	int outfile, result;
-	GtkTextBuffer *buffer;
-	GtkTextIter start, end;
-	gchar *text;
-#ifdef DEBUG
-	fprintf(stderr, "%s() Saving to '%s'.\n", __func__, filename);
-	fflush(stderr);
-#endif
-	// FIXME: this is stupid, I really should correct this
-	//
-	if (strncasecmp(filename, "File: ", 6) == 0)
-		filename += 6;
-	if (strncasecmp(filename, "File:", 5) == 0)
-		filename += 5;
-
-
-	outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
-	if (outfile == -1) {
-		fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
-			__func__, filename);
-		return;
-	}
-	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
-	gtk_text_buffer_get_start_iter(buffer, &start);
-	gtk_text_buffer_get_end_iter(buffer, &end);
-	text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
-	result = write(outfile, text, strlen(text));
-	close(outfile);
 }
 
 void save_scale_to_file(variable *var)
@@ -784,24 +638,6 @@ widget_entry_refresh(variable *var)
 #endif
 		}
 	}
-}
-
-void 
-widget_combo_refresh(variable * var)
-{
-	if (var == NULL || var->Attributes == NULL)
-		return;
-	/*
-	 ** The <item> tags
-	 */
-	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		fill_combo_by_items(var->Attributes, var->Widget);
-
-	if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
-		(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
-		gtk_widget_set_sensitive(var->Widget, FALSE);
 }
 
 void widget_scale_refresh(variable *var)
@@ -1144,11 +980,17 @@ char *widgets_to_str(int itype)
 		case WIDGET_COLORBUTTON:
 			type = "COLORBUTTON";
 			break;
+		case WIDGET_COMBOBOX:
+			type = "COMBOBOX";
+			break;
 		case WIDGET_COMBOBOXENTRY:
 			type = "COMBOBOXENTRY";
 			break;
 		case WIDGET_COMBOBOXTEXT:
 			type = "COMBOBOXTEXT";
+			break;
+		case WIDGET_EDIT:
+			type = "EDIT";
 			break;
 		case WIDGET_EVENTBOX:
 			type = "EVENTBOX";
@@ -1216,12 +1058,6 @@ char *widgets_to_str(int itype)
 
 	case WIDGET_ENTRY:
 		type = "ENTRY";
-		break;
-	case WIDGET_EDIT:
-		type = "EDIT";
-		break;
-	case WIDGET_COMBO:
-		type = "COMBO";
 		break;
 	case WIDGET_SCROLLEDW:
 		type = "SCROLLEDW";

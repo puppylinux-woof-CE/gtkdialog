@@ -105,9 +105,9 @@
      TABLE = 321,
      ETABLE = 322,
      PART_TABLE = 323,
-     COMBO = 324,
-     PART_COMBO = 325,
-     ECOMBO = 326,
+     COMBOBOX = 324,
+     PART_COMBOBOX = 325,
+     ECOMBOBOX = 326,
      GVIM = 327,
      EGVIM = 328,
      TEXT = 329,
@@ -264,9 +264,9 @@
 #define TABLE 321
 #define ETABLE 322
 #define PART_TABLE 323
-#define COMBO 324
-#define PART_COMBO 325
-#define ECOMBO 326
+#define COMBOBOX 324
+#define PART_COMBOBOX 325
+#define ECOMBOBOX 326
 #define GVIM 327
 #define EGVIM 328
 #define TEXT 329

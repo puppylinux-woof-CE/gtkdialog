@@ -142,7 +142,7 @@ gchar *widget_list_envvar_construct(GtkWidget *widget)
 	/* Thunor: This is all original code moved across when refactoring */
 	item = GTK_LIST(widget)->selection;
 	if (item != NULL) {
-		/* Thunor: Is this right? It's not being duplicated */
+		/* Thunor: Is this right? It's not being duplicated temp temp */
 		string = gtk_object_get_user_data(item->data);
 	} else {
 		string = g_strdup("");

@@ -425,11 +425,11 @@ gchar *Token;
 \<gvim\>     				{ Token="<gvim>"; return(GVIM);  			}
 \<\/gvim\>   				{ Token="</gvim>"; return(EGVIM);  			}
 
-\<combobox\>    			{ Token="<combobox>"; return(COMBO);  	  		}
+\<combobox\>    			{ Token="<combobox>"; return(COMBOBOX);		}
 \<combobox[ ]+  			{ Token="<combobox>"; 
 					  BEGIN(ST_TAG_ATTR);
-					  return(PART_COMBO); 					}
-\<\/combobox\>  			{ Token="</combobox>"; return(ECOMBO);    		}
+					  return(PART_COMBOBOX); 					}
+\<\/combobox\>  			{ Token="</combobox>"; return(ECOMBOBOX);	}
 
 \<list\>    				{ Token="<list>";  return(LIST);  			}
 \<list[ ]+      			{ Token="<list>";  

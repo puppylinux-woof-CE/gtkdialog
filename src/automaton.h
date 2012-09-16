@@ -58,7 +58,7 @@ typedef struct actioncommand {
 #define WIDGET_RADIOBUTTON       0x00060000
 #define WIDGET_LIST              0x00070000
 #define WIDGET_TABLE             0x00080000
-#define WIDGET_COMBO             0x00090000
+#define WIDGET_COMBOBOX          0x00090000
 #define WIDGET_OKBUTTON          0x000A0000
 #define WIDGET_CANCELBUTTON      0x000B0000
 #define WIDGET_HELPBUTTON        0x000C0000

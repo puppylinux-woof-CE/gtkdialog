@@ -1,5 +1,5 @@
 /*
- * widget_template.c: 
+ * widget_combobox.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -35,9 +35,9 @@
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes, located at file bottom */
-static void widget_template_input_by_command(variable *var, char *command);
-static void widget_template_input_by_file(variable *var, char *filename);
-static void widget_template_input_by_items(variable *var);
+static void widget_combobox_input_by_command(variable *var, char *command);
+static void widget_combobox_input_by_file(variable *var, char *filename);
+static void widget_combobox_input_by_items(variable *var);
 
 /* Notes: */
 
@@ -45,16 +45,17 @@ static void widget_template_input_by_items(variable *var);
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_template_clear(variable *var)
+void widget_combobox_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	GList            *empty = NULL;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
+	/* Thunor: This is all original code moved across when refactoring */
+	empty = g_list_append(empty, "");
+	gtk_combo_set_popdown_strings(GTK_COMBO(var->Widget), empty);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -65,7 +66,7 @@ void widget_template_clear(variable *var)
  * Create                                                              *
  ***********************************************************************/
 
-GtkWidget *widget_template_create(
+GtkWidget *widget_combobox_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GtkWidget        *widget;
@@ -74,9 +75,8 @@ GtkWidget *widget_template_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): Hello.\n", __func__);
-#endif
+	/* Thunor: This is all original code moved across when refactoring */
+	widget = gtk_combo_new();
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -89,7 +89,7 @@ GtkWidget *widget_template_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_template_envvar_all_construct(variable *var)
+gchar *widget_combobox_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -98,6 +98,10 @@ gchar *widget_template_envvar_all_construct(variable *var)
 #endif
 
 	/* This function should not be connected-up by default */
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): Hello.\n", __func__);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -110,15 +114,18 @@ gchar *widget_template_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_template_envvar_construct(GtkWidget *widget)
+gchar *widget_combobox_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
+	gchar            *text;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup("");
+	/* Thunor: This is all original code moved across when refactoring */
+	text = (gchar*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(widget)->entry));
+	string = g_strdup(text);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -131,7 +138,7 @@ gchar *widget_template_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_template_fileselect(
+void widget_combobox_fileselect(
 	variable *var, const char *name, const char *value)
 {
 	gchar            *var1;
@@ -152,9 +159,8 @@ void widget_template_fileselect(
  * Refresh                                                             *
  ***********************************************************************/
 
-void widget_template_refresh(variable *var)
+void widget_combobox_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;
@@ -171,21 +177,17 @@ void widget_template_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_template_input_by_command(var, act + 8);
+			widget_combobox_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			if (!initialised) {
-				/* Check for file-monitor and create if requested */
-				widget_file_monitor_will_create(var, act + 5);
-			}
-			widget_template_input_by_file(var, act + 5);
+			widget_combobox_input_by_file(var, act + 5);
 		}
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_template_input_by_items(var);
+		widget_combobox_input_by_items(var);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
@@ -209,10 +211,6 @@ void widget_template_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-		if ((monitor = g_object_get_data(G_OBJECT(var->Widget), "_monitor"))) {
-			g_signal_connect(monitor, "changed",
-				G_CALLBACK(on_any_widget_file_changed_event), (gpointer)var);
-		}
 
 	}
 
@@ -225,7 +223,7 @@ void widget_template_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_template_removeselected(variable *var)
+void widget_combobox_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -246,7 +244,7 @@ void widget_template_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_template_save(variable *var)
+void widget_combobox_save(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -266,7 +264,7 @@ void widget_template_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_template_input_by_command(variable *var, char *command)
+static void widget_combobox_input_by_command(variable *var, char *command)
 {
 	gchar            *var1;
 	gint              var2;
@@ -286,7 +284,7 @@ static void widget_template_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_template_input_by_file(variable *var, char *filename)
+static void widget_combobox_input_by_file(variable *var, char *filename)
 {
 	gchar            *var1;
 	gint              var2;
@@ -306,16 +304,29 @@ static void widget_template_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_template_input_by_items(variable *var)
+static void widget_combobox_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	GList            *element;
+	GList            *glist = NULL;
+	gchar            *text;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
+	/* Thunor: This is all original code moved across when refactoring */
+	g_assert(var->Attributes != NULL && var->Widget != NULL);
+
+	text = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
+	if (text == NULL)
+		return;
+
+	while (text != NULL) {
+		glist = g_list_append(glist, text);
+		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
+	}
+
+	gtk_combo_set_popdown_strings(GTK_COMBO(var->Widget), glist);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
