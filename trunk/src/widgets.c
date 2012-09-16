@@ -42,6 +42,7 @@
 #include "widget_combobox.h"
 #include "widget_comboboxtext.h"
 #include "widget_edit.h"
+#include "widget_entry.h"
 #include "widget_eventbox.h"
 #include "widget_expander.h"
 #include "widget_fontbutton.h"
@@ -152,6 +153,10 @@ widget_get_text_value(
 			string = widget_edit_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_ENTRY:
+			string = widget_entry_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_EVENTBOX:
 			string = widget_eventbox_envvar_construct(widget);
 			return string;
@@ -238,9 +243,7 @@ widget_get_text_value(
 					GTK_FILE_CHOOSER(widget));
 			break;
 #endif
-		case WIDGET_ENTRY:
-			return (char *) gtk_entry_get_text(GTK_ENTRY(widget));
-			break;
+
 			
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
@@ -384,67 +387,6 @@ void fill_menuitem_by_file(GtkWidget *widget, char *filename)
 	}
 }
 
-static
-void fill_entry_by_file(GtkWidget *widget, char *filename)
-{
-	FILE             *infile;
-	gchar             line[512];
-	gint              count;
-
-	if (infile = fopen(filename, "r")) {
-		/* Just one line */
-		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			gtk_entry_set_text(GTK_ENTRY(widget), line);
-		}
-		/* Close the file */
-		fclose(infile);
-	} else {
-		if (!option_no_warning)
-			g_warning("%s(): Couldn't open '%s' for reading.", 
-				__func__, filename);
-	}
-
-}
-
-void save_entry_to_file(variable *var)
-{
-	GList            *element;
-	FILE             *outfile;
-	gchar            *act;
-	gchar            *filename = NULL;
-	const gchar      *text;
-
-	/* We'll use the output file filename if available */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
-	while (act) {
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			filename = act + 5;
-			break;
-		}
-		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
-	}
-
-	/* If we have a valid filename then open it and dump the
-	 * widget's data to it */
-	if (filename) {
-		if ((outfile = fopen(filename, "w"))) {
-			text = gtk_entry_get_text(GTK_ENTRY(var->Widget));
-			fprintf(outfile, "%s", text);
-			fclose(outfile);
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
-				__func__, filename);
-		}
-	} else {
-		yywarning("No output file directive found");
-	}
-}
-
 void save_scale_to_file(variable *var)
 {
 	GList            *element;
@@ -569,74 +511,6 @@ void save_menuitem_to_file(variable *var)
 		}
 	} else {
 		yywarning("No output file directive found");
-	}
-}
-
-void 
-widget_entry_refresh(variable *var)
-{
-	GList            *element;
-	gchar            *act, *value;
-	gint              initialised = FALSE;
-
-	if (var != NULL && var->Attributes != NULL) {
-
-#ifdef DEBUG
-		g_message("%s(): entering.", __func__);
-#endif
-
-		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
-
-		/* The <input> tag... */
-		act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-		while (act) {
-			/* input file stock = "File:", input file = "File:/path/to/file" */
-			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-				fill_entry_by_file(var->Widget, act + 5);
-			if (input_is_shell_command(act))
-				fill_entry_by_command(var->Widget, act + 8);
-			act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-		}
-
-		/* Initialise these only once at start-up */
-		if (!initialised) {
-			/* Apply the default directive if available */
-			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
-				gtk_entry_set_text(GTK_ENTRY(var->Widget),
-				attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT));
-			/* Apply the sensitive directive if available */
-			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
-				gtk_widget_set_sensitive(var->Widget, FALSE);
-			if (attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "password"))
-				gtk_entry_set_visibility(GTK_ENTRY(var->Widget), FALSE);
-			/* Apply the width and height directives if available */
-			if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT) &&
-				attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-				gtk_widget_set_usize(var->Widget, 
-					atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH)),
-					atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT)));
-
-			/* Connect signals */
-			g_signal_connect(G_OBJECT(var->Widget), "changed", 
-				G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
-			g_signal_connect(G_OBJECT(var->Widget), "activate",
-				G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
-#if GTK_CHECK_VERSION(2,16,0)
-			/* Despite what the GTK+ 2 Reference Manual says, I found
-			 * these to be activatable by default. They will actually
-			 * be prefixed with either primary- or secondary- for use
-			 * within action directives */
-			g_signal_connect(G_OBJECT(var->Widget), "icon-press",
-				G_CALLBACK(on_any_widget_icon_press_event), (gpointer)var->Attributes);
-			g_signal_connect(G_OBJECT(var->Widget), "icon-release",
-				G_CALLBACK(on_any_widget_icon_release_event), (gpointer)var->Attributes);
-#endif
-		}
 	}
 }
 
@@ -864,28 +738,6 @@ void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 	gtk_clist_select_row(GTK_CLIST(list), 0, 0);
 } */
 
-void fill_entry_by_command(GtkWidget * entry, char *command)
-{
-	FILE *infile;
-	char line[512];
-
-	g_assert(entry != NULL && command != NULL);
-
-	infile = widget_opencommand(command);
-	if (infile == NULL) {
-		g_warning("%s(): command %s, %m\n", __func__, command);
-		return;
-	}
-
-	if (fgets(line, 512, infile) != NULL) {
-		if (line[strlen(line) - 1] == '\n')
-			line[strlen(line) - 1] = '\0';
-		gtk_entry_set_text(GTK_ENTRY(entry), (const gchar *) line);
-	}
-
-	pclose(infile);
-}
-
 void fill_scale_by_command(GtkWidget *widget, char *command)
 {
 	FILE             *infile;
@@ -992,6 +844,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_EDIT:
 			type = "EDIT";
 			break;
+		case WIDGET_ENTRY:
+			type = "ENTRY";
+			break;
 		case WIDGET_EVENTBOX:
 			type = "EVENTBOX";
 			break;
@@ -1056,9 +911,6 @@ char *widgets_to_str(int itype)
 			break;
 
 
-	case WIDGET_ENTRY:
-		type = "ENTRY";
-		break;
 	case WIDGET_SCROLLEDW:
 		type = "SCROLLEDW";
 		break;

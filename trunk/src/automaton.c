@@ -49,6 +49,7 @@
 #include "widget_combobox.h"
 #include "widget_comboboxtext.h"
 #include "widget_edit.h"
+#include "widget_entry.h"
 #include "widget_eventbox.h"
 #include "widget_expander.h"
 #include "widget_fontbutton.h"
@@ -324,6 +325,9 @@ void print_command(instruction command)
 		case WIDGET_EDIT:
 			printf("(new edit)");
 			break;
+		case WIDGET_ENTRY:
+			printf("(new entry())");
+			break;
 		case WIDGET_EVENTBOX:
 			printf("(new eventbox())");
 			break;
@@ -388,9 +392,6 @@ void print_command(instruction command)
 			break;
 
 
-	case WIDGET_ENTRY:
-	    printf("(new entry())");
-	    break;
 	case WIDGET_PROGRESS:
 	    printf("(new progressbar())");
 	    break;
@@ -630,6 +631,9 @@ void print_token(token Token)
 		case WIDGET_EDIT:
 			printf("(EDIT)");
 			break;
+		case WIDGET_ENTRY:
+			printf("(ENTRY)");
+			break;
 		case WIDGET_EVENTBOX:
 			printf("(EVENTBOX)");
 			break;
@@ -694,9 +698,6 @@ void print_token(token Token)
 			break;
 
 
-	case WIDGET_ENTRY:
-		printf("(ENTRY)");
-		break;
 	case WIDGET_PROGRESS:
 		printf("(PROGRESSBAR)");
 		break;
@@ -1532,6 +1533,10 @@ instruction_execute_push(
 				tag_attributes, Widget_Type);
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			break;
+		case WIDGET_ENTRY:
+			Widget = widget_entry_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_EVENTBOX:
 			Widget = widget_eventbox_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1656,13 +1661,6 @@ instruction_execute_push(
 			break;
 
 
-	case WIDGET_ENTRY:
-		/*
-		 ** Creating the widget, and pushing it into the stack.
-		 */
-		Widget = gtk_entry_new();
-		push_widget(Widget, Widget_Type);
-		break;
 
 	case WIDGET_CHOOSER:
 		/* Thunor: This widget is incredibly lacking in comparison to
