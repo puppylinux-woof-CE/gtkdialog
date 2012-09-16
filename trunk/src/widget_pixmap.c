@@ -151,16 +151,6 @@ GtkWidget *widget_pixmap_create(
 						widget = gtk_image_new_from_file("");
 					}
 				}
-				/* Is this file going to be monitored? */
-				if (attr) {
-					/* Get file-monitor (custom) */
-					if ((value = get_tag_attribute(attr, "file-monitor")) &&
-						((strcasecmp(value, "true") == 0) ||
-						(strcasecmp(value, "yes") == 0) ||
-						(atoi(value) == 1))) {
-						widget_file_monitor_create(widget, attr, file_name);
-					}
-				}
 				break;	/* Only one image is required */
 			}
 		}
@@ -246,6 +236,7 @@ void widget_pixmap_refresh(variable *var)
 	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
+	gchar            *value;
 	gint              initialised = FALSE;
 
 #ifdef DEBUG_TRANSITS
@@ -263,10 +254,15 @@ void widget_pixmap_refresh(variable *var)
 			widget_pixmap_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+			if (!initialised) {
+				/* Check for file-monitor and create if requested */
+				widget_file_monitor_will_create(var, act + 5);
+			}
 			/* Don't refresh images on the first call otherwise they
 			 * get created and then immediately refreshed at start-up */
-			if (initialised)
+			if (initialised) {
 				widget_pixmap_input_by_file(var, act + 5);
+			}
 		}
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
