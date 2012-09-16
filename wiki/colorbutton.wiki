@@ -35,6 +35,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -60,8 +62,10 @@ Some of these may have tag attribute equivalents.
 
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton-color-set color-set]", emitted when the user selects a colour.
 
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
+
 The following GtkWidget signals are connected-up for all widgets:
-"[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]"
+[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
 
 == Functions ==
 
