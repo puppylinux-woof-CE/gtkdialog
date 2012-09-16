@@ -37,6 +37,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || 0.7.21 ||
 || fs-filters || fileselect function pattern file filters || _pattern_{{{|}}}_pattern_{{{|}}}... || 0.7.21 ||
 || fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... ([http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types common types]) || 0.7.21 ||
@@ -73,8 +75,10 @@ The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activa
 
 For GTK+ 2.16 and later, the "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-press icon-press]" and "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-release icon-release]" signals are emitted when an activatable icon is pressed or released, but these signal names will be prefixed with either "primary-" or "secondary-" to indicate the source icon (since 0.7.21).
 
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
+
 The following GtkWidget signals are connected-up for all widgets:
-"[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event]", "[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]"
+[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
 
 == Functions ==
 
