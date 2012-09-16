@@ -11,6 +11,10 @@ for announcements.
 - Added file-monitor functionality to the edit widget.
 - Refactored the entry widget.
 - Added file-monitor functionality to the entry widget.
+- Added file-monitor functionality to the expander widget.
+- Added file-monitor functionality to the fontbutton widget.
+- Added file-monitor functionality to the frame widget although this
+  widget doesn't accept tag attributes which I may be able to solve.
 
 * Sat Sep 15 2012 Thunor <thunorsif@hotmail.com>
 - Added support for auto-refreshing of images from files on
