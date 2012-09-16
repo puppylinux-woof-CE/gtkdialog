@@ -9,6 +9,8 @@ for announcements.
 - Added file-monitor functionality to the comboboxentry/text widgets.
 - Refactored the edit widget.
 - Added file-monitor functionality to the edit widget.
+- Refactored the entry widget.
+- Added file-monitor functionality to the entry widget.
 
 * Sat Sep 15 2012 Thunor <thunorsif@hotmail.com>
 - Added support for auto-refreshing of images from files on

@@ -28,6 +28,7 @@
 #include "widget_combobox.h"
 #include "widget_comboboxtext.h"
 #include "widget_edit.h"
+#include "widget_entry.h"
 #include "widget_eventbox.h"
 #include "widget_expander.h"
 #include "widget_fontbutton.h"
@@ -357,6 +358,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_EDIT:
 			widget_edit_fileselect(toset, name, value);
 			break;
+		case WIDGET_ENTRY:
+			widget_entry_fileselect(toset, name, value);
+			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_fileselect(toset, name, value);
 			break;
@@ -416,12 +420,6 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_WINDOW:
 			widget_window_fileselect(toset, name, value);
 			break;
-
-
-		case WIDGET_ENTRY:
-			gtk_entry_set_text(GTK_ENTRY(toset->Widget), value);
-			break;
-
 		default:
 			yywarning("Set-value not implemented for this widget.");
 	}
@@ -470,6 +468,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_EDIT:
 			widget_edit_save(var);
+			break;
+		case WIDGET_ENTRY:
+			widget_entry_save(var);
 			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_save(var);
@@ -532,9 +533,6 @@ variable *variables_save(const char *name)
 			break;
 
 
-		case WIDGET_ENTRY:
-			save_entry_to_file(var);
-			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
 			save_scale_to_file(var);
@@ -613,6 +611,9 @@ variable *variables_refresh(const char *name)
 		case WIDGET_EDIT:
 			widget_edit_refresh(var);
 			break;
+		case WIDGET_ENTRY:
+			widget_entry_refresh(var);
+			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_refresh(var);
 			break;
@@ -674,9 +675,6 @@ variable *variables_refresh(const char *name)
 			break;
 
 
-		case WIDGET_ENTRY:
-			widget_entry_refresh(var);
-			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
 			widget_scale_refresh(var);
@@ -1619,6 +1617,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_EDIT:
 			widget_edit_clear(toclear);
 			break;
+		case WIDGET_ENTRY:
+			widget_entry_clear(toclear);
+			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_clear(toclear);
 			break;
@@ -1677,11 +1678,6 @@ variable *variables_clear(const char *name)
 			break;
 		case WIDGET_WINDOW:
 			widget_window_clear(toclear);
-			break;
-
-
-		case WIDGET_ENTRY:
-			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
 			break;
 		default:
 			yywarning("Clear not implemented for this widget.");
@@ -1752,6 +1748,9 @@ int remove_selected_variable(const char *name)
 		case WIDGET_EDIT:
 			widget_edit_removeselected(toclear);
 			break;
+		case WIDGET_ENTRY:
+			widget_entry_removeselected(toclear);
+			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_removeselected(toclear);
 			break;
@@ -1811,12 +1810,6 @@ int remove_selected_variable(const char *name)
 		case WIDGET_WINDOW:
 			widget_window_removeselected(toclear);
 			break;
-
-
-		case WIDGET_ENTRY:
-			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
-			break;
-
 		default:
 			yywarning("Delete not implemented for this widget.");
 	}

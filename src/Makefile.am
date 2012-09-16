@@ -29,6 +29,7 @@ gtkdialog_SOURCES = \
 	widget_combobox.c widget_combobox.h \
 	widget_comboboxtext.c widget_comboboxtext.h \
 	widget_edit.c widget_edit.h \
+	widget_entry.c widget_entry.h \
 	widget_eventbox.c widget_eventbox.h \
 	widget_expander.c widget_expander.h \
 	widget_fontbutton.c widget_fontbutton.h \
