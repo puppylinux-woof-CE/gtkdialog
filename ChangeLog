@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Sep 16 2012 Thunor <thunorsif@hotmail.com>
+- Added file-monitor functionality to the [toggle]button and checkbox
+  widgets.
+
 * Sat Sep 15 2012 Thunor <thunorsif@hotmail.com>
 - Added support for auto-refreshing of images from files on
   G_FILE_MONITOR_EVENT_CHANGED to the pixmap widget.

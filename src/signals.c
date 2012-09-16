@@ -1278,56 +1278,67 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 }
 
 /***********************************************************************
- * Widget File Monitor Create                                          *
+ * Widget File Monitor Will Create                                     *
  ***********************************************************************/
-
-gboolean widget_file_monitor_create(GtkWidget *widget,
-	tag_attr *tag_attributes, gchar *filename)
+/* If the tag attribute file-monitor is true then attempt to create the
+ * file monitor. The intention is to add this functionality to as many
+ * widgets that can benefit from it so as much as possible is done here
+ * to reduce the check and call down to one simple line */
+ 
+gboolean widget_file_monitor_will_create(variable *var, gchar *filename)
 {
 	GError           *error = NULL;
 	GFile            *file;
 	GFileMonitor     *monitor;
 	gchar            *value;
-	gint              retval = TRUE;
+	gint              retval = FALSE;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* GIO Reference states this function will never fail */
-	if ((file = g_file_new_for_path(find_pixmap(filename)))) {
+	/* Is this file going to be monitored? */
+	if (var->widget_tag_attr) {
 
-		/* I can't make this return NULL although if the
-		 * file doesn't exist then it just doesn't work */
-		monitor = g_file_monitor_file(file, G_FILE_MONITOR_NONE, FALSE,
-			&error);
+		/* Get file-monitor (custom) */
+		if ((value = get_tag_attribute(var->widget_tag_attr,
+			"file-monitor")) && ((strcasecmp(value, "true") == 0) ||
+			(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+
+			/* GIO Reference states this function will never fail */
+			if ((file = g_file_new_for_path(find_pixmap(filename)))) {
+
+				/* I can't make this return NULL although if the
+				 * file doesn't exist then it just doesn't work */
+				monitor = g_file_monitor_file(file, G_FILE_MONITOR_NONE,
+					FALSE, &error);
 
 #ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): file=%p monitor=%p\n", __func__, file,
-			monitor);
+				fprintf(stderr, "%s(): file=%p monitor=%p\n", __func__,
+					file, monitor);
 #endif
 
-		if (monitor) {
-			/* Get rate-limit (custom) */
-			if ((value = get_tag_attribute(tag_attributes, "rate-limit"))) {
-				/* I tested this and couldn't detect a change */
-				g_file_monitor_set_rate_limit(monitor, atoi(value));
+				if (monitor) {
+					/* Get rate-limit (custom) */
+					if ((value = get_tag_attribute(var->widget_tag_attr,
+						"rate-limit"))) {
+						/* I tested this and couldn't detect a change */
+						g_file_monitor_set_rate_limit(monitor, atoi(value));
+					}
+					/* Store monitor as a piece of widget data */
+					g_object_set_data(G_OBJECT(var->Widget), "_monitor",
+						(gpointer)monitor);
+
+					retval = TRUE;
+				} else {
+					if (file) g_object_unref(file);
+				}
 			}
-			/* Store monitor as a piece of widget data */
-			g_object_set_data(G_OBJECT(widget), "_monitor",
-				(gpointer)monitor);
-		} else {
-			if (file) g_object_unref(file);
-			retval = FALSE;
+			if (!retval)
+				fprintf(stderr, "%s(): Couldn't create file monitor for '%s'.\n",
+					__func__, filename);
 		}
-
-	} else {
-		retval = FALSE;
 	}
-
-	if (!retval)
-		fprintf(stderr, "%s(): Couldn't create file monitor for '%s'.\n",
-			__func__, filename);
 
 	return retval;
 }
