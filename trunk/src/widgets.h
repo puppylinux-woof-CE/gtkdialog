@@ -52,7 +52,6 @@ typedef struct _progr_descr progr_descr;
  * In my opinion there should be one source and header file for each widget
  * with all of the functions in a consistent order as finding stuff is
  * incredibly time consuming. Another job for another [rainy] day :) */
-static void fill_combo_by_items(AttributeSet *Attr, GtkWidget *combo);
 static void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale);
 
 char *widget_get_text_value(GtkWidget *widget, int type);
@@ -60,16 +59,11 @@ char *widget_get_text_value(GtkWidget *widget, int type);
 static void fill_scale_by_file(GtkWidget *widget, char *filename);
 static void fill_menuitem_by_file(GtkWidget *widget, char *filename);
 static void fill_entry_by_file(GtkWidget *entry, char *filename);
-static void fill_edit_by_file(GtkWidget *widget, char *filename);
 
-void widget_combo_refresh(variable *var);
 void widget_scale_refresh(variable *var);
 void widget_menuitem_refresh(variable *var);
-int widget_edit_refresh(variable *var);
 void widget_entry_refresh(variable *var);
 
-void widget_edit_save(variable *var);
-static void save_edit_to_file(GtkWidget *widget, char *filename);
 void save_entry_to_file(variable *var);
 void save_scale_to_file(variable *var);
 void save_menuitem_to_file(variable *var);

@@ -88,9 +88,80 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkCombo.html">GtkCombo</a>
 
 <hr>
 
+<h2> Definition </h2>
+
+<pre>
+&lt;combobox tag_attr="value"...&gt;
+	&lt;variable&gt;varname&lt;/variable&gt;
+	&lt;sensitive&gt;state&lt;/sensitive&gt;
+	&lt;action signal="type"&gt;activity&lt;/action&gt;...
+	&lt;item&gt;data&lt;/item&gt;...
+&lt;/combobox&gt;
+</pre>
+
+<p>"..." denotes acceptance of multiples of the same thing.</p>
+
+<h2> Tag Attributes </h2>
+
+<p>See the <a href="http://developer.gnome.org/gtk/2.24/GtkCombo.html#GtkCombo.object-hierarchy">GtkCombo</a> widget and ancestor class properties.</p>
+
+<p>The following custom tag attributes are available:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+</table>
+
+<h2> Directives </h2>
+
+<p>Some of these may have tag attribute equivalents.</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Mandatory</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> item </td><td class="wiki"> Input data </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+</table>
+
+<h2> Signals </h2>
+
+<p>There is no default signal for this widget.</p>
+
+<p>The following GtkWidget signals are connected-up for all widgets:</p>
+<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a>
+
+<h2> Functions </h2>
+
+<p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> show </td><td class="wiki"> Show widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> clear </td><td class="wiki"> Remove all widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+</table>
+
+<p>The following general functions can be performed by any widget capable of emitting signals:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> command </td><td class="wiki"> Execute command </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> exit </td><td class="wiki"> Exit dialog </td><td class="wiki"> A value for the <code>EXIT</code> shell variable </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> closewindow </td><td class="wiki"> Close dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> launch </td><td class="wiki"> Launch dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> presentwindow </td><td class="wiki"> <a href="http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present">Present</a> dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+</table>
+
 <h2> Notes </h2>
 
-<p>This widget has been deprecated since 0.7.21 and <a href="comboboxtext.html">comboboxtext</a> or <a href="comboboxentry.html">comboboxentry</a> should be used instead.</p>
+<p>This widget has been deprecated since GTK+ 2.4 and <a href="comboboxtext.html">comboboxtext</a> or <a href="comboboxentry.html">comboboxentry</a> should be used instead.</p>
 
 <hr>
 <p>
@@ -140,7 +211,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkCombo.html">GtkCombo</a>
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-09-13 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-09-16 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

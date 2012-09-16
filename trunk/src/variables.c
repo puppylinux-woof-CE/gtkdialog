@@ -25,7 +25,9 @@
 #include "widget_button.h"
 #include "widget_checkbox.h"
 #include "widget_colorbutton.h"
+#include "widget_combobox.h"
 #include "widget_comboboxtext.h"
+#include "widget_edit.h"
 #include "widget_eventbox.h"
 #include "widget_expander.h"
 #include "widget_fontbutton.h"
@@ -345,9 +347,15 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_fileselect(toset, name, value);
 			break;
+		case WIDGET_COMBOBOX:
+			widget_combobox_fileselect(toset, name, value);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_fileselect(toset, name, value);
+			break;
+		case WIDGET_EDIT:
+			widget_edit_fileselect(toset, name, value);
 			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_fileselect(toset, name, value);
@@ -453,9 +461,15 @@ variable *variables_save(const char *name)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_save(var);
 			break;
+		case WIDGET_COMBOBOX:
+			widget_combobox_save(var);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_save(var);
+			break;
+		case WIDGET_EDIT:
+			widget_edit_save(var);
 			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_save(var);
@@ -520,9 +534,6 @@ variable *variables_save(const char *name)
 
 		case WIDGET_ENTRY:
 			save_entry_to_file(var);
-			break;
-		case WIDGET_EDIT:
-			widget_edit_save(var);
 			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
@@ -592,9 +603,15 @@ variable *variables_refresh(const char *name)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_refresh(var);
 			break;
+		case WIDGET_COMBOBOX:
+			widget_combobox_refresh(var);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_refresh(var);
+			break;
+		case WIDGET_EDIT:
+			widget_edit_refresh(var);
 			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_refresh(var);
@@ -659,12 +676,6 @@ variable *variables_refresh(const char *name)
 
 		case WIDGET_ENTRY:
 			widget_entry_refresh(var);
-			break;
-		case WIDGET_COMBO:
-			widget_combo_refresh(var);
-			break;
-		case WIDGET_EDIT:
-			widget_edit_refresh(var);
 			break;
 		case WIDGET_VSCALE:
 		case WIDGET_HSCALE:
@@ -1562,7 +1573,6 @@ int append_fromto_variable(const char *from, const char *to)
 variable *variables_clear(const char *name)
 {
 	variable         *toclear;
-	GList            *empty = NULL;
 	gchar            *string;
 
 #ifdef DEBUG
@@ -1599,9 +1609,15 @@ variable *variables_clear(const char *name)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_clear(toclear);
 			break;
+		case WIDGET_COMBOBOX:
+			widget_combobox_clear(toclear);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_clear(toclear);
+			break;
+		case WIDGET_EDIT:
+			widget_edit_clear(toclear);
 			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_clear(toclear);
@@ -1667,19 +1683,6 @@ variable *variables_clear(const char *name)
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
 			break;
-		case WIDGET_COMBO:
-			empty = g_list_append(empty, "");
-			gtk_combo_set_popdown_strings(
-					GTK_COMBO(toclear->Widget), empty);
-			break;
-		case WIDGET_EDIT:
-			gtk_text_buffer_set_text(
-				gtk_text_view_get_buffer(
-					GTK_TEXT_VIEW(toclear->Widget)),
-					"",
-					0
-					);
-			break;
 		default:
 			yywarning("Clear not implemented for this widget.");
 	}
@@ -1739,9 +1742,15 @@ int remove_selected_variable(const char *name)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_removeselected(toclear);
 			break;
+		case WIDGET_COMBOBOX:
+			widget_combobox_removeselected(toclear);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_removeselected(toclear);
+			break;
+		case WIDGET_EDIT:
+			widget_edit_removeselected(toclear);
 			break;
 		case WIDGET_EVENTBOX:
 			widget_eventbox_removeselected(toclear);
@@ -1806,11 +1815,6 @@ int remove_selected_variable(const char *name)
 
 		case WIDGET_ENTRY:
 			gtk_entry_set_text(GTK_ENTRY(toclear->Widget), "");
-			break;
-
-		case WIDGET_EDIT:
-			gtk_text_buffer_delete_selection(gtk_text_view_get_buffer(GTK_TEXT_VIEW(toclear->Widget)), 
-					FALSE, TRUE);
 			break;
 
 		default:

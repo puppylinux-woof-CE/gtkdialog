@@ -46,7 +46,9 @@
 #include "widget_button.h"
 #include "widget_checkbox.h"
 #include "widget_colorbutton.h"
+#include "widget_combobox.h"
 #include "widget_comboboxtext.h"
+#include "widget_edit.h"
 #include "widget_eventbox.h"
 #include "widget_expander.h"
 #include "widget_fontbutton.h"
@@ -310,11 +312,17 @@ void print_command(instruction command)
 		case WIDGET_COLORBUTTON:
 			printf("(new colorbutton())");
 			break;
+		case WIDGET_COMBOBOX:
+			printf("(new combobox())");
+			break;
 		case WIDGET_COMBOBOXENTRY:
 			printf("(new comboboxentry())");
 			break;
 		case WIDGET_COMBOBOXTEXT:
 			printf("(new comboboxtext())");
+			break;
+		case WIDGET_EDIT:
+			printf("(new edit)");
 			break;
 		case WIDGET_EVENTBOX:
 			printf("(new eventbox())");
@@ -383,14 +391,8 @@ void print_command(instruction command)
 	case WIDGET_ENTRY:
 	    printf("(new entry())");
 	    break;
-	case WIDGET_EDIT:
-	    printf("(new edit)");
-	    break;
 	case WIDGET_PROGRESS:
 	    printf("(new progressbar())");
-	    break;
-	case WIDGET_COMBO:
-	    printf("(new combo())");
 	    break;
 	case WIDGET_SCROLLEDW:
 	    printf("(new scrolledwindow(pop()))");
@@ -616,11 +618,17 @@ void print_token(token Token)
 		case WIDGET_COLORBUTTON:
 			printf("(COLORBUTTON)");
 			break;
+		case WIDGET_COMBOBOX:
+			printf("(COMBOBOX)");
+			break;
 		case WIDGET_COMBOBOXENTRY:
 			printf("(COMBOBOXENTRY)");
 			break;
 		case WIDGET_COMBOBOXTEXT:
 			printf("(COMBOBOXTEXT)");
+			break;
+		case WIDGET_EDIT:
+			printf("(EDIT)");
 			break;
 		case WIDGET_EVENTBOX:
 			printf("(EVENTBOX)");
@@ -689,14 +697,8 @@ void print_token(token Token)
 	case WIDGET_ENTRY:
 		printf("(ENTRY)");
 		break;
-	case WIDGET_EDIT:
-		printf("(EDIT)");
-		break;
 	case WIDGET_PROGRESS:
 		printf("(PROGRESSBAR)");
-		break;
-	case WIDGET_COMBO:
-		printf("(COMBO)");
 		break;
 	case WIDGET_SCROLLEDW:
 		printf("(SCROLLEDW)");
@@ -1437,32 +1439,6 @@ create_chooser(AttributeSet *Attr)
 #endif
 
 static GtkWidget *
-create_edit(AttributeSet *Attr, 
-		tag_attr   *attr)
-{
-	GList         *element;
-	GtkWidget     *text_view;
-	GtkTextBuffer *text_buffer;
-	/*
-	 * Creating text view.
-	 */
-	text_view = gtk_text_view_new();
-	text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
-
-	if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-		(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-		gtk_widget_set_sensitive(text_view, FALSE);
- 
-	if (attributeset_is_avail(Attr, ATTR_DEFAULT))
-		gtk_text_buffer_set_text(text_buffer, 
-				attributeset_get_first(&element, Attr, ATTR_DEFAULT), -1);
-
-	return text_view;
-}
-
-static GtkWidget *
 create_scale(AttributeSet * Attr, tag_attr *attr, gint horv)
 {
 	GtkWidget        *scale;
@@ -1541,10 +1517,20 @@ instruction_execute_push(
 			Widget = widget_colorbutton_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_COMBOBOX:
+			Widget = widget_combobox_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
+			break;
+		case WIDGET_EDIT:
+			Widget = widget_edit_create(Attr, tag_attributes, Widget_Type);
+			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+				tag_attributes, Widget_Type);
+			push_widget(scrolled_window, WIDGET_SCROLLEDW);
 			break;
 		case WIDGET_EVENTBOX:
 			Widget = widget_eventbox_create(Attr, tag_attributes, Widget_Type);
@@ -1692,36 +1678,6 @@ instruction_execute_push(
 #endif
 		break;
 		
-	case WIDGET_EDIT:
-#if GTK_CHECK_VERSION(2, 4, 0)
-		Widget = create_edit(Attr, tag_attributes);
-		scrolled_window = put_in_the_scrolled_window(Widget, Attr,
-			tag_attributes, Widget_Type);
-		push_widget(scrolled_window, WIDGET_SCROLLEDW);
-		
-#else
-		yyerror_simple("Editor widget is not supported by"
-				"this version of GTK+, you need at"
-				"least GTK+ 2.4.0\n");
-#endif
-		break;
-
-	case WIDGET_COMBO:
-		/* The combo box is quiet simple, however it can be filled with
-		 ** a GList which contains a list of items.
-		 */
-		//Widget = gtk_combo_box_new();
-		Widget = gtk_combo_new();
-
-		if ((attributeset_cmp_left(Attr, ATTR_SENSITIVE, "false")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "no")) ||
-			(attributeset_cmp_left(Attr, ATTR_SENSITIVE, "0")))
-			gtk_widget_set_sensitive(Widget, FALSE);
-
-		push_widget(Widget, Widget_Type);
-		break;
-
 	case WIDGET_GVIM:
 		Widget = create_gvim(Attr);
 		push_widget(Widget, Widget_Type);

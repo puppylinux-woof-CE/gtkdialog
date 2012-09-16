@@ -108,7 +108,7 @@ start_up(void)
 %token         PROGRESS EPROGRESS PART_PROGRESS
 %token         LIST PART_LIST ELIST
 %token         TABLE ETABLE PART_TABLE
-%token         COMBO PART_COMBO ECOMBO
+%token         COMBOBOX PART_COMBOBOX ECOMBOBOX
 %token         GVIM EGVIM
 %token         TEXT PART_TEXT ETEXT
 %token         PIXMAP PART_PIXMAP EPIXMAP 
@@ -276,7 +276,7 @@ widget
   | progressbar
   | list
   | table
-  | combo
+  | combobox
   | pixmap
   | gvim
   | menubar
@@ -425,12 +425,12 @@ table
 	}
   ;
 
-combo
-  : COMBO attr ECOMBO                  {
-    		token_store(PUSH | WIDGET_COMBO);
+combobox
+  : COMBOBOX attr ECOMBOBOX                  {
+    		token_store(PUSH | WIDGET_COMBOBOX);
 	}
-  | PART_COMBO tagattr '>' attr ECOMBO {
-    		token_store_attr(PUSH | WIDGET_COMBO, $2);
+  | PART_COMBOBOX tagattr '>' attr ECOMBOBOX {
+    		token_store_attr(PUSH | WIDGET_COMBOBOX, $2);
 	}                                 
   ;
 

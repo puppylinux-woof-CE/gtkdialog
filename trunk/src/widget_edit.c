@@ -1,5 +1,5 @@
 /*
- * widget_colorbutton.c: 
+ * widget_edit.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -28,15 +28,16 @@
 #include "automaton.h"
 #include "widgets.h"
 #include "signals.h"
+#include "tag_attributes.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes, located at file bottom */
-static void widget_colorbutton_input_by_command(variable *var, char *command);
-static void widget_colorbutton_input_by_file(variable *var, char *filename);
-static void widget_colorbutton_input_by_items(variable *var);
+static void widget_edit_input_by_command(variable *var, char *command);
+static void widget_edit_input_by_file(variable *var, char *filename);
+static void widget_edit_input_by_items(variable *var);
 
 /* Notes: */
 
@@ -44,7 +45,7 @@ static void widget_colorbutton_input_by_items(variable *var);
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_colorbutton_clear(variable *var)
+void widget_edit_clear(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -53,7 +54,9 @@ void widget_colorbutton_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
+	/* Thunor: This is all original code moved across when refactoring */
+	gtk_text_buffer_set_text(gtk_text_view_get_buffer(
+		GTK_TEXT_VIEW(var->Widget)), "", 0);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -63,7 +66,8 @@ void widget_colorbutton_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
-GtkWidget *widget_colorbutton_create(
+
+GtkWidget *widget_edit_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GtkWidget        *widget;
@@ -72,7 +76,18 @@ GtkWidget *widget_colorbutton_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	widget = gtk_color_button_new();
+	/* Thunor: This is all original code moved across when refactoring */
+#if GTK_CHECK_VERSION(2, 4, 0)
+
+	widget = gtk_text_view_new();
+
+#else
+
+	yyerror_simple("Editor widget is not supported by"
+		"this version of GTK+, you need at"
+		"least GTK+ 2.4.0\n");
+
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -85,7 +100,7 @@ GtkWidget *widget_colorbutton_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_colorbutton_envvar_all_construct(variable *var)
+gchar *widget_edit_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -94,6 +109,10 @@ gchar *widget_colorbutton_envvar_all_construct(variable *var)
 #endif
 
 	/* This function should not be connected-up by default */
+
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): Hello.\n", __func__);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -106,42 +125,22 @@ gchar *widget_colorbutton_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
+gchar *widget_edit_envvar_construct(GtkWidget *widget)
 {
-	GdkColor          color;
-	gchar             envvar[32];
+	GtkTextBuffer    *text_buffer;
+	GtkTextIter       start, end;		
 	gchar            *string;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	gtk_color_button_get_color(GTK_COLOR_BUTTON(widget), &color);
-
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): color.red  =#%04x  rgb=%02x\n", __func__,
-		color.red, (color.red + 257 / 2) / 257);
-	fprintf(stderr, "%s(): color.green=#%04x  rgb=%02x\n", __func__,
-		color.green, (color.green + 257 / 2) / 257);
-	fprintf(stderr, "%s(): color.blue =#%04x  rgb=%02x\n", __func__,
-		color.blue, (color.blue + 257 / 2) / 257);
-#endif
-
-	if (gtk_color_button_get_use_alpha(GTK_COLOR_BUTTON(widget))) {
-		sprintf(envvar, "#%02x%02x%02x|%u",
-			(color.red + 257 / 2) / 257,
-			(color.green + 257 / 2) / 257,
-			(color.blue + 257 / 2) / 257,
-			gtk_color_button_get_alpha(GTK_COLOR_BUTTON(widget)));
-
-	} else {
-		sprintf(envvar, "#%02x%02x%02x",
-			(color.red + 257 / 2) / 257,
-			(color.green + 257 / 2) / 257,
-			(color.blue + 257 / 2) / 257);
-	}
-
-	string = g_strdup(envvar);
+	/* Thunor: This is all original code moved across when refactoring */
+	text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
+	gtk_text_buffer_get_start_iter(text_buffer, &start);
+	gtk_text_buffer_get_end_iter(text_buffer, &end);
+	/* This function returns an allocated string so no need to strdup */
+	string = gtk_text_buffer_get_text(text_buffer, &start, &end, TRUE);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -154,7 +153,7 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_colorbutton_fileselect(
+void widget_edit_fileselect(
 	variable *var, const char *name, const char *value)
 {
 	gchar            *var1;
@@ -174,15 +173,14 @@ void widget_colorbutton_fileselect(
 /***********************************************************************
  * Refresh                                                             *
  ***********************************************************************/
-void widget_colorbutton_refresh(variable *var)
+
+void widget_edit_refresh(variable *var)
 {
-	GdkColor          color;
 	GFileMonitor     *monitor;
 	GList            *element;
+	GtkTextBuffer    *text_buffer;
 	gchar            *act;
 	gint              initialised = FALSE;
-	guint             alpha;
-	list_t           *values = NULL;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -196,21 +194,21 @@ void widget_colorbutton_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_colorbutton_input_by_command(var, act + 8);
+			widget_edit_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			if (!initialised) {
 				/* Check for file-monitor and create if requested */
 				widget_file_monitor_will_create(var, act + 5);
 			}
-			widget_colorbutton_input_by_file(var, act + 5);
+			widget_edit_input_by_file(var, act + 5);
 		}
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_colorbutton_input_by_items(var);
+		widget_edit_input_by_items(var);
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
@@ -218,41 +216,12 @@ void widget_colorbutton_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_LABEL))
 			fprintf(stderr, "%s(): <label> not implemented for this widget.\n",
 				__func__);
-
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
-			values = linecutter(g_strdup(attributeset_get_first(&element,
-				var->Attributes, ATTR_DEFAULT)), '|');
-			if (values->n_lines > 0) {
-				/* Parse the RGB value to create the necessary GdkColor.
-				 * This function doesn't like trailing whitespace so it
-				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_color_parse(g_strstrip(values->line[0]), &color)) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
-					gtk_color_button_set_color(GTK_COLOR_BUTTON(var->Widget), &color);
-				}
-			}
-			if (values->n_lines > 1) {
-				/* Read alpha as an unsigned decimal integer */
-				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
-					/* This requires use-alpha="true" */
-					gtk_color_button_set_alpha(GTK_COLOR_BUTTON(var->Widget), alpha);
-				}
-			}
-			/* Free linecutter memory */
-			if (values) list_t_free(values);
+			/* Thunor: This is all original code moved across when refactoring */
+			text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+			gtk_text_buffer_set_text(text_buffer, attributeset_get_first(
+				&element, var->Attributes, ATTR_DEFAULT), -1);
 		}
-
-		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
-				__func__);
-		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
-				__func__);
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -264,8 +233,6 @@ void widget_colorbutton_refresh(variable *var)
 			g_signal_connect(monitor, "changed",
 				G_CALLBACK(on_any_widget_file_changed_event), (gpointer)var);
 		}
-		g_signal_connect(G_OBJECT(var->Widget), "color-set",
-			G_CALLBACK(on_any_widget_color_set_event), (gpointer)var->Attributes);
 
 	}
 
@@ -278,7 +245,7 @@ void widget_colorbutton_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_colorbutton_removeselected(variable *var)
+void widget_edit_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -287,8 +254,9 @@ void widget_colorbutton_removeselected(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
-		__func__);
+	/* Thunor: This is all original code moved across when refactoring */
+	gtk_text_buffer_delete_selection(gtk_text_view_get_buffer(
+		GTK_TEXT_VIEW(var->Widget)), FALSE, TRUE);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -299,13 +267,15 @@ void widget_colorbutton_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_colorbutton_save(variable *var)
+void widget_edit_save(variable *var)
 {
 	FILE             *outfile;
-	GdkColor          color;
 	GList            *element;
+	GtkTextBuffer    *buffer;
+	GtkTextIter       start, end;
 	gchar            *act;
 	gchar            *filename = NULL;
+	gchar            *text;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -325,20 +295,14 @@ void widget_colorbutton_save(variable *var)
 	 * widget's data to it */
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
-			gtk_color_button_get_color(GTK_COLOR_BUTTON(var->Widget), &color);
-			if (gtk_color_button_get_use_alpha(GTK_COLOR_BUTTON(var->Widget))) {
-				fprintf(outfile, "#%02x%02x%02x|%u",
-					(color.red + 257 / 2) / 257,
-					(color.green + 257 / 2) / 257,
-					(color.blue + 257 / 2) / 257,
-					gtk_color_button_get_alpha(GTK_COLOR_BUTTON(var->Widget)));
 
-			} else {
-				fprintf(outfile, "#%02x%02x%02x",
-					(color.red + 257 / 2) / 257,
-					(color.green + 257 / 2) / 257,
-					(color.blue + 257 / 2) / 257);
-			}
+			/* Thunor: This is all original code moved across when refactoring */
+			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+			gtk_text_buffer_get_start_iter(buffer, &start);
+			gtk_text_buffer_get_end_iter(buffer, &end);
+			text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
+			fprintf(outfile, "%s", text);
+
 			/* Close the file */
 			fclose(outfile);
 		} else {
@@ -358,63 +322,16 @@ void widget_colorbutton_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_colorbutton_input_by_command(variable *var, char *command)
+static void widget_edit_input_by_command(variable *var, char *command)
 {
-	FILE             *infile;
-	GdkColor          color;
-	list_t           *values = NULL;
-	gchar             line[512];
-	gint              count;
-	guint             alpha;
+	gchar            *var1;
+	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
-
-	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
-		/* Just one line */
-		if (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			values = linecutter(g_strdup(line), '|');
-			if (values->n_lines > 0) {
-				/* Parse the RGB value to create the necessary GdkColor.
-				 * This function doesn't like trailing whitespace so it
-				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_color_parse(g_strstrip(values->line[0]), &color)) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
-					gtk_color_button_set_color(GTK_COLOR_BUTTON(var->Widget), &color);
-				}
-			}
-			if (values->n_lines > 1) {
-				/* Read alpha as an unsigned decimal integer */
-				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
-					/* This requires use-alpha="true" */
-					gtk_color_button_set_alpha(GTK_COLOR_BUTTON(var->Widget), alpha);
-				}
-			}
-			/* Free linecutter memory */
-			if (values) list_t_free(values);
-		}
-		/* Close the file */
-		pclose(infile);
-	} else {
-		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
-			command);
-	}
+	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -425,56 +342,37 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_colorbutton_input_by_file(variable *var, char *filename)
+static void widget_edit_input_by_file(variable *var, char *filename)
 {
-	FILE             *infile;
-	GdkColor          color;
-	list_t           *values = NULL;
-	gchar             line[512];
-	gint              count;
-	guint             alpha;
+	GtkTextBuffer    *buffer;
+	gchar            *filebuffer;
+	gint              infile, result;
+	struct stat       st;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (infile = fopen(filename, "r")) {
-		/* Just one line */
-		if (fgets(line, 512, infile)) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			values = linecutter(g_strdup(line), '|');
-			if (values->n_lines > 0) {
-				/* Parse the RGB value to create the necessary GdkColor.
-				 * This function doesn't like trailing whitespace so it
-				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_color_parse(g_strstrip(values->line[0]), &color)) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
-					gtk_color_button_set_color(GTK_COLOR_BUTTON(var->Widget), &color);
-				}
-			}
-			if (values->n_lines > 1) {
-				/* Read alpha as an unsigned decimal integer */
-				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
-					/* This requires use-alpha="true" */
-					gtk_color_button_set_alpha(GTK_COLOR_BUTTON(var->Widget), alpha);
-				}
-			}
-			/* Free linecutter memory */
-			if (values) list_t_free(values);
+	/* Thunor: This is restructured original code moved across when refactoring */
+	if (stat(filename, &st) == 0) {
+
+		filebuffer = g_malloc(st.st_size);
+		infile = open(filename, O_RDONLY);
+
+		if (infile != -1) {
+
+			result = read(infile, filebuffer, st.st_size);
+			close(infile);
+
+			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+			gtk_text_buffer_set_text(buffer, filebuffer, st.st_size);
+
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+				filename);
 		}
-		/* Close the file */
-		fclose(infile);
 	} else {
-		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+		fprintf(stderr, "%s(): Couldn't stat '%s'.\n", __func__,
 			filename);
 	}
 
@@ -487,7 +385,7 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_colorbutton_input_by_items(variable *var)
+static void widget_edit_input_by_items(variable *var)
 {
 	gchar            *var1;
 	gint              var2;

@@ -2,8 +2,13 @@ Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
 * Sun Sep 16 2012 Thunor <thunorsif@hotmail.com>
-- Added file-monitor functionality to the [toggle]button and checkbox
-  widgets.
+- Added file-monitor functionality to the [toggle]button widget.
+- Added file-monitor functionality to the checkbox widget.
+- Added file-monitor functionality to the colorbutton widget.
+- Refactored the combobox widget.
+- Added file-monitor functionality to the comboboxentry/text widgets.
+- Refactored the edit widget.
+- Added file-monitor functionality to the edit widget.
 
 * Sat Sep 15 2012 Thunor <thunorsif@hotmail.com>
 - Added support for auto-refreshing of images from files on
