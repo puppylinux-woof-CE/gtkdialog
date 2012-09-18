@@ -507,6 +507,10 @@ void widget_tree_refresh(variable *var)
 #ifdef DEBUG_CONTENT
 			printf("%s(): 1: command='%s'\n", __func__, act);
 #endif
+			if (!initialised) {
+				/* Check for file-monitor and create if requested */
+				widget_file_monitor_try_create(var, act + 5);
+			}
 			widget_tree_input_by_file(var, act + 5);
 		} else {
 #ifdef DEBUG_CONTENT
