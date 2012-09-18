@@ -34,6 +34,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || ||
 || fs-filters || fileselect function pattern file filters || _pattern_{{{|}}}_pattern_{{{|}}}... || ||
 || fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... ([http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types common types]) || ||
@@ -60,6 +62,8 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 
 There is no default signal for this widget.
+
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 

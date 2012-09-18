@@ -39,6 +39,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || ||
 || homogeneous^[2]^ || Horizontal uniformity of an image with label || {{{true}}} or {{{false}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
@@ -69,6 +71,8 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkToggleButton.html#GtkToggleButton-toggled toggled]", emitted when the state is changed.
+
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 

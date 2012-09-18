@@ -44,6 +44,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || 0.7.21 ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || exported-column || The column to export data from || An integer >= {{{0}}} || ||
@@ -95,6 +97,8 @@ The default signal is "[http://developer.gnome.org/gtk/2.24/GtkTreeView.html#Gtk
 The "[http://developer.gnome.org/gtk/2.24/GtkTreeSelection.html#GtkTreeSelection-changed changed]" signal is emitted when the selection has changed (please see link about this).
 
 The "[http://developer.gnome.org/gtk/2.24/GtkTreeView.html#GtkTreeView-cursor-changed cursor-changed]" signal is emitted when the position of the cursor (focused cell) has changed.
+
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 

@@ -35,6 +35,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || range-min || Minimum value || A double precision floating point value || ||
 || range-max || Maximum value || A double precision floating point value || ||
 || range-step || Step increment || A double precision floating point value || ||
@@ -69,6 +71,8 @@ The "changed" signal is emitted when typing into the entry.
 The "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate activate]" signal is emitted when the user activates the entry with the Enter key.
 
 For GTK+ 2.16 and later, the "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-press icon-press]" and "[http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-release icon-release]" signals are emitted when an activatable icon is pressed or released, but these signal names will be prefixed with either "primary-" or "secondary-" to indicate the source icon.
+
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 

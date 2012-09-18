@@ -35,6 +35,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || ||
 || hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || ||
 || vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || ||
 || font-name || Font description || Example: {{{Monospace Bold 14}}} || ||
@@ -71,6 +73,8 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 
 The default signal is "[http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal-child-exited child-exited]", emitted when the terminal detects that the child has exited.
+
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 

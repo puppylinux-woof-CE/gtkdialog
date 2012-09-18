@@ -33,6 +33,8 @@ The following custom tag attributes are available:
 || milliseconds || Timer precision || {{{true}}} or {{{false}}} || ||
 || interval^[2]^ || Timer frequency || An unsigned integer value representing seconds or milliseconds || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -55,6 +57,8 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 
 The default signal is "tick", a custom signal emitted when the timer times-out.
+
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 
