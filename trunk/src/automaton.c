@@ -55,8 +55,11 @@
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_hscale.h"
+#include "widget_hseparator.h"
 #include "widget_list.h"
 #include "widget_menubar.h"
+#include "widget_menuitem.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -343,11 +346,26 @@ void print_command(instruction command)
 		case WIDGET_HBOX:
 			printf("(new hbox(pop()))");
 			break;
+		case WIDGET_HSCALE:
+			printf("(new hscale())");
+			break;
+		case WIDGET_HSEPARATOR:
+			printf("(new hseparator())");
+			break;
 		case WIDGET_LIST:
 			printf("(new list())");
 			break;
+		case WIDGET_MENU:
+			printf("(new menu(pop()))");
+			break;
 		case WIDGET_MENUBAR:
 			printf("(new menubar(pop()))");
+			break;
+		case WIDGET_MENUITEM:
+			printf("(new menuitem())");
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+			printf("(new menuitemseparator())");
 			break;
 		case WIDGET_NOTEBOOK:
 			printf("(new notebook(pop()))");
@@ -387,6 +405,12 @@ void print_command(instruction command)
 		case WIDGET_VBOX:
 			printf("(new vbox(pop()))");
 			break;
+		case WIDGET_VSCALE:
+			printf("(new vscale())");
+			break;
+		case WIDGET_VSEPARATOR:
+			printf("(new vseparator())");
+			break;
 		case WIDGET_WINDOW:
 			printf("(new window(pop()))");
 			break;
@@ -398,32 +422,11 @@ void print_command(instruction command)
 	case WIDGET_SCROLLEDW:
 	    printf("(new scrolledwindow(pop()))");
 	    break;
-	case WIDGET_MENU:
-	    printf("(new menu(pop()))");
-	    break;
-	case WIDGET_MENUITEM:
-	    printf("(new menuitem())");
-	    break;
-	case WIDGET_MENUITEMSEPARATOR:
-	    printf("(new menuitemseparator())");
-	    break;
 	case WIDGET_GVIM:
 	    printf("(new gvim())");
 	    break;
 	case WIDGET_CHOOSER:
 	    printf("(new chooser())");
-	    break;
-	case WIDGET_HSEPARATOR:
-	    printf("(new hseparator())");
-	    break;
-	case WIDGET_VSEPARATOR:
-	    printf("(new vseparator())");
-	    break;
-	case WIDGET_HSCALE:
-	    printf("(new hscale())");
-	    break;
-	case WIDGET_VSCALE:
-	    printf("(new vscale())");
 	    break;
 	default:
 	    printf("(Unknown Widget: %d)", Widget_Type);
@@ -649,11 +652,26 @@ void print_token(token Token)
 		case WIDGET_HBOX:
 			printf("(HBOX)");
 			break;
+		case WIDGET_HSCALE:
+			printf("(HSCALE)");
+			break;
+		case WIDGET_HSEPARATOR:
+			printf("(HSEPARATOR)");
+			break;
 		case WIDGET_LIST:
 			printf("(LIST)");
 			break;
+		case WIDGET_MENU:
+			printf("(MENU)");
+			break;
 		case WIDGET_MENUBAR:
 			printf("(MENUBAR)");
+			break;
+		case WIDGET_MENUITEM:
+			printf("(MENUITEM)");
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+			printf("(MENUITEMSEPARATOR)");
 			break;
 		case WIDGET_NOTEBOOK:
 			printf("(NOTEBOOK)");
@@ -693,6 +711,12 @@ void print_token(token Token)
 		case WIDGET_VBOX:
 			printf("(VBOX)");
 			break;
+		case WIDGET_VSCALE:
+			printf("(VSCALE)");
+			break;
+		case WIDGET_VSEPARATOR:
+			printf("(VSEPARATOR)");
+			break;
 		case WIDGET_WINDOW:
 			printf("(WINDOW)");
 			break;
@@ -704,29 +728,11 @@ void print_token(token Token)
 	case WIDGET_SCROLLEDW:
 		printf("(SCROLLEDW)");
 		break;
-	case WIDGET_MENU:
-		printf("(MENU)");
-		break;
-	case WIDGET_MENUITEM:
-		printf("(MENUITEM)");
-		break;
 	case WIDGET_GVIM:
 		printf("(GVIM)");
 		break;
 	case WIDGET_CHOOSER:
 		printf("(CHOOSER)");
-		break;
-	case WIDGET_HSEPARATOR:
-		printf("(HSEPARATOR)");
-	    break;
-	case WIDGET_VSEPARATOR:
-		printf("(VSEPARATOR)");
-	    break;
-	case WIDGET_HSCALE:
-		printf("(HSCALE)");
-		break;
-	case WIDGET_VSCALE:
-		printf("(VSCALE)");
 		break;
 	default:
 		printf("Unknown Widget (%d)", Widget_Type);
@@ -1033,277 +1039,6 @@ inner_border.top=%i inner_border.bottom=%i\n", __func__, inner_border.left,
 }
 
 static
-GtkWidget *create_menuitem(AttributeSet *Attr, tag_attr *attr)
-{
-	#define           TYPE_MENUITEM 0
-	#define           TYPE_MENUITEM_IMAGE_STOCK 1
-	#define           TYPE_MENUITEM_IMAGE_ICON 2
-	#define           TYPE_MENUITEM_IMAGE_FILE 3
-	#define           TYPE_MENUITEM_CHECK 4
-	#define           TYPE_MENUITEM_RADIO 5
-	GList            *element;
-	GtkWidget        *menu_item;
-	gchar            *icon_name, *image_name;
-	GtkIconTheme     *icon_theme;
-	GError           *error = NULL;
-	GdkPixbuf        *pixbuf;
-	GtkWidget        *image;
-	GtkAccelGroup    *accel_group = NULL;
-	gchar             accel_path[64];
-	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
-	gchar            *label, *stock_id, *value;
-	gint              width = -1, height = -1, is_active;
-	gint              size = 16;
-	gint              menuitemtype = TYPE_MENUITEM;
-
-	PIP_DEBUG("");
-
-	/* Read declared directives */
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "menuitem");
-	label = attributeset_get_first(&element, Attr, ATTR_LABEL);
-	if (attributeset_is_avail(Attr, ATTR_WIDTH))
-		width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
-	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
-		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
-
-	/* Thunor: We can add an accelerator for this menuitem if both
-	 * "accel-key" and "accel-mods" are valid custom tag attributes.
-	 * Note that because these widgets are created and pushed when the
-	 * end tags are detected, everything gets done in reverse! So here
-	 * the menuitems are created with possibly an accelerator, then
-	 * when the menu end tag is detected the menu and accelerator group
-	 * are created and finally the menuitems are appended to the menu */
-	if (attr) {
-		if ((value = get_tag_attribute(attr, "accel-key"))) {
-			/* Read accel-key as a decimal integer or hex value */
-			if (strncasecmp(value, "0x", 2) == 0) {
-				sscanf(value, "%x", &accel_key);
-			} else {
-				sscanf(value, "%u", &accel_key);
-			}
-			if ((value = get_tag_attribute(attr, "accel-mods"))) {
-				/* Read accel-mods as a decimal integer or hex value */
-				if (strncasecmp(value, "0x", 2) == 0) {
-					sscanf(value, "%x", &accel_mods);
-				} else {
-					sscanf(value, "%u", &accel_mods);
-				}
-				/* Create a random accel-path (yeah, this is fine) */
-				sprintf(accel_path, "<%i>/%i", rand(), rand());
-				custom_accel = TRUE;
-			}
-		}
-	}
-
-#ifdef DEBUG
-	fprintf(stderr, "%s: accel-path=%s\n", __func__, accel_path);
-	fprintf(stderr, "%s: accel-key=%u\n", __func__, accel_key);
-	fprintf(stderr, "%s: accel-mods=%u\n", __func__, accel_mods);
-#endif
-
-	/* We need to decode exactly what it is the user is trying to create
-	 * and then make the right widget.
-	 * 
-	 * Originally as I couldn't use "stock", "icon" and "image" (image
-	 * is a GTK+ property) I decided to make the meaningful names of
-	 * "image-stock", "image-icon" and "image-file", but then I found that
-	 * "stock[_id]" and "icon[_name]" were already being used within the
-	 * tree widget (I missed that) so I'll document the latter but accept
-	 * everything below (I'll have to now as they're likely being used) */
-	if (attr &&
-		(stock_id = get_tag_attribute(attr, "label")) &&
-		((value = get_tag_attribute(attr, "use-stock")) &&
-		((strcasecmp(value, "true") == 0) ||
-		(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)))) {
-		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
-	} else if (attr &&
-		((stock_id = get_tag_attribute(attr, "stock")) ||
-		(stock_id = get_tag_attribute(attr, "stock-id")) ||
-		(stock_id = get_tag_attribute(attr, "image-stock")))) {	/* I don't want to keep this temp temp */
-		menuitemtype = TYPE_MENUITEM_IMAGE_STOCK;
-	} else if (attr &&
-		((icon_name = get_tag_attribute(attr, "icon")) ||
-		(icon_name = get_tag_attribute(attr, "icon-name")) ||
-		(icon_name = get_tag_attribute(attr, "image-icon")))) {	/* I don't want to keep this temp temp */
-		menuitemtype = TYPE_MENUITEM_IMAGE_ICON;
-	} else if (attr &&
-		((image_name = get_tag_attribute(attr, "image-name")) ||
-		(image_name = get_tag_attribute(attr, "image-file")))) {	/* I don't want to keep this temp temp */
-		menuitemtype = TYPE_MENUITEM_IMAGE_FILE;
-	} else if (attr &&
-		(value = get_tag_attribute(attr, "checkbox"))) {
-		menuitemtype = TYPE_MENUITEM_CHECK;
-	} else if (attr &&
-		(value = get_tag_attribute(attr, "radiobutton"))) {
-		menuitemtype = TYPE_MENUITEM_RADIO;
-	} else {
-		menuitemtype = TYPE_MENUITEM;
-	}
-
-	/* Create the menuitem */
-	switch (menuitemtype) {
-		case TYPE_MENUITEM_IMAGE_STOCK:
-			/* Create the GtkImageMenuItem from stock without stock
-			 * accelerator */
-			menu_item = gtk_image_menu_item_new_from_stock(stock_id, NULL);
-#if 0
-			/* Thunor: Unfortunately I can't enable stock accelerators
-			 * by default as all existing applications will then get key
-			 * combinations redirected to menuitems which might have
-			 * unforseen consequences, but I'll leave this here anyway */
-
-			/* Who is going to set the accelerator? */
-			if (custom_accel) {
-				/* Create the GtkImageMenuItem from stock without stock
-				 * accelerator */
-				menu_item = gtk_image_menu_item_new_from_stock(stock_id, NULL);
-			} else {
-				/* Create an accelerator group for this stock item and
-				 * add it to the accelerator groups list which will get
-				 * added to the window later */
-				accel_group = gtk_accel_group_new();
-				accel_groups = g_list_append(accel_groups, accel_group);
-				/* Create the GtkImageMenuItem from stock with stock accelerator */
-				menu_item = gtk_image_menu_item_new_from_stock(stock_id, accel_group);
-			}
-#endif
-			break;
-		case TYPE_MENUITEM_IMAGE_ICON:
-			icon_theme = gtk_icon_theme_get_default();
-			/* Use the height or width dimension to override the default size */
-			if (height > -1) size = height;
-			else if (width > -1) size = width;
-			pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
-				size, 0, &error);
-			if (pixbuf) {
-				image = gtk_image_new_from_pixbuf(pixbuf);
-				/* pixbuf is no longer required and should be unreferenced */
-				g_object_unref(pixbuf);
-			} else {
-				/* pixbuf is null (file not found) so by using this
-				 * function gtk will substitute a broken image icon */
-				image = gtk_image_new_from_file("");
-			}
-			/* Create the GtkImageMenuItem using an image from the theme */
-			menu_item = gtk_image_menu_item_new_with_label(label);
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);
-			break;
-		case TYPE_MENUITEM_IMAGE_FILE:
-			if (width == -1 && height == -1) {
-				/* Handle unscaled images */
-				image = gtk_image_new_from_file(find_pixmap(image_name));
-			} else {
-				/* Handle scaled images */
-				pixbuf = gdk_pixbuf_new_from_file_at_size(
-					find_pixmap(image_name), width, height, NULL);
-				if (pixbuf) {
-					image = gtk_image_new_from_pixbuf(pixbuf);
-					/* pixbuf is no longer required and should be unreferenced */
-					g_object_unref(pixbuf);
-				} else {
-					/* pixbuf is null (file not found) so by using this
-					* function gtk will substitute a broken image icon */
-					image = gtk_image_new_from_file("");
-				}
-			}
-			/* Create the GtkImageMenuItem using an image from a file */
-			menu_item = gtk_image_menu_item_new_with_label(label);
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), image);
-			break;
-		case TYPE_MENUITEM_CHECK:
-			/* Create the GtkCheckMenuItem */
-			menu_item = gtk_check_menu_item_new_with_label(label);
-			/* Get the active state */
-			if ((strcasecmp(value, "true") == 0) ||
-				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-				is_active = 1;
-			} else {
-				is_active = 0;
-			}
-			/* Set the active state */
-			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), is_active);
-			break;
-		case TYPE_MENUITEM_RADIO:
-			/* Create the GtkRadioMenuItem */
-			if (lastradiowidget == NULL) {
-				menu_item = gtk_radio_menu_item_new_with_label(NULL, label);
-				lastradiowidget = menu_item;
-			} else {
-				menu_item = gtk_radio_menu_item_new_with_label_from_widget(
-					GTK_RADIO_MENU_ITEM(lastradiowidget), label);
-			}
-			/* Get the active state */
-			if ((strcasecmp(value, "true") == 0) ||
-				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1)) {
-				is_active = 1;
-			} else {
-				is_active = 0;
-			}
-			/* Set the active state (yeah, it uses the same base class function) */
-			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), is_active);
-			break;
-		case TYPE_MENUITEM:
-		default:
-			/* Create the GtkMenuItem */
-			menu_item = gtk_menu_item_new_with_label(label);
-			break;
-	}
-
-	/* Are we setting an accelerator? */
-	if (custom_accel) {
-		/* Register and set the accelerator path on the menuitem */
-		gtk_accel_map_add_entry(accel_path, accel_key, accel_mods);
-		gtk_menu_item_set_accel_path(GTK_MENU_ITEM(menu_item), accel_path);
-	}
-
-	return menu_item;
-}
-
-static
-GtkWidget *create_menu(AttributeSet *Attr, tag_attr *attr, stackelement items)
-{
-	GList            *element;
-	GtkAccelGroup    *accel_group;
-	GtkWidget        *menu_items;
-	GtkWidget        *root_menu;
-	GtkWidget        *menu;
-	gchar            *label;
-	gint              n;
-
-	menu = gtk_menu_new();
-
-	/* Thunor: Each menu needs an accelerator group which requires adding
-	 * to the window, but because everything is being done in reverse i.e.
-	 * the window is created last, the accel-groups have to be temporarily
-	 * stored within a list for adding later when the window is created */
-	accel_group = gtk_accel_group_new();
-	gtk_menu_set_accel_group(GTK_MENU(menu), accel_group);
-	accel_groups = g_list_append(accel_groups, accel_group);
-#ifdef DEBUG
-	fprintf(stderr, "%s: Appending accel_group=%p to GList\n",
-		__func__, accel_group);
-#endif
-
-	for (n = 0; n < items.nwidgets; ++n){
-		menu_items = items.widgets[n];
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
-	}
-
-	attributeset_set_if_unset(Attr, ATTR_LABEL, "menu");
-	//Redundant: label = attributeset_get_first(&element, Attr, ATTR_LABEL);
-
-	/* Thunor: A menu widget is in fact a menuitem widget with a submenu
-	 * so it'll be created just like any other menuitem widget. It's
-	 * possible to create image, checkbox or radiobutton menu widgets but
-	 * their usefulness is questionable. In fact creating a menu widget
-	 * closes any open radiobutton group so that makes that pointless */
-	root_menu = create_menuitem(Attr, attr);
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(root_menu), menu);
-
-	return root_menu;
-}
-
-static
 gboolean widget_moved(GtkWidget *widget,
                       GdkEvent *event,
                       gpointer user_data){
@@ -1439,45 +1174,6 @@ create_chooser(AttributeSet *Attr)
 }
 #endif
 
-static GtkWidget *
-create_scale(AttributeSet * Attr, tag_attr *attr, gint horv)
-{
-	GtkWidget        *scale;
-	gdouble           range_min = 0;
-	gdouble           range_max = 100;
-	gdouble           range_step = 1;
-	gdouble           range_value = 0;
-	gchar            *value;
-
-	/* Thunor: These "range-*" names are consistent with the spinbutton widget */
-	if (attr) {
-		if (!(value = get_tag_attribute(attr, "range-min")))
-			value = get_tag_attribute(attr, "scale-min");
-		if (value) range_min = atof(value);
-
-		if (!(value = get_tag_attribute(attr, "range-max")))
-			value = get_tag_attribute(attr, "scale-max");
-		if (value) range_max = atof(value);
-
-		if (!(value = get_tag_attribute(attr, "range-step")))
-			value = get_tag_attribute(attr, "scale-step");
-		if (value) range_step = atof(value);
-
-		if (!(value = get_tag_attribute(attr, "range-value")))
-			value = get_tag_attribute(attr, "scale-value");
-		if (value) range_value = atof(value);
-	}
-
-	if (!horv) {
-		scale = gtk_hscale_new_with_range(range_min, range_max, range_step);
-	} else {
-		scale = gtk_vscale_new_with_range(range_min, range_max, range_step);
-	}
-	gtk_range_set_value(GTK_RANGE(scale), range_value);
-
-	return scale;
-}
-
 static gint 
 instruction_execute_push(
 		token          Token, 
@@ -1576,17 +1272,40 @@ instruction_execute_push(
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
 			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			Widget = widget_hscale_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
+		case WIDGET_HSEPARATOR:
+		case WIDGET_VSEPARATOR:
+			Widget = widget_hseparator_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_LIST:
 			Widget = widget_list_create(Attr, tag_attributes, Widget_Type);
 			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
 				tag_attributes, Widget_Type);
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);		
 			break;
+		case WIDGET_MENU:
+			Widget = widget_menu_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
+			break;
 		case WIDGET_MENUBAR:
 			Widget = widget_menubar_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			/* Creating this widget closes any open group */
 			lastradiowidget = NULL;
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+		case WIDGET_MENUITEM:
+			Widget = widget_menuitem_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			/* Creating a non radiobutton menuitem widget closes any open group */
+			if (!(GTK_IS_RADIO_MENU_ITEM(Widget))) lastradiowidget = NULL;
 			break;
 		case WIDGET_NOTEBOOK:
 			Widget = widget_notebook_create(Attr, tag_attributes, Widget_Type);
@@ -1681,27 +1400,6 @@ instruction_execute_push(
 		push_widget(Widget, Widget_Type);
 		break;
 		
-	case WIDGET_MENU:
-		Widget = create_menu(Attr, tag_attributes, pop());
-		push_widget(Widget, Widget_Type);
-		/* Creating this widget closes any open group */
-		lastradiowidget = NULL;
-		break;
-
-	case WIDGET_MENUITEM:
-		Widget = create_menuitem(Attr, tag_attributes);
-		push_widget(Widget, Widget_Type);
-		/* Creating a non radiobutton menuitem widget closes any open group */
-		if (!(GTK_IS_RADIO_MENU_ITEM(Widget))) lastradiowidget = NULL;
-		break;
-
-	case WIDGET_MENUITEMSEPARATOR:
-		Widget = gtk_separator_menu_item_new();
-		push_widget(Widget, Widget_Type);
-		/* Creating this widget closes any open group */
-		lastradiowidget = NULL;
-		break;
-
 	case WIDGET_PROGRESS:
 		Widget = gtk_progress_bar_new();
 		/*
@@ -1722,32 +1420,6 @@ instruction_execute_push(
 				(gpointer) Attr);
 
 		push_widget(Widget, WIDGET_PROGRESS);
-		break;
-
-	case WIDGET_HSEPARATOR:
-		/* Thunor: My first new widget :) */
-		Widget = gtk_hseparator_new();
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_VSEPARATOR:
-		/* Thunor: I'm on a roll now... */
-		Widget = gtk_vseparator_new();
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_HSCALE:
-		Widget = create_scale(Attr, tag_attributes, 0);
-		/* The directives are applied in the refresh function */
-		/* The signals are connected in the refresh function */
-		push_widget(Widget, Widget_Type);
-		break;
-
-	case WIDGET_VSCALE:
-		Widget = create_scale(Attr, tag_attributes, 1);
-		/* The directives are applied in the refresh function */
-		/* The signals are connected in the refresh function */
-		push_widget(Widget, Widget_Type);
 		break;
 
 	default:

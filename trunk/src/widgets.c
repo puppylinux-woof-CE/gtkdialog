@@ -48,8 +48,11 @@
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_hscale.h"
+#include "widget_hseparator.h"
 #include "widget_list.h"
 #include "widget_menubar.h"
+#include "widget_menuitem.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -71,47 +74,12 @@
 
 extern gboolean option_no_warning;
 
-static
-void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale)
-{
-#if GTK_CHECK_VERSION(2,16,0)
-	GList            *element;
-	gchar            *text;
-	gdouble           value;
-	gint              position, count;
-
-	g_assert(Attr != NULL && scale != NULL);
-
-	text = attributeset_get_first(&element, Attr, ATTR_ITEM);
-	while (text) {
-		/* sscanf is good for the first two values */
-		if (sscanf(text, "%lf | %d", &value, &position) == 2) {
-			/* Now we'll position on the markup or the terminating zero */
-			count = 0;
-			while (*text != 0 && count < 2) {
-				if (*text == '|') count++;
-				text++;
-			}
-#ifdef DEBUG
-			printf("%s: value=%.16f position=%i markup='%s'\n",
-				__func__, value, position, text);
-#endif
-			gtk_scale_add_mark(GTK_SCALE(scale), value, position, text);
-		}
-		text = attributeset_get_next(&element, Attr, ATTR_ITEM);
-	}
-#endif
-}
-
 char *
 widget_get_text_value(
 		GtkWidget *widget, 
 		int type)
 {
 	gchar            *string;
-	gchar             value[32];
-	gint              digits;
-	gdouble           val;
 
 #ifdef DEBUG
 	g_message("%s(): type: %08x\n", __func__, type);
@@ -177,12 +145,28 @@ widget_get_text_value(
 			string = widget_hbox_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			string = widget_hscale_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_HSEPARATOR:
+		case WIDGET_VSEPARATOR:
+			string = widget_hseparator_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_LIST:
 			string = widget_list_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_MENUBAR:
 			string = widget_menubar_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+		case WIDGET_MENUITEM:
+		case WIDGET_MENU:
+			string = widget_menuitem_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_NOTEBOOK:
@@ -244,440 +228,11 @@ widget_get_text_value(
 			break;
 #endif
 
-			
-		case WIDGET_VSCALE:
-		case WIDGET_HSCALE:
-			digits = gtk_scale_get_digits(GTK_SCALE(widget));
-			val = gtk_range_get_value(GTK_RANGE(widget));
-			switch (digits) {
-				case 0:
-					sprintf(value, "%.0f", val);
-					break;
-				case 1:
-					sprintf(value, "%.1f", val);
-					break;
-				case 2:
-					sprintf(value, "%.2f", val);
-					break;
-				case 3:
-					sprintf(value, "%.3f", val);
-					break;
-				case 4:
-					sprintf(value, "%.4f", val);
-					break;
-				case 5:
-					sprintf(value, "%.5f", val);
-					break;
-				case 6:
-					sprintf(value, "%.6f", val);
-					break;
-				case 7:
-					sprintf(value, "%.7f", val);
-					break;
-				case 8:
-					sprintf(value, "%.8f", val);
-					break;
-				case 9:
-					sprintf(value, "%.9f", val);
-					break;
-				case 10:
-					sprintf(value, "%.10f", val);
-					break;
-				case 11:
-					sprintf(value, "%.11f", val);
-					break;
-				case 12:
-					sprintf(value, "%.12f", val);
-					break;
-				case 13:
-					sprintf(value, "%.13f", val);
-					break;
-				case 14:
-					sprintf(value, "%.14f", val);
-					break;
-				case 15:
-					sprintf(value, "%.15f", val);
-					break;
-				case 16:
-					sprintf(value, "%.16f", val);
-					break;
-				/* Is there much point going beyond 16? */
-				default:
-					sprintf(value, "%f", val);
-					break;
-			}
-			return g_strdup(value);
-			break;
-
-		case WIDGET_MENU:
-		case WIDGET_MENUITEM:
-			if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-				if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
-					string = g_strdup("true");
-				} else {
-					string = g_strdup("false");
-				}
-			} else {
-				string = g_strdup("");
-			}
-			return string;
-			break;
 
 		default:
 			return NULL;
 	}
 	g_error("%s(): this should not be reached", __func__);
-}
-
-static
-void fill_scale_by_file(GtkWidget *widget, char *filename)
-{
-	FILE             *infile;
-	gchar             line[512];
-	gint              count;
-
-	if (infile = fopen(filename, "r")) {
-		/* Just one line */
-		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			gtk_range_set_value(GTK_RANGE(widget), atof(line));
-		}
-		/* Close the file */
-		fclose(infile);
-	} else {
-		if (!option_no_warning)
-			g_warning("%s(): Couldn't open '%s' for reading.", 
-				__func__, filename);
-	}
-}
-
-static
-void fill_menuitem_by_file(GtkWidget *widget, char *filename)
-{
-	FILE             *infile;
-	gchar             line[512];
-	gint              count, is_active;
-
-	if (infile = fopen(filename, "r")) {
-		/* Just one line */
-		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			if ((strcasecmp(line, "true") == 0) ||
-				(strcasecmp(line, "yes") == 0) || (atoi(line) == 1)) {
-				is_active = 1;
-			} else {
-				is_active = 0;
-			}
-			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), is_active);
-		}
-		/* Close the file */
-		fclose(infile);
-	} else {
-		if (!option_no_warning)
-			g_warning("%s(): Couldn't open '%s' for reading.", 
-				__func__, filename);
-	}
-}
-
-void save_scale_to_file(variable *var)
-{
-	GList            *element;
-	FILE             *outfile;
-	gchar            *act;
-	gchar            *filename = NULL;
-	gint              digits;
-	gdouble           val;
-
-	/* We'll use the output file filename if available */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
-	while (act) {
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			filename = act + 5;
-			break;
-		}
-		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
-	}
-
-	/* If we have a valid filename then open it and dump the
-	 * widget's data to it */
-	if (filename) {
-		if ((outfile = fopen(filename, "w"))) {
-			digits = gtk_scale_get_digits(GTK_SCALE(var->Widget));
-			val = gtk_range_get_value(GTK_RANGE(var->Widget));
-			switch (digits) {
-				case 0:
-					fprintf(outfile, "%.0f", val);
-					break;
-				case 1:
-					fprintf(outfile, "%.1f", val);
-					break;
-				case 2:
-					fprintf(outfile, "%.2f", val);
-					break;
-				case 3:
-					fprintf(outfile, "%.3f", val);
-					break;
-				case 4:
-					fprintf(outfile, "%.4f", val);
-					break;
-				case 5:
-					fprintf(outfile, "%.5f", val);
-					break;
-				case 6:
-					fprintf(outfile, "%.6f", val);
-					break;
-				case 7:
-					fprintf(outfile, "%.7f", val);
-					break;
-				case 8:
-					fprintf(outfile, "%.8f", val);
-					break;
-				case 9:
-					fprintf(outfile, "%.9f", val);
-					break;
-				case 10:
-					fprintf(outfile, "%.10f", val);
-					break;
-				case 11:
-					fprintf(outfile, "%.11f", val);
-					break;
-				case 12:
-					fprintf(outfile, "%.12f", val);
-					break;
-				case 13:
-					fprintf(outfile, "%.13f", val);
-					break;
-				case 14:
-					fprintf(outfile, "%.14f", val);
-					break;
-				case 15:
-					fprintf(outfile, "%.15f", val);
-					break;
-				case 16:
-					fprintf(outfile, "%.16f", val);
-					break;
-				/* Is there much point going beyond 16? */
-				default:
-					fprintf(outfile, "%f", val);
-					break;
-			}
-			fclose(outfile);
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
-				__func__, filename);
-		}
-	} else {
-		yywarning("No output file directive found");
-	}
-}
-
-void save_menuitem_to_file(variable *var)
-{
-	GList            *element;
-	FILE             *outfile;
-	gchar            *act;
-	gchar            *filename = NULL;
-	gint              is_active;
-
-	/* We'll use the output file filename if available */
-	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
-	while (act) {
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
-			filename = act + 5;
-			break;
-		}
-		act = attributeset_get_next(&element, var->Attributes, ATTR_OUTPUT);
-	}
-
-	/* If we have a valid filename then open it and dump the
-	 * widget's data to it */
-	if (filename) {
-		if ((outfile = fopen(filename, "w"))) {
-			is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(var->Widget));
-			if (is_active) fprintf(outfile, "%s", "true");
-			else fprintf(outfile, "%s", "false");
-			fclose(outfile);
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
-				__func__, filename);
-		}
-	} else {
-		yywarning("No output file directive found");
-	}
-}
-
-void widget_scale_refresh(variable *var)
-{
-	GList            *element;
-	gchar            *act, *value;
-	gint              initialised = FALSE;
-
-	if (var != NULL && var->Attributes != NULL) {
-
-#ifdef DEBUG
-		g_message("%s(): entering.", __func__);
-#endif
-
-		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
-
-		/* The <input> tag... */
-		act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-		while (act) {
-			/* input file stock = "File:", input file = "File:/path/to/file" */
-			if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-				fill_scale_by_file(var->Widget, act + 5);
-			if (input_is_shell_command(act))
-				fill_scale_by_command(var->Widget, act + 8);
-			act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-		}
-
-		/* The <item> tags... */
-		if (attributeset_is_avail(var->Attributes, ATTR_ITEM)) {
-#if GTK_CHECK_VERSION(2,16,0)
-			gtk_scale_clear_marks(GTK_SCALE(var->Widget));
-#endif
-			fill_scale_by_items(var->Attributes, var->Widget);
-		}
-
-		/* Initialise these only once at start-up */
-		if (!initialised) {
-			/* Apply the default directive if available */
-			if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT))
-				gtk_range_set_value(GTK_RANGE(var->Widget),
-					atof(attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT)));
-			/* Apply the sensitive directive if available */
-			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
-				gtk_widget_set_sensitive(var->Widget, FALSE);
-
-			/* Connect signals */
-			g_signal_connect(G_OBJECT(var->Widget), "value-changed",
-				G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
-		}
-	}
-}
-
-void widget_menuitem_refresh(variable *var)
-{
-	GList            *element;
-	gchar            *act, *value, *image_name;
-	gint              width = -1, height = -1;
-	GdkPixbuf        *pixbuf;
-	GtkWidget        *image;
-	gint              initialised = FALSE;
-
-	if (var != NULL && var->Attributes != NULL) {
-
-#ifdef DEBUG
-		g_message("%s(): entering.", __func__);
-#endif
-
-		/* Get initialised state of widget */
-		if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-			initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
-
-		/* Image menuitems from file can be refreshed (GTK+ destroys the
-		 * original image when a new one is set) */
-		if (initialised && GTK_IS_IMAGE_MENU_ITEM(var->Widget)) {
-			if (var->widget_tag_attr &&
-				((image_name = get_tag_attribute(var->widget_tag_attr, "image-name")) ||
-				(image_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
-				if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-					width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
-				if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-					height = atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT));
-
-				if (width == -1 && height == -1) {
-					/* Handle unscaled images */
-					image = gtk_image_new_from_file(find_pixmap(image_name));
-				} else {
-					/* Handle scaled images */
-					pixbuf = gdk_pixbuf_new_from_file_at_size(
-						find_pixmap(image_name), width, height, NULL);
-					if (pixbuf) {
-						image = gtk_image_new_from_pixbuf(pixbuf);
-						/* pixbuf is no longer required and should be unreferenced */
-						g_object_unref(pixbuf);
-					} else {
-						/* pixbuf is null (file not found) so by using this
-						* function gtk will substitute a broken image icon */
-						image = gtk_image_new_from_file("");
-					}
-				}
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(var->Widget), image);
-			}
-		}
-
-		/* Checkbox and radiobutton menuitems can be refreshed */
-		if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
-			/* The <input> tag... */
-			act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
-			while (act) {
-				/* input file stock = "File:", input file = "File:/path/to/file" */
-				if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5)
-					fill_menuitem_by_file(var->Widget, act + 5);
-				if (input_is_shell_command(act))
-					fill_menuitem_by_command(var->Widget, act + 8);
-				act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
-			}
-		}
-
-		/* Initialise these only once at start-up */
-		if (!initialised) {
-			/* Apply the sensitive directive if available */
-			if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
-				(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "0")))
-				gtk_widget_set_sensitive(var->Widget, FALSE);
-			/* The GTK "sensitive" property (if present) will be set later after
-			 * widget realization, but this doesn't have any effect until after
-			 * the menu has been opened by the user which results in accelerators
-			 * being live up until that point. I don't know why that is -- it 
-			 * looks as though GTK is initialising the menus on first opening as
-			 * they render much quicker on subsequent openings -- but it can be
-			 * dealt with by applying the property right here right now.
-			 * Note that I'm applying this after any sensitive directive which
-			 * would be the normal sequence of things.
-			 * 
-			 * [UPDATE]
-			 * Menuitems are realized when the menu is opened which could be a
-			 * problem since then tag attributes that are GTK properties will
-			 * sit there waiting to be applied at some later time. Something is
-			 * going to have to be done about the on_any_widget_realized method
-			 * of setting tag attributes because it will be affecting other widgets
-			 * such as the notebook including all of the widgets within that!
-			 * When that's dealt with I can remove the following code temp temp */
-			if (var->widget_tag_attr &&
-				(value = get_tag_attribute(var->widget_tag_attr, "sensitive")) &&
-				((strcasecmp(value, "false") == 0) ||
-				(strcasecmp(value, "no") == 0) || (atoi(value) == 0))) {
-				gtk_widget_set_sensitive(var->Widget, FALSE);
-			}
-
-			/* Connect signals */
-			/* Only the checkbox and radiobutton emit the toggled signal */
-			if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
-				g_signal_connect(G_OBJECT(var->Widget), "toggled",
-					G_CALLBACK(on_any_widget_toggled_event), (gpointer)var->Attributes);
-			}
-			/* All menuitems emit the activate signal */
-			g_signal_connect(G_OBJECT(var->Widget), "activate",
-				G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
-		}
-	}
 }
 
 extern gchar *option_include_file;
@@ -738,72 +293,6 @@ void fill_clist_by_command(GtkWidget * list, int columns, char *command)
 	gtk_clist_select_row(GTK_CLIST(list), 0, 0);
 } */
 
-void fill_scale_by_command(GtkWidget *widget, char *command)
-{
-	FILE             *infile;
-	gchar             line[512];
-	gint              count;
-
-	g_assert(widget != NULL && command != NULL);
-
-#ifdef DEBUG
-	g_message("%s(): command: '%s'", __func__, command);
-#endif
-
-	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
-		/* Just one line */
-		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			gtk_range_set_value(GTK_RANGE(widget), atof(line));
-		}
-		/* Close the file */
-		pclose(infile);
-	} else {
-		g_warning("%s(): command %s, %m\n", __func__, command);
-	}
-}
-
-void fill_menuitem_by_command(GtkWidget *widget, char *command)
-{
-	FILE             *infile;
-	gchar             line[512];
-	gint              count, is_active;
-
-	g_assert(widget != NULL && command != NULL);
-
-#ifdef DEBUG
-	g_message("%s(): command: '%s'", __func__, command);
-#endif
-
-	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
-		/* Just one line */
-		if ((fgets(line, 512, infile))) {
-			/* Enforce end of string in case of max chars read */
-			line[512 - 1] = 0;
-			/* Remove the trailing [CR]LFs */
-			for (count = strlen(line) - 1; count >= 0; count--)
-				if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			if ((strcasecmp(line, "true") == 0) ||
-				(strcasecmp(line, "yes") == 0) || (atoi(line) == 1)) {
-				is_active = 1;
-			} else {
-				is_active = 0;
-			}
-			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), is_active);
-		}
-		/* Close the file */
-		pclose(infile);
-	} else {
-		g_warning("%s(): command %s, %m\n", __func__, command);
-	}
-}
-
 char *widgets_to_str(int itype)
 {
 	char *type;
@@ -862,11 +351,26 @@ char *widgets_to_str(int itype)
 		case WIDGET_HBOX:
 			type = "HBOX";
 			break;
+		case WIDGET_HSCALE:
+			type = "HSCALE";
+			break;
+		case WIDGET_HSEPARATOR:
+			type = "HSEPARATOR";
+			break;
 		case WIDGET_LIST:
 			type = "LIST";
 			break;
+		case WIDGET_MENU:
+			type = "MENU";
+			break;
 		case WIDGET_MENUBAR:
 			type = "MENUBAR";
+			break;
+		case WIDGET_MENUITEM:
+			type = "MENUITEM";
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+			type = "MENUITEMSEPARATOR";
 			break;
 		case WIDGET_NOTEBOOK:
 			type = "NOTEBOOK";
@@ -906,6 +410,12 @@ char *widgets_to_str(int itype)
 		case WIDGET_VBOX:
 			type = "VBOX";
 			break;
+		case WIDGET_VSCALE:
+			type = "VSCALE";
+			break;
+		case WIDGET_VSEPARATOR:
+			type = "VSEPARATOR";
+			break;
 		case WIDGET_WINDOW:
 			type = "WINDOW";
 			break;
@@ -913,18 +423,6 @@ char *widgets_to_str(int itype)
 
 	case WIDGET_SCROLLEDW:
 		type = "SCROLLEDW";
-		break;
-	case WIDGET_HSEPARATOR:
-		type = "HSEPARATOR";
-	    break;
-	case WIDGET_VSEPARATOR:
-		type = "VSEPARATOR";
-	    break;
-	case WIDGET_HSCALE:
-		type = "HSCALE";
-		break;
-	case WIDGET_VSCALE:
-		type = "VSCALE";
 		break;
 	default:
 		type = "THINGY";

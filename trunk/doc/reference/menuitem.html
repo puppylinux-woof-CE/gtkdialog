@@ -117,6 +117,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkMenuItem.html">GtkMenuItem</a>
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
 <tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
+<tr><td class="wiki"> file-monitor </td><td class="wiki"> Monitor input file(s) for changes </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> rate-limit </td><td class="wiki"> The file monitor limit in milliseconds </td><td class="wiki"> An integer &gt;= <code>10</code> </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> accel-key </td><td class="wiki"> Accelerator key </td><td class="wiki"> A decimal or hexadecimal value (<a href="http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h">full list</a>) </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> accel-mods<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Accelerator modifiers </td><td class="wiki"> A decimal or hexadecimal value (<a href="http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h">full list</a>) </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> icon-name<sup><a href="#note2">[2]</a></sup> </td><td class="wiki"> GTK theme icon name </td><td class="wiki">  </td><td class="wiki"> 0.7.21 </td></tr>
@@ -152,6 +154,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkMenuItem.html">GtkMenuItem</a>
 <p>The default signal for the checkbox and radiobutton menuitem widgets is "<a href="http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem-toggled">toggled</a>", emitted when the state is changed, otherwise the default signal is "<a href="http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate">activate</a>", emitted when the item is activated.</p>
 
 <p>All widgets emit the "activate" signal.</p>
+
+<p>The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 
 <p>The following signals are connected-up for all widgets:</p>
 
@@ -241,7 +245,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkMenuItem.html">GtkMenuItem</a>
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-09-16 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-09-18 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

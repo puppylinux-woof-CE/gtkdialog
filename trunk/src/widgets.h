@@ -47,28 +47,9 @@ struct _progr_descr {
 };
 typedef struct _progr_descr progr_descr;
 
-/* Thunor: I've pulled out all the prototypes static or not and grouped
- * and reordered them alphabetically to show what's been implemented.
- * In my opinion there should be one source and header file for each widget
- * with all of the functions in a consistent order as finding stuff is
- * incredibly time consuming. Another job for another [rainy] day :) */
-static void fill_scale_by_items(AttributeSet *Attr, GtkWidget *scale);
-
 char *widget_get_text_value(GtkWidget *widget, int type);
 
-static void fill_scale_by_file(GtkWidget *widget, char *filename);
-static void fill_menuitem_by_file(GtkWidget *widget, char *filename);
-
-void widget_scale_refresh(variable *var);
-void widget_menuitem_refresh(variable *var);
-
-void save_scale_to_file(variable *var);
-void save_menuitem_to_file(variable *var);
-
 FILE *widget_opencommand(const char *command);
-
-void fill_scale_by_command(GtkWidget *widget, char *command);
-void fill_menuitem_by_command(GtkWidget *widget, char *command);
 
 char *widgets_to_str(int itype);
 

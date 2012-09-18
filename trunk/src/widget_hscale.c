@@ -1,5 +1,5 @@
 /*
- * widget_edit.c: 
+ * widget_hscale.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
@@ -35,9 +35,9 @@
 //#define DEBUG_TRANSITS
 
 /* Local function prototypes, located at file bottom */
-static void widget_edit_input_by_command(variable *var, char *command);
-static void widget_edit_input_by_file(variable *var, char *filename);
-static void widget_edit_input_by_items(variable *var);
+static void widget_hscale_input_by_command(variable *var, char *command);
+static void widget_hscale_input_by_file(variable *var, char *filename);
+static void widget_hscale_input_by_items(variable *var);
 
 /* Notes: */
 
@@ -45,7 +45,7 @@ static void widget_edit_input_by_items(variable *var);
  * Clear                                                               *
  ***********************************************************************/
 
-void widget_edit_clear(variable *var)
+void widget_hscale_clear(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -54,9 +54,7 @@ void widget_edit_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* Thunor: This is all original code moved across when refactoring */
-	gtk_text_buffer_set_text(gtk_text_view_get_buffer(
-		GTK_TEXT_VIEW(var->Widget)), "", 0);
+	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -67,27 +65,45 @@ void widget_edit_clear(variable *var)
  * Create                                                              *
  ***********************************************************************/
 
-GtkWidget *widget_edit_create(
+GtkWidget *widget_hscale_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
 	GtkWidget        *widget;
+	gdouble           range_min = 0;
+	gdouble           range_max = 100;
+	gdouble           range_step = 1;
+	gdouble           range_value = 0;
+	gchar            *value;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* Thunor: This is all original code moved across when refactoring */
-#if GTK_CHECK_VERSION(2, 4, 0)
+	/* Thunor: These "range-*" names are consistent with the spinbutton widget */
+	if (attr) {
+		if (!(value = get_tag_attribute(attr, "range-min")))
+			value = get_tag_attribute(attr, "scale-min");
+		if (value) range_min = atof(value);
 
-	widget = gtk_text_view_new();
+		if (!(value = get_tag_attribute(attr, "range-max")))
+			value = get_tag_attribute(attr, "scale-max");
+		if (value) range_max = atof(value);
 
-#else
+		if (!(value = get_tag_attribute(attr, "range-step")))
+			value = get_tag_attribute(attr, "scale-step");
+		if (value) range_step = atof(value);
 
-	yyerror_simple("Editor widget is not supported by"
-		"this version of GTK+, you need at"
-		"least GTK+ 2.4.0\n");
+		if (!(value = get_tag_attribute(attr, "range-value")))
+			value = get_tag_attribute(attr, "scale-value");
+		if (value) range_value = atof(value);
+	}
 
-#endif
+	if (Type == WIDGET_HSCALE) {
+		widget = gtk_hscale_new_with_range(range_min, range_max, range_step);
+	} else {
+		widget = gtk_vscale_new_with_range(range_min, range_max, range_step);
+	}
+	gtk_range_set_value(GTK_RANGE(widget), range_value);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -100,7 +116,7 @@ GtkWidget *widget_edit_create(
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
-gchar *widget_edit_envvar_all_construct(variable *var)
+gchar *widget_hscale_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
@@ -125,22 +141,77 @@ gchar *widget_edit_envvar_all_construct(variable *var)
  * Environment Variable Construct                                      *
  ***********************************************************************/
 
-gchar *widget_edit_envvar_construct(GtkWidget *widget)
+gchar *widget_hscale_envvar_construct(GtkWidget *widget)
 {
-	GtkTextBuffer    *text_buffer;
-	GtkTextIter       start, end;		
 	gchar            *string;
+	gchar             value[32];
+	gdouble           val;
+	gint              digits;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* Thunor: This is all original code moved across when refactoring */
-	text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
-	gtk_text_buffer_get_start_iter(text_buffer, &start);
-	gtk_text_buffer_get_end_iter(text_buffer, &end);
-	/* This function returns an allocated string so no need to strdup */
-	string = gtk_text_buffer_get_text(text_buffer, &start, &end, TRUE);
+	digits = gtk_scale_get_digits(GTK_SCALE(widget));
+	val = gtk_range_get_value(GTK_RANGE(widget));
+	switch (digits) {
+		case 0:
+			sprintf(value, "%.0f", val);
+			break;
+		case 1:
+			sprintf(value, "%.1f", val);
+			break;
+		case 2:
+			sprintf(value, "%.2f", val);
+			break;
+		case 3:
+			sprintf(value, "%.3f", val);
+			break;
+		case 4:
+			sprintf(value, "%.4f", val);
+			break;
+		case 5:
+			sprintf(value, "%.5f", val);
+			break;
+		case 6:
+			sprintf(value, "%.6f", val);
+			break;
+		case 7:
+			sprintf(value, "%.7f", val);
+			break;
+		case 8:
+			sprintf(value, "%.8f", val);
+			break;
+		case 9:
+			sprintf(value, "%.9f", val);
+			break;
+		case 10:
+			sprintf(value, "%.10f", val);
+			break;
+		case 11:
+			sprintf(value, "%.11f", val);
+			break;
+		case 12:
+			sprintf(value, "%.12f", val);
+			break;
+		case 13:
+			sprintf(value, "%.13f", val);
+			break;
+		case 14:
+			sprintf(value, "%.14f", val);
+			break;
+		case 15:
+			sprintf(value, "%.15f", val);
+			break;
+		case 16:
+			sprintf(value, "%.16f", val);
+			break;
+		/* Is there much point going beyond 16? */
+		default:
+			sprintf(value, "%f", val);
+			break;
+	}
+	string = g_strdup(value);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -153,7 +224,7 @@ gchar *widget_edit_envvar_construct(GtkWidget *widget)
  * Fileselect                                                          *
  ***********************************************************************/
 
-void widget_edit_fileselect(
+void widget_hscale_fileselect(
 	variable *var, const char *name, const char *value)
 {
 	gchar            *var1;
@@ -174,11 +245,10 @@ void widget_edit_fileselect(
  * Refresh                                                             *
  ***********************************************************************/
 
-void widget_edit_refresh(variable *var)
+void widget_hscale_refresh(variable *var)
 {
 	GFileMonitor     *monitor;
 	GList            *element;
-	GtkTextBuffer    *text_buffer;
 	gchar            *act;
 	gint              initialised = FALSE;
 
@@ -194,21 +264,25 @@ void widget_edit_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act))
-			widget_edit_input_by_command(var, act + 8);
+			widget_hscale_input_by_command(var, act + 8);
 		/* input file stock = "File:", input file = "File:/path/to/file" */
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			if (!initialised) {
 				/* Check for file-monitor and create if requested */
 				widget_file_monitor_try_create(var, act + 5);
 			}
-			widget_edit_input_by_file(var, act + 5);
+			widget_hscale_input_by_file(var, act + 5);
 		}
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);
 	}
 
 	/* The <item> tags... */
-	if (attributeset_is_avail(var->Attributes, ATTR_ITEM))
-		widget_edit_input_by_items(var);
+	if (attributeset_is_avail(var->Attributes, ATTR_ITEM)) {
+#if GTK_CHECK_VERSION(2,16,0)
+		gtk_scale_clear_marks(GTK_SCALE(var->Widget));
+#endif
+		widget_hscale_input_by_items(var);
+	}
 
 	/* Initialise these only once at start-up */
 	if (!initialised) {
@@ -217,11 +291,15 @@ void widget_edit_refresh(variable *var)
 			fprintf(stderr, "%s(): <label> not implemented for this widget.\n",
 				__func__);
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
-			/* Thunor: This is all original code moved across when refactoring */
-			text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
-			gtk_text_buffer_set_text(text_buffer, attributeset_get_first(
-				&element, var->Attributes, ATTR_DEFAULT), -1);
+			gtk_range_set_value(GTK_RANGE(var->Widget),
+				atof(attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT)));
 		}
+		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
+			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
+				__func__);
+		if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
+			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
+				__func__);
 		if ((attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "false")) ||
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "disabled")) ||	/* Deprecated */
 			(attributeset_cmp_left(var->Attributes, ATTR_SENSITIVE, "no")) ||
@@ -229,6 +307,8 @@ void widget_edit_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
+		g_signal_connect(G_OBJECT(var->Widget), "value-changed",
+			G_CALLBACK(on_any_widget_value_changed_event), (gpointer)var->Attributes);
 
 	}
 
@@ -241,7 +321,7 @@ void widget_edit_refresh(variable *var)
  * Removeselected                                                      *
  ***********************************************************************/
 
-void widget_edit_removeselected(variable *var)
+void widget_hscale_removeselected(variable *var)
 {
 	gchar            *var1;
 	gint              var2;
@@ -250,9 +330,8 @@ void widget_edit_removeselected(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* Thunor: This is all original code moved across when refactoring */
-	gtk_text_buffer_delete_selection(gtk_text_view_get_buffer(
-		GTK_TEXT_VIEW(var->Widget)), FALSE, TRUE);
+	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
+		__func__);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -263,15 +342,14 @@ void widget_edit_removeselected(variable *var)
  * Save                                                                *
  ***********************************************************************/
 
-void widget_edit_save(variable *var)
+void widget_hscale_save(variable *var)
 {
 	FILE             *outfile;
 	GList            *element;
-	GtkTextBuffer    *buffer;
-	GtkTextIter       start, end;
 	gchar            *act;
 	gchar            *filename = NULL;
-	gchar            *text;
+	gdouble           value;
+	guint             digits;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -292,14 +370,66 @@ void widget_edit_save(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 
-			/* Thunor: This is all original code moved across when refactoring */
-			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
-			gtk_text_buffer_get_start_iter(buffer, &start);
-			gtk_text_buffer_get_end_iter(buffer, &end);
-			text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
-			fprintf(outfile, "%s", text);
+			digits = gtk_scale_get_digits(GTK_SCALE(var->Widget));
+			value = gtk_range_get_value(GTK_RANGE(var->Widget));
+			switch (digits) {
+				case 0:
+					fprintf(outfile, "%.0f", value);
+					break;
+				case 1:
+					fprintf(outfile, "%.1f", value);
+					break;
+				case 2:
+					fprintf(outfile, "%.2f", value);
+					break;
+				case 3:
+					fprintf(outfile, "%.3f", value);
+					break;
+				case 4:
+					fprintf(outfile, "%.4f", value);
+					break;
+				case 5:
+					fprintf(outfile, "%.5f", value);
+					break;
+				case 6:
+					fprintf(outfile, "%.6f", value);
+					break;
+				case 7:
+					fprintf(outfile, "%.7f", value);
+					break;
+				case 8:
+					fprintf(outfile, "%.8f", value);
+					break;
+				case 9:
+					fprintf(outfile, "%.9f", value);
+					break;
+				case 10:
+					fprintf(outfile, "%.10f", value);
+					break;
+				case 11:
+					fprintf(outfile, "%.11f", value);
+					break;
+				case 12:
+					fprintf(outfile, "%.12f", value);
+					break;
+				case 13:
+					fprintf(outfile, "%.13f", value);
+					break;
+				case 14:
+					fprintf(outfile, "%.14f", value);
+					break;
+				case 15:
+					fprintf(outfile, "%.15f", value);
+					break;
+				case 16:
+					fprintf(outfile, "%.16f", value);
+					break;
+				/* Is there much point going beyond 16? */
+				default:
+					fprintf(outfile, "%f", value);
+					break;
+			}
 
-			/* Close the file */
 			fclose(outfile);
 		} else {
 			fprintf(stderr, "%s(): Couldn't open '%s' for writing.\n",
@@ -318,16 +448,39 @@ void widget_edit_save(variable *var)
  * Input by Command                                                    *
  ***********************************************************************/
 
-static void widget_edit_input_by_command(variable *var, char *command)
+static void widget_hscale_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+#ifdef DEBUG_CONTENT
+	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
+#endif
+
+	/* Opening pipe for reading... */
+	if (infile = widget_opencommand(command)) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+
+			gtk_range_set_value(GTK_RANGE(var->Widget), atof(line));
+
+		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			command);
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -338,37 +491,32 @@ static void widget_edit_input_by_command(variable *var, char *command)
  * Input by File                                                       *
  ***********************************************************************/
 
-static void widget_edit_input_by_file(variable *var, char *filename)
+static void widget_hscale_input_by_file(variable *var, char *filename)
 {
-	GtkTextBuffer    *buffer;
-	gchar            *filebuffer;
-	gint              infile, result;
-	struct stat       st;
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* Thunor: This is restructured original code moved across when refactoring */
-	if (stat(filename, &st) == 0) {
+	if (infile = fopen(filename, "r")) {
+		/* Just one line */
+		if (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 
-		filebuffer = g_malloc(st.st_size);
-		infile = open(filename, O_RDONLY);
+			gtk_range_set_value(GTK_RANGE(var->Widget), atof(line));
 
-		if (infile != -1) {
-
-			result = read(infile, filebuffer, st.st_size);
-			close(infile);
-
-			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
-			gtk_text_buffer_set_text(buffer, filebuffer, st.st_size);
-
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
-				filename);
 		}
+		/* Close the file */
+		fclose(infile);
 	} else {
-		fprintf(stderr, "%s(): Couldn't stat '%s'.\n", __func__,
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			filename);
 	}
 
@@ -381,16 +529,40 @@ static void widget_edit_input_by_file(variable *var, char *filename)
  * Input by Items                                                      *
  ***********************************************************************/
 
-static void widget_edit_input_by_items(variable *var)
+static void widget_hscale_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
+	GList            *element;
+	gchar            *text;
+	gdouble           value;
+	gint              position, count;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
+#if GTK_CHECK_VERSION(2,16,0)
+
+	g_assert(var->Attributes != NULL && var->Widget != NULL);
+
+	text = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
+	while (text) {
+		/* sscanf is good for the first two values */
+		if (sscanf(text, "%lf | %d", &value, &position) == 2) {
+			/* Now we'll position on the markup or the terminating zero */
+			count = 0;
+			while (*text != 0 && count < 2) {
+				if (*text == '|') count++;
+				text++;
+			}
+#ifdef DEBUG_CONTENT
+			printf("%s: value=%.16f position=%i markup='%s'\n",
+				__func__, value, position, text);
+#endif
+			gtk_scale_add_mark(GTK_SCALE(var->Widget), value, position, text);
+		}
+		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
+	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

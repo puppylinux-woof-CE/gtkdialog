@@ -205,7 +205,7 @@ void widget_expander_refresh(variable *var)
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			if (!initialised) {
 				/* Check for file-monitor and create if requested */
-				widget_file_monitor_will_create(var, act + 5);
+				widget_file_monitor_try_create(var, act + 5);
 			}
 			widget_expander_input_by_file(var, act + 5);
 		}
@@ -235,10 +235,6 @@ void widget_expander_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-		if ((monitor = g_object_get_data(G_OBJECT(var->Widget), "_monitor"))) {
-			g_signal_connect(monitor, "changed",
-				G_CALLBACK(on_any_widget_file_changed_event), (gpointer)var);
-		}
 		/* Using connect-after here else widget's variable is lagging */
 		g_signal_connect_after(G_OBJECT(var->Widget), "activate",
 			G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
