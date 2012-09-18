@@ -117,6 +117,8 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> file-monitor </td><td class="wiki"> Monitor input file(s) for changes </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> rate-limit </td><td class="wiki"> The file monitor limit in milliseconds </td><td class="wiki"> An integer &gt;= <code>10</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> hscrollbar-policy </td><td class="wiki"> Policy for the horizontal scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> vscrollbar-policy </td><td class="wiki"> Policy for the vertical scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> font-name </td><td class="wiki"> Font description </td><td class="wiki"> Example: <code>Monospace Bold 14</code> </td><td class="wiki"> </td></tr>
@@ -153,6 +155,8 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <h2> Signals </h2>
 
 <p>The default signal is "<a href="http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal-child-exited">child-exited</a>", emitted when the terminal detects that the child has exited.</p>
+
+<p>The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 
 <p>The following signals are connected-up for all widgets:</p>
 
@@ -240,7 +244,7 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-09-16 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-09-18 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

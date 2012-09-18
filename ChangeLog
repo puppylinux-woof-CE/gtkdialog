@@ -7,6 +7,14 @@ for announcements.
 - Fixed the progressbar signal handling: it now has a default signal
   "time-out" and it now supports <action signal="type">...</action>.
 - Added file-monitor functionality to the radiobutton widget.
+- Added file-monitor functionality to the spinbutton widget.
+- Added file-monitor functionality to the statusbar widget.
+- Added file-monitor functionality to the table widget.
+- Added file-monitor functionality to the terminal widget.
+- Added file-monitor functionality to the text widget.
+- Added file-monitor functionality to the timer widget.
+- Added file-monitor functionality to the tree widget.
+- Added file-monitor functionality to the window widget.
 
 * Mon Sep 17 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the h/vscale widgets.

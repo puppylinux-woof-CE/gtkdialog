@@ -117,6 +117,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkSpinButton.html">GtkSpinButton
 <tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> file-monitor </td><td class="wiki"> Monitor input file(s) for changes </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> rate-limit </td><td class="wiki"> The file monitor limit in milliseconds </td><td class="wiki"> An integer &gt;= <code>10</code> </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> range-min </td><td class="wiki"> Minimum value </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> range-max </td><td class="wiki"> Maximum value </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> range-step </td><td class="wiki"> Step increment </td><td class="wiki"> A double precision floating point value </td><td class="wiki"> </td></tr>
@@ -151,6 +153,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkSpinButton.html">GtkSpinButton
 <p>The "<a href="http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-activate">activate</a>" signal is emitted when the user activates the entry with the Enter key.</p>
 
 <p>For GTK+ 2.16 and later, the "<a href="http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-press">icon-press</a>" and "<a href="http://developer.gnome.org/gtk/2.24/GtkEntry.html#GtkEntry-icon-release">icon-release</a>" signals are emitted when an activatable icon is pressed or released, but these signal names will be prefixed with either "primary-" or "secondary-" to indicate the source icon.</p>
+
+<p>The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 
 <p>The following signals are connected-up for all widgets:</p>
 
@@ -235,7 +239,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkSpinButton.html">GtkSpinButton
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-09-16 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-09-18 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
