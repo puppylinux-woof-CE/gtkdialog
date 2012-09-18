@@ -35,6 +35,8 @@ The following custom tag attributes are available:
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || icon-name^[1]^ || GTK theme icon name ||  || 0.7.21 ||
 || stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || 0.7.21 ||
 || image-name || Image filename ||  || 0.7.21 ||
@@ -62,6 +64,8 @@ Some of these may have tag attribute equivalents.
 == Signals ==
 
 The default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
+
+The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 
