@@ -721,7 +721,7 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 		retval = WIDGET_TEXT;
 /* GtkWidget--->GtkProgress--->GtkProgressBar */
 	else if (GTK_IS_PROGRESS_BAR(widget))
-		retval = WIDGET_PROGRESS;
+		retval = WIDGET_PROGRESSBAR;
 /* GtkWidget--->GtkRange--->GtkScale--->GtkHScale */
 	else if (GTK_IS_HSCALE(widget))
 		retval = WIDGET_HSCALE;

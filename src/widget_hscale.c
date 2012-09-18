@@ -247,7 +247,6 @@ void widget_hscale_fileselect(
 
 void widget_hscale_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;

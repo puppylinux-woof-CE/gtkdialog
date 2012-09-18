@@ -412,11 +412,11 @@ gchar *Token;
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_RADIO);  					}
 
-\<progressbar\>    			{ Token="<progressbar>"; return(PROGRESS);      	}
-\<\/progressbar\>  			{ Token="</progressbar>"; return(EPROGRESS);    	}
+\<progressbar\>    			{ Token="<progressbar>"; return(PROGRESSBAR);      	}
+\<\/progressbar\>  			{ Token="</progressbar>"; return(EPROGRESSBAR);    	}
 \<progressbar[ ]+  			{ Token="<progressbar>"; 
 					  BEGIN(ST_TAG_ATTR);
-					  return(PART_PROGRESS);  				}
+					  return(PART_PROGRESSBAR);  				}
 
 
 \<radio\>    				{ Token="<radio>"; return(RADIO);  			}

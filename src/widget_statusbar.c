@@ -34,13 +34,13 @@
 //#define DEBUG_TRANSITS
 #define MESSAGE_LENGTH_MAX 512
 
+/* Local variables */
+
 /* Local function prototypes, located at file bottom */
 static void widget_statusbar_input_by_command(variable *var, char *command);
 static void widget_statusbar_input_by_file(variable *var, char *filename);
 static void widget_statusbar_input_by_items(variable *var);
 static void widget_statusbar_update(variable *var, gchar *text);
-
-/* Local variables */
 
 /* Notes: */
 

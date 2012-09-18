@@ -1256,6 +1256,10 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 				/* A GtkLabel that ticks is a timer */
 				if (strcasecmp(signal_name, "tick") == 0)
 					execute = TRUE;
+/* GtkWidget--->GtkProgress--->GtkProgressBar */
+			} else if (GTK_IS_PROGRESS_BAR(widget)) {
+				if (strcasecmp(signal_name, "time-out") == 0)
+					execute = TRUE;
 /* GtkWidget--->GtkRange--->GtkScale */
 			} else if (GTK_IS_SCALE(widget)) {
 				if (strcasecmp(signal_name, "value-changed") == 0)

@@ -1,7 +1,8 @@
 /*
- * widgets.h: Widget manipulation functions
+ * widget_progressbar.h: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  LÃ¡szlÃ³ Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2011 Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +19,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef WIDGETS_H
-#define WIDGETS_H
+#ifndef WIDGET_PROGRESSBAR_H
+#define WIDGET_PROGRESSBAR_H
 
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <gtk/gtk.h>
-#include "gtkdialog.h"
-#include "stack.h"
-#include "attributes.h"
-#include "stringman.h"
-#include "variables.h"
-#include "automaton.h"
-
-char *widget_get_text_value(GtkWidget *widget, int type);
-FILE *widget_opencommand(const char *command);
-char *widgets_to_str(int itype);
+/* Function prototypes */
+void widget_progressbar_clear(variable *var);
+GtkWidget *widget_progressbar_create(
+	AttributeSet *Attr, tag_attr *attr, gint Type);
+gchar *widget_progressbar_envvar_all_construct(variable *var);
+gchar *widget_progressbar_envvar_construct(GtkWidget *widget);
+void widget_progressbar_fileselect(
+	variable *var, const char *name, const char *value);
+void widget_progressbar_refresh(variable *var);
+void widget_progressbar_removeselected(variable *var);
+void widget_progressbar_save(variable *var);
 
 #endif

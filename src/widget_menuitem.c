@@ -483,7 +483,6 @@ void widget_menuitem_fileselect(
 void widget_menuitem_refresh(variable *var)
 {
 	GdkPixbuf        *pixbuf;
-	GFileMonitor     *monitor;
 	GList            *element;
 	GtkWidget        *image;
 	gchar            *act;

@@ -2117,19 +2117,19 @@ YY_RULE_SETUP
 case 68:
 YY_RULE_SETUP
 #line 415 "gtkdialog_lexer.l"
-{ Token="<progressbar>"; return(PROGRESS);      	}
+{ Token="<progressbar>"; return(PROGRESSBAR);      	}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
 #line 416 "gtkdialog_lexer.l"
-{ Token="</progressbar>"; return(EPROGRESS);    	}
+{ Token="</progressbar>"; return(EPROGRESSBAR);    	}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
 #line 417 "gtkdialog_lexer.l"
 { Token="<progressbar>"; 
 					  BEGIN(ST_TAG_ATTR);
-					  return(PART_PROGRESS);  				}
+					  return(PART_PROGRESSBAR);  				}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP

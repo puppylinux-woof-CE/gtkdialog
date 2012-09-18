@@ -105,7 +105,7 @@ start_up(void)
 %token         BUTTONOK BUTTONCANCEL BUTTONHELP BUTTONYES BUTTONNO
 %token         CHECKBOX ECHECKBOX PART_CHECKBOX
 %token         RADIO ERADIO PART_RADIO
-%token         PROGRESS EPROGRESS PART_PROGRESS
+%token         PROGRESSBAR EPROGRESSBAR PART_PROGRESSBAR
 %token         LIST PART_LIST ELIST
 %token         TABLE ETABLE PART_TABLE
 %token         COMBOBOX PART_COMBOBOX ECOMBOBOX
@@ -390,13 +390,13 @@ radiobutton
   ;
 
 progressbar
-  : PROGRESS attr EPROGRESS {
-	   	token_store(PUSH | WIDGET_PROGRESS);
+  : PROGRESSBAR attr EPROGRESSBAR {
+	   	token_store(PUSH | WIDGET_PROGRESSBAR);
            }
-  | PART_PROGRESS tagattr '>' attr EPROGRESS {
-                token_store_attr(PUSH | WIDGET_PROGRESS, $2);
+  | PART_PROGRESSBAR tagattr '>' attr EPROGRESSBAR {
+                token_store_attr(PUSH | WIDGET_PROGRESSBAR, $2);
 	   }
-  | PROGRESS attr PROGRESS  {
+  | PROGRESSBAR attr PROGRESSBAR  {
 		yyerror("</progressbar> expected instead of <progressbar>.");
            }
   ;

@@ -163,7 +163,6 @@ void widget_entry_fileselect(
 
 void widget_entry_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;

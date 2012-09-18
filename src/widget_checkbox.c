@@ -161,7 +161,6 @@ void widget_checkbox_fileselect(
  ***********************************************************************/
 void widget_checkbox_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gchar            *value;
