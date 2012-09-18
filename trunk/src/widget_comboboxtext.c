@@ -260,7 +260,6 @@ void widget_comboboxtext_fileselect(
 
 void widget_comboboxtext_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	GtkTreeIter       iter;
 	GtkTreeModel     *model;

@@ -96,9 +96,9 @@
      RADIO = 312,
      ERADIO = 313,
      PART_RADIO = 314,
-     PROGRESS = 315,
-     EPROGRESS = 316,
-     PART_PROGRESS = 317,
+     PROGRESSBAR = 315,
+     EPROGRESSBAR = 316,
+     PART_PROGRESSBAR = 317,
      LIST = 318,
      PART_LIST = 319,
      ELIST = 320,
@@ -255,9 +255,9 @@
 #define RADIO 312
 #define ERADIO 313
 #define PART_RADIO 314
-#define PROGRESS 315
-#define EPROGRESS 316
-#define PART_PROGRESS 317
+#define PROGRESSBAR 315
+#define EPROGRESSBAR 316
+#define PART_PROGRESSBAR 317
 #define LIST 318
 #define PART_LIST 319
 #define ELIST 320

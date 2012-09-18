@@ -162,7 +162,6 @@ void widget_hseparator_fileselect(
 
 void widget_hseparator_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;

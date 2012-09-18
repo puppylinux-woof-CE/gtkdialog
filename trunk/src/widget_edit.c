@@ -176,7 +176,6 @@ void widget_edit_fileselect(
 
 void widget_edit_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	GtkTextBuffer    *text_buffer;
 	gchar            *act;

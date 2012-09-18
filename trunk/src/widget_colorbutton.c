@@ -177,7 +177,6 @@ void widget_colorbutton_fileselect(
 void widget_colorbutton_refresh(variable *var)
 {
 	GdkColor          color;
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;

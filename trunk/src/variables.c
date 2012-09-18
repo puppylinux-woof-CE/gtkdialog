@@ -41,6 +41,7 @@
 #include "widget_menuitem.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
+#include "widget_progressbar.h"
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
@@ -404,6 +405,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_PIXMAP:
 			widget_pixmap_fileselect(toset, name, value);
 			break;
+		case WIDGET_PROGRESSBAR:
+			widget_progressbar_fileselect(toset, name, value);
+			break;
 		case WIDGET_RADIOBUTTON:
 			widget_radiobutton_fileselect(toset, name, value);
 			break;
@@ -527,6 +531,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_PIXMAP:
 			widget_pixmap_save(var);
+			break;
+		case WIDGET_PROGRESSBAR:
+			widget_progressbar_save(var);
 			break;
 		case WIDGET_RADIOBUTTON:
 			widget_radiobutton_save(var);
@@ -671,6 +678,9 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_PIXMAP:
 			widget_pixmap_refresh(var);
+			break;
+		case WIDGET_PROGRESSBAR:
+			widget_progressbar_refresh(var);
 			break;
 		case WIDGET_RADIOBUTTON:
 			widget_radiobutton_refresh(var);
@@ -1691,6 +1701,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_PIXMAP:
 			widget_pixmap_clear(toclear);
 			break;
+		case WIDGET_PROGRESSBAR:
+			widget_progressbar_clear(toclear);
+			break;
 		case WIDGET_RADIOBUTTON:
 			widget_radiobutton_clear(toclear);
 			break;
@@ -1834,6 +1847,9 @@ int remove_selected_variable(const char *name)
 			break;
 		case WIDGET_PIXMAP:
 			widget_pixmap_removeselected(toclear);
+			break;
+		case WIDGET_PROGRESSBAR:
+			widget_progressbar_removeselected(toclear);
 			break;
 		case WIDGET_RADIOBUTTON:
 			widget_radiobutton_removeselected(toclear);

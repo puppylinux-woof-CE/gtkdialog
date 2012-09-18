@@ -33,12 +33,12 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
+/* Local variables */
+
 /* Local function prototypes, located at file bottom */
 static void widget_pixmap_input_by_command(variable *var, char *command);
 static void widget_pixmap_input_by_file(variable *var, char *filename);
 static void widget_pixmap_input_by_items(variable *var);
-
-/* Local variables */
 
 /* Notes: */
 
@@ -233,7 +233,6 @@ void widget_pixmap_fileselect(
 
 void widget_pixmap_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gchar            *value;

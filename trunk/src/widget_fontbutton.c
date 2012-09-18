@@ -153,7 +153,6 @@ void widget_fontbutton_fileselect(
  ***********************************************************************/
 void widget_fontbutton_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gchar            *value;

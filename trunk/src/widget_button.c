@@ -443,7 +443,6 @@ void widget_button_fileselect(
  ***********************************************************************/
 void widget_button_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gchar            *value;

@@ -62,6 +62,7 @@
 #include "widget_menuitem.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
+#include "widget_progressbar.h"
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
@@ -373,6 +374,9 @@ void print_command(instruction command)
 		case WIDGET_PIXMAP:
 			printf("(new pixmap())");
 			break;
+		case WIDGET_PROGRESSBAR:
+			printf("(new progressbar())");
+			break;
 		case WIDGET_RADIOBUTTON:
 			printf("(new radiobutton())");
 			break;
@@ -416,9 +420,6 @@ void print_command(instruction command)
 			break;
 
 
-	case WIDGET_PROGRESS:
-	    printf("(new progressbar())");
-	    break;
 	case WIDGET_SCROLLEDW:
 	    printf("(new scrolledwindow(pop()))");
 	    break;
@@ -679,6 +680,9 @@ void print_token(token Token)
 		case WIDGET_PIXMAP:
 			printf("(PIXMAP)");
 			break;
+		case WIDGET_PROGRESSBAR:
+			printf("(PROGRESSBAR)");
+			break;
 		case WIDGET_RADIOBUTTON:
 			printf("(RADIOBUTTON)");
 			break;
@@ -722,9 +726,6 @@ void print_token(token Token)
 			break;
 
 
-	case WIDGET_PROGRESS:
-		printf("(PROGRESSBAR)");
-		break;
 	case WIDGET_SCROLLEDW:
 		printf("(SCROLLEDW)");
 		break;
@@ -1317,6 +1318,10 @@ instruction_execute_push(
 			Widget = widget_pixmap_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+		case WIDGET_PROGRESSBAR:
+			Widget = widget_progressbar_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
+			break;
 		case WIDGET_RADIOBUTTON:
 			Widget = widget_radiobutton_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1400,28 +1405,6 @@ instruction_execute_push(
 		push_widget(Widget, Widget_Type);
 		break;
 		
-	case WIDGET_PROGRESS:
-		Widget = gtk_progress_bar_new();
-		/*
-		 *
-		 */
-		if (attributeset_is_avail(Attr, ATTR_LABEL)) {
-			char *t;
-			t = attributeset_get_first(&element, Attr, ATTR_LABEL);
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(Widget), t);
-		}
-		/*
-		 * We start the input command in a separate thread when the
-		 * widget gets realized.
-		 */
-		g_signal_connect(G_OBJECT(Widget),
-				"realize",
-				(GCallback)on_any_progress_bar_realized,
-				(gpointer) Attr);
-
-		push_widget(Widget, WIDGET_PROGRESS);
-		break;
-
 	default:
 		if (!option_no_warning)
 		g_warning("%s(): Unknown widget type.", __func__);

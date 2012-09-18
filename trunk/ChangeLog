@@ -1,6 +1,13 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Sep 18 2012 Thunor <thunorsif@hotmail.com>
+- Added file-monitor functionality to the notebook widget.
+- Refactored the progressbar widget.
+- Fixed the progressbar signal handling: it now has a default signal
+  "time-out" and it now supports <action signal="type">...</action>.
+- Added file-monitor functionality to the radiobutton widget.
+
 * Mon Sep 17 2012 Thunor <thunorsif@hotmail.com>
 - Refactored the h/vscale widgets.
 - Added file-monitor functionality to the h/vscale widgets.

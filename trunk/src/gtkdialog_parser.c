@@ -239,9 +239,9 @@ start_up(void)
      RADIO = 312,
      ERADIO = 313,
      PART_RADIO = 314,
-     PROGRESS = 315,
-     EPROGRESS = 316,
-     PART_PROGRESS = 317,
+     PROGRESSBAR = 315,
+     EPROGRESSBAR = 316,
+     PART_PROGRESSBAR = 317,
      LIST = 318,
      PART_LIST = 319,
      ELIST = 320,
@@ -398,9 +398,9 @@ start_up(void)
 #define RADIO 312
 #define ERADIO 313
 #define PART_RADIO 314
-#define PROGRESS 315
-#define EPROGRESS 316
-#define PART_PROGRESS 317
+#define PROGRESSBAR 315
+#define EPROGRESSBAR 316
+#define PART_PROGRESSBAR 317
 #define LIST 318
 #define PART_LIST 319
 #define ELIST 320
@@ -965,7 +965,7 @@ static const char *const yytname[] =
   "LABEL", "ELABEL", "ITEM", "EITEM", "PART_ITEM", "BUTTON", "PART_BUTTON",
   "EBUTTON", "BUTTONOK", "BUTTONCANCEL", "BUTTONHELP", "BUTTONYES",
   "BUTTONNO", "CHECKBOX", "ECHECKBOX", "PART_CHECKBOX", "RADIO", "ERADIO",
-  "PART_RADIO", "PROGRESS", "EPROGRESS", "PART_PROGRESS", "LIST",
+  "PART_RADIO", "PROGRESSBAR", "EPROGRESSBAR", "PART_PROGRESSBAR", "LIST",
   "PART_LIST", "ELIST", "TABLE", "ETABLE", "PART_TABLE", "COMBOBOX",
   "PART_COMBOBOX", "ECOMBOBOX", "GVIM", "EGVIM", "TEXT", "PART_TEXT",
   "ETEXT", "PIXMAP", "PART_PIXMAP", "EPIXMAP", "DEFAULT", "EDEFAULT",
@@ -3390,7 +3390,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 393 "gtkdialog_parser.y"
     {
-	   	token_store(PUSH | WIDGET_PROGRESS);
+	   	token_store(PUSH | WIDGET_PROGRESSBAR);
            }
     break;
 
@@ -3399,7 +3399,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 396 "gtkdialog_parser.y"
     {
-                token_store_attr(PUSH | WIDGET_PROGRESS, (yyvsp[(2) - (5)].nvval));
+                token_store_attr(PUSH | WIDGET_PROGRESSBAR, (yyvsp[(2) - (5)].nvval));
 	   }
     break;
 

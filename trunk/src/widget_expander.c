@@ -183,7 +183,6 @@ void widget_expander_fileselect(
  ***********************************************************************/
 void widget_expander_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;

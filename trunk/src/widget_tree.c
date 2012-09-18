@@ -38,6 +38,19 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
+/* Local variables */
+typedef enum {
+	ColumnPixbuf,
+	ColumnIconName,
+	ColumnStockId,
+	FirstDataColumn
+} treecolumns;
+
+gchar *icon_name;
+gchar *stock_id;
+gint icon_column;
+gint stock_column;
+
 /* Local function prototypes, located at file bottom */
 static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr,
 	tag_attr *attr);
@@ -58,19 +71,6 @@ gint widget_tree_natcasecmp(GtkTreeModel *model, GtkTreeIter *a,
 	GtkTreeIter *b, gpointer user_data);
 static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 	GtkTreeIter *b, gpointer user_data, gint sensitive);
-
-/* Local variables */
-typedef enum {
-	ColumnPixbuf,
-	ColumnIconName,
-	ColumnStockId,
-	FirstDataColumn
-} treecolumns;
-
-gchar *icon_name;
-gchar *stock_id;
-gint icon_column;
-gint stock_column;
 
 /* Notes:
  * I want to note that g_object_get_data is being used quite a bit here

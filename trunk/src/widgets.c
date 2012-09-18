@@ -55,6 +55,7 @@
 #include "widget_menuitem.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
+#include "widget_progressbar.h"
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
@@ -72,12 +73,13 @@
 #undef WARNING
 #include "macros.h"
 
-extern gboolean option_no_warning;
+extern gchar *option_include_file;
 
-char *
-widget_get_text_value(
-		GtkWidget *widget, 
-		int type)
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+char *widget_get_text_value(GtkWidget *widget, int type)
 {
 	gchar            *string;
 
@@ -177,6 +179,10 @@ widget_get_text_value(
 			string = widget_pixmap_envvar_construct(widget);
 			return string;
 			break;
+		case WIDGET_PROGRESSBAR:
+			string = widget_progressbar_envvar_construct(widget);
+			return string;
+			break;
 		case WIDGET_RADIOBUTTON:
 			string = widget_radiobutton_envvar_construct(widget);
 			return string;
@@ -235,11 +241,11 @@ widget_get_text_value(
 	g_error("%s(): this should not be reached", __func__);
 }
 
-extern gchar *option_include_file;
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
-FILE *
-widget_opencommand(
-		const char *command)
+FILE *widget_opencommand(const char *command)
 {
 	char *the_line;
 	FILE *infile;
@@ -263,35 +269,9 @@ widget_opencommand(
 	return infile;
 }
 
-/* Redundant: Not being used anywhere.
-void fill_clist_by_command(GtkWidget * list, int columns, char *command)
-{
-	int c;
-	FILE *infile;
-	char *oneline = NULL;
-	list_t *thisline;
-	int size = 0;
-	/$
-	 ** Opening pipe for reading...
-	 $/
-	infile = widget_opencommand(command);
-	if (infile == NULL) {
-		fprintf(stderr, "%s(): command %s, %m\n", __func__,
-			command);
-		return;
-	}
-
-	/$
-	 ** Reading and filling the lines to the clist...
-	 $/
-	while (getline(&oneline, &size, infile) != -1) {
-		thisline = linecutter(oneline, '|');
-		gtk_clist_append(GTK_CLIST(list), thisline->line);
-	}
-
-	pclose(infile);
-	gtk_clist_select_row(GTK_CLIST(list), 0, 0);
-} */
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
 
 char *widgets_to_str(int itype)
 {
@@ -378,6 +358,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_PIXMAP:
 			type = "PIXMAP";
 			break;
+		case WIDGET_PROGRESSBAR:
+			type = "PROGRESSBAR";
+			break;
 		case WIDGET_RADIOBUTTON:
 			type = "RADIOBUTTON";
 			break;
@@ -428,153 +411,4 @@ char *widgets_to_str(int itype)
 		type = "THINGY";
 	}
 	return (type);
-}
-
-/*
- * Some stuff to handle progress bars.
- */
-G_LOCK_DEFINE_STATIC(any_progress_bar);
-
-void
-perform_progress_bar_actions(progr_descr *descr)
-{
-	GList *element;
-	gchar *command;
-	gchar *type;
-
-	command = attributeset_get_first(&element, descr->Attr, ATTR_ACTION);
-	while (command != NULL){
-		type = attributeset_get_this_tagattr(&element, descr->Attr,
-			ATTR_ACTION, "type");
-		execute_action(descr->widget, command, type);
-next_command:   
-		command = attributeset_get_next(&element, descr->Attr, ATTR_ACTION);
-	}
-}
-
-gpointer 
-progress_bar_thread_entry(progr_descr *descr)
-{
-	char      oneline[512];
-	gboolean  actions_performed = FALSE;
-	long int  ival;
-	char     *end;
-	gint length;
-	
-	while (fgets(oneline, 512, descr->pipe) != NULL) {
-		length = strlen(oneline) - 1;
-		if (oneline[length] == '\n')
-			oneline[length] = '\0';
-
-		ival = strtol(oneline, &end, 0);
-		descr->fraction =  ival / 100.0;
-		if (descr->fraction > 1.0)
-			descr->fraction = 1.0;
-		/*
-		 * Entering critical region.
-		 */
-		gdk_threads_enter();
-		/*
-		 * Updating the screen, for this we need a progress bar.
-		 */
-		G_LOCK(any_progress_bar);
-		if (descr->widget != NULL) {
-			if (end != oneline)
-				gtk_progress_bar_set_fraction(
-					GTK_PROGRESS_BAR(descr->widget), 
-					descr->fraction);
-			else
-				gtk_progress_bar_set_text(
-					GTK_PROGRESS_BAR(descr->widget), 
-					oneline);
-		}
-		G_UNLOCK(any_progress_bar);
-		/*
-		 * Processing pending events.
-		 */
-		while (gtk_events_pending()) 
-			gtk_main_iteration_do(FALSE);
-		/*
-		 * Performing actions if needed.
-		 */
-		if (ival != 100)
-			actions_performed = FALSE;
-		if (ival == 100 && !actions_performed) {
-			perform_progress_bar_actions(descr);
-			actions_performed = TRUE;
-		}
-		
-		/*
-		 * Processing pending events.
-		 */
-		while (gtk_events_pending()) 
-			gtk_main_iteration_do(FALSE);
-		/*
-		 * Leaving critical region.
-		 */
-		gdk_threads_leave();
-
-		if (descr->widget == NULL)
-			break;
-
-	}
-
-	pclose(descr->pipe);
-	return NULL;
-}
-
-
-void 
-descriptor_destroy_notify(progr_descr *descr)
-{
-	g_assert(descr != NULL);
-	G_LOCK(any_progress_bar);
-	descr->widget = NULL;
-	G_UNLOCK(any_progress_bar);
-}
-
-/*
- * In this function we create a descriptor and start up a thread to handle the
- * input of the progress bar.
- */
-void
-on_any_progress_bar_realized(GtkWidget *widget, 
-		AttributeSet *Attr)
-{
-	GList *element;
-	progr_descr *descr;
-	gchar *input;
-
-#ifdef DEBUG
-	g_message("%s(%p, %p);", __func__, widget, Attr);
-#endif	
-	g_assert(GTK_IS_WIDGET(widget) && Attr != NULL);
-	/*
-	 * If there is no input, we can return.
-	 */
-	if (!attributeset_is_avail(Attr, ATTR_INPUT))
-		return;
-	/*
-	 * Creating the descriptor from the first input.
-	 */
-	input = attributeset_get_first(&element, Attr, ATTR_INPUT);
-	descr = g_new0(progr_descr, 1);
-	descr->Attr = Attr;
-	descr->widget = widget;
-	descr->shell_command = input_get_shell_command(input);
-	descr->pipe = widget_opencommand(descr->shell_command);
-	/*
-	 * When the widget gets destroyed we call this function to prevent
-	 * further reading the pipe and setting the destroyed progress bar.
-	 */
-	g_object_set_data_full(G_OBJECT(widget),
-			"descriptor",
-			descr, 
-			(GDestroyNotify)descriptor_destroy_notify);
-	/*
-	 * Now we can fire up the reader thread.
-	 */
-	descr->thread = g_thread_create(
-			(GThreadFunc) progress_bar_thread_entry, 
-			descr, FALSE, NULL);
 }

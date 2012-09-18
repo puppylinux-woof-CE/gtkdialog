@@ -96,6 +96,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkProgressBar.html">GtkProgressB
 	&lt;variable&gt;varname&lt;/variable&gt;
 	&lt;input&gt;command&lt;/input&gt;
 	&lt;action&gt;activity&lt;/action&gt;...
+	&lt;action signal="type"&gt;activity&lt;/action&gt;...
 	&lt;action type="function"&gt;parameter&lt;/action&gt;...
 &lt;/progressbar&gt;
 </pre>
@@ -124,14 +125,16 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkProgressBar.html">GtkProgressB
 <tr><td class="wiki"> label </td><td class="wiki"> Initial text </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action </td><td class="wiki"> Execute command when input data reaches 100 </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action </td><td class="wiki"> Perform function when input data reaches 100 </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action type="<i>function</i>" </td><td class="wiki"> Perform function when input data reaches 100 </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action </td><td class="wiki"> Execute command on default signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> action type="<i>function</i>" </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> </td><td class="wiki"> </td></tr>
 </table>
 
 <h2> Signals </h2>
 
-<p>All action directives will be executed when the input data reaches 100.</p>
+<p>The default signal is "time-out", emitted when the input data reaches 100.</p>
 
 <p>The following signals are connected-up for all widgets:</p>
 
@@ -210,7 +213,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkProgressBar.html">GtkProgressB
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-09-16 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-09-18 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

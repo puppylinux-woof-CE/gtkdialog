@@ -181,7 +181,6 @@ void widget_list_fileselect(
  ***********************************************************************/
 void widget_list_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gchar            *value;

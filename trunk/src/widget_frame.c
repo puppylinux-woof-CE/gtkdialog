@@ -226,7 +226,6 @@ void widget_frame_fileselect(
  ***********************************************************************/
 void widget_frame_refresh(variable *var)
 {
-	GFileMonitor     *monitor;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;
