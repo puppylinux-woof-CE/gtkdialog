@@ -34,8 +34,11 @@
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
+#include "widget_hscale.h"
+#include "widget_hseparator.h"
 #include "widget_list.h"
 #include "widget_menubar.h"
+#include "widget_menuitem.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
@@ -376,11 +379,24 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_HBOX:
 			widget_hbox_fileselect(toset, name, value);
 			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			widget_hscale_fileselect(toset, name, value);
+			break;
+		case WIDGET_HSEPARATOR:
+		case WIDGET_VSEPARATOR:
+			widget_hseparator_fileselect(toset, name, value);
+			break;
 		case WIDGET_LIST:
 			widget_list_fileselect(toset, name, value);
 			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_fileselect(toset, name, value);
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+		case WIDGET_MENUITEM:
+		case WIDGET_MENU:
+			widget_menuitem_fileselect(toset, name, value);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_fileselect(toset, name, value);
@@ -487,11 +503,24 @@ variable *variables_save(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_save(var);
 			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			widget_hscale_save(var);
+			break;
+		case WIDGET_HSEPARATOR:
+		case WIDGET_VSEPARATOR:
+			widget_hseparator_save(var);
+			break;
 		case WIDGET_LIST:
 			widget_list_save(var);
 			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_save(var);
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+		case WIDGET_MENUITEM:
+		case WIDGET_MENU:
+			widget_menuitem_save(var);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_save(var);
@@ -530,17 +559,6 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_WINDOW:
 			widget_window_save(var);
-			break;
-
-
-		case WIDGET_VSCALE:
-		case WIDGET_HSCALE:
-			save_scale_to_file(var);
-			break;
-		case WIDGET_MENU:
-		case WIDGET_MENUITEM:
-			if (GTK_IS_CHECK_MENU_ITEM(var->Widget))
-				save_menuitem_to_file(var);
 			break;
 		default:
 			yywarning("Save not implemented for this widget.");
@@ -629,11 +647,24 @@ variable *variables_refresh(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_refresh(var);
 			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			widget_hscale_refresh(var);
+			break;
+		case WIDGET_HSEPARATOR:
+		case WIDGET_VSEPARATOR:
+			widget_hseparator_refresh(var);
+			break;
 		case WIDGET_LIST:
 			widget_list_refresh(var);
 			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_refresh(var);
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+		case WIDGET_MENUITEM:
+		case WIDGET_MENU:
+			widget_menuitem_refresh(var);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_refresh(var);
@@ -672,16 +703,6 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_WINDOW:
 			widget_window_refresh(var);
-			break;
-
-
-		case WIDGET_VSCALE:
-		case WIDGET_HSCALE:
-			widget_scale_refresh(var);
-			break;
-		case WIDGET_MENU:
-		case WIDGET_MENUITEM:
-			widget_menuitem_refresh(var);
 			break;
 		default:
 			if (initialised)
@@ -1102,6 +1123,8 @@ gint variables_count_widgets(void)
 void variables_drop_by_window_id(variable *actual, gint window_id)
 {
 	GFileMonitor     *monitor;
+	gchar             name[16];
+	gint              index = 0;
 
 #ifdef DEBUG
 	GtkWidget *ancestor;
@@ -1146,11 +1169,19 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 				 * detect that var and var widget are NULL */
 
 				/* Cancel any existing file monitors */
-				if ((monitor = g_object_get_data(G_OBJECT(actual->Widget),
-					"_monitor"))) {
-					g_file_monitor_cancel(monitor);
-					g_object_unref(monitor);
-					/* I don't have access to file to unref it */
+				while (TRUE) {
+					sprintf(name, "_monitor%i", index++);
+					monitor = g_object_get_data(G_OBJECT(actual->Widget), name);
+					if (monitor) {
+#ifdef DEBUG
+						fprintf(stderr, "%s(): cancelling %s\n", __func__, name);
+#endif
+						g_file_monitor_cancel(monitor);
+						g_object_unref(monitor);
+						/* I don't have access to file to unref it */
+					} else {
+						break;
+					}
 				}
 
 				actual->Widget = NULL;
@@ -1635,11 +1666,24 @@ variable *variables_clear(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_clear(toclear);
 			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			widget_hscale_clear(toclear);
+			break;
+		case WIDGET_HSEPARATOR:
+		case WIDGET_VSEPARATOR:
+			widget_hseparator_clear(toclear);
+			break;
 		case WIDGET_LIST:
 			widget_list_clear(toclear);
 			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_clear(toclear);
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+		case WIDGET_MENUITEM:
+		case WIDGET_MENU:
+			widget_menuitem_clear(toclear);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_clear(toclear);
@@ -1766,11 +1810,24 @@ int remove_selected_variable(const char *name)
 		case WIDGET_HBOX:
 			widget_hbox_removeselected(toclear);
 			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			widget_hscale_removeselected(toclear);
+			break;
+		case WIDGET_HSEPARATOR:
+		case WIDGET_VSEPARATOR:
+			widget_hseparator_removeselected(toclear);
+			break;
 		case WIDGET_LIST:
 			widget_list_removeselected(toclear);
 			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_removeselected(toclear);
+			break;
+		case WIDGET_MENUITEMSEPARATOR:
+		case WIDGET_MENUITEM:
+		case WIDGET_MENU:
+			widget_menuitem_removeselected(toclear);
 			break;
 		case WIDGET_NOTEBOOK:
 			widget_notebook_removeselected(toclear);

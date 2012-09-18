@@ -1,6 +1,15 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Mon Sep 17 2012 Thunor <thunorsif@hotmail.com>
+- Refactored the h/vscale widgets.
+- Added file-monitor functionality to the h/vscale widgets.
+- Refactored the h/vseparator widgets (they're one line each :) ).
+- Added file-monitor functionality to the list widget.
+- Refactored the menu, menuitem and menuitemseparator widgets.
+- Added file-monitor functionality to the menu and menuitem widgets.
+- Modified the file monitor to cope with multiple input files.
+
 * Sun Sep 16 2012 Thunor <thunorsif@hotmail.com>
 - Added file-monitor functionality to the [toggle]button widget.
 - Added file-monitor functionality to the checkbox widget.

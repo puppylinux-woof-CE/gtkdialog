@@ -89,6 +89,6 @@ gint window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data);
 void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	const gchar *signal_name);
-gboolean widget_file_monitor_will_create(variable *var, gchar *filename);
+gboolean widget_file_monitor_try_create(variable *var, gchar *filename);
 
 #endif

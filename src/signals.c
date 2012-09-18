@@ -1278,19 +1278,23 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 }
 
 /***********************************************************************
- * Widget File Monitor Will Create                                     *
+ * Widget File Monitor Try Create                                      *
  ***********************************************************************/
 /* If the tag attribute file-monitor is true then attempt to create the
- * file monitor. The intention is to add this functionality to as many
- * widgets that can benefit from it so as much as possible is done here
- * to reduce the check and call down to one simple line */
+ * file monitor and connect to the signal.
+ * 
+ * The monitor object is attached to the widget as a piece of data
+ * with a unique sequential name starting at "_monitor0" which will be
+ * used later to cancel the monitor when/if the widget is dropped */
  
-gboolean widget_file_monitor_will_create(variable *var, gchar *filename)
+gboolean widget_file_monitor_try_create(variable *var, gchar *filename)
 {
 	GError           *error = NULL;
 	GFile            *file;
 	GFileMonitor     *monitor;
+	gchar             name[16];
 	gchar            *value;
+	gint              index = 0;
 	gint              retval = FALSE;
 
 #ifdef DEBUG_TRANSITS
@@ -1319,15 +1323,34 @@ gboolean widget_file_monitor_will_create(variable *var, gchar *filename)
 #endif
 
 				if (monitor) {
+
 					/* Get rate-limit (custom) */
 					if ((value = get_tag_attribute(var->widget_tag_attr,
 						"rate-limit"))) {
 						/* I tested this and couldn't detect a change */
 						g_file_monitor_set_rate_limit(monitor, atoi(value));
 					}
+
+					/* Generate unique name */
+					while (TRUE) {
+						sprintf(name, "_monitor%i", index++);
+						if (!(g_object_get_data(G_OBJECT(var->Widget), name)))
+							break;
+					}
+
+#ifdef DEBUG_CONTENT
+					fprintf(stderr, "%s(): name=%s\n", __func__, name);
+#endif
+
 					/* Store monitor as a piece of widget data */
-					g_object_set_data(G_OBJECT(var->Widget), "_monitor",
+					g_object_set_data(G_OBJECT(var->Widget), name,
 						(gpointer)monitor);
+
+					/* Connect to the "changed" signal which will reach
+					 * the application as the "file-changed" signal */
+					g_signal_connect(monitor, "changed",
+						G_CALLBACK(on_any_widget_file_changed_event),
+						(gpointer)var);
 
 					retval = TRUE;
 				} else {

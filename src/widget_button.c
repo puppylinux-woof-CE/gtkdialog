@@ -467,7 +467,7 @@ void widget_button_refresh(variable *var)
 		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 			if (!initialised) {
 				/* Check for file-monitor and create if requested */
-				widget_file_monitor_will_create(var, act + 5);
+				widget_file_monitor_try_create(var, act + 5);
 			}
 			/* Don't refresh images on the first call otherwise they
 			 * get created and then immediately refreshed at start-up */
@@ -509,10 +509,6 @@ void widget_button_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
-		if ((monitor = g_object_get_data(G_OBJECT(var->Widget), "_monitor"))) {
-			g_signal_connect(monitor, "changed",
-				G_CALLBACK(on_any_widget_file_changed_event), (gpointer)var);
-		}
 		if (var->Type == WIDGET_TOGGLEBUTTON) {
 			g_signal_connect(G_OBJECT(var->Widget), "toggled",
 				G_CALLBACK(on_any_widget_toggled_event), (gpointer)var->Attributes);
