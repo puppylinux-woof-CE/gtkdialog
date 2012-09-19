@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Wed Sep 19 2012 Thunor <thunorsif@hotmail.com>
+- Added RELEASE_INFO to the help string.
+- Updated the copyright notices.
+
 * Tue Sep 18 2012 Thunor <thunorsif@hotmail.com>
 - Added file-monitor functionality to the notebook widget.
 - Refactored the progressbar widget.
