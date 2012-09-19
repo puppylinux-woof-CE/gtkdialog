@@ -2,6 +2,7 @@
  * gtkdialog.c: Starting up the program.
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -356,8 +357,8 @@ print_version_exit(int exitcode)
 
 	PIP_DEBUG("Start.");
 
-	printf("%s version %s (C) 2003-2007 Laszlo Pere, 2011-2012 Thunor\n", 
-		PACKAGE_NAME, PACKAGE_VERSION);
+	printf("%s version %s %s (C) 2003-2007 Laszlo Pere, 2011-2012 Thunor\n", 
+		PACKAGE_NAME, PACKAGE_VERSION, RELEASE_INFO);
 	printf("Built with additional support for: ");
 #if HAVE_GLADE_LIB
 	printf("Glade"); extralibs++;
