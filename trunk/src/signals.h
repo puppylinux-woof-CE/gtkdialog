@@ -81,6 +81,8 @@ void on_any_widget_row_activated_event(GtkWidget *widget,
 void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr);
 void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var);
+void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
+	GFile *other_file, GFileMonitorEvent event_type, variable *var);
 
 /*void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	GtkTreeViewColumn *column, AttributeSet *Attr); Redundant */
@@ -90,6 +92,6 @@ gint window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data);
 void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	const gchar *signal_name);
-gboolean widget_file_monitor_try_create(variable *var, gchar *filename);
+void widget_file_monitor_try_create(variable *var, gchar *filename);
 
 #endif

@@ -1183,9 +1183,9 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 					sprintf(name, "_monitor%i", index++);
 					monitor = g_object_get_data(G_OBJECT(actual->Widget), name);
 					if (monitor) {
-#ifdef DEBUG
+//#ifdef DEBUG
 						fprintf(stderr, "%s(): cancelling %s\n", __func__, name);
-#endif
+//#endif
 						g_file_monitor_cancel(monitor);
 						g_object_unref(monitor);
 						/* I don't have access to file to unref it */
