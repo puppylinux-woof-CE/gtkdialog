@@ -4,6 +4,11 @@ for announcements.
 * Wed Sep 19 2012 Thunor <thunorsif@hotmail.com>
 - Added RELEASE_INFO to the help string.
 - Updated the copyright notices.
+- Added support for the auto-refresh tag attribute to all widgets that
+  currently support file monitors. Auto refreshing can be faster for
+  applications that contain 100s of pixmaps or buttons (games) as it
+  connects directly to the widget's refresh function and doesn't fire a
+  signal through gtkdialog's signal handling system.
 
 * Tue Sep 18 2012 Thunor <thunorsif@hotmail.com>
 - Added file-monitor functionality to the notebook widget.

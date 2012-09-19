@@ -1039,6 +1039,105 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
  *                                                                     *
  ***********************************************************************/
 
+void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
+	GFile *other_file, GFileMonitorEvent event_type, variable *var)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	if (event_type == G_FILE_MONITOR_EVENT_CHANGED) {
+		switch (var->Type) {
+			case WIDGET_TOGGLEBUTTON:
+			case WIDGET_BUTTON:
+				widget_button_refresh(var);
+				break;
+			case WIDGET_CHECKBOX:
+				widget_checkbox_refresh(var);
+				break;
+			case WIDGET_COLORBUTTON:
+				widget_colorbutton_refresh(var);
+				break;
+			case WIDGET_COMBOBOXENTRY:
+			case WIDGET_COMBOBOXTEXT:
+				widget_comboboxtext_refresh(var);
+				break;
+			case WIDGET_EDIT:
+				widget_edit_refresh(var);
+				break;
+			case WIDGET_ENTRY:
+				widget_entry_refresh(var);
+				break;
+			case WIDGET_EXPANDER:
+				widget_expander_refresh(var);
+				break;
+			case WIDGET_FONTBUTTON:
+				widget_fontbutton_refresh(var);
+				break;
+			case WIDGET_FRAME:
+				widget_frame_refresh(var);
+				break;
+			case WIDGET_HSCALE:
+			case WIDGET_VSCALE:
+				widget_hscale_refresh(var);
+				break;
+			case WIDGET_LIST:
+				widget_list_refresh(var);
+				break;
+			case WIDGET_MENUITEM:
+			case WIDGET_MENU:
+				widget_menuitem_refresh(var);
+				break;
+			case WIDGET_NOTEBOOK:
+				widget_notebook_refresh(var);
+				break;
+			case WIDGET_PIXMAP:
+				widget_pixmap_refresh(var);
+				break;
+			case WIDGET_RADIOBUTTON:
+				widget_radiobutton_refresh(var);
+				break;
+			case WIDGET_SPINBUTTON:
+				widget_spinbutton_refresh(var);
+				break;
+			case WIDGET_STATUSBAR:
+				widget_statusbar_refresh(var);
+				break;
+			case WIDGET_TABLE:
+				widget_table_refresh(var);
+				break;
+			case WIDGET_TERMINAL:
+				widget_terminal_refresh(var);
+				break;
+			case WIDGET_TEXT:
+				widget_text_refresh(var);
+				break;
+			case WIDGET_TIMER:
+				widget_timer_refresh(var);
+				break;
+#if GTK_CHECK_VERSION(2,4,0)
+			case WIDGET_TREE:
+				widget_tree_refresh(var);
+				break;
+#endif
+			case WIDGET_WINDOW:
+				widget_window_refresh(var);
+				break;
+			default:
+				fprintf(stderr, "%s(): Unhandled widget type.\n", __func__);
+				break;
+		}
+	}
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
 gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	gpointer data)
 {
@@ -1285,22 +1384,25 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 /***********************************************************************
  * Widget File Monitor Try Create                                      *
  ***********************************************************************/
-/* If the tag attribute file-monitor is true then attempt to create the
- * file monitor and connect to the signal.
+/* If the tag attribute file-monitor is true then attempt to create a
+ * file monitor and emit a signal on change.
+ * 
+ * If the tag attribute auto-refresh is true then attempt to create a
+ * file monitor and connect directly to the widget's refresh function.
  * 
  * The monitor object is attached to the widget as a piece of data
  * with a unique sequential name starting at "_monitor0" which will be
  * used later to cancel the monitor when/if the widget is dropped */
- 
-gboolean widget_file_monitor_try_create(variable *var, gchar *filename)
+
+void widget_file_monitor_try_create(variable *var, gchar *filename)
 {
-	GError           *error = NULL;
+	GError           *error;
 	GFile            *file;
 	GFileMonitor     *monitor;
 	gchar             name[16];
 	gchar            *value;
+	gint              count;
 	gint              index = 0;
-	gint              retval = FALSE;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -1309,64 +1411,77 @@ gboolean widget_file_monitor_try_create(variable *var, gchar *filename)
 	/* Is this file going to be monitored? */
 	if (var->widget_tag_attr) {
 
-		/* Get file-monitor (custom) */
-		if ((value = get_tag_attribute(var->widget_tag_attr,
-			"file-monitor")) && ((strcasecmp(value, "true") == 0) ||
-			(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+		for (count = 0; count < 2; count++) {
 
-			/* GIO Reference states this function will never fail */
-			if ((file = g_file_new_for_path(find_pixmap(filename)))) {
+			/* Get file-monitor (custom) or auto-refresh (custom) */
+			if (((!count && (value = get_tag_attribute(var->widget_tag_attr,
+				"file-monitor"))) ||
+				(count && (value = get_tag_attribute(var->widget_tag_attr,
+				"auto-refresh")))) && ((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
 
-				/* I can't make this return NULL although if the
-				 * file doesn't exist then it just doesn't work */
-				monitor = g_file_monitor_file(file, G_FILE_MONITOR_NONE,
-					FALSE, &error);
+				/* GIO Reference states this function will never fail */
+				if ((file = g_file_new_for_path(find_pixmap(filename)))) {
 
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s(): file=%p monitor=%p\n", __func__,
-					file, monitor);
-#endif
-
-				if (monitor) {
-
-					/* Get rate-limit (custom) */
-					if ((value = get_tag_attribute(var->widget_tag_attr,
-						"rate-limit"))) {
-						/* I tested this and couldn't detect a change */
-						g_file_monitor_set_rate_limit(monitor, atoi(value));
-					}
-
-					/* Generate unique name */
-					while (TRUE) {
-						sprintf(name, "_monitor%i", index++);
-						if (!(g_object_get_data(G_OBJECT(var->Widget), name)))
-							break;
-					}
+					/* I can't make this return NULL although if the
+					 * file doesn't exist then it just doesn't work */
+					error = NULL;
+					monitor = g_file_monitor_file(file, G_FILE_MONITOR_NONE,
+						FALSE, &error);
 
 #ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s(): name=%s\n", __func__, name);
+					fprintf(stderr, "%s(): file=%p monitor=%p\n", __func__,
+						file, monitor);
 #endif
 
-					/* Store monitor as a piece of widget data */
-					g_object_set_data(G_OBJECT(var->Widget), name,
-						(gpointer)monitor);
+					if (monitor) {
 
-					/* Connect to the "changed" signal which will reach
-					 * the application as the "file-changed" signal */
-					g_signal_connect(monitor, "changed",
-						G_CALLBACK(on_any_widget_file_changed_event),
-						(gpointer)var);
+						/* Get rate-limit (custom) */
+						if ((value = get_tag_attribute(var->widget_tag_attr,
+							"rate-limit"))) {
+							/* I tested this and couldn't detect a change */
+							g_file_monitor_set_rate_limit(monitor, atoi(value));
+						}
 
-					retval = TRUE;
-				} else {
-					if (file) g_object_unref(file);
+						/* Generate unique name */
+						while (TRUE) {
+							sprintf(name, "_monitor%i", index++);
+							if (!(g_object_get_data(G_OBJECT(var->Widget), name)))
+								break;
+						}
+
+#ifdef DEBUG_CONTENT
+						fprintf(stderr, "%s(): name=%s\n", __func__, name);
+#endif
+
+						/* Store monitor as a piece of widget data */
+						g_object_set_data(G_OBJECT(var->Widget), name,
+							(gpointer)monitor);
+
+						if (!count) {
+							/* Connect to the "changed" signal which will reach
+							 * the application as the "file-changed" signal */
+							g_signal_connect(monitor, "changed",
+								G_CALLBACK(on_any_widget_file_changed_event),
+								(gpointer)var);
+						} else {
+							/* Connect to the "changed" signal which will call
+							 * the widget's refresh function directly without
+							 * being routed through gtkdialog's signal handling
+							 * system and without emitting a signal (it's faster) */
+							g_signal_connect(monitor, "changed",
+								G_CALLBACK(on_any_widget_auto_refresh_event),
+								(gpointer)var);
+						}
+
+					} else {
+						if (file) g_object_unref(file);
+					}
 				}
+				if (!file || !monitor)
+					fprintf(stderr, "%s(): Couldn't create file monitor for '%s'.\n",
+						__func__, filename);
 			}
-			if (!retval)
-				fprintf(stderr, "%s(): Couldn't create file monitor for '%s'.\n",
-					__func__, filename);
 		}
 	}
-
-	return retval;
 }
