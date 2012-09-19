@@ -80,6 +80,6 @@ The following general functions can be performed by any widget capable of emitti
 
 == Notes ==
 
-This widget has been deprecated since GTK+ 2.4 and [comboboxtext] or [comboboxentry] should be used instead.
+This widget has been deprecated since GTK+ 2.4 and [comboboxtext] or [comboboxentry] are recommended as replacements.
 
 ----

@@ -35,7 +35,8 @@ The following custom tag attributes are available:
 || space-expand || Pack widget expanding into space || {{{true}}} or {{{false}}} || ||
 || space-fill || Pack widget filling space || {{{true}}} or {{{false}}} || ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || ||
-|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || ||
+|| file-monitor || Emit signal when input file(s) change || {{{true}}} or {{{false}}} || ||
+|| auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || ||
 || rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 

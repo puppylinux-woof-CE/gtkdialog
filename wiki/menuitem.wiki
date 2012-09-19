@@ -35,7 +35,8 @@ The following custom tag attributes are available:
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Value* || *Since* ||
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
-|| file-monitor || Monitor input file(s) for changes || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| file-monitor || Emit signal when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || accel-key || Accelerator key || A decimal or hexadecimal value ([http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h full list]) || 0.7.21 ||
 || accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value ([http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h full list]) || 0.7.21 ||
