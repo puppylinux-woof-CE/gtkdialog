@@ -39,7 +39,6 @@ The following custom tag attributes are available:
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || file-monitor || Emit signal when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
-|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (see [http://developer.gnome.org/gtk/2.24/gtk-Standard-Enumerations.html#GtkShadowType GtkShadowType]) || 0.8.1 ||

@@ -39,7 +39,6 @@ The following custom tag attributes are available:
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || file-monitor || Emit signal when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
-|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || fs-action || fileselect function action type || {{{file}}}, {{{newfile}}}, {{{folder}}} or {{{newfolder}}} || 0.7.21 ||
 || fs-filters || fileselect function pattern file filters || _pattern_{{{|}}}_pattern_{{{|}}}... || 0.7.21 ||
 || fs-filters-mime || fileselect function mime-type file filters || _mime/type_{{{|}}}_mime/type_{{{|}}}... ([http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types common types]) || 0.7.21 ||

@@ -34,7 +34,6 @@ The following custom tag attributes are available:
 || block-function-signals || Block signal emissions from functions || {{{true}}} or {{{false}}} || 0.7.21 ||
 || file-monitor || Emit signal when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
-|| rate-limit || The file monitor limit in milliseconds || An integer >= {{{10}}} || 0.8.1 ||
 || tab-base-index || Tab label start page number || Integer || 0.7.21 ||
 || tab-labels || Tab labels || _label0_ {{{|}}} _label1_ {{{|}}} ... || 0.7.21 ||
 || tab-prefix || Tab label prefix || || 0.7.21 ||
