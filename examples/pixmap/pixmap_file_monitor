@@ -1,0 +1,71 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+# Get the filenames of the first two images in /usr/share/pixmaps
+IMAGEFILES="$(find /usr/share/pixmaps -maxdepth 1 -type f | head -2)"
+index=0
+for f in $IMAGEFILES; do
+	eval IMAGEFILE$index="$f"
+	index=$(($index + 1))
+done
+cp "$IMAGEFILE0" "$TMPDIR"/inputfile
+
+funcpmpCreate() {
+	echo '			<pixmap file-monitor="true">
+				<variable>'$1'</variable>
+				<width>32</width>
+				<height>32</height>
+				<input file>'"$TMPDIR"'/inputfile</input>
+				<action signal="file-changed">refresh:'$1'</action>
+			</pixmap>'
+}
+
+# This is a bit obfuscated by the use of shell script but it's simply
+# 10 rows of 10 pixmaps and the pixmap code can be easily viewed above.
+# As with all of the examples, running with the "-d" option will dump
+# the complete dialog description to the terminal.
+
+width=10
+height=10
+
+export MAIN_DIALOG='
+<window title="Pixmap File Monitor">
+	<vbox>
+		'$(y=0; while [ $y -lt $height ]; do
+			echo "		<hbox>"
+			x=0; while [ $x -lt $width ]; do
+				echo "$(funcpmpCreate y${y}x$x)"
+				x=$(($x + 1))
+			done
+			echo "		</hbox>"
+			y=$(($y + 1))
+		done)'
+		<hbox homogeneous="true">
+			<button>
+				<label>Change</label>
+				<width>32</width>
+				<height>32</height>
+				<input file>'"$IMAGEFILE1"'</input>
+				<action>cp '"$IMAGEFILE1"' '"$TMPDIR"'/inputfile</action>
+			</button>
+			<button>
+				<label>Change</label>
+				<width>32</width>
+				<height>32</height>
+				<input file>'"$IMAGEFILE0"'</input>
+				<action>cp '"$IMAGEFILE0"' '"$TMPDIR"'/inputfile</action>
+			</button>
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac

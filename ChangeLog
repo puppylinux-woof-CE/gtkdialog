@@ -1,8 +1,18 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Sep 20 2012 Thunor <thunorsif@hotmail.com>
+- Removed rate-limit from docs as it means "the rate limit to which the
+  monitor will report consecutive change events to the same file" and
+  not the initial response time as I mistakenly thought. The initial
+  response time doesn't appear to be configurable.
+- Tweaked configure.in.
+- Added examples/pixmap/pixmap_auto_refresh.
+- Added examples/pixmap/pixmap_file_monitor.
+- Updated the README.
+
 * Wed Sep 19 2012 Thunor <thunorsif@hotmail.com>
-- Added RELEASE_INFO to the help string.
+- Added BUILD_DETAILS to the help string.
 - Updated the copyright notices.
 - Added support for the auto-refresh tag attribute to all widgets that
   currently support file monitors. Auto refreshing can be faster for
