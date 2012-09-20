@@ -358,7 +358,7 @@ print_version_exit(int exitcode)
 	PIP_DEBUG("Start.");
 
 	printf("%s version %s %s (C) 2003-2007 Laszlo Pere, 2011-2012 Thunor\n", 
-		PACKAGE_NAME, PACKAGE_VERSION, RELEASE_INFO);
+		PACKAGE_NAME, PACKAGE_VERSION, BUILD_DETAILS);
 	printf("Built with additional support for: ");
 #if HAVE_GLADE_LIB
 	printf("Glade"); extralibs++;

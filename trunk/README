@@ -16,15 +16,35 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
+Downloading the Source Code
+===========================
+
+Get it from here:
+    http://code.google.com/p/gtkdialog/downloads/list
+
+Get the latest revision from SVN (always stable):
+    svn checkout http://gtkdialog.googlecode.com/svn/trunk/ gtkdialog
+
+Get an older revision from SVN:
+    svn checkout -r432 http://gtkdialog.googlecode.com/svn/trunk/ gtkdialog
+
+
 Compilation and Installation
 ============================
 
-Initially you'll need to run ./autogen.sh in place of ./configure to
-generate the build scripts but after that it's the usual:
+From a Source Package
+---------------------
 
-	./configure
-	make
-	make install
+    ./configure [configure-options]
+    make
+    make install
+
+From SVN
+--------
+
+    ./autogen.sh [configure-options]
+    make
+    make install
 
 The doc/reference/* and examples/* don't install by default so you might
 like to copy them somewhere.
@@ -42,7 +62,8 @@ ARM
 ---
 A problem was encountered when compiling on the ARM platform whereby the
 widgets were being packed in the wrong order and I have applied a fix for
-this wrapped in an #ifdef __arm__ preprocessor macro in automaton.c:1827.
+this wrapped in an #ifdef __arm__ preprocessor macro in automaton.c.
+
 
 Contacting Us
 =============
@@ -50,4 +71,4 @@ Contacting Us
 http://code.google.com/p/gtkdialog/
 
 
-2012-09-10
+2012-09-20

@@ -1,14 +1,16 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT([gtkdialog], [0.8.1], [thunorsif@hotmail.com])
+AC_INIT([gtkdialog], [0.8.1], [thunorsif@hotmail.com], [gtkdialog],
+	[http://code.google.com/p/gtkdialog/])
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([config.h])
 AM_MAINTAINER_MODE
 
+# Setting config.h macros.
 AC_PATH_PROG(svnv, svnversion)
-if test "X$svnv" != "X" && test `$svnv -n` != "exported"; then
-	AC_DEFINE_UNQUOTED(RELEASE_INFO, ["r`svnversion -n`"], [Release Info])
+if test "x$svnv" != "x" && test `$svnv -n` != "exported"; then
+	AC_DEFINE_UNQUOTED(BUILD_DETAILS, ["r`svnversion -n`"], [Build details])
 else
-	AC_DEFINE_UNQUOTED(RELEASE_INFO, ["release"], [Release Info])
+	AC_DEFINE_UNQUOTED(BUILD_DETAILS, ["release"], [Build details])
 fi
 
 # Checks for programs.
