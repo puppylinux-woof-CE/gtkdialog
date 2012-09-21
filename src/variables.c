@@ -19,6 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "config.h"
 #include "gtkdialog.h"
 #include "variables.h"
 #include "widgets.h"
@@ -53,6 +54,9 @@
 #include "widget_vbox.h"
 #include "widget_window.h"
 #include "tag_attributes.h"
+#if HAVE_SYS_INOTIFY_H
+#include <sys/inotify.h>
+#endif
 
 extern gboolean option_no_warning;
 
@@ -1132,9 +1136,15 @@ gint variables_count_widgets(void)
 
 void variables_drop_by_window_id(variable *actual, gint window_id)
 {
+	gint              index = 0;
+#if HAVE_SYS_INOTIFY_H
+	gchar             fdname[16];
+	gchar             wdname[16];
+	gint              fd, wd;
+#else
 	GFileMonitor     *monitor;
 	gchar             name[16];
-	gint              index = 0;
+#endif
 
 #ifdef DEBUG
 	GtkWidget *ancestor;
@@ -1176,11 +1186,32 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 			if (actual->window_id == window_id) {
 
 				/* Timer callbacks cancel themselves when they
-				 * detect that var and var widget are NULL */
+				 * detect that var and var->widget are NULL */
 
 				/* Cancel any existing file monitors */
+#if HAVE_SYS_INOTIFY_H
 				while (TRUE) {
-					sprintf(name, "_monitor%i", index++);
+					sprintf(fdname, "_inotifyfd%i", index);
+					sprintf(wdname, "_inotifywd%i", index);
+					if ((g_object_get_data(G_OBJECT(actual->Widget), fdname)) &&
+						(g_object_get_data(G_OBJECT(actual->Widget), wdname))) {
+						fd = (gint)g_object_get_data(G_OBJECT(actual->Widget),
+							fdname);
+						wd = (gint)g_object_get_data(G_OBJECT(actual->Widget),
+							wdname);
+#ifdef DEBUG
+						fprintf(stderr, "%s(): fd=%i wd=%i\n", __func__,
+							fd, wd);
+#endif
+						inotify_rm_watch(fd, wd);
+					} else {
+						break;
+					}
+					index++;
+				}
+#else
+				while (TRUE) {
+					sprintf(name, "_monitor%i", index);
 					monitor = g_object_get_data(G_OBJECT(actual->Widget), name);
 					if (monitor) {
 #ifdef DEBUG
@@ -1192,7 +1223,9 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 					} else {
 						break;
 					}
+					index++;
 				}
+#endif
 
 				actual->Widget = NULL;
 

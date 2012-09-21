@@ -79,10 +79,18 @@ void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr
 void on_any_widget_row_activated_event(GtkWidget *widget,
 	GtkTreePath *path, GtkTreeViewColumn *column, AttributeSet *Attr);
 void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr);
+
+#if HAVE_SYS_INOTIFY_H
+void on_any_widget_file_changed_event(gpointer data, gint source,
+	GdkInputCondition condition);
+void on_any_widget_auto_refresh_event(gpointer data, gint source,
+	GdkInputCondition condition);
+#else
 void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var);
 void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var);
+#endif
 
 /*void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	GtkTreeViewColumn *column, AttributeSet *Attr); Redundant */
