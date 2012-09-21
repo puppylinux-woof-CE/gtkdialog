@@ -1,3 +1,24 @@
+2012-09-21
+* 0.8.2 released
+* Added eventbox, expander and fontbutton widgets.
+* Added a terminal widget -- requires libvte but is not mandatory.
+* Added activate, grabfocus, hide, show, and presentwindow functions.
+* Added widget signal emission on input file change (file-monitor).
+* Added widget auto-refreshing on input file change (auto-refresh).
+* Greatly improved the table and tree widgets including natural sorting.
+* Greatly enhanced the performance of the table, tree and comboboxes.
+* Greatly expanded the feature set of several incomplete widgets.
+* Added many useful exported variables on button and key press events.
+* Added the envvar GTKDIALOG_PIXMAP_PATH to help locate pixmaps.
+* Re-engineered the launch and closewindow system to be more robust.
+* Fixed the longstanding not exiting via the window manager bug.
+* Fixed and improved the button horizontal image with label alignment.
+* Fixed the Raspberry Pi's (ARM) incorrectly ordered widgets problem.
+* Added build and extra library details to the --version argument.
+* Added more than a dozen new examples.
+* Added a default application icon.
+* Fixed several bugs.
+
 2011-09-26
 * 0.8.0 released
 * Applied several patches from various distributions

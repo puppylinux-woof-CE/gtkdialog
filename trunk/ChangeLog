@@ -2,9 +2,14 @@ Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
 * Fri Sep 21 2012 Thunor <thunorsif@hotmail.com>
+- Version 0.8.2 released (r455)
+
+* Fri Sep 21 2012 Thunor <thunorsif@hotmail.com>
 - Added an inotify alternative to the GIO file monitor which is very
   fast but unfortunately there's a 128 file descriptor limit so I've
   disabled it in configure.in.
+- Fixed examples/miscellaneous/stock_icon_test: newlines in item.
+- Updated the documentation.
 
 * Thu Sep 20 2012 Thunor <thunorsif@hotmail.com>
 - Removed rate-limit from docs as it means "the rate limit to which the

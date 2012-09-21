@@ -51,9 +51,9 @@ treCreate() {
 				<label>Name|GTK+</label>'
 		for ((y = 0; y < 35; y++)); do
 			i=$((x*35*2+y*2+1))
-			echo '<item '$type'="'${icon_names[$i]}'">"'${icon_names[$i]}'|'
+			echo -n '<item '$type'="'${icon_names[$i]}'">"'${icon_names[$i]}'|'
 			if [ ${icon_names[$(($i+1))]} != 0 ]; then
-				echo ${icon_names[$(($i+1))]}
+				echo -n ${icon_names[$(($i+1))]}
 			fi
 			echo '"</item>'
 		done
