@@ -30,6 +30,9 @@
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
+#if HAVE_SYS_INOTIFY_H
+#include <sys/inotify.h>
+#endif
 
 /* Defines */
 //#define DEBUG_CONTENT
@@ -1013,22 +1016,39 @@ next_command:
  * G_FILE_MONITOR_EVENT_CHANGED (0)
  * G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT (1)
  * 
+ * Thanks and credit go to technosaurus for the inotify code.
  */
 
+#if HAVE_SYS_INOTIFY_H
+void on_any_widget_file_changed_event(gpointer data, gint source,
+	GdkInputCondition condition)
+#else
 void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
+#endif
 {
+#if HAVE_SYS_INOTIFY_H
+	gchar             buffer[sizeof(struct inotify_event)];
+	variable         *var = (variable*)data;
+#endif
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if HAVE_SYS_INOTIFY_H
+	/* Just clearing, don't care the type */
+	read(source, buffer, sizeof(buffer));
+
+#else
 #ifdef DEBUG_CONTENT
 	fprintf(stderr, "%s(): event_type=%i filename=%s\n", __func__,
 		event_type, g_file_get_path(file));
 #endif
 
 	if (event_type == G_FILE_MONITOR_EVENT_CHANGED)
-		widget_signal_executor(var->Widget, var->Attributes, "file-changed");
+#endif
+	widget_signal_executor(var->Widget, var->Attributes, "file-changed");
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -1039,94 +1059,109 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
  *                                                                     *
  ***********************************************************************/
 
+#if HAVE_SYS_INOTIFY_H
+void on_any_widget_auto_refresh_event(gpointer data, gint source,
+	GdkInputCondition condition)
+#else
 void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
+#endif
 {
+#if HAVE_SYS_INOTIFY_H
+	gchar             buffer[sizeof(struct inotify_event)];
+	variable         *var = (variable*)data;
+#endif
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (event_type == G_FILE_MONITOR_EVENT_CHANGED) {
-		switch (var->Type) {
-			case WIDGET_TOGGLEBUTTON:
-			case WIDGET_BUTTON:
-				widget_button_refresh(var);
-				break;
-			case WIDGET_CHECKBOX:
-				widget_checkbox_refresh(var);
-				break;
-			case WIDGET_COLORBUTTON:
-				widget_colorbutton_refresh(var);
-				break;
-			case WIDGET_COMBOBOXENTRY:
-			case WIDGET_COMBOBOXTEXT:
-				widget_comboboxtext_refresh(var);
-				break;
-			case WIDGET_EDIT:
-				widget_edit_refresh(var);
-				break;
-			case WIDGET_ENTRY:
-				widget_entry_refresh(var);
-				break;
-			case WIDGET_EXPANDER:
-				widget_expander_refresh(var);
-				break;
-			case WIDGET_FONTBUTTON:
-				widget_fontbutton_refresh(var);
-				break;
-			case WIDGET_FRAME:
-				widget_frame_refresh(var);
-				break;
-			case WIDGET_HSCALE:
-			case WIDGET_VSCALE:
-				widget_hscale_refresh(var);
-				break;
-			case WIDGET_LIST:
-				widget_list_refresh(var);
-				break;
-			case WIDGET_MENUITEM:
-			case WIDGET_MENU:
-				widget_menuitem_refresh(var);
-				break;
-			case WIDGET_NOTEBOOK:
-				widget_notebook_refresh(var);
-				break;
-			case WIDGET_PIXMAP:
-				widget_pixmap_refresh(var);
-				break;
-			case WIDGET_RADIOBUTTON:
-				widget_radiobutton_refresh(var);
-				break;
-			case WIDGET_SPINBUTTON:
-				widget_spinbutton_refresh(var);
-				break;
-			case WIDGET_STATUSBAR:
-				widget_statusbar_refresh(var);
-				break;
-			case WIDGET_TABLE:
-				widget_table_refresh(var);
-				break;
-			case WIDGET_TERMINAL:
-				widget_terminal_refresh(var);
-				break;
-			case WIDGET_TEXT:
-				widget_text_refresh(var);
-				break;
-			case WIDGET_TIMER:
-				widget_timer_refresh(var);
-				break;
-#if GTK_CHECK_VERSION(2,4,0)
-			case WIDGET_TREE:
-				widget_tree_refresh(var);
-				break;
+#if HAVE_SYS_INOTIFY_H
+	/* Just clearing, don't care the type */
+	read(source, buffer, sizeof(buffer));
+
+#else
+	if (event_type == G_FILE_MONITOR_EVENT_CHANGED)
 #endif
-			case WIDGET_WINDOW:
-				widget_window_refresh(var);
-				break;
-			default:
-				fprintf(stderr, "%s(): Unhandled widget type.\n", __func__);
-				break;
-		}
+	switch (var->Type) {
+		case WIDGET_TOGGLEBUTTON:
+		case WIDGET_BUTTON:
+			widget_button_refresh(var);
+			break;
+		case WIDGET_CHECKBOX:
+			widget_checkbox_refresh(var);
+			break;
+		case WIDGET_COLORBUTTON:
+			widget_colorbutton_refresh(var);
+			break;
+		case WIDGET_COMBOBOXENTRY:
+		case WIDGET_COMBOBOXTEXT:
+			widget_comboboxtext_refresh(var);
+			break;
+		case WIDGET_EDIT:
+			widget_edit_refresh(var);
+			break;
+		case WIDGET_ENTRY:
+			widget_entry_refresh(var);
+			break;
+		case WIDGET_EXPANDER:
+			widget_expander_refresh(var);
+			break;
+		case WIDGET_FONTBUTTON:
+			widget_fontbutton_refresh(var);
+			break;
+		case WIDGET_FRAME:
+			widget_frame_refresh(var);
+			break;
+		case WIDGET_HSCALE:
+		case WIDGET_VSCALE:
+			widget_hscale_refresh(var);
+			break;
+		case WIDGET_LIST:
+			widget_list_refresh(var);
+			break;
+		case WIDGET_MENUITEM:
+		case WIDGET_MENU:
+			widget_menuitem_refresh(var);
+			break;
+		case WIDGET_NOTEBOOK:
+			widget_notebook_refresh(var);
+			break;
+		case WIDGET_PIXMAP:
+			widget_pixmap_refresh(var);
+			break;
+		case WIDGET_RADIOBUTTON:
+			widget_radiobutton_refresh(var);
+			break;
+		case WIDGET_SPINBUTTON:
+			widget_spinbutton_refresh(var);
+			break;
+		case WIDGET_STATUSBAR:
+			widget_statusbar_refresh(var);
+			break;
+		case WIDGET_TABLE:
+			widget_table_refresh(var);
+			break;
+		case WIDGET_TERMINAL:
+			widget_terminal_refresh(var);
+			break;
+		case WIDGET_TEXT:
+			widget_text_refresh(var);
+			break;
+		case WIDGET_TIMER:
+			widget_timer_refresh(var);
+			break;
+#if GTK_CHECK_VERSION(2,4,0)
+		case WIDGET_TREE:
+			widget_tree_refresh(var);
+			break;
+#endif
+		case WIDGET_WINDOW:
+			widget_window_refresh(var);
+			break;
+		default:
+			fprintf(stderr, "%s(): Unhandled widget type.\n", __func__);
+			break;
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -1392,8 +1427,92 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
  * 
  * The monitor object is attached to the widget as a piece of data
  * with a unique sequential name starting at "_monitor0" which will be
- * used later to cancel the monitor when/if the widget is dropped */
+ * used later to cancel the monitor when/if the widget is dropped.
+ * 
+ * Thanks and credit go to technosaurus for the inotify code.
+ */
 
+#if HAVE_SYS_INOTIFY_H
+void widget_file_monitor_try_create(variable *var, gchar *filename)
+{
+	gchar             fdname[16];
+	gchar             wdname[16];
+	gchar            *value;
+	gint              count;
+	gint              fd, wd;
+	gint              index = 0;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	/* Is this file going to be monitored? */
+	if (var->widget_tag_attr) {
+
+		for (count = 0; count < 2; count++) {
+
+			/* Get file-monitor (custom) or auto-refresh (custom) */
+			if (((!count && (value = get_tag_attribute(var->widget_tag_attr,
+				"file-monitor"))) ||
+				(count && (value = get_tag_attribute(var->widget_tag_attr,
+				"auto-refresh")))) && ((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+
+				if ((fd = inotify_init()) != -1) {
+
+					if ((wd = inotify_add_watch(fd, (gchar*)filename,
+						IN_MODIFY)) != -1) {
+#ifdef DEBUG_CONTENT
+						fprintf(stderr, "%s(): fd=%i wd=%i\n", __func__,
+							fd, wd);
+#endif
+						/* Generate unique name */
+						while (TRUE) {
+							sprintf(fdname, "_inotifyfd%i", index);
+							sprintf(wdname, "_inotifywd%i", index);
+							if (!(g_object_get_data(G_OBJECT(var->Widget),
+								fdname))) break;
+							index++;
+						}
+#ifdef DEBUG_CONTENT
+						fprintf(stderr, "%s(): fdname=%s wdname=%s\n",
+							__func__, fdname, wdname);
+#endif
+						/* Store fd as a piece of widget data */
+						g_object_set_data(G_OBJECT(var->Widget), fdname,
+							(gpointer)fd);
+
+						/* Store wd as a piece of widget data */
+						g_object_set_data(G_OBJECT(var->Widget), wdname,
+							(gpointer)wd);
+
+						if (!count) {
+							/* Connect to the "changed" signal which will reach
+							 * the application as the "file-changed" signal */
+							gdk_input_add(fd, GDK_INPUT_READ,
+								on_any_widget_file_changed_event, (gpointer)var); 
+						} else {
+							/* Connect to the "changed" signal which will call
+							 * the widget's refresh function directly without
+							 * being routed through gtkdialog's signal handling
+							 * system and without emitting a signal (it's faster) */
+							gdk_input_add(fd, GDK_INPUT_READ,
+								on_any_widget_auto_refresh_event, (gpointer)var); 
+						}
+
+					} else {
+						if (fd != -1) close(fd);
+					}
+				}
+				if (fd == -1 || wd == -1)
+					fprintf(stderr, "%s(): Couldn't create file monitor for '%s'.\n",
+						__func__, filename);
+			}
+		}
+	}
+}
+
+#else
 void widget_file_monitor_try_create(variable *var, gchar *filename)
 {
 	GError           *error;
@@ -1403,6 +1522,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gchar            *value;
 	gint              count;
 	gint              index = 0;
+	gint              fd, wd;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -1485,3 +1605,4 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 		}
 	}
 }
+#endif

@@ -12,6 +12,10 @@ if test "x$svnv" != "x" && test `$svnv -n` != "exported"; then
 else
 	AC_DEFINE_UNQUOTED(BUILD_DETAILS, ["release"], [Build details])
 fi
+# Don't uncomment this as there's a limit on the number of file
+# descriptors -- see /proc/sys/fs/inotify/max_user_instances
+#AC_CHECK_HEADER([sys/inotify.h], [AC_DEFINE([HAVE_SYS_INOTIFY_H], 1,
+#	[Define to 1 if you have the <sys/inotify.h> header file.])])
 
 # Checks for programs.
 AC_ISC_POSIX
