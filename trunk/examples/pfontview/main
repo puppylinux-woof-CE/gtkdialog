@@ -1,0 +1,205 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# Pfontview (c) Thunor 2012
+# GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+# See http://www.gnu.org/licenses/gpl-2.0.txt
+
+## Strip comments from the entire project using:
+## for f in func* main; do sed -i -e '/## /d' -e '/ ##/d' $f; done
+
+## ----------------------------------------------------------------------------
+## Constants
+## ----------------------------------------------------------------------------
+## These are application defaults which may be updated from rcfiles.
+
+TARGET=pfontview
+TITLE=Pfontview
+VERSION=0.1.0
+LOCAL_DATA_DIR=$HOME/.$TARGET
+PACKAGE_DATA_DIR=`pwd`
+# Setting these to non-zero will generate lots of useful debugging info.
+DEBUG_CONTENT=0
+DEBUG_TRANSITS=0
+
+## These don't require exporting.
+DebugSpacer="[]"
+LocalFontDir=$HOME/.fonts
+FontSymlink=$LocalFontDir/${TARGET}.XXXXXXXX
+PreviewFontSize=20
+PreviewText=
+WindowIcon=mini-font.xpm
+WindowWidth=300
+WindowHeight=300
+
+## ----------------------------------------------------------------------------
+## Includes
+## ----------------------------------------------------------------------------
+## These files are sourced from the PATH.
+
+PATH=$PACKAGE_DATA_DIR:$PATH
+
+. funcFontFamilyInit
+. funcgtkrcCreate
+. funci18n
+. funcrcCreate
+. funcrcGet
+. funcrcSet
+. functmpGet
+. functmpSet
+
+## ----------------------------------------------------------------------------
+## Local Functions
+## ----------------------------------------------------------------------------
+
+## Enable the embedding of comments within the XML.
+Comment() { :; }
+
+## ----------------------------------------------------------------------------
+## Main
+## ----------------------------------------------------------------------------
+
+## Create the local data directory if it doesn't already exist.
+if [ ! -d $LOCAL_DATA_DIR ]; then
+	mkdir $LOCAL_DATA_DIR
+	if [ $? -ne 0 ]; then
+		echo "Error: Couldn't create $LOCAL_DATA_DIR"
+		exit 1
+	fi
+fi
+
+## Create the local font directory if it doesn't already exist.
+if [ ! -d $LocalFontDir ]; then
+	mkdir $LocalFontDir
+	if [ $? -ne 0 ]; then
+		echo "Error: Couldn't create $LocalFontDir"
+		exit 1
+	fi
+fi
+
+## Create the rcfiles.
+funcrcCreate
+
+## Process the command-line argument(s).
+if [ -z "$1" -o "$1" = -h -o "$1" = --help ]; then
+	echo "$TITLE $VERSION (C) 2012 Thunor
+Usage: $TARGET [FILE]
+
+Where FILE is a TrueType font file.
+
+See $PACKAGE_DATA_DIR/README for more information.
+"
+	exit 1
+fi
+
+## Create a temporary directory.
+TEMP_DIR=`mktemp -d --tmpdir ${TARGET}.XXXXXXXX`
+if [ $? -ne 0 ]; then
+	echo "Error: Couldn't create temporary directory."
+	exit 1
+fi
+
+## Load the initial rcfiles required.
+PreviewText="`funcrcGet PreviewText`"
+
+## Internationalise.
+funci18n
+
+## Get and set the font family.
+funcFontFamilyInit "$1"
+
+## Create a custom style.
+funcgtkrcCreate
+
+## Create the initial files required.
+functmpSet PreviewText "`funcrcGet PreviewText`"
+functmpSet Pangrams '<span font="'"$FontFamily 8"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily 12"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily 16"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily 24"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily 48"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily 64"'">'"$i18nPangram"'</span>'
+## Create a symlink within the local font dir to the TrueType font file.
+FontSymlink=`mktemp $FontSymlink`
+ln -fs "$1" $FontSymlink
+
+## Create the XML for the main dialog.
+echo '
+<window title="'$TITLE'"image-name="'$WindowIcon'" window-position="2"
+	width-request="'$WindowWidth'" height-request="'$WindowHeight'"
+	border-width="0">
+	<vbox spacing="0">
+		<menubar space-expand="false" space-fill="false">
+			<menu use-underline="true" label="_File">
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<variable>muiQuit</variable>
+					<action>. funcrcSet; funcrcSet PreviewText "$entPreview"</action>
+					<action>exit:Quit</action>
+				</menuitem>
+			</menu>
+		</menubar>
+		<vbox border-width="5" space-expand="true" space-fill="true">
+			<hbox space-expand="false" space-fill="false">
+				<text use-markup="true" space-expand="false" space-fill="false">
+					<label>"<b>'$i18nFamily':</b> '$FontFamily'"</label>
+				</text>
+				<text space-expand="true" space-fill="true">
+					<label>"'$DebugSpacer'"</label>
+				</text>
+			</hbox>
+			<vbox space-expand="true" space-fill="true">
+				<vbox scrollable="true" hscrollbar-policy="2">
+					<eventbox name="WhiteBg">
+						<text name="BlackFg" use-markup="true" wrap="false">
+							<input file>'$TEMP_DIR'/Pangrams</input>
+						</text>
+					</eventbox>
+				</vbox>
+			</vbox>
+			<hbox space-expand="false" space-fill="false">
+				<text space-expand="false" space-fill="false">
+					<label>"'$i18nPreview':"</label>
+				</text>
+				<text space-expand="true" space-fill="true">
+					<label>"'$DebugSpacer'"</label>
+				</text>
+			</hbox>
+			<hbox space-expand="false" space-fill="false">
+				<entry name="Preview" secondary-icon-stock="gtk-clear"
+					space-expand="true" space-fill="true">
+					<variable>entPreview</variable>
+					<input file>'$TEMP_DIR'/PreviewText</input>
+					<action signal="secondary-icon-release">clear:entPreview</action>
+				</entry>
+				<button use-stock="true" label="gtk-quit">
+					<action>activate:muiQuit</action>
+				</button>
+			</hbox>
+		</vbox>
+	</vbox>
+	<variable>winMain</variable>
+</window>
+' > $TEMP_DIR/winMain
+
+## Export everything necessary.
+export GTKDIALOG
+export TARGET
+export TITLE
+export VERSION
+export LOCAL_DATA_DIR
+export PACKAGE_DATA_DIR
+export DEBUG_CONTENT
+export DEBUG_TRANSITS
+export PATH
+export TEMP_DIR
+export GTK2_RC_FILES
+export GTKDIALOG_PIXMAP_PATH=/usr/local/lib/X11/mini-icons:\
+/usr/local/lib/X11/pixmaps:/usr/share/pixmaps:/usr/share/icons
+
+## And off we go...
+$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
+
+## Remove the temporary files.
+rm $FontSymlink
+rm -rf $TEMP_DIR

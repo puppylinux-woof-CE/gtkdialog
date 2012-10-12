@@ -1,0 +1,21 @@
+#!/bin/sh
+
+## Includes.
+. funcrcSet
+
+## Create the rcfiles.
+
+funcrcCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcrcCreate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Create the missing rcfiles.
+	if [ ! -f $LOCAL_DATA_DIR/Version ]; then
+		funcrcSet Version "$VERSION"
+	fi
+	if [ ! -f $LOCAL_DATA_DIR/PreviewText ]; then
+		funcrcSet PreviewText "$PreviewText"
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}
