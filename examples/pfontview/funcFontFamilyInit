@@ -16,6 +16,7 @@ funcFontFamilyInit() {
 		if [ $? -eq 0 ]; then
 			family=${family#*\"}
 			family=${family%\"*}
+			FontFamily=$family
 		else
 			FontFamily="$i18nInvalid_font"
 		fi
