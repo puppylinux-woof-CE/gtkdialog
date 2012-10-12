@@ -127,7 +127,7 @@ ln -fs "$1" $FontSymlink
 
 ## Create the XML for the main dialog.
 echo '
-<window title="'$TITLE'"image-name="'$WindowIcon'" window-position="2"
+<window title="'"$TITLE - ${1##*/}"'"image-name="'$WindowIcon'" window-position="2"
 	width-request="'$WindowWidth'" height-request="'$WindowHeight'"
 	border-width="0">
 	<vbox spacing="0">
