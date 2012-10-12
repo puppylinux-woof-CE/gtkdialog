@@ -28,6 +28,7 @@ EXTRA_DIST = \
 	examples/miscellaneous/* \
 	examples/notebook/* \
 	examples/pixmap/* \
+	examples/pfontview/* \
 	examples/playmusic/* \
 	examples/progressbar/* \
 	examples/radiobutton/* \

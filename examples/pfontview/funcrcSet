@@ -1,0 +1,9 @@
+#!/bin/sh
+
+## Set a variable [maintained as a file] within the local data directory.
+## On entry: $1 = name
+##           $2 = value
+
+funcrcSet() {
+	echo "$2" > $LOCAL_DATA_DIR/$1
+}

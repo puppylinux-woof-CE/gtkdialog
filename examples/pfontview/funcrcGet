@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## Get a variable [maintained as a file] from the local data directory.
+## On entry: $1 = name
+##  On exit: echoes value
+
+funcrcGet() {
+	local input
+
+	## Fast portable builtin found, better than:
+	##   cat $LOCAL_DATA_DIR/$1
+	##   echo `<$LOCAL_DATA_DIR/$1`
+	read -r input < $LOCAL_DATA_DIR/$1
+	echo "$input"
+}
