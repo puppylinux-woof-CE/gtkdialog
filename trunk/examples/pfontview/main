@@ -19,12 +19,13 @@ TITLE=Pfontview
 VERSION=0.1.0
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
-# Setting these to non-zero will generate lots of useful debugging info.
+## Setting these to non-zero will generate lots of useful debugging info.
 DEBUG_CONTENT=0
 DEBUG_TRANSITS=0
 
 ## These don't require exporting.
-DebugSpacer="[]"
+DebugSpacer=
+#"[]"
 LocalFontDir=$HOME/.fonts
 FontSymlink=$LocalFontDir/${TARGET}.XXXXXXXX
 PreviewFontSize=20
