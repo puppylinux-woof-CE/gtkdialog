@@ -14,8 +14,12 @@ funcFontFamilyInit() {
 	if [ `command -v fc-query` ]; then
 		family="`fc-query \"$1\" | grep family:`"
 		if [ $? -eq 0 ]; then
-			family=${family#*\"}
+			## Get text before first '(s)'
+			family=${family%%(s)*}
+			## Get text before last '"'
 			family=${family%\"*}
+			## Get text after first '"'
+			family=${family#*\"}
 			FontFamily=$family
 		else
 			FontFamily="$i18nInvalid_font"
