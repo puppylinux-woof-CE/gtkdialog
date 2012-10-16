@@ -1,0 +1,37 @@
+#!/bin/sh
+
+## Internationalise everything necessary.
+
+funci18nApply() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funci18nApply; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Default to English.
+	i18nFile="_File"
+	i18nSave_Settings="_Save Settings"
+	i18nView="_View"
+	i18nShow_Family="Show _Family"
+	i18nShow_Style="Show _Style"
+	i18nShow_Font_Button="Show Font _Button"
+	i18nNone="_None"
+	i18nSmall="_Small"
+	i18nBig="_Big"
+	i18nFamily="Family"
+	i18nStyle="Style"
+	i18nPangram="The quick brown fox jumps over the lazy dog"
+	i18nPreview="Preview"
+	i18nInvalid_font="Invalid font"
+	i18nnot_found="not found"
+
+	## Now override the English text with another language.
+	case ${LANG%%_*} in
+		de)
+			# Copy and paste the above text here and modify it.
+			;;
+		fr)
+			# Copy and paste the above text here and modify it.
+			;;
+	esac
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

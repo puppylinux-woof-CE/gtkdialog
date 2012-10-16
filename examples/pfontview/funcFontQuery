@@ -1,0 +1,100 @@
+#!/bin/sh
+
+## Query the font and extract the required information.
+## On entry: $1 = filename
+##  On exit: Font* variables will be initialised
+
+funcFontQuery() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcFontQuery; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local style stylelang column columnlang
+	local styleen stylenative
+	local nativelang=${LANG%%_*}
+	local family line
+	local first=1
+
+	## This is the recommended portable way to check for
+	## the existence of an executable within the path.
+	if [ `command -v fc-query` ]; then
+
+		fc-query "$1" > $TEMP_DIR/FontQuery
+		if [ $? -eq 0 ]; then
+
+			while read -r line; do
+				case $line in
+					family:*"(s)")
+						family=$line ;;
+					style:*"(s)")
+						style=$line ;;
+					stylelang:*"(s)")
+						stylelang=$line ;;
+				esac
+			done < $TEMP_DIR/FontQuery
+
+			## Get text before first '(s)'
+			family=${family%%(s)*}
+			## Get text before last '"'
+			family=${family%\"*}
+			## Get text after first '"'
+			family=${family#*\"}
+			FontFamily=$family
+
+			while [ -n "$style" -a -n "$stylelang" ]; do
+
+				## Get text before first '(s)'
+				column=${style%%(s)*}
+				columnlang=${stylelang%%(s)*}
+				## Get text before last '"'
+				column=${column%\"*}
+				columnlang=${columnlang%\"*}
+				## Get text after first '"'
+				column=${column#*\"}
+				columnlang=${columnlang#*\"}
+
+				if [ $DEBUG_CONTENT -ne 0 ]; then
+					echo "$FUNCNAME(): columnlang=$columnlang column=$column"
+				fi
+
+				## Always record the first item as English.
+				if [ $first -eq 1 ]; then
+					styleen=$column
+					first=0
+				fi
+				if [ "$columnlang" = en ]; then
+					styleen=$column
+				fi
+				if [ "$columnlang" = "$nativelang" ]; then
+					stylenative=$column
+				fi
+
+				## Get text after first '(s)'
+				style=${style#*(s)}
+				stylelang=${stylelang#*(s)}
+
+			done
+
+			if [ -n "$stylenative" ]; then
+				FontStyle=$stylenative
+			else
+				FontStyle=$styleen
+			fi
+
+		else
+			FontFamily="$i18nInvalid_font"
+			FontStyle=""
+		fi
+	else
+		FontFamily="fc-query $i18nnot_found"
+		FontStyle=""
+	fi
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		echo "$FUNCNAME(): nativelang=$nativelang"
+		echo "$FUNCNAME(): FontFamily=$FontFamily"
+		echo "$FUNCNAME(): FontStyle=$FontStyle"
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

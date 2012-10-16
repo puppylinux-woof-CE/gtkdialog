@@ -1,4 +1,11 @@
 
-* Sat Oct 12 2012 Thunor <thunorsif@hotmail.com>
+* Tue Oct 16 2012 Thunor <thunorsif@hotmail.com>
+- 0.1.1
+- Added Style information and included it within the font_name.
+- Added the option of showing a small or regular fontbutton widget.
+- Added the ability to reconfigure the interface and to save and restore
+  it -- the window dimensions too using xwininfo.
+
+* Fri Oct 12 2012 Thunor <thunorsif@hotmail.com>
 - 0.1.0
 - Initial commit.

@@ -16,9 +16,10 @@ GTKDIALOG=gtkdialog
 
 TARGET=pfontview
 TITLE=Pfontview
-VERSION=0.1.0
+VERSION=0.1.1
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
+WINDOW_TITLE="$TITLE - ${1##*/}"
 ## Setting these to non-zero will generate lots of useful debugging info.
 DEBUG_CONTENT=0
 DEBUG_TRANSITS=0
@@ -28,9 +29,12 @@ DebugSpacer=
 #"[]"
 LocalFontDir=$HOME/.fonts
 FontSymlink=$LocalFontDir/${TARGET}.XXXXXXXX
+WindowIcon=mini-font.xpm
+FamilyTextState=true
+StyleTextState=true
+FontButtonState=1
 PreviewFontSize=20
 PreviewText=
-WindowIcon=mini-font.xpm
 WindowWidth=300
 WindowHeight=300
 
@@ -41,11 +45,12 @@ WindowHeight=300
 
 PATH=$PACKAGE_DATA_DIR:$PATH
 
-. funcFontFamilyInit
+. funcFontQuery
 . funcgtkrcCreate
-. funci18n
+. funci18nApply
 . funcrcCreate
 . funcrcGet
+. funcrcSave
 . funcrcSet
 . functmpGet
 . functmpSet
@@ -56,6 +61,17 @@ PATH=$PACKAGE_DATA_DIR:$PATH
 
 ## Enable the embedding of comments within the XML.
 Comment() { :; }
+
+## Convert 1 to true and 0 to false.
+## On entry: $1 = 1 or 0
+##  On exit: echoes true or false
+funcTorF() {
+	if [ $1 -eq 1 ]; then
+		echo true
+	else
+		echo false
+	fi
+}
 
 ## ----------------------------------------------------------------------------
 ## Main
@@ -88,8 +104,6 @@ if [ -z "$1" -o "$1" = -h -o "$1" = --help ]; then
 Usage: $TARGET [FILE]
 
 Where FILE is a TrueType font file.
-
-See $PACKAGE_DATA_DIR/README for more information.
 "
 	exit 1
 fi
@@ -102,53 +116,139 @@ if [ $? -ne 0 ]; then
 fi
 
 ## Load the initial rcfiles required.
+FamilyTextState="`funcrcGet FamilyTextState`"
+StyleTextState="`funcrcGet StyleTextState`"
+FontButtonState="`funcrcGet FontButtonState`"
 PreviewText="`funcrcGet PreviewText`"
+WindowWidth="`funcrcGet WindowWidth`"
+WindowHeight="`funcrcGet WindowHeight`"
 
 ## Internationalise.
-funci18n
+funci18nApply
 
-## Get and set the font family.
-funcFontFamilyInit "$1"
+## Create a symlink within the local font dir to the TrueType font file.
+FontSymlink=`mktemp $FontSymlink`
+ln -fs "$1" $FontSymlink
+
+## Query the font for the required information.
+funcFontQuery $FontSymlink
 
 ## Create a custom style.
 funcgtkrcCreate
 
 ## Create the initial files required.
 functmpSet PreviewText "`funcrcGet PreviewText`"
-functmpSet Pangrams '<span font="'"$FontFamily 8"'">'"$i18nPangram"'</span>
-<span font="'"$FontFamily 12"'">'"$i18nPangram"'</span>
-<span font="'"$FontFamily 16"'">'"$i18nPangram"'</span>
-<span font="'"$FontFamily 24"'">'"$i18nPangram"'</span>
-<span font="'"$FontFamily 48"'">'"$i18nPangram"'</span>
-<span font="'"$FontFamily 64"'">'"$i18nPangram"'</span>'
-## Create a symlink within the local font dir to the TrueType font file.
-FontSymlink=`mktemp $FontSymlink`
-ln -fs "$1" $FontSymlink
+functmpSet Pangrams '<span font="'"$FontFamily $FontStyle 8"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily $FontStyle 12"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily $FontStyle 16"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily $FontStyle 24"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily $FontStyle 48"'">'"$i18nPangram"'</span>
+<span font="'"$FontFamily $FontStyle 64"'">'"$i18nPangram"'</span>'
 
 ## Create the XML for the main dialog.
 echo '
-<window title="'"$TITLE - ${1##*/}"'"image-name="'$WindowIcon'" window-position="2"
-	width-request="'$WindowWidth'" height-request="'$WindowHeight'"
-	border-width="0">
+<window title="'$WINDOW_TITLE'" image-name="'$WindowIcon'"
+	default-width="'$WindowWidth'" default-height="'$WindowHeight'"
+	window-position="2" border-width="0">
 	<vbox spacing="0">
 		<menubar space-expand="false" space-fill="false">
-			<menu use-underline="true" label="_File">
+			<menu use-underline="true" label="'$i18nFile'">
+				<menuitem stock-id="gtk-save" label="'$i18nSave_Settings'"
+					accel-key="0x53" accel-mods="4">
+					<action>. funcrcSave; funcrcSave</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
 				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
-					<variable>muiQuit</variable>
-					<action>. funcrcSet; funcrcSet PreviewText "$entPreview"</action>
 					<action>exit:Quit</action>
 				</menuitem>
 			</menu>
+			<menu use-underline="true" label="'$i18nView'">
+				<menuitem checkbox="'$FamilyTextState'" use-underline="true">
+					<variable>muiShowFamily</variable>
+					<label>"'$i18nShow_Family'"</label>
+					<action>if true show:hbxFamily</action>
+					<action>if true enable:hbxFamily</action>
+					<action>if false hide:hbxFamily</action>
+					<action>if false disable:hbxFamily</action>
+				</menuitem>
+				<menuitem checkbox="'$StyleTextState'" use-underline="true">
+					<variable>muiShowStyle</variable>
+					<label>"'$i18nShow_Style'"</label>
+					<action>if true show:hbxStyle</action>
+					<action>if true enable:hbxStyle</action>
+					<action>if false hide:hbxStyle</action>
+					<action>if false disable:hbxStyle</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menu stock-id="gtk-select-font" label="'$i18nShow_Font_Button'">
+					<menuitem radiobutton="'`echo $(($FontButtonState & 1))`'"
+						use-underline="true">
+						<variable>muiFontButtonNone</variable>
+						<label>"'$i18nNone'"</label>
+						<action>if true hide:ftbBig</action>
+						<action>if true disable:ftbBig</action>
+						<action>if true hide:ftbSmall</action>
+						<action>if true disable:ftbSmall</action>
+					</menuitem>
+					<menuitem radiobutton="'`echo $(($FontButtonState >> 1 & 1))`'"
+						use-underline="true">
+						<variable>muiFontButtonSmall</variable>
+						<label>"'$i18nSmall'"</label>
+						<action>if true hide:ftbBig</action>
+						<action>if true disable:ftbBig</action>
+						<action>if true show:ftbSmall</action>
+						<action>if true enable:ftbSmall</action>
+					</menuitem>
+					<menuitem radiobutton="'`echo $(($FontButtonState >> 2 & 1))`'"
+						use-underline="true">
+						<variable>muiFontButtonBig</variable>
+						<label>"'$i18nBig'"</label>
+						<action>if true show:ftbBig</action>
+						<action>if true enable:ftbBig</action>
+						<action>if true hide:ftbSmall</action>
+						<action>if true disable:ftbSmall</action>
+					</menuitem>
+				</menu>
+			</menu>
 		</menubar>
 		<vbox border-width="5" space-expand="true" space-fill="true">
-			<hbox space-expand="false" space-fill="false">
-				<text use-markup="true" space-expand="false" space-fill="false">
-					<label>"<b>'$i18nFamily':</b> '$FontFamily'"</label>
+			<hbox visible="'$FamilyTextState'" sensitive="'$FamilyTextState'"
+				space-expand="false" space-fill="false">
+				<text use-markup="true" width-request="60"
+					space-expand="false" space-fill="false">
+					<label>"<b>'$i18nFamily':</b>"</label>
+				</text>
+				<text selectable="true"
+					space-expand="false" space-fill="false">
+					<label>"'$FontFamily'"</label>
 				</text>
 				<text space-expand="true" space-fill="true">
 					<label>"'$DebugSpacer'"</label>
 				</text>
+				<variable>hbxFamily</variable>
 			</hbox>
+			<hbox visible="'$StyleTextState'" sensitive="'$StyleTextState'"
+				space-expand="false" space-fill="false">
+				<text use-markup="true" width-request="60"
+					space-expand="false" space-fill="false">
+					<label>"<b>'$i18nStyle':</b>"</label>
+				</text>
+				<text selectable="true"
+					space-expand="false" space-fill="false">
+					<label>"'$FontStyle'"</label>
+				</text>
+				<text space-expand="true" space-fill="true">
+					<label>"'$DebugSpacer'"</label>
+				</text>
+				<variable>hbxStyle</variable>
+			</hbox>
+			<fontbutton font-name="'$FontFamily $FontStyle $PreviewFontSize'"
+				use-font="true" use-size="true" show-size="false" title=""
+				visible="'`funcTorF $(($FontButtonState >> 2 & 1))`'"
+				sensitive="'`funcTorF $(($FontButtonState >> 2 & 1))`'"
+				space-expand="false" space-fill="false">
+				<variable>ftbBig</variable>
+			</fontbutton>
 			<vbox space-expand="true" space-fill="true">
 				<vbox scrollable="true" hscrollbar-policy="2">
 					<eventbox name="WhiteBg">
@@ -167,14 +267,22 @@ echo '
 				</text>
 			</hbox>
 			<hbox space-expand="false" space-fill="false">
+				<button space-expand="false" space-fill="false"
+					visible="'`funcTorF $(($FontButtonState >> 1 & 1))`'"
+					sensitive="'`funcTorF $(($FontButtonState >> 1 & 1))`'">
+					<variable>ftbSmall</variable>
+					<input file stock="gtk-select-font"></input>
+					<action>activate:ftbBig</action>
+				</button>
 				<entry name="Preview" secondary-icon-stock="gtk-clear"
 					space-expand="true" space-fill="true">
 					<variable>entPreview</variable>
 					<input file>'$TEMP_DIR'/PreviewText</input>
 					<action signal="secondary-icon-release">clear:entPreview</action>
 				</entry>
-				<button use-stock="true" label="gtk-quit">
-					<action>activate:muiQuit</action>
+				<button use-stock="true" label="gtk-quit" has-focus="true"
+					space-expand="false" space-fill="false">
+					<action>exit:Quit</action>
 				</button>
 			</hbox>
 		</vbox>
@@ -190,6 +298,7 @@ export TITLE
 export VERSION
 export LOCAL_DATA_DIR
 export PACKAGE_DATA_DIR
+export WINDOW_TITLE
 export DEBUG_CONTENT
 export DEBUG_TRANSITS
 export PATH

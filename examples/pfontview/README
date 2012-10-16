@@ -1,6 +1,5 @@
 Pfontview - A simple lightweight TrueType font viewer.
 
-
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -15,14 +14,14 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-
 Installation
 ============
 
 From Source
 -----------
-By default the application will run from the current folder but it's possible
-to install it using the supplied Makefile (type "make" to show usage examples):
+By default the application will run from the current folder but it is
+possible to install it using the supplied Makefile (type "make" to show
+usage examples).
 
 Install to wherever your PREFIX is currently set to:
 
@@ -32,8 +31,10 @@ To uninstall:
 
     make uninstall
 
-DESTDIR is supported for packagers to install to an intermediate folder e.g.
-make DESTDIR=pfontview-0.1.0 install
+DESTDIR is supported for packagers to install to an intermediate folder;
+for example:
+
+    make DESTDIR=pfontview-0.1.1 install
 
 Requirements
 ============
@@ -48,6 +49,11 @@ Usage: pfontview [FILE]
 
 Where FILE is a TrueType font file.
 
+Operation
+=========
+
+Save Settings will additionally save the window dimensions.
+
 Contacting Us
 =============
 
@@ -56,4 +62,4 @@ Thunor <thunorsif@hotmail.com>
 http://code.google.com/p/gtkdialog/
 
 
-2012-10-12
+2012-10-16

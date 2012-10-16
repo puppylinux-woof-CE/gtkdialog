@@ -21,7 +21,7 @@ style "styleWhiteBg" {
 widget "*WhiteBg" style "styleWhiteBg"
 
 style "stylePreview" {
-	font_name = "'"$FontFamily $PreviewFontSize"'"
+	font_name = "'"$FontFamily $FontStyle $PreviewFontSize"'"
 }
 widget "*Preview" style "stylePreview"
 '
