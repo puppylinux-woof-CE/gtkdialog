@@ -1,0 +1,58 @@
+#!/bin/sh
+
+## Includes.
+. funcrcSet
+
+## Save the rcfiles.
+
+funcrcSave() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcrcSave; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local line value width height
+	local found=0
+
+	## Update the rcfiles.
+	funcrcSet FamilyTextState $muiShowFamily
+	funcrcSet StyleTextState $muiShowStyle
+
+	if [ $muiFontButtonNone = true ]; then
+		value=1
+	elif [ $muiFontButtonSmall = true ]; then
+		value=2
+	elif [ $muiFontButtonBig = true ]; then
+		value=4
+	fi
+	funcrcSet FontButtonState $value
+
+	funcrcSet PreviewText "$entPreview"
+
+	## This is the recommended portable way to check for
+	## the existence of an executable within the path.
+	if [ `command -v xwininfo` ]; then
+
+		## xwininfo returns stats by default but it'll print info if
+		## the named window exists or not so this must be checked for.
+		xwininfo -name "$WINDOW_TITLE" > $TEMP_DIR/XWinInfo
+		while read -r line; do
+			case $line in
+				xwininfo:*\"$WINDOW_TITLE\")
+					found=1 ;;
+				Width:*)
+					## Get text after first ':'
+					width=${line#*:} ;;
+				Height:*)
+					## Get text after first ':'
+					height=${line#*:} ;;
+			esac
+		done < $TEMP_DIR/XWinInfo
+
+		if [ $found -eq 1 ]; then
+			funcrcSet WindowWidth $width
+			funcrcSet WindowHeight $height
+		fi
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

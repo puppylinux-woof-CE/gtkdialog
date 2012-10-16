@@ -66,7 +66,6 @@ install: check
 		fi; \
 		chmod 755 $(DESTDIR)$(PACKAGE_DATA_DIR)/$$func; \
 	done
-	cp README $(DESTDIR)$(PACKAGE_DATA_DIR)
 
 uninstall: check
 	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
