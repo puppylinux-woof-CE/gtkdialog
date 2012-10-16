@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## Get a variable [maintained as a file] from the temporary directory.
+## On entry: $1 = name
+##  On exit: echoes value
+
+functmpGet() {
+	local input
+
+	## Fast portable builtin found, better than:
+	##   cat $TEMP_DIR/$1
+	##   echo `<$TEMP_DIR/$1`
+	read -r input < $TEMP_DIR/$1
+	echo "$input"
+}

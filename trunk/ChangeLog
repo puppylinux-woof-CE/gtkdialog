@@ -1,7 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
-* Sat Oct 12 2012 Thunor <thunorsif@hotmail.com>
+* Tue Oct 16 2012 Thunor <thunorsif@hotmail.com>
+- Added an example application Pfeme.
+
+* Fri Oct 12 2012 Thunor <thunorsif@hotmail.com>
 - Added an example application Pfontview.
 
 * Fri Sep 21 2012 Thunor <thunorsif@hotmail.com>

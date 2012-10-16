@@ -1,0 +1,76 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+
+## Create the game list using the selected profile.
+## On entry: $1 = 1 to reuse a previous session's list if one exists
+
+funcGameListCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcGameListCreate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local ProfileSelected="`funcrcGet ProfileSelected`"
+	local ProfileROMsPath0="`funcrcGet Profile${ProfileSelected}ROMsPath0`"
+	local ProfileROMsPattern0="`funcrcGet Profile${ProfileSelected}ROMsPattern0`"
+	local ProfileROMsPath1="`funcrcGet Profile${ProfileSelected}ROMsPath1`"
+	local ProfileROMsPattern1="`funcrcGet Profile${ProfileSelected}ROMsPattern1`"
+	local ProfileROMsPath2="`funcrcGet Profile${ProfileSelected}ROMsPath2`"
+	local ProfileROMsPattern2="`funcrcGet Profile${ProfileSelected}ROMsPattern2`"
+	local count create ext f gamelist ifs item name path pattern xplayed
+
+	if [ -n "$1" ] && [ $1 = 1 ] && [ -f $LOCAL_DATA_DIR/GameList ]; then
+		create=0
+	else
+		create=1
+	fi
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		if [ $create -eq 0 ]; then
+			echo "$FUNCNAME(): Reusing an existing game list"
+		else
+			echo "$FUNCNAME(): Creating a new game list"
+		fi
+	fi
+
+	## Create the game list?
+	if [ $create -eq 1 ]; then
+		printf "" > $LOCAL_DATA_DIR/GameList
+		for f in 0 1 2; do
+			eval path="\$ProfileROMsPath$f"
+			eval pattern="\$ProfileROMsPattern$f"
+
+			if [ $DEBUG_CONTENT -ne 0 ]; then
+				echo "$FUNCNAME(): Searching $path for $pattern"
+			fi
+
+			if [ -n "$path" -a -n "$pattern" ]; then
+				gamelist=`find "$path" -maxdepth 1 -type f -iname "$pattern"`
+				ifs=$IFS
+				IFS='
+'
+				for item in $gamelist; do
+					## Get everything after the last slash.
+					name="${item##*/}"
+					## Get everything before the last period or the end.
+					name="${name%.*}"
+					## Get everything after the last period if one exists.
+					case "$item" in
+						*.*) ext="${item##*.}" ;;
+						*) ext="" ;;
+					esac
+					xplayed=1
+					echo "$item|$name|$ext|$xplayed" >> $LOCAL_DATA_DIR/GameList
+				done
+				IFS=$ifs
+			fi
+		done
+	fi
+
+	## Count the games.
+	count=`wc -l < $LOCAL_DATA_DIR/GameList`
+	echo "Found $count" > $TEMP_DIR/GameCount
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+
+## Play the selected game with the selected profile.
+
+funcGamePlay() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcGamePlay; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local ProfileSelected="`funcrcGet ProfileSelected`"
+	local ProfileExecutable="`funcrcGet Profile${ProfileSelected}Executable`"
+	local ProfileArguments="`funcrcGet Profile${ProfileSelected}Arguments`"
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		echo "$FUNCNAME(): Playing $treGameList"
+	fi
+
+	## Executable and Arguments come from the rcfiles but the rest is live.
+	## Gtkdialog currently throws an error message when loading a null
+	## string into an edit widget so adding a newline keeps it happy.
+	"$ProfileExecutable" $ProfileArguments $entProfileCommandLineArgs \
+		"$treGameList" > $TEMP_DIR/Output 2>&1; echo >> $TEMP_DIR/Output
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}
