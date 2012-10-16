@@ -1,0 +1,50 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+. funcrcSet
+. functmpGet
+
+## Save profile data.
+## On entry: $1 = 0 to save profile only to visible profile
+##                1 to save command line args only to selected profile
+
+funcProfileSave() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcProfileSave; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local ProfileSelected="`funcrcGet ProfileSelected`"
+	local ProfileVisible="`functmpGet ProfileVisible`"
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		if [ -n "$1" ] && [ $1 = 1 ]; then
+			echo "$FUNCNAME(): Saving command line args to profile$ProfileSelected"
+		else
+			echo "$FUNCNAME(): Saving visible profile to profile$ProfileVisible"
+		fi
+	fi
+
+	if [ -n "$1" ] && [ $1 = 1 ]; then
+		funcrcSet Profile${ProfileSelected}CommandLineArgs \
+			"$entProfileCommandLineArgs"
+	else
+		funcrcSet Profile${ProfileVisible}Executable "$entProfileExecutable"
+		funcrcSet Profile${ProfileVisible}Arguments "$entProfileArguments"
+		funcrcSet Profile${ProfileVisible}Readme "$entProfileReadme"
+		funcrcSet Profile${ProfileVisible}ROMsPath0 "$entProfileROMsPath0"
+		funcrcSet Profile${ProfileVisible}ROMsPattern0 "$entProfileROMsPattern0"
+		funcrcSet Profile${ProfileVisible}ROMsPath1 "$entProfileROMsPath1"
+		funcrcSet Profile${ProfileVisible}ROMsPattern1 "$entProfileROMsPattern1"
+		funcrcSet Profile${ProfileVisible}ROMsPath2 "$entProfileROMsPath2"
+		funcrcSet Profile${ProfileVisible}ROMsPattern2 "$entProfileROMsPattern2"
+		funcrcSet Profile${ProfileVisible}ImagesPath0 "$entProfileImagesPath0"
+		funcrcSet Profile${ProfileVisible}ImagesPattern0 "$entProfileImagesPattern0"
+		funcrcSet Profile${ProfileVisible}ImagesPath1 "$entProfileImagesPath1"
+		funcrcSet Profile${ProfileVisible}ImagesPattern1 "$entProfileImagesPattern1"
+		funcrcSet Profile${ProfileVisible}ImagesPath2 "$entProfileImagesPath2"
+		funcrcSet Profile${ProfileVisible}ImagesPattern2 "$entProfileImagesPattern2"
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

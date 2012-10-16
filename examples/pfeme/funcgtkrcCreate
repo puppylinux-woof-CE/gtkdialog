@@ -1,0 +1,35 @@
+#!/bin/sh
+
+## Includes.
+. functmpSet
+
+## Create a custom style for specific widgets.
+
+funcgtkrcCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcgtkrcCreate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	functmpSet gtkrc '
+style "styleTabsImages" {
+	bg[NORMAL] = "#000000"
+}
+widget "*TabsImages" style "styleTabsImages"
+
+style "styleTabReadme" {
+	text[NORMAL] = "'$ReadmeForeground'"
+	base[NORMAL] = "'$ReadmeBackground'"
+	font_name = "'"$ReadmeFontName"'"
+}
+widget "*TabReadme" style "styleTabReadme"
+
+style "styleTabOutput" {
+	text[NORMAL] = "'$OutputForeground'"
+	base[NORMAL] = "'$OutputBackground'"
+	font_name = "'"$OutputFontName"'"
+}
+widget "*TabOutput" style "styleTabOutput"
+'
+	GTK2_RC_FILES=$TEMP_DIR/gtkrc:~/.gtkrc-2.0
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

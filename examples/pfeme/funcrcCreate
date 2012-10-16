@@ -1,0 +1,60 @@
+#!/bin/sh
+
+## Includes.
+. funcrcSet
+
+## Create the rcfiles.
+
+funcrcCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcrcCreate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local f p t
+
+	## Create the missing rcfiles.
+	if [ ! -f $LOCAL_DATA_DIR/Version ]; then
+		funcrcSet Version "$VERSION"
+	fi
+	if [ ! -f $LOCAL_DATA_DIR/ReadmeForeground ]; then
+		funcrcSet ReadmeForeground "$ReadmeForeground"
+	fi
+	if [ ! -f $LOCAL_DATA_DIR/ReadmeBackground ]; then
+		funcrcSet ReadmeBackground "$ReadmeBackground"
+	fi
+	if [ ! -f $LOCAL_DATA_DIR/ReadmeFontName ]; then
+		funcrcSet ReadmeFontName "$ReadmeFontName"
+	fi
+	if [ ! -f $LOCAL_DATA_DIR/ProfileSelected ]; then
+		funcrcSet ProfileSelected "$ProfileSelected"
+	fi
+
+	## Create the profiles.
+	p=0; while [ $p -lt $ProfileMax ]; do
+		if [ ! -f $LOCAL_DATA_DIR/Profile${p}CommandLineArgs ]; then
+			funcrcSet Profile${p}CommandLineArgs ""
+		fi
+		if [ ! -f $LOCAL_DATA_DIR/Profile${p}Executable ]; then
+			funcrcSet Profile${p}Executable ""
+		fi
+		if [ ! -f $LOCAL_DATA_DIR/Profile${p}Arguments ]; then
+			funcrcSet Profile${p}Arguments ""
+		fi
+		if [ ! -f $LOCAL_DATA_DIR/Profile${p}Readme ]; then
+			funcrcSet Profile${p}Readme ""
+		fi
+		for f in 0 1 2; do
+			for t in ROMs Images; do
+				if [ ! -f $LOCAL_DATA_DIR/Profile${p}${t}Path$f ]; then
+					funcrcSet Profile${p}${t}Path$f ""
+				fi
+				if [ ! -f $LOCAL_DATA_DIR/Profile${p}${t}Pattern$f ]; then
+					funcrcSet Profile${p}${t}Pattern$f "*"
+				fi
+			done
+		done
+		p=$(($p + 1))
+	done
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

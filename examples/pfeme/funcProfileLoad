@@ -1,0 +1,48 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+. funcrcSet
+. functmpSet
+
+## Load a profile and make it the visible profile.
+## On entry: $1 = profile number
+##           $2 = 1 to load profile with command line args
+
+funcProfileLoad() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcProfileLoad; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		if [ -n "$2" ] && [ $2 = 1 ]; then
+			echo "$FUNCNAME(): Loading profile$1 with command line args"
+		else
+			echo "$FUNCNAME(): Loading profile$1"
+		fi
+	fi
+
+	if [ -n "$2" ] && [ $2 = 1 ]; then
+		functmpSet ProfileCommandLineArgs "`funcrcGet Profile${1}CommandLineArgs`"
+	fi
+	functmpSet ProfileExecutable "`funcrcGet Profile${1}Executable`"
+	functmpSet ProfileArguments "`funcrcGet Profile${1}Arguments`"
+	functmpSet ProfileReadme "`funcrcGet Profile${1}Readme`"
+	functmpSet ProfileROMsPath0 "`funcrcGet Profile${1}ROMsPath0`"
+	functmpSet ProfileROMsPattern0 "`funcrcGet Profile${1}ROMsPattern0`"
+	functmpSet ProfileROMsPath1 "`funcrcGet Profile${1}ROMsPath1`"
+	functmpSet ProfileROMsPattern1 "`funcrcGet Profile${1}ROMsPattern1`"
+	functmpSet ProfileROMsPath2 "`funcrcGet Profile${1}ROMsPath2`"
+	functmpSet ProfileROMsPattern2 "`funcrcGet Profile${1}ROMsPattern2`"
+	functmpSet ProfileImagesPath0 "`funcrcGet Profile${1}ImagesPath0`"
+	functmpSet ProfileImagesPattern0 "`funcrcGet Profile${1}ImagesPattern0`"
+	functmpSet ProfileImagesPath1 "`funcrcGet Profile${1}ImagesPath1`"
+	functmpSet ProfileImagesPattern1 "`funcrcGet Profile${1}ImagesPattern1`"
+	functmpSet ProfileImagesPath2 "`funcrcGet Profile${1}ImagesPath2`"
+	functmpSet ProfileImagesPattern2 "`funcrcGet Profile${1}ImagesPattern2`"
+
+	functmpSet ProfileVisible $1
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

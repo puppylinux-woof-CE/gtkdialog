@@ -1,0 +1,444 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+# Pfeme (c) Thunor 2012
+# GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+# See http://www.gnu.org/licenses/gpl-2.0.txt
+
+## Strip comments from the entire project using:
+## for f in func* main; do sed -i -e '/## /d' -e '/ ##/d' $f; done
+
+## ----------------------------------------------------------------------------
+## Constants
+## ----------------------------------------------------------------------------
+## These are application defaults which may be updated from rcfiles.
+
+TARGET=pfeme
+TITLE=Pfeme
+VERSION=0.1.0
+LOCAL_DATA_DIR=$HOME/.$TARGET
+PACKAGE_DATA_DIR=`pwd`
+## Setting these to non-zero will generate lots of useful debugging info.
+DEBUG_CONTENT=1
+DEBUG_TRANSITS=1
+
+## These don't require exporting.
+DebugSpacer="[]"
+ImageSize=200
+OutputForeground="#ffffff"
+OutputBackground="#000000"
+OutputFontName="Monospace 10"
+ProfileMax=5
+ProfileSelected=0
+ProfileVisible=0
+ReadmeForeground="#000000"
+ReadmeBackground="#ffffff"
+ReadmeFontName="Monospace 10"
+
+## ----------------------------------------------------------------------------
+## Includes
+## ----------------------------------------------------------------------------
+## These files are sourced from the PATH.
+
+PATH=$PACKAGE_DATA_DIR:$PATH
+
+. funcGameListCreate
+. funcgtkrcCreate
+. funcProfileLoad
+. funcrcCreate
+. funcrcGet
+. funcrcSet
+. functmpGet
+. functmpSet
+
+## ----------------------------------------------------------------------------
+## Local Functions
+## ----------------------------------------------------------------------------
+
+## Enable the embedding of comments within the XML.
+Comment() { :; }
+
+## Create the XML for the Games tab.
+funcTabGamesCreate() {
+	echo '<vbox border-width="5">
+			<tree column-type="string|string|string|uint64" has-focus="true"
+				column-visible="false" rules-hint="true" selection-mode="2"
+				auto-sort="true" sort-column="1">
+				<variable>treGameList</variable>
+				<label>Path|Name|Type|x Played</label>
+				<input file>'$LOCAL_DATA_DIR'/GameList</input>
+				<action>activate:tgbGamePlay</action>
+				<action signal="cursor-changed">enable:tgbGamePlay</action>
+				<action signal="cursor-changed">enable:entProfileCommandLineArgs</action>
+			</tree>
+			<hbox homogeneous="true" space-expand="false" space-fill="true">
+				<text><label>"'$DebugSpacer'"</label></text>
+'`Comment ##
+## Using a togglebutton here instead of a button allows gtk to repaint
+## the window in-between clearing and disabling and refreshing which is
+## preferential to having everything freeze and then update all at once.
+## `'
+				<togglebutton use-stock="true" label="gtk-refresh">
+					<variable>btnGameListRefresh</variable>
+					<action>if true clear:treGameList</action>
+					<action>if true clear:stbGameCount</action>
+					<action>if true disable:tgbGamePlay</action>
+					<action>if true disable:entProfileCommandLineArgs</action>
+					<action>if true activate:btnGameListRefresh</action>
+					<action>if false . funcGameListCreate; funcGameListCreate</action>
+					<action>if false refresh:treGameList</action>
+					<action>if false refresh:stbGameCount</action>
+					<action>if false grabfocus:treGameList</action>
+				</togglebutton>
+'`Comment ##
+## Getting the window to hide before executing the emulator requires that
+## gtk returns to its main loop, so its a two stage process made possible
+## by the use of the activate function. Initially I had the Play button
+## hide the window before activating a second button which executed the
+## emulator but I managed to combine the two into a tidier togglebutton.
+## `'
+				<togglebutton use-underline="true">
+					<variable>tgbGamePlay</variable>
+					<label>_Play</label>
+					<sensitive>false</sensitive>
+					<input file stock="gtk-execute"></input>
+					<action>if true hide:winMain</action>
+					<action>if true activate:tgbGamePlay</action>
+					<action>if false . funcProfileSave; funcProfileSave 1</action>
+					<action>if false . funcGamePlay; funcGamePlay</action>
+					<action>if false clear:ediOutput</action>
+					<action>if false refresh:ediOutput</action>
+					<action>if false show:winMain</action>
+				</togglebutton>
+				<text><label>"'$DebugSpacer'"</label></text>
+			</hbox>
+		</vbox>'
+}
+
+## Create the XML for the Profiles tab.
+funcTabProfilesCreate() {
+	local f tab
+
+	echo '<vbox border-width="5">
+			<hbox>'
+	f=0; while [ $f -lt $ProfileMax ]; do
+		echo '<button>
+				<variable>btnProfile'$f'</variable>
+				<width>32</width><height>32</height>
+				<input file>'$TEMP_DIR'/Profile'$f'</input>
+				<action>. funcProfileLoad; funcProfileLoad '$f'</action>
+
+				<action>refresh:entProfileExecutable</action>
+				<action>refresh:entProfileArguments</action>
+				<action>refresh:entProfileReadme</action>
+				<action>refresh:entProfileROMsPath0</action>
+				<action>refresh:entProfileROMsPattern0</action>
+				<action>refresh:entProfileROMsPath1</action>
+				<action>refresh:entProfileROMsPattern1</action>
+				<action>refresh:entProfileROMsPath2</action>
+				<action>refresh:entProfileROMsPattern2</action>
+				<action>refresh:entProfileImagesPath0</action>
+				<action>refresh:entProfileImagesPattern0</action>
+				<action>refresh:entProfileImagesPath1</action>
+				<action>refresh:entProfileImagesPattern1</action>
+				<action>refresh:entProfileImagesPath2</action>
+				<action>refresh:entProfileImagesPattern2</action>
+
+				<action>disable:btnProfileApply</action>
+			</button>'
+		f=$(($f + 1))
+	done
+	echo '</hbox>
+			<frame>'
+	for f in Executable Arguments Readme; do
+		echo '<hbox>
+				<text space-expand="false" space-fill="false"
+					width-request="70">
+					<label>"'$f'"</label>
+				</text>
+				<entry fs-action="file" fs-folder="'$HOME'" fs-title="'$TITLE'"
+					space-expand="true" space-fill="true"
+					width-request="314">
+					<variable>entProfile'$f'</variable>
+					<input file>'$TEMP_DIR'/Profile'$f'</input>
+					<action signal="changed">enable:btnProfileApply</action>
+				</entry>
+				<vbox>'
+		## Arguments doesn't require a fileselect button so we'll use a
+		## label with a fixed size. Nothing is going to be perfect here
+		## since the theme controls button and image properties but it's
+		## correct most of the time with the themes that I've tested.
+		## The button has to go inside a vbox to isolate it otherwise it
+		## stretches vertically which is not what we want here.
+		if [ $f = "Arguments" ]; then
+			echo '<text space-expand="true" space-fill="false"
+					width-request="30">
+					<label>"'$DebugSpacer'"</label>
+				</text>'
+		else
+			echo '<button space-expand="true" space-fill="false">
+					<input file stock="gtk-new"></input>
+					<action>fileselect:entProfile'$f'</action>
+				</button>'
+		fi
+		echo '</vbox>'
+		## If the button was up against the edge it would stretch
+		## horizontally which an invisible label luckily prevents.
+		echo '<text space-expand="false" space-fill="false"
+				width-request="0" visible="false">
+				<label>"'$DebugSpacer'"</label>
+			</text>'
+		echo '</hbox>'
+	done
+	echo '</frame>
+			<notebook tab-labels="ROMs|Images">
+				<vbox border-width="5">'
+	for f in 0 1 2 3 4 5; do
+		if [ $f -lt 3 ]; then
+			tab=ROMs
+		else
+			tab=Images
+		fi
+		echo '<hbox>
+				<text space-expand="false" space-fill="false">
+					<label>Path</label>
+				</text>
+				<entry fs-action="folder" fs-folder="'$HOME'" fs-title="'$TITLE'"
+					space-expand="true" space-fill="true"
+					width-request="220">
+					<variable>entProfile'$tab'Path'$(($f % 3))'</variable>
+					<input file>'$TEMP_DIR'/Profile'$tab'Path'$(($f % 3))'</input>
+					<action signal="changed">enable:btnProfileApply</action>
+				</entry>
+				<vbox>
+					<button space-expand="true" space-fill="false">
+						<input file stock="gtk-open"></input>
+						<action>fileselect:entProfile'$tab'Path'$(($f % 3))'</action>
+					</button>
+				</vbox>
+				<text space-expand="false" space-fill="false">
+					<label>Pattern</label>
+				</text>
+				<entry space-expand="true" space-fill="true"
+					width-request="80">
+					<variable>entProfile'$tab'Pattern'$(($f % 3))'</variable>
+					<input file>'$TEMP_DIR'/Profile'$tab'Pattern'$(($f % 3))'</input>
+					<action signal="changed">enable:btnProfileApply</action>
+				</entry>
+			</hbox>'
+		if [ $f -eq 2 ]; then
+			echo '</vbox>
+				<vbox border-width="5">'
+		fi
+	done
+	echo '</vbox>
+			</notebook>
+			<hbox homogeneous="true" space-expand="false" space-fill="true">
+				<text><label>"'$DebugSpacer'"</label></text>
+				<button use-stock="true" label="gtk-apply">
+					<variable>btnProfileApply</variable>
+					<sensitive>false</sensitive>
+					<action>. funcProfileSave; funcProfileSave</action>
+					<action>disable:btnProfileApply</action>
+				</button>
+				<button use-underline="true">
+					<variable>btnProfileSelect</variable>
+					<label>_Select</label>
+					<sensitive>false</sensitive>
+					<input file stock="gtk-ok"></input>
+					<action>""</action>
+				</button>
+				<text><label>"'$DebugSpacer'"</label></text>
+			</hbox>
+		</vbox>'
+}
+
+## Create the XML for the Readme tab.
+funcTabReadmeCreate() {
+	echo '<vbox border-width="5">
+			<edit name="TabReadme" editable="false" cursor-visible="false">
+				<variable>ediReadme</variable>
+				<input file>'$TEMP_DIR'/Readme</input>
+			</edit>
+			<expander use-underline="true" space-expand="false" space-fill="true">
+				<hbox>
+					<colorbutton tooltip-text="Foreground">
+						<default>'$ReadmeForeground'</default>
+						<action>enable:btnReadmeApply</action>
+						<action>""</action>
+					</colorbutton>
+					<colorbutton tooltip-text="Background">
+						<default>'$ReadmeBackground'</default>
+						<action>enable:btnReadmeApply</action>
+						<action>""</action>
+					</colorbutton>
+					<fontbutton tooltip-text="Font Name">
+						<default>'$ReadmeFontName'</default>
+						<action>enable:btnReadmeApply</action>
+						<action>""</action>
+					</fontbutton>
+					<button use-stock="true" label="gtk-apply">
+						<variable>btnReadmeApply</variable>
+						<sensitive>false</sensitive>
+						<action>""</action>
+					</button>
+				</hbox>
+				<label>_Options</label>
+			</expander>
+		</vbox>'
+}
+
+## Create the XML for the Output tab.
+funcTabOutputCreate() {
+	echo '<vbox border-width="5">
+			<edit name="TabOutput" editable="false" cursor-visible="false">
+				<variable>ediOutput</variable>
+				<input file>'$TEMP_DIR'/Output</input>
+			</edit>
+		</vbox>'
+}
+
+## Create the XML for the Images tabs.
+funcTabsImagesCreate() {
+	for f in 0 1 2; do
+		echo '<eventbox name="TabsImages" border-width="5">
+				<pixmap>
+					<variable>pmpImage'$f'</variable>
+					<width>'$ImageSize'</width>
+					<height>'$ImageSize'</height>
+					<input file>'$TEMP_DIR'/Image'$f'</input>
+				</pixmap>
+			</eventbox>'
+	done
+}
+
+## ----------------------------------------------------------------------------
+## Main
+## ----------------------------------------------------------------------------
+
+## Create the local data directory if it doesn't already exist.
+if [ ! -d $LOCAL_DATA_DIR ]; then
+	mkdir $LOCAL_DATA_DIR
+	if [ $? -ne 0 ]; then
+		echo "Error: Couldn't create $LOCAL_DATA_DIR"
+		exit 1
+	fi
+fi
+
+## Create the rcfiles.
+funcrcCreate
+
+## Process the command-line argument(s).
+if [ "$1" = -h -o "$1" = --help ]; then
+	echo "$TITLE $VERSION (C) 2012 Thunor
+Usage: $TARGET
+
+See $PACKAGE_DATA_DIR/README for more information.
+"
+	exit 1
+fi
+
+## Create a temporary directory.
+TEMP_DIR=`mktemp -d --tmpdir ${TARGET}.XXXXXXXX`
+if [ $? -ne 0 ]; then
+	echo "Error: Couldn't create temporary directory."
+	exit 1
+fi
+
+## Load the initial rcfiles required.
+ReadmeForeground="`funcrcGet ReadmeForeground`"
+ReadmeBackground="`funcrcGet ReadmeBackground`"
+ReadmeFontName="`funcrcGet ReadmeFontName`"
+ProfileSelected="`funcrcGet ProfileSelected`"
+ProfileReadme="`funcrcGet Profile${ProfileSelected}Readme`"
+
+## Create a custom style.
+funcgtkrcCreate
+
+## Create the initial files required.
+funcProfileLoad $ProfileSelected 1
+funcGameListCreate 1
+if [ -n "$ProfileReadme" ]; then
+	ln -fs "$ProfileReadme" $TEMP_DIR/Readme
+else
+	rm $TEMP_DIR/Readme
+	functmpSet Readme ""
+fi
+functmpSet Output ""
+
+## Create the XML for the main dialog.
+echo '
+<window title="'$TITLE'" icon-name="'$TARGET'" window-position="1" border-width="0">
+	<vbox spacing="0">
+		<menubar space-expand="false" space-fill="false">
+			<menu use-underline="true" label="_File">
+				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+					<variable>muiQuit</variable>
+					<action>. funcProfileSave; funcProfileSave 1</action>
+					<action>exit:Quit</action>
+				</menuitem>
+			</menu>
+		</menubar>
+		<vbox border-width="5" space-expand="true" space-fill="true">
+			<hbox>
+				<vbox width-request="">
+					<notebook tab-labels="Games|Profiles|Readme|Output">
+						'"`funcTabGamesCreate`"'
+						'"`funcTabProfilesCreate`"'
+						'"`funcTabReadmeCreate`"'
+						'"`funcTabOutputCreate`"'
+					</notebook>
+				</vbox>
+				<vbox>
+					<notebook tab-prefix="Image ">
+						'"`funcTabsImagesCreate`"'
+					</notebook>
+					<text height-request=""><label>"'$DebugSpacer'"</label></text>
+				</vbox>
+			</hbox>
+			<hbox space-expand="false" space-fill="true">
+				<text space-expand="false" space-fill="true">
+					<label>Command Line Args.</label>
+				</text>
+				<entry secondary-icon-stock="gtk-clear"
+					space-expand="true" space-fill="true">
+					<variable>entProfileCommandLineArgs</variable>
+					<sensitive>false</sensitive>
+					<input file>'$TEMP_DIR'/ProfileCommandLineArgs</input>
+					<action signal="activate">activate:tgbGamePlay</action>
+					<action signal="secondary-icon-release">clear:entProfileCommandLineArgs</action>
+				</entry>
+				<button use-stock="true" label="gtk-quit"
+					space-expand="false" space-fill="false">
+					<action>activate:muiQuit</action>
+				</button>
+			</hbox>
+		</vbox>
+		<statusbar space-expand="false" space-fill="false">
+			<variable>stbGameCount</variable>
+			<input file>'$TEMP_DIR'/GameCount</input>
+		</statusbar>
+	</vbox>
+	<variable>winMain</variable>
+</window>
+' > $TEMP_DIR/winMain
+
+## Export everything necessary.
+export GTKDIALOG
+export TARGET
+export TITLE
+export VERSION
+export LOCAL_DATA_DIR
+export PACKAGE_DATA_DIR
+export DEBUG_CONTENT
+export DEBUG_TRANSITS
+export PATH
+export TEMP_DIR
+export GTK2_RC_FILES
+
+## And off we go...
+$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
+
+## Remove the temporary files.
+rm -rf $TEMP_DIR
