@@ -16,7 +16,7 @@ GTKDIALOG=gtkdialog
 
 TARGET=pfontview
 TITLE=Pfontview
-VERSION=0.1.1
+VERSION=0.1.2
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
 WINDOW_TITLE="$TITLE - ${1##*/}"
@@ -73,15 +73,79 @@ funcTorF() {
 	fi
 }
 
+## Get major/minor/micro version of an application.
+## On entry: $1 = command
+##           $2 = index into string to locate version
+##  On exit: Initialises major/minor/micro_version
+funcAppVersionGet() {
+	local field
+	local index=0
+
+	for field in `$1`; do
+		if [ $((index++)) -eq $2 ]; then break; fi
+	done
+	major_version=${field%%.*}; field=${field#*.}
+	minor_version=${field%%.*}
+	micro_version=${field#*.}
+}
+
+## Create the XML for the Tools menu.
+## On entry: $1 = the font filename from the command-line
+funcToolsMenuCreate() {
+	local pfont2=`command -v pfont2`
+	local ttf=`command -v ttf`
+	local sfontview=`command -v sfontview`
+
+	if [ "$pfont2" -o "$ttf" -o "$sfontview" ]; then
+		echo '<menu use-underline="true" label="'$i18nTools'">'
+		if [ "$pfont2" ]; then
+			echo \
+'				<menuitem use-underline="true" label="_Pfont2">
+					<action>pfont2 "'$1'" &</action>
+				</menuitem>'
+		fi
+		if [ "$ttf" ]; then
+			echo \
+'				<menuitem use-underline="true" label="Pfont2 P_review">
+					<action>ttf "'$1'" &</action>
+				</menuitem>'
+		fi
+		if [ "$sfontview" ]; then
+			echo \
+'				<menuitem use-underline="true" label="_Sfontview">
+					<action>sfontview "'$1'" &</action>
+				</menuitem>'
+		fi
+		echo '			</menu>'
+	fi
+}
+
 ## ----------------------------------------------------------------------------
 ## Main
 ## ----------------------------------------------------------------------------
+
+## Check requirements.
+if [ ! `command -v fc-query` ]; then
+	echo "Couldn't find fc-query"
+	exit 1
+fi
+if [ ! `command -v $GTKDIALOG` ]; then
+	echo "Couldn't find $GTKDIALOG"
+	exit 1
+fi
+funcAppVersionGet "$GTKDIALOG -v" 2
+if [ $minor_version -ge 8 -a $micro_version -ge 2 ]; then
+	true
+else
+	echo "Couldn't find $GTKDIALOG >= 0.8.2"
+	exit 1
+fi
 
 ## Create the local data directory if it doesn't already exist.
 if [ ! -d $LOCAL_DATA_DIR ]; then
 	mkdir $LOCAL_DATA_DIR
 	if [ $? -ne 0 ]; then
-		echo "Error: Couldn't create $LOCAL_DATA_DIR"
+		echo "Couldn't create $LOCAL_DATA_DIR"
 		exit 1
 	fi
 fi
@@ -90,7 +154,7 @@ fi
 if [ ! -d $LocalFontDir ]; then
 	mkdir $LocalFontDir
 	if [ $? -ne 0 ]; then
-		echo "Error: Couldn't create $LocalFontDir"
+		echo "Couldn't create $LocalFontDir"
 		exit 1
 	fi
 fi
@@ -111,7 +175,7 @@ fi
 ## Create a temporary directory.
 TEMP_DIR=`mktemp -d --tmpdir ${TARGET}.XXXXXXXX`
 if [ $? -ne 0 ]; then
-	echo "Error: Couldn't create temporary directory."
+	echo "Couldn't create temporary directory."
 	exit 1
 fi
 
@@ -210,6 +274,7 @@ echo '
 					</menuitem>
 				</menu>
 			</menu>
+			'"$(funcToolsMenuCreate "$1")"'
 		</menubar>
 		<vbox border-width="5" space-expand="true" space-fill="true">
 			<hbox visible="'$FamilyTextState'" sensitive="'$FamilyTextState'"
