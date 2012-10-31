@@ -34,7 +34,7 @@ To uninstall:
 DESTDIR is supported for packagers to install to an intermediate folder;
 for example:
 
-    make DESTDIR=pfontview-0.1.1 install
+    make DESTDIR=pfontview-0.1.2 install
 
 Requirements
 ============
@@ -54,6 +54,9 @@ Operation
 
 Save Settings will additionally save the window dimensions.
 
+If you have Pfont2 or Sfontview installed then you will be able to
+access them via the Tools menu.
+
 Contacting Us
 =============
 
@@ -62,4 +65,4 @@ Thunor <thunorsif@hotmail.com>
 http://code.google.com/p/gtkdialog/
 
 
-2012-10-16
+2012-10-31

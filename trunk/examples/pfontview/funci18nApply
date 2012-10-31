@@ -13,6 +13,7 @@ funci18nApply() {
 	i18nShow_Family="Show _Family"
 	i18nShow_Style="Show _Style"
 	i18nShow_Font_Button="Show Font _Button"
+	i18nTools="_Tools"
 	i18nNone="_None"
 	i18nSmall="_Small"
 	i18nBig="_Big"
@@ -21,7 +22,6 @@ funci18nApply() {
 	i18nPangram="The quick brown fox jumps over the lazy dog"
 	i18nPreview="Preview"
 	i18nInvalid_font="Invalid font"
-	i18nnot_found="not found"
 
 	## Now override the English text with another language.
 	case ${LANG%%_*} in

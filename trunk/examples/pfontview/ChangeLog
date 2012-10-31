@@ -1,3 +1,7 @@
+* Wed Oct 31 2012 Thunor <thunorsif@hotmail.com>
+- 0.1.2
+- Added a Tools menu with access to Pfont2 and Sfontview if installed.
+- Added a requirements check for fc-query and gtkdialog >= 0.8.2.
 
 * Tue Oct 16 2012 Thunor <thunorsif@hotmail.com>
 - 0.1.1
