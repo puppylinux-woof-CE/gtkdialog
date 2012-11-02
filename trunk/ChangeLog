@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Nov 1 2012 Thunor <thunorsif@hotmail.com>
+- Connected-up the button-press/release-event signals to the
+  comboboxentry widget's child entry widget.
+
 * Tue Oct 16 2012 Thunor <thunorsif@hotmail.com>
 - Added an example application Pfeme.
 
