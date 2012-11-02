@@ -423,13 +423,22 @@ void widget_comboboxtext_refresh(variable *var)
 		g_signal_connect(G_OBJECT(var->Widget), "changed", 
 			G_CALLBACK(on_any_widget_changed_event),
 			(gpointer)var->Attributes);
-		/* The comboboxtext functions also manage the comboboxentry:
-		 * connect to the activate signal emitted when Enter is pressed
-		 * within the entry */
+		/* The comboboxtext functions also manage the comboboxentry */
 		if (var->Type == WIDGET_COMBOBOXENTRY) {
+			/* Connect to the activate signal of the child entry widget */
 			g_signal_connect(G_OBJECT(gtk_bin_get_child(
 				GTK_BIN(var->Widget))), "activate",
 				G_CALLBACK(on_any_widget_activate_event),
+				(gpointer)var->Attributes);
+			/* Connect to the button-press/release signals of the child
+			 * entry widget */
+			g_signal_connect(G_OBJECT(gtk_bin_get_child(
+				GTK_BIN(var->Widget))), "button-press-event",
+				G_CALLBACK(on_any_widget_button_pressed),
+				(gpointer)var->Attributes);
+			g_signal_connect(G_OBJECT(gtk_bin_get_child(
+				GTK_BIN(var->Widget))), "button-release-event",
+				G_CALLBACK(on_any_widget_button_released),
 				(gpointer)var->Attributes);
 		}
 	}
