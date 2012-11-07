@@ -697,10 +697,12 @@ void widget_tree_save(variable *var)
 	gdouble           valdouble;
 	gchar            *act;
 	gchar            *filename = NULL;
+	gchar            *line;
+	gchar            *string;
 	gchar            *text;
-	gchar            *value;
-	gint              column;
-	gint              index;
+	gint              column, columnmax;
+	gint              initialcolumn;
+	gint              initialrow = TRUE;
 	gint64            valint64;
 	guint64           valuint64;
 
@@ -724,50 +726,61 @@ void widget_tree_save(variable *var)
 		if ((outfile = fopen(filename, "w"))) {
 
 			model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
+			columnmax = gtk_tree_model_get_n_columns(GTK_TREE_MODEL(model));
+
 			gtk_tree_model_get_iter_first(model, &iter);
-			/* Which column should we export */
-			if ((value = g_object_get_data(G_OBJECT(var->Widget), "exported-column"))) {
-				column = atoi(value) + FirstDataColumn;
-			} else {
-				column = FirstDataColumn;
-			}
-			coltype = gtk_tree_model_get_column_type(GTK_TREE_MODEL(model),
-				column);
-			index = 0;
 			while (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
-				switch (coltype) {
-					case G_TYPE_STRING:
-						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
-							column, &text, -1);
-						break;
-					case G_TYPE_INT64:
-						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
-							column, &valint64, -1);
-						text = g_strdup_printf("%lli", valint64);
-						break;
-					case G_TYPE_UINT64:
-						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
-							column, &valuint64, -1);
-						text = g_strdup_printf("%llu", valuint64);
-						break;
-					case G_TYPE_DOUBLE:
-						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
-							column, &valdouble, -1);
-						text = g_strdup_printf("%f", valdouble);
-						break;
-					default:
-						fprintf(stderr, "%s(): Unsupported column-type %i\n",
-							__func__, coltype);
-						text = g_strdup("");
+
+				line = g_strdup("");
+				initialcolumn = TRUE;
+				for (column = ColumnIconName; column < columnmax; column++) {
+
+					coltype = gtk_tree_model_get_column_type
+						(GTK_TREE_MODEL(model), column);
+					switch (coltype) {
+						case G_TYPE_STRING:
+							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+								column, &string, -1);
+							break;
+						case G_TYPE_INT64:
+							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+								column, &valint64, -1);
+							string = g_strdup_printf("%lli", valint64);
+							break;
+						case G_TYPE_UINT64:
+							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+								column, &valuint64, -1);
+							string = g_strdup_printf("%llu", valuint64);
+							break;
+						case G_TYPE_DOUBLE:
+							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
+								column, &valdouble, -1);
+							string = g_strdup_printf("%f", valdouble);
+							break;
+						default:
+							fprintf(stderr, "%s(): Unsupported column-type %i\n",
+								__func__, coltype);
+							string = g_strdup("");
+					}
+					if (initialcolumn) {
+						text = g_strconcat(line, string, NULL);
+						initialcolumn = FALSE;
+					} else {
+						text = g_strconcat(line, "|", string, NULL);
+					}
+					g_free(line);
+					line = text;
+					g_free(string);
 				}
-				if (index == 0) {
+				if (initialrow) {
 					fprintf(outfile, "%s", text);
+					initialrow = FALSE;
 				} else {
 					fprintf(outfile, "\n%s", text);
 				}
 				g_free(text);
+
 				if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter)) break;
-				index++;
 			}
 
 			fclose(outfile);
