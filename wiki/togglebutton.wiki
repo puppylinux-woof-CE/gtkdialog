@@ -43,6 +43,8 @@ The following custom tag attributes are available:
 || auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || image-position^[1]^ || Image position relative to label || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (left, right, top, bottom) || ||
 || homogeneous^[2]^ || Horizontal uniformity of an image with label || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| theme-icon-size || The size of the GTK theme icon || An integer > {{{0}}} or {{{-1}}} to ignore || 0.8.1 ||
+|| stock-icon-size || The size of the GTK stock icon || {{{0}}} to {{{6}}} (see [http://developer.gnome.org/gtk/2.24/gtk-Themeable-Stock-Images.html#GtkIconSize GtkIconSize]) || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -110,9 +112,9 @@ The following general functions can be performed by any widget capable of emitti
 
 2. The existing "[http://developer.gnome.org/gtk/2.24/GtkBox.html#GtkBox--homogeneous homogeneous]" GTK+ property -- applicable to the hbox and vbox -- can be used here to effect the box inside the button when including an image and a label.
 
-3. Theme icons default to 20 and do not scale or refresh (the height or width directives can be used to request a size).
+3. Theme icons default to 20 and do not scale or refresh (the "theme-icon-size" custom tag attribute can be used to request a size).
 
-4. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "[http://developer.gnome.org/gtk/2.24/GtkImage.html#GtkImage--icon-size icon-size]" tag attribute can be used to adjust the size).
+4. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "stock-icon-size" custom tag attribute can be used to request a size).
 
 5. This widget supports conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
 

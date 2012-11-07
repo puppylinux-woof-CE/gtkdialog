@@ -116,7 +116,7 @@ The following functions can be performed upon this widget by any widget capable 
 || hide || Hide widget || Shell variable name || 0.8.1 ||
 || grabfocus || Grab input focus || Shell variable name || 0.8.1 ||
 || refresh || Reload input data || Shell variable name || ||
-|| save || Save widget data || Shell variable name || 0.8.1 ||
+|| save^[2]^ || Save widget data || Shell variable name || 0.8.1 ||
 || clear || Remove all widget data || Shell variable name || 0.7.21 ||
 || removeselected || Remove selected widget data || Shell variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
@@ -135,5 +135,7 @@ The following general functions can be performed by any widget capable of emitti
 == Notes ==
 
 1. This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.
+
+2. When saving, due to the multiple input data formats, the columns are output in the following raw state: _icon-name_ {{{|}}} _stock-id_ {{{|}}} _data0_ {{{|}}} _data1_  {{{|}}} ...
 
 ----
