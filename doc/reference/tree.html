@@ -198,7 +198,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html">GtkTreeView</a>
 <tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> grabfocus </td><td class="wiki"> Grab input focus </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> save </td><td class="wiki"> Save widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr><td class="wiki"> save<sup><a href="#note2">[2]</a></sup> </td><td class="wiki"> Save widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.8.1 </td></tr>
 <tr><td class="wiki"> clear </td><td class="wiki"> Remove all widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> removeselected </td><td class="wiki"> Remove selected widget data </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
 </table>
@@ -217,6 +217,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html">GtkTreeView</a>
 <h2> Notes </h2>
 
 <p><a name="note1"></a>1. This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.</p>
+
+<p><a name="note2"></a>2. When saving, due to the multiple input data formats, the columns are output in the following raw state: <i>icon-name</i> <code>|</code> <i>stock-id</i> <code>|</code> <i>data0</i> <code>|</code> <i>data1</i>  <code>|</code> ...</p>
 
 <hr>
 <p>
@@ -266,7 +268,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkTreeView.html">GtkTreeView</a>
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-09-20 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-11-07 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

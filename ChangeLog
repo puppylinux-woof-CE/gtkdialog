@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Wed Nov 7 2012 Thunor <thunorsif@hotmail.com>
+- Modified the tree widget's output data format: now all of the columns
+  are output in the raw state "icon-name | stock-id | data0 | data1 ..."
+  whether or not icon-name or stock-id were supplied.
+
 * Thu Nov 1 2012 Thunor <thunorsif@hotmail.com>
 - Connected-up the button-press/release-event signals to the
   comboboxentry widget's child entry widget.
