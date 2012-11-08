@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Nov 8 2012 Thunor <thunorsif@hotmail.com>
+- Modified the table widget's output data format: now all of the columns
+  are output.
+- Updated the pfeme, pfontview and playmusic example applications.
+
 * Wed Nov 7 2012 Thunor <thunorsif@hotmail.com>
 - Modified the tree widget's output data format: now all of the columns
   are output in the raw state "icon-name | stock-id | data0 | data1 ..."

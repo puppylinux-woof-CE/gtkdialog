@@ -10,5 +10,5 @@ funcrcfileGet() {
 	local value
 
 	value="`grep \"^$1=\" $LOCAL_DATA_DIR/${TARGET}rc`"
-	echo ${value##*=}
+	echo ${value#*=}
 }

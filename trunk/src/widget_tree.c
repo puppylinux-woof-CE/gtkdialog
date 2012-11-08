@@ -701,7 +701,6 @@ void widget_tree_save(variable *var)
 	gchar            *string;
 	gchar            *text;
 	gint              column, columnmax;
-	gint              initialcolumn;
 	gint              initialrow = TRUE;
 	gint64            valint64;
 	guint64           valuint64;
@@ -732,7 +731,6 @@ void widget_tree_save(variable *var)
 			while (gtk_tree_store_iter_is_valid(GTK_TREE_STORE(model), &iter)) {
 
 				line = g_strdup("");
-				initialcolumn = TRUE;
 				for (column = ColumnIconName; column < columnmax; column++) {
 
 					coltype = gtk_tree_model_get_column_type
@@ -762,9 +760,8 @@ void widget_tree_save(variable *var)
 								__func__, coltype);
 							string = g_strdup("");
 					}
-					if (initialcolumn) {
+					if (column == ColumnIconName) {
 						text = g_strconcat(line, string, NULL);
-						initialcolumn = FALSE;
 					} else {
 						text = g_strconcat(line, "|", string, NULL);
 					}

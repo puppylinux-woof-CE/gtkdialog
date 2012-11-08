@@ -7,12 +7,9 @@
 functmpGet() {
 	local input
 
-## 	if [ -n "$BASH" ]; then		Redundant: fast portable builtin found.
-## 		echo `<$TEMP_DIR/$1`
-## 	else
-## 		cat $TEMP_DIR/$1
-## 	fi
-
+	## Fast portable builtin found, better than:
+	##   cat $TEMP_DIR/$1
+	##   echo `<$TEMP_DIR/$1`
 	read -r input < $TEMP_DIR/$1
-	echo $input
+	echo "$input"
 }

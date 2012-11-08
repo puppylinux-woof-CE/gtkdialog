@@ -25,23 +25,24 @@ version='$VERSION'' > $LOCAL_DATA_DIR/${TARGET}rc
 	## Write the players section.
 	if [ $1 = new ]; then
 		## Find a flac player.
-		if [ -n "`which flac123`" ]; then flac="flac123 -q"; fi
+		if [ `command -v flac123` ]; then flac="flac123 -q"; fi
 
 		## Find an mp3 player.
-		if [ -n "`which mpg123`" ]; then mp3="mpg123 -q"
-		elif [ -n "`which mpg321`" ]; then mp3="mpg321 -q"
-		elif [ -n "`which madplay`" ]; then mp3="madplay -q"
+		if [ `command -v mpg123` ]; then mp3="mpg123 -q"
+		elif [ `command -v mpg321` ]; then mp3="mpg321 -q"
+		elif [ `command -v madplay` ]; then mp3="madplay -q"
+		elif [ `command -v plaympeg` ]; then mp3="plaympeg"
 		fi
 
 		## Find an ogg player.
-		if [ -n "`which ogg123`" ]; then ogg="ogg123 -q"; fi
+		if [ `command -v ogg123` ]; then ogg="ogg123 -q"; fi
 
 		## Find a player for other.
-		if [ -n "`which playsound`" ]; then other="playsound"; fi
+		if [ `command -v playsound` ]; then other="playsound"; fi
 
 		## Find a wav player.
-		if [ -n "`which wavplay`" ]; then wav="wavplay -q"
-		elif [ -n "`which aplay`" ]; then wav="aplay -q"
+		if [ `command -v wavplay` ]; then wav="wavplay -q"
+		elif [ `command -v aplay` ]; then wav="aplay -q"
 		fi
 
 		echo '

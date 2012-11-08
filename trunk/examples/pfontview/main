@@ -16,7 +16,7 @@ GTKDIALOG=gtkdialog
 
 TARGET=pfontview
 TITLE=Pfontview
-VERSION=0.1.2
+VERSION=0.1.3
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
 WINDOW_TITLE="$TITLE - ${1##*/}"
@@ -173,7 +173,7 @@ Where FILE is a TrueType font file.
 fi
 
 ## Create a temporary directory.
-TEMP_DIR=`mktemp -d --tmpdir ${TARGET}.XXXXXXXX`
+TEMP_DIR=`mktemp -d -t ${TARGET}.XXXXXXXX`
 if [ $? -ne 0 ]; then
 	echo "Couldn't create temporary directory."
 	exit 1
