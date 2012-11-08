@@ -473,9 +473,10 @@ void widget_table_save(variable *var)
 	GList            *element;
 	gchar            *act;
 	gchar            *filename = NULL;
+	gchar            *line;
 	gchar            *string;
-	gchar            *value;
-	gint              column = 0;
+	gchar            *text;
+	gint              column, columnmax;
 	gint              retval;
 	gint              row = 0;
 
@@ -498,24 +499,37 @@ void widget_table_save(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 
-			/* Which column should we export */
-			if (var->widget_tag_attr) {
-				/* Get exported-column */
-				if ((value = get_tag_attribute(var->widget_tag_attr, "exported-column")))
-					column = atoi(value);
-			}
+			g_object_get(G_OBJECT(var->Widget), "n-columns", &columnmax, NULL);
+
 			/* Where's the GtkCList row count? It's not such a problem as
 			 * gtk_clist_get_text() returns 0 if it's not available at which
 			 * point we'll stop */
-			retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, column, &string);
+			retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, 0, &string);
 			while (retval) {
-				if (row == 0) {
-					fprintf(outfile, "%s", string);
-				} else {
-					fprintf(outfile, "\n%s", string);
+
+				line = g_strdup("");
+				for (column = 0; column < columnmax; column++) {
+
+					/* Do not free string, it is not newly allocated */
+					gtk_clist_get_text(GTK_CLIST(var->Widget), row, column, &string);
+
+					if (column == 0) {
+						text = g_strconcat(line, string, NULL);
+					} else {
+						text = g_strconcat(line, "|", string, NULL);
+					}
+					g_free(line);
+					line = text;
 				}
+				if (row == 0) {
+					fprintf(outfile, "%s", text);
+				} else {
+					fprintf(outfile, "\n%s", text);
+				}
+				g_free(text);
+
 				row++;
-				retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, column, &string);
+				retval = gtk_clist_get_text(GTK_CLIST(var->Widget), row, 0, &string);
 			}
 
 			fclose(outfile);

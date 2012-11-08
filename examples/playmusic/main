@@ -16,7 +16,7 @@ GTKDIALOG=gtkdialog
 
 TARGET=playmusic
 TITLE=PlayMusic
-VERSION=0.1.7
+VERSION=0.1.8
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
 DEBUG_CONTENT=0
@@ -97,7 +97,7 @@ funcButtonsCreate() {
 if [ ! -d $LOCAL_DATA_DIR ]; then
 	mkdir $LOCAL_DATA_DIR
 	if [ $? -ne 0 ]; then
-		echo "Error: Couldn't create $LOCAL_DATA_DIR"
+		echo "Couldn't create $LOCAL_DATA_DIR"
 		exit 1
 	fi
 fi
@@ -122,9 +122,9 @@ See $PACKAGE_DATA_DIR/README for more information.
 fi
 
 ## Create a temporary directory.
-TEMP_DIR=`mktemp -d --tmpdir ${TARGET}.XXXXXXXX`
+TEMP_DIR=`mktemp -d -t ${TARGET}.XXXXXXXX`
 if [ $? -ne 0 ]; then
-	echo "Error: Couldn't create temporary directory."
+	echo "Couldn't create temporary directory."
 	exit 1
 fi
 
@@ -141,7 +141,6 @@ functmpSet dialogcovercheck false
 functmpSet coverpresscheck false
 functmpSet folderopencheck false
 functmpSet autonextcheck false
-functmpSet dialogcoverstate closed
 functmpSet folderopen "[empty]"
 functmpSet playerstate stopped
 functmpSet trackinfotype 0
@@ -160,12 +159,9 @@ DIALOG_COVER='
 		<width>'$COVER_SIZE'</width>
 		<height>'$COVER_SIZE'</height>
 		<input file>'$TEMP_DIR'/cover</input>
-		<action>. functmpSet; functmpSet dialogcoverstate closed</action>
-		<action>closewindow:winDialogCover</action>
+		<action>closewindow:DIALOG_COVER</action>
 	</button>
-	<variable>winDialogCover</variable>
-	<action signal="hide">. functmpSet; functmpSet dialogcoverstate closed</action>
-	<action signal="hide">closewindow:winDialogCover</action>
+	<variable>DIALOG_COVER</variable>
 </window>
 '
 
@@ -174,7 +170,8 @@ echo '
 <window name="winMain" title="'$TITLE'" icon-name="'$TARGET'" window-position="2"
 	width-request="'$WINDOW_WIDTH'" resizable="false">
 	<vbox>
-		<entry name="entTrackInfo" editable="false" has-frame="false" can-focus="false">
+		<entry name="entTrackInfo" editable="false" has-frame="false" can-focus="false"
+			tooltip-text="Left-click to toggle between artist/album and track info">
 			<variable>entTrackInfo</variable>
 			<input file>'$TEMP_DIR'/trackinfo</input>
 			<action signal="button-press-event">"
@@ -192,7 +189,10 @@ echo '
 ## `'
 			<button name="btnCover" space-expand="false" space-fill="false"
 				width-request="'$(($COVER_THUMB_SIZE + 10))'"
-				height-request="'$(($COVER_THUMB_SIZE + 10))'">
+				height-request="'$(($COVER_THUMB_SIZE + 10))'"
+				tooltip-text="Left-click: Next album
+Middle-click: View cover
+Right-click: Previous album">
 				<variable>btnCover</variable>
 				<width>'$COVER_THUMB_SIZE'</width>
 				<height>'$COVER_THUMB_SIZE'</height>
@@ -219,9 +219,9 @@ echo '
 				<action signal="button-press-event">disable:tmrAutoNext</action>
 				<action signal="button-press-event">"
 					if [ $BUTTON -eq 2 ]; then
-						. funcDialogCoverOpen; funcDialogCoverOpen
 						. functmpGet
 						. funcWidgetSchedule
+						funcWidgetSchedule muiDialogCoverCheck dialogcovercheck
 						## tmrAutoNext was disabled on entry to these actions
 						## to stop it interferring with folder navigation and
 						## so we need to restore its correct state.
@@ -418,9 +418,8 @@ echo '
 		</entry>
 	</vbox>
 '`Comment ##
-## The window "show" signal is used to start playing the initial track and is
-## a good place to auto-start something although for some reason this signal
-## will fire twice at start-up and care should be taken to ignore the second.
+## The window "show" signal is used to start playing the initial track
+## and is a good place to auto-start something.
 ## `'
 	<action signal="show">. funcPlay; funcPlay</action>
 	<action signal="show">refresh:nbkPlayPause</action>

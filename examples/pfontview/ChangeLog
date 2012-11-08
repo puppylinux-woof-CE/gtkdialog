@@ -1,3 +1,7 @@
+* Thu Nov 8 2012 Thunor <thunorsif@hotmail.com>
+- 0.1.3
+- Changed --tmpdir to -t.
+
 * Wed Oct 31 2012 Thunor <thunorsif@hotmail.com>
 - 0.1.2
 - Added a Tools menu with access to Pfont2 and Sfontview if installed.

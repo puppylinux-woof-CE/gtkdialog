@@ -1,3 +1,11 @@
+* Thu Nov 8 2012 Thunor <thunorsif@hotmail.com>
+- 0.1.8
+- Changed --tmpdir to -t.
+- Removed the launch fix since launch and closewindow work properly now.
+- Changed ##*= to #*= in funcrcfileGet.
+- Added plaympeg (libsmpeg) to MP3 player search list.
+- Changed use of which to more portable command -v.
+- Added a couple of tooltips.
 
 * Tue Dec 6 2011 Thunor <thunorsif@hotmail.com>
 - 0.1.7

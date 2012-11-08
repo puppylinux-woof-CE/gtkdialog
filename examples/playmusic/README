@@ -1,6 +1,5 @@
 PlayMusic - A simple lightweight GUI for audio players.
 
-
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -15,14 +14,14 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-
 Installation
 ============
 
 From Source
 -----------
-By default the application will run from the current folder but it's possible
-to install it using the supplied Makefile (type "make" to show usage examples):
+By default the application will run from the current folder but it is
+possible to install it using the supplied Makefile (type "make" to show
+usage examples).
 
 Install to wherever your PREFIX is currently set to:
 
@@ -32,8 +31,10 @@ To uninstall:
 
     make uninstall
 
-DESTDIR is supported for packagers to install to an intermediate folder e.g.
-make DESTDIR=playmusic-0.1.7 install
+DESTDIR is supported for packagers to install to an intermediate folder;
+for example:
+
+    make DESTDIR=playmusic-0.1.8 install
 
 Requirements
 ============
@@ -102,5 +103,4 @@ Thunor <thunorsif@hotmail.com>
 
 http://code.google.com/p/gtkdialog/
 
-
-2011-12-06
+2012-11-08

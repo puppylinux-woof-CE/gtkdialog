@@ -321,7 +321,7 @@ funcTabsImagesCreate() {
 if [ ! -d $LOCAL_DATA_DIR ]; then
 	mkdir $LOCAL_DATA_DIR
 	if [ $? -ne 0 ]; then
-		echo "Error: Couldn't create $LOCAL_DATA_DIR"
+		echo "Couldn't create $LOCAL_DATA_DIR"
 		exit 1
 	fi
 fi
@@ -340,9 +340,9 @@ See $PACKAGE_DATA_DIR/README for more information.
 fi
 
 ## Create a temporary directory.
-TEMP_DIR=`mktemp -d --tmpdir ${TARGET}.XXXXXXXX`
+TEMP_DIR=`mktemp -d -t ${TARGET}.XXXXXXXX`
 if [ $? -ne 0 ]; then
-	echo "Error: Couldn't create temporary directory."
+	echo "Couldn't create temporary directory."
 	exit 1
 fi
 
