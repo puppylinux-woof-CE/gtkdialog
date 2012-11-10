@@ -3,6 +3,7 @@ for announcements.
 
 * Sat Nov 10 2012 Thunor <thunorsif@hotmail.com>
 - Fixed refreshing text widget with markup not showing markup.
+- Fixed edit widget's text != NULL assertion Gtk-CRITICAL warning.
 
 * Thu Nov 8 2012 Thunor <thunorsif@hotmail.com>
 - Modified the table widget's output data format: now all of the columns
