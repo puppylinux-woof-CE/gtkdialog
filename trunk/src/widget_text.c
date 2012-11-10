@@ -280,8 +280,14 @@ static void widget_text_input_by_command(variable *var, char *command)
 		while (fgets(line, 512, infile)) {
 			g_string_append(text, line);
 		}
-		gtk_label_set_text(GTK_LABEL(var->Widget), text->str);
+
+		if (gtk_label_get_use_markup(GTK_LABEL(var->Widget))) {
+			gtk_label_set_markup(GTK_LABEL(var->Widget), text->str);
+		} else {
+			gtk_label_set_text(GTK_LABEL(var->Widget), text->str);
+		}
 		g_string_free(text, TRUE);
+
 		/* Close the file */
 		pclose(infile);
 	} else {
@@ -313,8 +319,14 @@ static void widget_text_input_by_file(variable *var, char *filename)
 		while (fgets(line, 512, infile)) {
 			g_string_append(text, line);
 		}
-		gtk_label_set_text(GTK_LABEL(var->Widget), text->str);
+
+		if (gtk_label_get_use_markup(GTK_LABEL(var->Widget))) {
+			gtk_label_set_markup(GTK_LABEL(var->Widget), text->str);
+		} else {
+			gtk_label_set_text(GTK_LABEL(var->Widget), text->str);
+		}
 		g_string_free(text, TRUE);
+
 		/* Close the file */
 		fclose(infile);
 	} else {
