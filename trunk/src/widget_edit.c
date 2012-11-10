@@ -360,7 +360,11 @@ static void widget_edit_input_by_file(variable *var, char *filename)
 			close(infile);
 
 			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
-			gtk_text_buffer_set_text(buffer, filebuffer, st.st_size);
+			if (st.st_size > 0) {
+				gtk_text_buffer_set_text(buffer, filebuffer, st.st_size);
+			} else {
+				gtk_text_buffer_set_text(buffer, "", 0);
+			}
 
 		} else {
 			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
