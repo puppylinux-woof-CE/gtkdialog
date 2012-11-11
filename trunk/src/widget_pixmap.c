@@ -72,7 +72,7 @@ GtkWidget *widget_pixmap_create(
 	GError           *error = NULL;
 	GList            *element;
 	GtkIconTheme     *icon_theme;
-	GtkWidget        *widget;
+	GtkWidget        *widget = NULL;
 	GdkPixbuf        *pixbuf;
 	gchar            *act;
 	gchar            *file_name;
@@ -155,6 +155,12 @@ GtkWidget *widget_pixmap_create(
 			}
 		}
 		act = attributeset_get_next(&element, Attr, ATTR_INPUT);
+	}
+
+	if (widget == NULL) {
+		/* No input file directive found so by using this
+		 * function gtk will substitute a broken image icon */
+		widget = gtk_image_new_from_file("");
 	}
 
 #ifdef DEBUG_TRANSITS
