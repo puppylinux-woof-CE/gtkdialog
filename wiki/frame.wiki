@@ -36,15 +36,15 @@ None.
 Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| label || Initial text || || || 0.8.1 ||
-|| variable || Shell variable name || || || 0.8.1 ||
-|| input || Data input source || Shell command || || 0.8.1 ||
-|| input file || Data input source || Filename || || 0.8.1 ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.8.1 ||
-|| action signal="_type_" || Execute command on signal || Shell command || || 0.8.1 ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || 0.8.1 ||
-|| output file || Data output target || Filename || || 0.8.1 ||
+|| *Name* || *Description* || *Contents* || *Since* ||
+|| label || Initial text || || 0.8.1 ||
+|| variable || Shell variable name || || 0.8.1 ||
+|| input || Data input source || Shell command || 0.8.1 ||
+|| input file || Data input source || Filename || 0.8.1 ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| action signal="_type_" || Execute command on signal || Shell command || 0.8.1 ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || 0.8.1 ||
+|| output file || Data output target || Filename || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==

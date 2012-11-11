@@ -51,20 +51,20 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| label || Initial text || || || ||
-|| variable || Shell variable name || || || ||
-|| height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
-|| width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.7.21 ||
-|| input || Data input source || Shell command || || 0.7.21 ||
-|| input file^[3]^ || Data input source || Filename || || 0.7.21 ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
-|| action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_^[4]^ || || ||
-|| action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_^[4]^ || || ||
-|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| output file || Data output target || Filename || || 0.7.21 ||
+|| *Name* || *Description* || *Contents* || *Since* ||
+|| label || Initial text || || ||
+|| variable || Shell variable name || || ||
+|| height || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
+|| width || Image scaling dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
+|| input || Data input source || Shell command || 0.7.21 ||
+|| input file^[3]^ || Data input source || Filename || 0.7.21 ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| action || Execute command on default signal || Shell command || ||
+|| action || Perform function on default signal || _function_:_parameter_^[4]^ || ||
+|| action signal="_type_" || Execute command on signal || Shell command || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_^[4]^ || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || ||
+|| output file || Data output target || Filename || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==

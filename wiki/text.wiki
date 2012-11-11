@@ -41,14 +41,14 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| label || Initial text || || || ||
-|| variable || Shell variable name || || || ||
-|| input || Data input source || Shell command || || ||
-|| input file || Data input source || Filename || || ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.7.21 ||
-|| action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
+|| *Name* || *Description* || *Contents* || *Since* ||
+|| label || Initial text || || ||
+|| variable || Shell variable name || || ||
+|| input || Data input source || Shell command || ||
+|| input file || Data input source || Filename || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || 0.7.21 ||
+|| action signal="_type_" || Execute command on signal || Shell command || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==

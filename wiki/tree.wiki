@@ -67,27 +67,27 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| label || Column header labels || _label0_ {{{|}}} _label1_ {{{|}}} ... || || ||
-|| variable || Shell variable name || || || ||
-|| height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
-|| width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
-|| input || Data input source || Shell command || || ||
-|| input icon-column="_index_" || Data input source || Shell command || || ||
-|| input stock-column="_index_" || Data input source || Shell command || || ||
-|| input file || Data input source || Filename || || ||
-|| input file icon-column="_index_" || Data input source || Filename || || ||
-|| input file stock-column="_index_" || Data input source || Filename || || ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
-|| action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
-|| action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| item || Input data || _data0_ {{{|}}} _data1_ {{{|}}} ... || || ||
-|| item icon-name="_image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || || ||
-|| item stock-id="_gtk-image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || || ||
-|| output file || Data output target || Filename || || 0.8.1 ||
+|| *Name* || *Description* || *Contents* || *Since* ||
+|| label || Column header labels || _label0_ {{{|}}} _label1_ {{{|}}} ... || ||
+|| variable || Shell variable name || || ||
+|| height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || ||
+|| width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || ||
+|| input || Data input source || Shell command || ||
+|| input icon-column="_index_" || Data input source || Shell command || ||
+|| input stock-column="_index_" || Data input source || Shell command || ||
+|| input file || Data input source || Filename || ||
+|| input file icon-column="_index_" || Data input source || Filename || ||
+|| input file stock-column="_index_" || Data input source || Filename || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || ||
+|| action || Execute command on default signal || Shell command || ||
+|| action || Perform function on default signal || _function_:_parameter_ || ||
+|| action signal="_type_" || Execute command on signal || Shell command || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || ||
+|| item || Input data || _data0_ {{{|}}} _data1_ {{{|}}} ... || ||
+|| item icon-name="_image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || ||
+|| item stock-id="_gtk-image_" || Input data || _data0_ {{{|}}} _data1_  {{{|}}} ... || ||
+|| output file || Data output target || Filename || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==

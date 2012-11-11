@@ -45,16 +45,16 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| default || Initial text || || || ||
-|| variable || Shell variable name || || || ||
-|| height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
-|| width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || || ||
-|| input file || Data input source || Filename || || ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
-|| action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
-|| output file || Data output target || Filename || || ||
+|| *Name* || *Description* || *Contents* || *Since* ||
+|| default || Initial text || || ||
+|| variable || Shell variable name || || ||
+|| height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || ||
+|| width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || ||
+|| input file || Data input source || Filename || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || ||
+|| action signal="_type_" || Execute command on signal || Shell command || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || ||
+|| output file || Data output target || Filename || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==

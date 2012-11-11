@@ -48,18 +48,18 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| default || Initial value || A double precision floating point value || || ||
-|| variable || Shell variable name || || || ||
-|| input || Data input source || Shell command || || ||
-|| input file || Data input source || Filename || || ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || ||
-|| action || Execute command on default signal || Shell command || || ||
-|| action || Perform function on default signal || _function_:_parameter_ || || ||
-|| action signal="_type_" || Execute command on signal || Shell command || || ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || ||
-|| action type="_function_" || Perform function on default signal || _parameter_ || || ||
-|| output file || Data output target || Filename || || ||
+|| *Name* || *Description* || *Contents* || *Since* ||
+|| default || Initial value || A double precision floating point value || ||
+|| variable || Shell variable name || || ||
+|| input || Data input source || Shell command || ||
+|| input file || Data input source || Filename || ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || ||
+|| action || Execute command on default signal || Shell command || ||
+|| action || Perform function on default signal || _function_:_parameter_ || ||
+|| action signal="_type_" || Execute command on signal || Shell command || ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || ||
+|| action type="_function_" || Perform function on default signal || _parameter_ || ||
+|| output file || Data output target || Filename || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==

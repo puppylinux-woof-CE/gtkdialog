@@ -45,13 +45,13 @@ The following custom tag attributes are available:
 Some of these may have tag attribute equivalents.
 
 <wiki:comment>ExportTableStart</wiki:comment>
-|| *Name* || *Description* || *Contents* || *Mandatory* || *Since* ||
-|| variable || Shell variable name || || || 0.8.1 ||
-|| height^[2]^ || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.8.1 ||
-|| width^[2]^ || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || || 0.8.1 ||
-|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || || 0.8.1 ||
-|| action signal="_type_" || Execute command on signal || Shell command || || 0.8.1 ||
-|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || || 0.8.1 ||
+|| *Name* || *Description* || *Contents* || *Since* ||
+|| variable || Shell variable name || || 0.8.1 ||
+|| height^[2]^ || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.8.1 ||
+|| width^[2]^ || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.8.1 ||
+|| sensitive || Sensitive state || {{{true}}} or {{{false}}} || 0.8.1 ||
+|| action signal="_type_" || Execute command on signal || Shell command || 0.8.1 ||
+|| action signal="_type_" || Perform function on signal || _function_:_parameter_ || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
