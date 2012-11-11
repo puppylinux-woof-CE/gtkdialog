@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Nov 11 2012 Thunor <thunorsif@hotmail.com>
+- Changed the mandatory input file directive requirement for the pixmap
+  widget and removed the Mandatory column from the wiki/reference.
+
 * Sat Nov 10 2012 Thunor <thunorsif@hotmail.com>
 - Fixed refreshing text widget with markup not showing markup.
 - Fixed edit widget's text != NULL assertion Gtk-CRITICAL warning.
