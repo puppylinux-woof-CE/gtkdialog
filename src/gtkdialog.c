@@ -481,6 +481,7 @@ main(int argc, char *argv[])
 	GTKD_FUNCTION_SIGNALS_RESET;
 	lastradiowidget = NULL;
 	accel_groups = NULL;
+	widget_hide_list = widget_show_list = NULL;
 	window_id = 0;
 
 	setlocale(LC_ALL, "");

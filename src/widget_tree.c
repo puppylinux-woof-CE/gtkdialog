@@ -524,7 +524,13 @@ void widget_tree_refresh(variable *var)
 			 * I think I've found the answer but I'm not going to mess
 			 * about with it right now. It looks as though input isn't
 			 * set-up properly in the parser which might uncover other
-			 * issues when corrected so I'll mark it temp temp */
+			 * issues when corrected so I'll mark it temp temp
+			 * 
+			 * [UPDATE] 2012-11-16
+			 * I have a suspicion that the recently replaced custom tree
+			 * signal handler may have been responsible for the above in
+			 * which case it won't be a possible issue anymore.
+			 */
 			widget_tree_input_by_command(var, act, TRUE);
 		}
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);

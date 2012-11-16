@@ -147,6 +147,9 @@ GtkWidget *widget_frame_create(
 
 	gtk_container_add(GTK_CONTAINER(widget), vbox);
 
+	/* This widget has one or more children which require registering */
+	widget_visibility_list_add(vbox, attr);
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif

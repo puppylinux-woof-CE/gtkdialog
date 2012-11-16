@@ -41,8 +41,6 @@ extern gboolean option_no_warning;
 
 static gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
 {
-	GtkWidget        *grandparent = NULL;
-	GtkWidget        *parent = NULL;
 	GParamSpec       *paramspec;
 	gint              n = 0;
 
@@ -53,45 +51,13 @@ static gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
 			nameval->name, nameval->value);
 #endif
 
-	/* Some widgets are automatically placed inside a scrolled window or
-	 * inside a viewport inside a scrolled window which results in these
-	 * enveloping widgets being inaccessible and in most situations this
-	 * is fine but a widget's visible property needs to apply to all of
-	 * the widgets and so it's dealt with here; the show and hide actions
-	 * are already aware of this situation.
-	 * 
-	 * THIS SHOULD WORK BUT IT DOESN'T: THE WIDGET REMAINS AS AN ARTIFACT
-	 * SO I'VE DISABLED IT. I HAVE A FEELING THAT IT HAS SOMETHING TO DO
-	 * WITH THIS FUNCTION BEING CALLED ON WIDGET REALIZATION.
-	 * 
-	 * The best thing to do is to place widgets like this in a notebook
-	 * on page one and hide the notebook [page] because I've tried it */
-#if 0
-	if ((strcasecmp(nameval->name, "visible") == 0)) {
-
-		parent = gtk_widget_get_parent(widget);
-		if (parent) grandparent = gtk_widget_get_parent(parent);
-
-		if (!(parent && ((GTK_IS_SCROLLED_WINDOW(parent)) ||
-			(GTK_IS_VIEWPORT(parent))))) parent = NULL;
-
-		if (!(parent && (GTK_IS_VIEWPORT(parent)) && grandparent &&
-			GTK_IS_SCROLLED_WINDOW(grandparent))) grandparent = NULL;
-
-		g_object_set(G_OBJECT(widget), "visible",
-			!strcasecmp(nameval->value, "true"), NULL);
-
-		if (parent) {
-			g_object_set(G_OBJECT(parent), "visible",
-				!strcasecmp(nameval->value, "true"), NULL);
-		}
-
-		if (grandparent) {
-			g_object_set(G_OBJECT(grandparent), "visible",
-				!strcasecmp(nameval->value, "true"), NULL);
-		}
-	}
+	/* Thunor: The visible property should not be modified here */
+	if (strcmp(nameval->name, "visible") == 0) {
+#ifdef DEBUG
+		fprintf(stderr, "%s(): not applying visible property\n", __func__);
 #endif
+		return FALSE;
+	}
 
 	/*
 	 * If the widget -- or its parents -- has not got this property

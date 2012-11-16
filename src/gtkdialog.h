@@ -53,6 +53,9 @@ GtkWidget *lastradiowidget;
 /* An accumulated list of menu accelerator groups to be added to the window */
 GList *accel_groups;
 
+/* A list of widgets to hide and to show */
+GList *widget_hide_list, *widget_show_list;
+
 /* An auto-incremented unique id for each window created */
 gint window_id;
 
