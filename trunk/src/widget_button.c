@@ -360,6 +360,12 @@ GtkWidget *widget_button_create(
 			break;
 	}
 
+	/* This widget has one or more children which require registering */
+	widget_visibility_list_add(boxouter, attr);
+	widget_visibility_list_add(box, attr);
+	widget_visibility_list_add(icon, attr);
+	widget_visibility_list_add(label, attr);
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif

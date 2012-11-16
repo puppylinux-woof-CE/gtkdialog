@@ -104,64 +104,6 @@ instruction_execute_push(token Token,
 		tag_attr *tag_attributes);
 
 
-static gboolean
-widget_connect_signals(
-		GtkWidget    *widget,
-		AttributeSet *Attr)
-{
-	g_return_val_if_fail(GTK_IS_WIDGET(widget), FALSE);
-
-	PIP_DEBUG("Connecting signals for %p.", widget);
-
-	g_signal_connect(G_OBJECT(widget), "button-press-event", 
-			(GCallback) (on_any_widget_button_pressed), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "button-release-event", 
-			(GCallback) (on_any_widget_button_released), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "configure-event", 
-			(GCallback) (on_any_widget_configure_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "delete-event", 
-			(GCallback) (on_any_widget_delete_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "destroy-event", 
-			(GCallback) (on_any_widget_destroy_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "enter-notify-event", 
-			(GCallback) (on_any_widget_enter_notify_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "leave-notify-event", 
-			(GCallback) (on_any_widget_leave_notify_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "focus-in-event", 
-			(GCallback) (on_any_widget_focus_in_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "focus-out-event", 
-			(GCallback) (on_any_widget_focus_out_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "hide", 
-			(GCallback) (on_any_widget_hide), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "key-press-event", 
-			(GCallback) (on_any_widget_key_press_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "key-release-event", 
-			(GCallback) (on_any_widget_key_release_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "map-event", 
-			(GCallback) (on_any_widget_map_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "unmap-event", 
-			(GCallback) (on_any_widget_unmap_event), 
-			(gpointer) Attr);
-	g_signal_connect(G_OBJECT(widget), "show", 
-			(GCallback) (on_any_widget_show), 
-			(gpointer) Attr);
-
-	return TRUE;
-}
-
 int 
 execute_action(GtkWidget *widget, 
 		const char *command, 
@@ -533,7 +475,8 @@ void run_program()
 	 * the stack which is a window.
 	 */
 	s = pop();
-	gtk_widget_show_all(s.widgets[0]);
+	//gtk_widget_show_all(s.widgets[0]);	Redundant: done manually.
+	widget_show_all();
 
 	PIP_DEBUG("Window: %p.", s.widgets[0]);
 
@@ -1181,16 +1124,15 @@ instruction_execute_push(
 		AttributeSet  *Attr,
 		tag_attr      *tag_attributes)
 {
-	GList            *element;
-	GtkWidget        *scrolled_window;	
-	GtkWidget        *OtherWidget;
-	GtkWidget        *Widget;
-	variable         *var;
-	gint              Widget_Type, n, border_width;
-	gchar            *value;
 	GList            *accel_group = NULL;
+	GList            *element;
+	GtkWidget        *scrolled_window = NULL;
+	GtkWidget        *Widget = NULL;
+	gchar            *value;
+	gint              Widget_Type, n, border_width;
 	gint              original_expand, original_fill;
 	gint              space_expand, space_fill;
+	variable         *var;
 
 	PIP_DEBUG("token: %d", Token);
 	
@@ -1421,15 +1363,19 @@ instruction_execute_push(
 	variables_set_attributes(attributeset_get_first(&element, Attr,
 		ATTR_VARIABLE), Attr);
 
+	/* Thunor: At this point Widget and possibly scrolled_window will
+	 * be non-NULL and they require registering in a list (actually two)
+	 * for later hiding or showing in run_program() */
+	widget_visibility_list_add(Widget, tag_attributes);
+	widget_visibility_list_add(scrolled_window, tag_attributes);
+
 	/*
 	 * This is where we set the properties and connect signals 
 	 * for the widget.
 	 */
 	//widget_set_tag_attributes(Widget, tag_attributes);
-	g_signal_connect(G_OBJECT(Widget),
-				"realize",
-				(GCallback)on_any_widget_realized,
-				(gpointer) tag_attributes);
+	g_signal_connect(G_OBJECT(Widget), "realize",
+		G_CALLBACK(on_any_widget_realized), (gpointer)tag_attributes);
 
 	/* Thunor: This is in addition to the widget specific signals that
 	 * are generally connected within each widget's refresh function at

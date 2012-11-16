@@ -68,10 +68,13 @@
 #include "widget_window.h"
 #include "signals.h"
 #include "tag_attributes.h"
+#include "macros.h"
 
+/* Defines */
+//#define DEBUG_CONTENT
+//#define DEBUG_TRANSITS
 #undef DEBUG
 #undef WARNING
-#include "macros.h"
 
 extern gchar *option_include_file;
 
@@ -411,4 +414,147 @@ char *widgets_to_str(int itype)
 		type = "THINGY";
 	}
 	return (type);
+}
+
+/***********************************************************************
+ *  Widget Connect Signals                                             *
+ ***********************************************************************/
+
+gboolean widget_connect_signals(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	g_return_val_if_fail(GTK_IS_WIDGET(widget), FALSE);
+
+	PIP_DEBUG("Connecting signals for %p.", widget);
+
+	g_signal_connect(G_OBJECT(widget), "button-press-event",
+		G_CALLBACK(on_any_widget_button_pressed), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "button-release-event",
+		G_CALLBACK(on_any_widget_button_released), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "key-press-event",
+		G_CALLBACK(on_any_widget_key_press_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "key-release-event",
+		G_CALLBACK(on_any_widget_key_release_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "hide",
+		G_CALLBACK(on_any_widget_hide), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "show",
+		G_CALLBACK(on_any_widget_show), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "map-event",
+		G_CALLBACK(on_any_widget_map_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "unmap-event",
+		G_CALLBACK(on_any_widget_unmap_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "enter-notify-event",
+		G_CALLBACK(on_any_widget_enter_notify_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "leave-notify-event",
+		G_CALLBACK(on_any_widget_leave_notify_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "focus-in-event",
+		G_CALLBACK(on_any_widget_focus_in_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "focus-out-event",
+		G_CALLBACK(on_any_widget_focus_out_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "configure-event",
+		G_CALLBACK(on_any_widget_configure_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "delete-event",
+		G_CALLBACK(on_any_widget_delete_event), (gpointer)Attr);
+	g_signal_connect(G_OBJECT(widget), "destroy-event",
+		G_CALLBACK(on_any_widget_destroy_event), (gpointer)Attr);
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return TRUE;
+}
+
+/***********************************************************************
+ * Widget Visibility List Add                                          *
+ ***********************************************************************/
+/* Add a widget to the hide list or to the show list */
+
+void widget_visibility_list_add(GtkWidget *widget, tag_attr *attr)
+{
+	gchar            *value;
+	gint              visible = TRUE;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	if (widget) {
+		if (attr) {
+			if ((value = get_tag_attribute(attr, "visible"))) {
+				if ((strcasecmp(value, "false") == 0) ||
+					(strcasecmp(value, "no") == 0) ||
+					(strcasecmp(value, "0") == 0)) {
+					visible = FALSE;
+				}
+			}
+		}
+		if (visible) {
+			widget_show_list = g_list_append(widget_show_list, widget);
+		} else {
+			widget_hide_list = g_list_append(widget_hide_list, widget);
+		}
+	}
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ * Widget Show All                                                     *
+ ***********************************************************************/
+/* Show all widgets individually.
+ * 
+ * Visible widgets are simply shown.
+ * 
+ * Invisible widgets are shown and then immediately hidden to allocate
+ * resources else widgets like checkboxes won't function until shown.
+ */
+
+void widget_show_all(void)
+{
+	GList            *element;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	/* Show visible widgets */
+	if (widget_show_list) {
+		element = widget_show_list;
+		while (element) {
+			gtk_widget_show(element->data);
+			element = element->next;
+		}
+		/* Free the memory as we won't need it anymore */
+		g_list_free(widget_show_list);
+		/* This may be reused so being initially NULL is important */
+		widget_show_list = NULL;
+	}
+
+	/* Show and then immediately hide invisible widgets */
+	if (widget_hide_list) {
+		element = widget_hide_list;
+		while (element) {
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): showing then hiding Name='%s'\n",
+				__func__, find_variable_by_widget(element->data)->Name);
+#endif
+			gtk_widget_show(element->data);
+			gtk_widget_hide(element->data);
+			element = element->next;
+		}
+		/* Free the memory as we won't need it anymore */
+		g_list_free(widget_hide_list);
+		/* This may be reused so being initially NULL is important */
+		widget_hide_list = NULL;
+	}
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
 }

@@ -813,39 +813,22 @@ variable *variables_show(const char *name)
 	if (!(parent && (GTK_IS_VIEWPORT(parent)) && grandparent &&
 		GTK_IS_SCROLLED_WINDOW(grandparent))) grandparent = NULL;
 
-	if (grandparent) {
-#ifdef DEBUG
-		fprintf(stderr, "%s(): Showing grandparent\n", __func__);
-#endif
+	if (grandparent)
 		gtk_widget_show(grandparent);
-	}
 
-	if (parent) {
-#ifdef DEBUG
-		fprintf(stderr, "%s(): Showing parent\n", __func__);
-#endif
+	if (parent)
 		gtk_widget_show(parent);
-	}
 
-#ifdef DEBUG
-	fprintf(stderr, "%s(): Showing widget\n", __func__);
-#endif
-	gtk_widget_show(var->Widget);
-
-/* Redundant
-	parent = gtk_widget_get_parent(var->Widget);
-	if (parent != NULL) grandparent = gtk_widget_get_parent(parent);
-
-	if (parent != NULL && GTK_IS_SCROLLED_WINDOW(parent)) {
-		gtk_widget_show(parent);
-	} else if (parent != NULL && GTK_IS_VIEWPORT(parent)) {
-		/$ A viewport will always be inside a scrolled window $/
-		if (grandparent != NULL && GTK_IS_SCROLLED_WINDOW(grandparent)) {
-			gtk_widget_show(grandparent);
-		}
+	if (var->Type == WIDGET_BUTTON) {
+		/* Button widgets can have up to four added child widgets */
+		gtk_widget_show_all(var->Widget);
+	} else if (var->Type == WIDGET_FRAME) {
+		/* Frame widgets have an added child widget */
+		gtk_widget_show(gtk_bin_get_child(GTK_BIN(var->Widget)));
+		gtk_widget_show(var->Widget);
 	} else {
 		gtk_widget_show(var->Widget);
-	}*/
+	}
 
 	return (var);
 }

@@ -38,8 +38,6 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
-/* Local function prototypes, located at file bottom */
-
 /* Notes:
  * I'm not quite convinced about these button_* callbacks at the moment
  * as they are/were old code and only appear to be duplicating code within
@@ -752,6 +750,8 @@ gboolean on_any_widget_map_event(GtkWidget *widget, GdkEvent *event,
 
 void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 {
+	variable         *var = find_variable_by_widget(widget);
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
@@ -760,7 +760,10 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 	fprintf(stderr, "%s(): widget=%p  tag_attributes=%p\n", __func__,
 		widget, tag_attributes);
 #endif
+
 	widget_set_tag_attributes(widget, tag_attributes);
+
+	widget_signal_executor(widget, var->Attributes, "realize");
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
