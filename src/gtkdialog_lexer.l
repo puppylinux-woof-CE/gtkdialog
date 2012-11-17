@@ -580,13 +580,6 @@ gchar *Token;
 \<sensitive\>      			{ Token="<sensitive>"; return(SENSITIVE);  		}
 \<\/sensitive\>    			{ Token="</sensitive>"; return(ESENSITIVE);  	}
 
-\<variable\>     			{ 
-					  Token="<variable>"; 
-					  return(VARIABLE); 					}
-\<\/variable\>   			{ 
-					  Token="</variable>"; 
-					  return(EVARIABLE); 					}
-
 \<height\>       			{ Token="<height>"; return(HEIGHT);  			}
 \<\/height\>     			{ Token="</height>"; return(EHEIGHT);  			}
 
@@ -607,24 +600,21 @@ gchar *Token;
 \<\/output\>      			{ Token="</output>"; return(EOUTPUT);   		}
 \<\output\ file\> 			{ Token="<output>"; return(OUTPUTFILE);   		}
 
+\<variable\>     			{ Token="<variable>"; return(VARIABLE);  		}
+\<variable[ ]+   			{ Token="<variable>"; 
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_VARIABLE); 				}
+\<\/variable\>   			{ Token="</variable>"; return(EVARIABLE);  		}
+
 	/*
 	** The definition of action tags.
 	*/
-\<action\> { 
-	Token="<action>"; 
-	return(ACTION);
-}
 
-\<action[ ]+ { 
-	Token="<action>"; 
-	BEGIN(ST_TAG_ATTR);
-	return(PART_ACTION);
-}
-
-\<\/action\>  { 
-	Token="</action>"; 
-	return(EACTION);
-}
+\<action\>     				{ Token="<action>"; return(ACTION);  			}
+\<action[ ]+   				{ Token="<action>";
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_ACTION); 					}
+\<\/action\>     			{ Token="</action>"; return(EACTION);  			}
 
 
 

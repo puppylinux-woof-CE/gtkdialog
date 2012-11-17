@@ -114,7 +114,7 @@ start_up(void)
 %token         PIXMAP PART_PIXMAP EPIXMAP 
 %token         DEFAULT EDEFAULT
 %token         SENSITIVE ESENSITIVE
-%token         VARIABLE EVARIABLE
+%token         VARIABLE PART_VARIABLE EVARIABLE
 %token         WIDTH EWIDTH
 %token         HEIGHT EHEIGHT
 %token         INPUT INPUTFILE EINPUT PART_INPUT PART_INPUTFILE
@@ -646,12 +646,12 @@ attr
   :
   | attr defaultvalue
   | attr sensitive
-  | attr variable
   | attr label
   | attr width
   | attr height
   | attr input
   | attr output
+  | attr variable
   | attr action
   | attr item
   ;
@@ -660,11 +660,6 @@ label
   :    LABEL STRING ELABEL          {
 		token_store_with_argument( SET | ATTR_LABEL, $2);     }
   ;
-
-variable
-  : VARIABLE STRING EVARIABLE    {
-     token_store_with_argument( SET | ATTR_VARIABLE, $2); }
-  ; 
 
 sensitive
   : SENSITIVE STRING ESENSITIVE       {
@@ -713,6 +708,15 @@ output
 	}
   ;
 
+variable
+  : VARIABLE STRING EVARIABLE { 
+		token_store_with_argument( SET | ATTR_VARIABLE, $2);
+	}
+  | PART_VARIABLE tagattr '>' STRING EVARIABLE {
+		token_store_with_argument_attr(SET | ATTR_VARIABLE, $4, $2);
+	}
+  ; 
+
 action
   : ACTION STRING EACTION  { 
 		token_store_with_argument( SET|ATTR_ACTION, $2); 
@@ -721,7 +725,6 @@ action
 		token_store_with_argument_attr(SET | ATTR_ACTION, $4, $2);
 	}
   ;
-
 
 item
   : ITEM STRING EITEM { 

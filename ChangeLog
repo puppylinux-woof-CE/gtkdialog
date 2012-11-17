@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Nov 17 2012 Thunor <thunorsif@hotmail.com>
+- It's now possible to prevent the exporting of declared variables by
+  using <variable export="false">VARNAME</variable>.
+
 * Fri Nov 16 2012 Thunor <thunorsif@hotmail.com>
 - Solved the hidden widgets leaving artifacts at start-up problem.
 
