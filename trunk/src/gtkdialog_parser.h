@@ -1,10 +1,9 @@
-
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* A Bison parser, made by GNU Bison 2.4.3.  */
 
 /* Skeleton interface for Bison's Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
+   2009, 2010 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -121,80 +120,81 @@
      SENSITIVE = 337,
      ESENSITIVE = 338,
      VARIABLE = 339,
-     EVARIABLE = 340,
-     WIDTH = 341,
-     EWIDTH = 342,
-     HEIGHT = 343,
-     EHEIGHT = 344,
-     INPUT = 345,
-     INPUTFILE = 346,
-     EINPUT = 347,
-     PART_INPUT = 348,
-     PART_INPUTFILE = 349,
-     OUTPUT = 350,
-     OUTPUTFILE = 351,
-     EOUTPUT = 352,
-     ACTION = 353,
-     EACTION = 354,
-     PART_ACTION = 355,
-     COMM = 356,
-     ENDCOMM = 357,
-     IF = 358,
-     ENDIF = 359,
-     WHILE = 360,
-     EWHILE = 361,
-     SHOW_WIDGETS = 362,
-     EMB_VARIABLE = 363,
-     EMB_NUMBER = 364,
-     END_OF_FILE = 365,
-     NUMBER = 366,
-     STRING = 367,
-     UMINUS = 368,
-     HSEPARATOR = 369,
-     PART_HSEPARATOR = 370,
-     EHSEPARATOR = 371,
-     VSEPARATOR = 372,
-     PART_VSEPARATOR = 373,
-     EVSEPARATOR = 374,
-     COMBOBOXTEXT = 375,
-     PART_COMBOBOXTEXT = 376,
-     ECOMBOBOXTEXT = 377,
-     COMBOBOXENTRY = 378,
-     PART_COMBOBOXENTRY = 379,
-     ECOMBOBOXENTRY = 380,
-     HSCALE = 381,
-     PART_HSCALE = 382,
-     EHSCALE = 383,
-     VSCALE = 384,
-     PART_VSCALE = 385,
-     EVSCALE = 386,
-     SPINBUTTON = 387,
-     PART_SPINBUTTON = 388,
-     ESPINBUTTON = 389,
-     TIMER = 390,
-     PART_TIMER = 391,
-     ETIMER = 392,
-     TOGGLEBUTTON = 393,
-     PART_TOGGLEBUTTON = 394,
-     ETOGGLEBUTTON = 395,
-     STATUSBAR = 396,
-     PART_STATUSBAR = 397,
-     ESTATUSBAR = 398,
-     COLORBUTTON = 399,
-     PART_COLORBUTTON = 400,
-     ECOLORBUTTON = 401,
-     FONTBUTTON = 402,
-     PART_FONTBUTTON = 403,
-     EFONTBUTTON = 404,
-     TERMINAL = 405,
-     PART_TERMINAL = 406,
-     ETERMINAL = 407,
-     EVENTBOX = 408,
-     PART_EVENTBOX = 409,
-     EEVENTBOX = 410,
-     EXPANDER = 411,
-     PART_EXPANDER = 412,
-     EEXPANDER = 413
+     PART_VARIABLE = 340,
+     EVARIABLE = 341,
+     WIDTH = 342,
+     EWIDTH = 343,
+     HEIGHT = 344,
+     EHEIGHT = 345,
+     INPUT = 346,
+     INPUTFILE = 347,
+     EINPUT = 348,
+     PART_INPUT = 349,
+     PART_INPUTFILE = 350,
+     OUTPUT = 351,
+     OUTPUTFILE = 352,
+     EOUTPUT = 353,
+     ACTION = 354,
+     EACTION = 355,
+     PART_ACTION = 356,
+     COMM = 357,
+     ENDCOMM = 358,
+     IF = 359,
+     ENDIF = 360,
+     WHILE = 361,
+     EWHILE = 362,
+     SHOW_WIDGETS = 363,
+     EMB_VARIABLE = 364,
+     EMB_NUMBER = 365,
+     END_OF_FILE = 366,
+     NUMBER = 367,
+     STRING = 368,
+     UMINUS = 369,
+     HSEPARATOR = 370,
+     PART_HSEPARATOR = 371,
+     EHSEPARATOR = 372,
+     VSEPARATOR = 373,
+     PART_VSEPARATOR = 374,
+     EVSEPARATOR = 375,
+     COMBOBOXTEXT = 376,
+     PART_COMBOBOXTEXT = 377,
+     ECOMBOBOXTEXT = 378,
+     COMBOBOXENTRY = 379,
+     PART_COMBOBOXENTRY = 380,
+     ECOMBOBOXENTRY = 381,
+     HSCALE = 382,
+     PART_HSCALE = 383,
+     EHSCALE = 384,
+     VSCALE = 385,
+     PART_VSCALE = 386,
+     EVSCALE = 387,
+     SPINBUTTON = 388,
+     PART_SPINBUTTON = 389,
+     ESPINBUTTON = 390,
+     TIMER = 391,
+     PART_TIMER = 392,
+     ETIMER = 393,
+     TOGGLEBUTTON = 394,
+     PART_TOGGLEBUTTON = 395,
+     ETOGGLEBUTTON = 396,
+     STATUSBAR = 397,
+     PART_STATUSBAR = 398,
+     ESTATUSBAR = 399,
+     COLORBUTTON = 400,
+     PART_COLORBUTTON = 401,
+     ECOLORBUTTON = 402,
+     FONTBUTTON = 403,
+     PART_FONTBUTTON = 404,
+     EFONTBUTTON = 405,
+     TERMINAL = 406,
+     PART_TERMINAL = 407,
+     ETERMINAL = 408,
+     EVENTBOX = 409,
+     PART_EVENTBOX = 410,
+     EEVENTBOX = 411,
+     EXPANDER = 412,
+     PART_EXPANDER = 413,
+     EEXPANDER = 414
    };
 #endif
 /* Tokens.  */
@@ -280,80 +280,81 @@
 #define SENSITIVE 337
 #define ESENSITIVE 338
 #define VARIABLE 339
-#define EVARIABLE 340
-#define WIDTH 341
-#define EWIDTH 342
-#define HEIGHT 343
-#define EHEIGHT 344
-#define INPUT 345
-#define INPUTFILE 346
-#define EINPUT 347
-#define PART_INPUT 348
-#define PART_INPUTFILE 349
-#define OUTPUT 350
-#define OUTPUTFILE 351
-#define EOUTPUT 352
-#define ACTION 353
-#define EACTION 354
-#define PART_ACTION 355
-#define COMM 356
-#define ENDCOMM 357
-#define IF 358
-#define ENDIF 359
-#define WHILE 360
-#define EWHILE 361
-#define SHOW_WIDGETS 362
-#define EMB_VARIABLE 363
-#define EMB_NUMBER 364
-#define END_OF_FILE 365
-#define NUMBER 366
-#define STRING 367
-#define UMINUS 368
-#define HSEPARATOR 369
-#define PART_HSEPARATOR 370
-#define EHSEPARATOR 371
-#define VSEPARATOR 372
-#define PART_VSEPARATOR 373
-#define EVSEPARATOR 374
-#define COMBOBOXTEXT 375
-#define PART_COMBOBOXTEXT 376
-#define ECOMBOBOXTEXT 377
-#define COMBOBOXENTRY 378
-#define PART_COMBOBOXENTRY 379
-#define ECOMBOBOXENTRY 380
-#define HSCALE 381
-#define PART_HSCALE 382
-#define EHSCALE 383
-#define VSCALE 384
-#define PART_VSCALE 385
-#define EVSCALE 386
-#define SPINBUTTON 387
-#define PART_SPINBUTTON 388
-#define ESPINBUTTON 389
-#define TIMER 390
-#define PART_TIMER 391
-#define ETIMER 392
-#define TOGGLEBUTTON 393
-#define PART_TOGGLEBUTTON 394
-#define ETOGGLEBUTTON 395
-#define STATUSBAR 396
-#define PART_STATUSBAR 397
-#define ESTATUSBAR 398
-#define COLORBUTTON 399
-#define PART_COLORBUTTON 400
-#define ECOLORBUTTON 401
-#define FONTBUTTON 402
-#define PART_FONTBUTTON 403
-#define EFONTBUTTON 404
-#define TERMINAL 405
-#define PART_TERMINAL 406
-#define ETERMINAL 407
-#define EVENTBOX 408
-#define PART_EVENTBOX 409
-#define EEVENTBOX 410
-#define EXPANDER 411
-#define PART_EXPANDER 412
-#define EEXPANDER 413
+#define PART_VARIABLE 340
+#define EVARIABLE 341
+#define WIDTH 342
+#define EWIDTH 343
+#define HEIGHT 344
+#define EHEIGHT 345
+#define INPUT 346
+#define INPUTFILE 347
+#define EINPUT 348
+#define PART_INPUT 349
+#define PART_INPUTFILE 350
+#define OUTPUT 351
+#define OUTPUTFILE 352
+#define EOUTPUT 353
+#define ACTION 354
+#define EACTION 355
+#define PART_ACTION 356
+#define COMM 357
+#define ENDCOMM 358
+#define IF 359
+#define ENDIF 360
+#define WHILE 361
+#define EWHILE 362
+#define SHOW_WIDGETS 363
+#define EMB_VARIABLE 364
+#define EMB_NUMBER 365
+#define END_OF_FILE 366
+#define NUMBER 367
+#define STRING 368
+#define UMINUS 369
+#define HSEPARATOR 370
+#define PART_HSEPARATOR 371
+#define EHSEPARATOR 372
+#define VSEPARATOR 373
+#define PART_VSEPARATOR 374
+#define EVSEPARATOR 375
+#define COMBOBOXTEXT 376
+#define PART_COMBOBOXTEXT 377
+#define ECOMBOBOXTEXT 378
+#define COMBOBOXENTRY 379
+#define PART_COMBOBOXENTRY 380
+#define ECOMBOBOXENTRY 381
+#define HSCALE 382
+#define PART_HSCALE 383
+#define EHSCALE 384
+#define VSCALE 385
+#define PART_VSCALE 386
+#define EVSCALE 387
+#define SPINBUTTON 388
+#define PART_SPINBUTTON 389
+#define ESPINBUTTON 390
+#define TIMER 391
+#define PART_TIMER 392
+#define ETIMER 393
+#define TOGGLEBUTTON 394
+#define PART_TOGGLEBUTTON 395
+#define ETOGGLEBUTTON 396
+#define STATUSBAR 397
+#define PART_STATUSBAR 398
+#define ESTATUSBAR 399
+#define COLORBUTTON 400
+#define PART_COLORBUTTON 401
+#define ECOLORBUTTON 402
+#define FONTBUTTON 403
+#define PART_FONTBUTTON 404
+#define EFONTBUTTON 405
+#define TERMINAL 406
+#define PART_TERMINAL 407
+#define ETERMINAL 408
+#define EVENTBOX 409
+#define PART_EVENTBOX 410
+#define EEVENTBOX 411
+#define EXPANDER 412
+#define PART_EXPANDER 413
+#define EEXPANDER 414
 
 
 
@@ -362,7 +363,7 @@
 typedef union YYSTYPE
 {
 
-/* Line 1676 of yacc.c  */
+/* Line 1685 of yacc.c  */
 #line 78 "gtkdialog_parser.y"
  
   double     dval;
@@ -373,8 +374,8 @@ typedef union YYSTYPE
 
 
 
-/* Line 1676 of yacc.c  */
-#line 378 "gtkdialog_parser.h"
+/* Line 1685 of yacc.c  */
+#line 379 "gtkdialog_parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

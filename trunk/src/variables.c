@@ -1334,13 +1334,11 @@ void variables_export_all(void)
 
 static void _variables_export(variable *actual)
 {
+	GList            *element;
+	gchar            *act;
 	gchar            *line;
 	gchar            *value;
-/* Redundant.
-	GList            *itemlist;
-	gint              n;
-	gchar            *tmp;
-	gchar            *text; */
+	gint              export = TRUE;
 
 #ifdef DEBUG
 	g_message("%s(%p)", __func__, actual);
@@ -1358,12 +1356,28 @@ static void _variables_export(variable *actual)
 	if (actual->left != NULL)
 		_variables_export(actual->left);
 
+	/* Thunor: It's now possible to prevent the exporting of declared
+	 * variables by using <variable export="false">VARNAME</variable> */
+	if ((act = attributeset_get_first(&element, actual->Attributes,
+		ATTR_VARIABLE)) &&
+		(value = attributeset_get_this_tagattr(&element, actual->Attributes,
+		ATTR_VARIABLE, "export")) &&
+		((strcasecmp(value, "false") == 0) ||
+		(strcasecmp(value, "no") == 0) ||
+		(strcasecmp(value, "0") == 0))) {
+		export = FALSE;
+#ifdef DEBUG
+		fprintf(stderr, "%s(): variable=%s export=%s\n",
+			__func__, act, value);
+#endif
+	}
+
 	/* Thunor: I've stopped this from exporting autonamed variables
 	 * because it's pointless and will affect performance. There's no
 	 * reason why this should export them when print_variables() doesn't
 	 * so it's a bug -- the developer wouldn't even know they existed.
 	if (actual->Widget != NULL) { */
-	if (actual->Widget != NULL && !actual->autonamed) {
+	if (actual->Widget != NULL && !actual->autonamed && export) {
 		//
 		// To export only the active element
 		//
@@ -1453,11 +1467,10 @@ static void _variables_export(variable *actual)
 
 void print_variables(variable *actual)
 {
+	GList            *element;
+	gchar            *act;
 	gchar            *value;
-/* Redundant.
-	GList            *itemlist;
-	gint              n;
-	gchar            *tmp; */
+	gint              export = TRUE;
 
 	if (actual == NULL)
 		actual = root;
@@ -1468,7 +1481,23 @@ void print_variables(variable *actual)
 	if (actual->left != NULL)
 		print_variables(actual->left);
 
-	if (actual->Widget != NULL && !actual->autonamed) {
+	/* Thunor: It's now possible to prevent the exporting of declared
+	 * variables by using <variable export="false">VARNAME</variable> */
+	if ((act = attributeset_get_first(&element, actual->Attributes,
+		ATTR_VARIABLE)) &&
+		(value = attributeset_get_this_tagattr(&element, actual->Attributes,
+		ATTR_VARIABLE, "export")) &&
+		((strcasecmp(value, "false") == 0) ||
+		(strcasecmp(value, "no") == 0) ||
+		(strcasecmp(value, "0") == 0))) {
+		export = FALSE;
+#ifdef DEBUG
+		fprintf(stderr, "%s(): variable=%s export=%s\n",
+			__func__, act, value);
+#endif
+	}
+
+	if (actual->Widget != NULL && !actual->autonamed && export) {
 		//
 		// To print only the active element
 		//
