@@ -59,6 +59,22 @@ PATH=$PACKAGE_DATA_DIR:$PATH
 ## Enable the embedding of comments within the XML.
 Comment() { :; }
 
+## Get major/minor/micro version of an application.
+## On entry: $1 = command
+##           $2 = index into string to locate version
+##  On exit: Initialises major/minor/micro_version
+funcAppVersionGet() {
+	local field
+	local index=0
+
+	for field in `$1`; do
+		if [ $((index++)) -eq $2 ]; then break; fi
+	done
+	major_version=${field%%.*}; field=${field#*.}
+	minor_version=${field%%.*}
+	micro_version=${field#*.}
+}
+
 ## Create the XML for the Games tab.
 funcTabGamesCreate() {
 	echo '<vbox border-width="5">
@@ -258,7 +274,7 @@ funcTabProfilesCreate() {
 funcTabReadmeCreate() {
 	echo '<vbox border-width="5">
 			<edit name="TabReadme" editable="false" cursor-visible="false">
-				<variable>ediReadme</variable>
+				<variable export="false">ediReadme</variable>
 				<input file>'$TEMP_DIR'/Readme</input>
 			</edit>
 			<expander use-underline="true" space-expand="false" space-fill="true">
@@ -293,7 +309,7 @@ funcTabReadmeCreate() {
 funcTabOutputCreate() {
 	echo '<vbox border-width="5">
 			<edit name="TabOutput" editable="false" cursor-visible="false">
-				<variable>ediOutput</variable>
+				<variable export="false">ediOutput</variable>
 				<input file>'$TEMP_DIR'/Output</input>
 			</edit>
 		</vbox>'
@@ -316,6 +332,19 @@ funcTabsImagesCreate() {
 ## ----------------------------------------------------------------------------
 ## Main
 ## ----------------------------------------------------------------------------
+
+## Check requirements.
+if [ ! `command -v $GTKDIALOG` ]; then
+	echo "Couldn't find $GTKDIALOG"
+	exit 1
+fi
+funcAppVersionGet "$GTKDIALOG -v" 2
+if [ $minor_version -ge 8 -a $micro_version -ge 3 ]; then
+	true
+else
+	echo "Couldn't find $GTKDIALOG >= 0.8.3"
+	exit 1
+fi
 
 ## Create the local data directory if it doesn't already exist.
 if [ ! -d $LOCAL_DATA_DIR ]; then
