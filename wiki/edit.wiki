@@ -47,7 +47,8 @@ Some of these may have tag attribute equivalents.
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Name* || *Description* || *Contents* || *Since* ||
 || default || Initial text || || ||
-|| variable || Shell variable name || || ||
+|| variable || Variable name || || ||
+|| variable export="false" || Variable name, not exported to shell || || 0.8.3 ||
 || height^[1]^ || Initial minimum height || An integer > {{{0}}} or {{{-1}}} to ignore || ||
 || width^[1]^ || Initial minimum width || An integer > {{{0}}} or {{{-1}}} to ignore || ||
 || input file || Data input source || Filename || ||
@@ -65,7 +66,7 @@ The "file-changed" signal is emitted if file-monitor is true and the input file 
 
 The following signals are connected-up for all widgets:
 
-[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
+[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
 
 == Functions ==
 
@@ -73,15 +74,15 @@ The following functions can be performed upon this widget by any widget capable 
 
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
-|| enable || Sensitise widget || Shell variable name || ||
-|| disable || Desensitise widget || Shell variable name || ||
-|| show || Show widget || Shell variable name || 0.8.1 ||
-|| hide || Hide widget || Shell variable name || 0.8.1 ||
-|| grabfocus || Grab input focus || Shell variable name || 0.8.1 ||
-|| refresh || Reload input data || Shell variable name || ||
-|| save || Save widget data || Shell variable name || ||
-|| clear || Remove all widget data || Shell variable name || ||
-|| removeselected || Remove selected widget data || Shell variable name || ||
+|| enable || Sensitise widget || Variable name || ||
+|| disable || Desensitise widget || Variable name || ||
+|| show || Show widget || Variable name || 0.8.1 ||
+|| hide || Hide widget || Variable name || 0.8.1 ||
+|| grabfocus || Grab input focus || Variable name || 0.8.1 ||
+|| refresh || Reload input data || Variable name || ||
+|| save || Save widget data || Variable name || ||
+|| clear || Remove all widget data || Variable name || ||
+|| removeselected || Remove selected widget data || Variable name || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 The following general functions can be performed by any widget capable of emitting signals:
@@ -89,10 +90,10 @@ The following general functions can be performed by any widget capable of emitti
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
 || command || Execute command || Shell command || ||
-|| exit || Exit dialog || A value for the {{{EXIT}}} shell variable || ||
-|| closewindow || Close dialog || Shell variable name || ||
-|| launch || Launch dialog || Shell variable name || ||
-|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Shell variable name || 0.8.1 ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} variable || ||
+|| closewindow || Close dialog || Variable name || ||
+|| launch || Launch dialog || Variable name || ||
+|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Notes ==
