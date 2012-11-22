@@ -120,7 +120,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkEventBox.html">GtkEventBox</a>
 
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> variable </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> variable </td><td class="wiki"> Variable name </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> variable export="false" </td><td class="wiki"> Variable name, not exported to shell </td><td class="wiki"> </td><td class="wiki"> 0.8.3 </td></tr>
 <tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td></tr>
@@ -132,7 +133,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkEventBox.html">GtkEventBox</a>
 
 <p>The following signals are connected-up for all widgets:</p>
 
-<p>"<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide">hide</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show">show</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>", "<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a>"</p>
+<a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a>
 
 <h2> Functions </h2>
 
@@ -140,10 +141,10 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkEventBox.html">GtkEventBox</a>
 
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> show </td><td class="wiki"> Show widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> show </td><td class="wiki"> Show widget </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
 </table>
 
 <p>The following general functions can be performed by any widget capable of emitting signals:</p>
@@ -151,10 +152,10 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkEventBox.html">GtkEventBox</a>
 <table class="wiki" border="1" cellpadding="5px">
 <tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
 <tr><td class="wiki"> command </td><td class="wiki"> Execute command </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> exit </td><td class="wiki"> Exit dialog </td><td class="wiki"> A value for the <code>EXIT</code> shell variable </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> closewindow </td><td class="wiki"> Close dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> launch </td><td class="wiki"> Launch dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> presentwindow </td><td class="wiki"> <a href="http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present">Present</a> dialog </td><td class="wiki"> Shell variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> exit </td><td class="wiki"> Exit dialog </td><td class="wiki"> A value for the <code>EXIT</code> variable </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> closewindow </td><td class="wiki"> Close dialog </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> launch </td><td class="wiki"> Launch dialog </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> presentwindow </td><td class="wiki"> <a href="http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present">Present</a> dialog </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
 </table>
 
 <h2> Notes </h2>
@@ -211,7 +212,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkEventBox.html">GtkEventBox</a>
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-11-11 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-11-22 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

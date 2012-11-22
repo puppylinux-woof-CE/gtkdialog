@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Wed Nov 21 2012 Thunor <thunorsif@hotmail.com>
+- Changed the --center command-line option to equal GTK_WIN_POS_CENTER
+  rather than the incorrect over-the-top GTK_WIN_POS_CENTER_ALWAYS.
+- Added the realize signal to the wiki and widget reference.
+
 * Sat Nov 17 2012 Thunor <thunorsif@hotmail.com>
 - It's now possible to prevent the exporting of declared variables by
   using <variable export="false">VARNAME</variable>.
