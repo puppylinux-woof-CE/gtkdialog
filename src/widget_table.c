@@ -241,7 +241,7 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 	}
 
 #ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s:() widget=%p selectionmode=%i column=%i\n",
+	fprintf(stderr, "%s(): widget=%p selectionmode=%i column=%i\n",
 		__func__, widget, selectionmode, column);
 #endif
 
@@ -430,7 +430,7 @@ void widget_table_removeselected(variable *var)
 	}
 
 #ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s:() widget=%p selectionmode=%i column=%i\n",
+	fprintf(stderr, "%s(): widget=%p selectionmode=%i column=%i\n",
 		__func__, var->Widget, selectionmode, column);
 #endif
 

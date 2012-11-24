@@ -260,9 +260,9 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 	selectionmode = gtk_tree_selection_get_mode(selection);
 
 #ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s:() widget=%p selectionmode=%i\n", __func__,
+	fprintf(stderr, "%s(): widget=%p selectionmode=%i\n", __func__,
 		widget, selectionmode);
-	fprintf(stderr, "%s:() widget=%p selected row count=%i\n", __func__,
+	fprintf(stderr, "%s(): widget=%p selected row count=%i\n", __func__,
 		widget, gtk_tree_selection_count_selected_rows(selection));
 #endif
 
@@ -342,7 +342,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 		}
 
 #ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s:() line=%s\n", __func__, line);
+		fprintf(stderr, "%s(): line=%s\n", __func__, line);
 #endif
 
 		string = line;
