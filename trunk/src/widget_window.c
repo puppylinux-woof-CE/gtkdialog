@@ -122,8 +122,7 @@ GtkWidget *widget_window_create(
 		gtk_widget_set_uposition(widget, geometry_x, geometry_y);
 	if (option_centering)
 		gtk_window_set_position(GTK_WINDOW(widget),
-			/* GTK_WIN_POS_CENTER_ALWAYS);	Redundant: horrible */
-			GTK_WIN_POS_CENTER);
+			GTK_WIN_POS_CENTER_ALWAYS);
 
 	/* Pop the widgets that the window will contain and add them */
 	s = pop();

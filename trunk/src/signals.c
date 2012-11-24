@@ -27,6 +27,7 @@
 #include "attributes.h"
 #include "signals.h"
 #include "tag_attributes.h"
+#include "widgets.h"
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
@@ -38,16 +39,10 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
-/* Notes:
- * I'm not quite convinced about these button_* callbacks at the moment
- * as they are/were old code and only appear to be duplicating code within
- * the widget_signal_executor anyway, so I'll mark them temp temp
- * 
- * list_selection and table_selection are equally as dodgy.
- * 
- * tree_row_activated_attr and tree_cursor_changed too.
- * 
- *  */
+/* Local function prototypes */
+gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active);
+
+/* Notes: */
 
 /***********************************************************************
  *                                                                     *
@@ -55,15 +50,18 @@
 
 void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 {
-	GList *element;
+/*	GList *element;	Redundant
 	gchar *command;
 	gchar *signal;
-	gchar *type;
+	gchar *type; */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	widget_signal_executor(button, Attr, "clicked");
+
+/* Redundant
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL) {
 
@@ -101,7 +99,7 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 #ifdef DEBUG_CONTENT
 		printf("%s: element=%p\n", __func__, element);
 #endif
-	}
+	} */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -114,15 +112,18 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 
 void button_entered_attr(GtkWidget *button, AttributeSet *Attr)
 {
-	GList *element;
+/*	GList *element;	Redundant
 	gchar *command;
 	gchar *signal;
-	gchar *type;
+	gchar *type; */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	widget_signal_executor(button, Attr, "enter");
+
+/* Redundant
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL) {
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
@@ -132,7 +133,7 @@ void button_entered_attr(GtkWidget *button, AttributeSet *Attr)
 			execute_action(button, command, type);
 		}
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
+	} */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -145,15 +146,18 @@ void button_entered_attr(GtkWidget *button, AttributeSet *Attr)
 
 void button_leaved_attr(GtkWidget *button, AttributeSet *Attr)
 {
-	GList *element;
+/*	GList *element;	Redundant
 	gchar *command;
 	gchar *signal;
-	gchar *type;
+	gchar *type; */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	widget_signal_executor(button, Attr, "leave");
+
+/* Redundant
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL) {
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
@@ -163,7 +167,7 @@ void button_leaved_attr(GtkWidget *button, AttributeSet *Attr)
 			execute_action(button, command, type);
 		}
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
+	} */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -187,15 +191,18 @@ void button_pressed(GtkWidget *button, const gchar *str)
 
 void button_pressed_attr(GtkWidget *button, AttributeSet *Attr)
 {
-	GList *element;
+/*	GList *element;	Redundant
 	gchar *command;
 	gchar *signal;
-	gchar *type;
+	gchar *type; */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	widget_signal_executor(button, Attr, "pressed");
+
+/* Redundant
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL) {
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
@@ -205,7 +212,7 @@ void button_pressed_attr(GtkWidget *button, AttributeSet *Attr)
 			execute_action(button, command, type);
 		}
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
+	} */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -218,15 +225,18 @@ void button_pressed_attr(GtkWidget *button, AttributeSet *Attr)
 
 void button_released_attr(GtkWidget *button, AttributeSet *Attr)
 {
-	GList *element;
+/*	GList *element;	Redundant
 	gchar *command;
 	gchar *signal;
-	gchar *type;
+	gchar *type; */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+	widget_signal_executor(button, Attr, "released");
+
+/* Redundant
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL) {
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
@@ -236,7 +246,7 @@ void button_released_attr(GtkWidget *button, AttributeSet *Attr)
 			execute_action(button, command, type);
 		}
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
+	} */
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -1226,6 +1236,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	GList            *element;
 	gchar            *command, *type, *signal;
 	gint              execute, is_active;
+	variable         *var = find_variable_by_widget(widget);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -1239,20 +1250,44 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command) {
 		execute = FALSE;
+		is_active = -1;
 
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 
 		if (signal && g_ascii_strcasecmp(signal, signal_name) == 0) {
-			/************************************************************************
-			 * This manages <action signal="type"> i.e the specified signal         *
-			 ************************************************************************/
+			/***********************************************************
+			 * This manages <action signal="type">                     *
+			 * i.e the specified signal                                *
+			 ***********************************************************/
 
 #ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
+			fprintf(stderr, "%s(): command=%s type=%s signal=%s signal_name=%s\n",
 				__func__, command, type, signal, signal_name);
 #endif
 
+			/* There's a class hierarchy to be aware of here */
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
+			if (GTK_IS_TOGGLE_BUTTON(widget)) {
+				/* togglebuttons support conditional function execution on their active state */
+				is_active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
+			} else if (GTK_IS_EXPANDER(widget)) {
+				/* expanders support conditional function execution on their expanded state */
+				is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkCheckMenuItem */
+			} else if (GTK_IS_CHECK_MENU_ITEM(widget)) {
+				/* checkbox menuitems support conditional function execution on their active state */
+				is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
+			}
+
+			execute = widget_signal_executor_eval_prefix(&command, is_active);
+
+#if 0	/* Redundant: Was also restricting conditional execution to certain
+		 * signals which surely isn't correct: it should be that if it is a
+		 * particular class of widget then it can check against its state.
+		 * Maybe in the future I can even expand upon that state checking */
+		 
 			/* Some widgets support conditional function execution on certain signals */
 			if (strncasecmp(command, "if true ", 8) == 0) {
 				if (strcasecmp(signal_name, "activate") == 0) {
@@ -1297,13 +1332,16 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			} else {
 				execute = TRUE;
 			}
+#endif	/* Redundant ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
+
 		} else if (signal == NULL) {
-			/************************************************************************
-			 * This manages <action> i.e. the default widget signal                 *
-			 ************************************************************************/
+			/***********************************************************
+			 * This manages <action> and <action type="function">      *
+			 * i.e. the default widget signal                          *
+			 ***********************************************************/
 
 #ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s: command=%s type=%s signal=%s signal_name=%s\n",
+			fprintf(stderr, "%s(): command=%s type=%s signal=%s signal_name=%s\n",
 				__func__, command, type, signal, signal_name);
 #endif
 
@@ -1311,112 +1349,326 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
 			if (GTK_IS_TOGGLE_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* togglebuttons support conditional function execution */
+					/* togglebuttons support conditional function execution on their active state */
 					is_active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
-					if (strncasecmp(command, "if true ", 8) == 0) {
-						command += 8;
-						if (is_active) execute = TRUE;
-					} else if (strncasecmp(command, "if false ", 9) == 0) {
-						command += 9;
-						if (!is_active) execute = TRUE;
-					} else {
-						execute = TRUE;
-					}
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkColorButton */
 			} else if (GTK_IS_COLOR_BUTTON(widget)) {
-				if (strcasecmp(signal_name, "color-set") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "color-set") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkFontButton */
 			} else if (GTK_IS_FONT_BUTTON(widget)) {
-				if (strcasecmp(signal_name, "font-set") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "font-set") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton */
+			} else if (GTK_IS_BUTTON(widget)) {
+				if (strcasecmp(signal_name, "clicked") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
 			} else if (GTK_IS_EXPANDER(widget)) {
 				if (strcasecmp(signal_name, "activate") == 0) {
-					/* expanders support conditional function execution */
+					/* expanders support conditional function execution on their expanded state */
 					is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
-					if (strncasecmp(command, "if true ", 8) == 0) {
-						command += 8;
-						if (is_active) execute = TRUE;
-					} else if (strncasecmp(command, "if false ", 9) == 0) {
-						command += 9;
-						if (!is_active) execute = TRUE;
-					} else {
-						execute = TRUE;
-					}
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkCheckMenuItem */
 			} else if (GTK_IS_CHECK_MENU_ITEM(widget)) {
 				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* Checkbox menuitems support conditional function execution */
+					/* checkbox menuitems support conditional function execution on their active state */
 					is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-					if (strncasecmp(command, "if true ", 8) == 0) {
-						command += 8;
-						if (is_active) execute = TRUE;
-					} else if (strncasecmp(command, "if false ", 9) == 0) {
-						command += 9;
-						if (!is_active) execute = TRUE;
-					} else {
-						execute = TRUE;
-					}
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem */
 			} else if (GTK_IS_MENU_ITEM(widget)) {
-				if (strcasecmp(signal_name, "activate") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "activate") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkCombo */
 			} else if (GTK_IS_COMBO_BOX(widget)) {
-				if (strcasecmp(signal_name, "changed") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "changed") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkContainer--->GtkCList */
 			} else if (GTK_IS_CLIST(widget)) {
-				if (strcasecmp(signal_name, "select-row") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "select-row") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkContainer--->GtkList */
 			} else if (GTK_IS_LIST(widget)) {
-				if (strcasecmp(signal_name, "selection-changed") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "selection-changed") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkContainer--->GtkTreeView */
 			} else if (GTK_IS_TREE_VIEW(widget)) {
-				if (strcasecmp(signal_name, "row-activated") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "row-activated") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkEntry-->GtkSpinButton */
 			} else if (GTK_IS_SPIN_BUTTON(widget)) {
-				if (strcasecmp(signal_name, "value-changed") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "value-changed") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkEntry */
 			} else if (GTK_IS_ENTRY(widget)) {
-				if (strcasecmp(signal_name, "changed") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "changed") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkMisc--->GtkLabel */
 			} else if (GTK_IS_LABEL(widget)) {
 				/* A GtkLabel that ticks is a timer */
-				if (strcasecmp(signal_name, "tick") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "tick") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkProgress--->GtkProgressBar */
 			} else if (GTK_IS_PROGRESS_BAR(widget)) {
-				if (strcasecmp(signal_name, "time-out") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "time-out") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 /* GtkWidget--->GtkRange--->GtkScale */
 			} else if (GTK_IS_SCALE(widget)) {
-				if (strcasecmp(signal_name, "value-changed") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "value-changed") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 #if HAVE_VTE
 /* GtkWidget--->VteTerminal */
 			} else if (VTE_IS_TERMINAL(widget)) {
-				if (strcasecmp(signal_name, "child-exited") == 0)
-					execute = TRUE;
+				if (strcasecmp(signal_name, "child-exited") == 0) {
+					execute = widget_signal_executor_eval_prefix(&command, is_active);
+				}
 #endif
 			}
 		}
+
 		if (execute) execute_action(widget, command, type);
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
+
 	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
+}
+
+/***********************************************************************
+ * Widget Signal Executor - Evaluate Prefix                            *
+ ***********************************************************************/
+/* On entry: command is a pointer to a pointer to the command string
+ *           is_active = 1, 0 or -1 if not applicable
+ *  On exit: returns true if action valid or false */
+
+gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
+{
+	FILE             *infile;
+	gchar             filename[256];
+	gchar             line[64] = "";
+	gint              count;
+	gint              not;
+	gint              retval = FALSE;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "\n%s(): Entering.\n", __func__);
+	fprintf(stderr, "%s():    *command=%s\n", __func__, *command);
+#endif
+
+	/*****************************************************
+	 * Active state true conditional function execution  *
+	 *****************************************************/
+	if ((strncasecmp(*command, "if true ", 8) == 0) && (is_active > -1)) {
+
+#ifdef DEBUG_CONTENT
+		fprintf(stderr, "%s(): if true detected\n", __func__);
+#endif
+		*command += 8;
+		if (is_active) retval = TRUE;
+
+	/*****************************************************
+	 * Active state false conditional function execution *
+	 *****************************************************/
+	} else if ((strncasecmp(*command, "if false ", 9) == 0) && (is_active > -1)) {
+
+#ifdef DEBUG_CONTENT
+		fprintf(stderr, "%s(): if false detected\n", __func__);
+#endif
+		*command += 9;
+		if (!is_active) retval = TRUE;
+
+	/*****************************************************
+	 * Input file conditional function execution         *
+	 *****************************************************/
+	} else if ((strncasecmp(*command, "if file(", 8) == 0) ||
+		(strncasecmp(*command, "if file (", 9) == 0) ||
+		(strncasecmp(*command, "if !file(", 9) == 0) ||
+		(strncasecmp(*command, "if ! file(", 10) == 0) ||
+		(strncasecmp(*command, "if !file (", 10) == 0) ||
+		(strncasecmp(*command, "if ! file (", 11) == 0)) {
+
+		/* Are we looking for true or false? */
+		if (strchr(*command, '!')) {
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): if ! file() detected\n", __func__);
+#endif
+			not = TRUE;
+		} else {
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): if file() detected\n", __func__);
+#endif
+			not = FALSE;
+		}
+
+		/* Locate filename start and update pointer */
+		*command = strchr(*command, '(') + 1;
+
+		/* Get filename, locate end and update pointer */
+		strcpy(filename, *command);
+		for (count = strlen(filename) - 1; count >= 0; count--) {
+			if (filename[count] == ')') {
+				filename[count] = 0;
+				break;
+			}
+		}
+		*command += count + 1;
+
+		/* There may have been spaces inside the brackets */
+		g_strstrip(filename);
+
+		if (infile = fopen(filename, "r")) {
+			/* Just one line */
+			if (fgets(line, 64, infile)) {
+				/* Enforce end of string in case of max chars read */
+				line[64 - 1] = 0;
+				/* Remove the trailing [CR]LFs */
+				for (count = strlen(line) - 1; count >= 0; count--)
+					if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			}
+
+			if (not) {
+				if ((strcasecmp(line, "false") == 0) ||
+					(strcasecmp(line, "no") == 0) ||
+					(strcasecmp(line, "0") == 0)) {
+					retval = TRUE;
+				}
+			} else {
+				if ((strcasecmp(line, "true") == 0) ||
+					(strcasecmp(line, "yes") == 0) ||
+					(atoi(line))) {
+					retval = TRUE;
+				}
+			}
+
+			/* Close the file */
+			fclose(infile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+				filename);
+		}
+
+#ifdef DEBUG_CONTENT
+		fprintf(stderr, "%s():        filename=%s\n", __func__, filename);
+		fprintf(stderr, "%s():        line=%s\n", __func__, line);
+		fprintf(stderr, "%s():        *command=%s\n", __func__, *command);
+		fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
+#endif
+
+	/*****************************************************
+	 * Shell command conditional function execution      *
+	 *****************************************************/
+	} else if ((strncasecmp(*command, "if command(", 11) == 0) ||
+		(strncasecmp(*command, "if command (", 12) == 0) ||
+		(strncasecmp(*command, "if !command(", 12) == 0) ||
+		(strncasecmp(*command, "if ! command(", 13) == 0) ||
+		(strncasecmp(*command, "if !command (", 13) == 0) ||
+		(strncasecmp(*command, "if ! command (", 14) == 0)) {
+
+		/* Are we looking for true or false? */
+		if (strchr(*command, '!')) {
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): if ! command() detected\n", __func__);
+#endif
+			not = TRUE;
+		} else {
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): if command() detected\n", __func__);
+#endif
+			not = FALSE;
+		}
+
+		/* Locate filename start and update pointer */
+		*command = strchr(*command, '(') + 1;
+
+		/* Get filename, locate end and update pointer */
+		strcpy(filename, *command);
+		for (count = strlen(filename) - 1; count >= 0; count--) {
+			if (filename[count] == ')') {
+				filename[count] = 0;
+				break;
+			}
+		}
+		*command += count + 1;
+
+		/* There may have been spaces inside the brackets */
+		g_strstrip(filename);
+
+		/* Do as action_shellcommand() does */
+		variables_export_all();
+
+		/* Opening pipe for reading... */
+		if (infile = widget_opencommand(filename)) {
+			/* Just one line */
+			if (fgets(line, 64, infile)) {
+				/* Enforce end of string in case of max chars read */
+				line[64 - 1] = 0;
+				/* Remove the trailing [CR]LFs */
+				for (count = strlen(line) - 1; count >= 0; count--)
+					if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			}
+
+			if (not) {
+				if ((strcasecmp(line, "false") == 0) ||
+					(strcasecmp(line, "no") == 0) ||
+					(strcasecmp(line, "0") == 0)) {
+					retval = TRUE;
+				}
+			} else {
+				if ((strcasecmp(line, "true") == 0) ||
+					(strcasecmp(line, "yes") == 0) ||
+					(atoi(line))) {
+					retval = TRUE;
+				}
+			}
+
+			/* Close the file */
+			pclose(infile);
+		} else {
+			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+				filename);
+		}
+
+#ifdef DEBUG_CONTENT
+		fprintf(stderr, "%s():        filename=%s\n", __func__, filename);
+		fprintf(stderr, "%s():        line=%s\n", __func__, line);
+		fprintf(stderr, "%s():        *command=%s\n", __func__, *command);
+		fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
+#endif
+
+	} else {
+		retval = TRUE;
+	}
+
+	/* Preceding the remainder of the command could be whitespace so
+	 * skip over it and update the pointer */
+	while (**command && **command == ' ') (*command)++;
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s():    *command=%s\n", __func__, *command);
+	fprintf(stderr, "%s():    retval=%i\n", __func__, retval);
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+
+	return retval;
 }
 
 /***********************************************************************

@@ -887,7 +887,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 #if 0 //#if VTE_CHECK_VERSION(0,26,0)
 			g_object_get(G_OBJECT(widget), "inner-border", &inner_border, NULL);
 #ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s:() inner_border.left=%i inner_border.right=%i \
+			fprintf(stderr, "%s(): inner_border.left=%i inner_border.right=%i \
 inner_border.top=%i inner_border.bottom=%i\n", __func__, inner_border.left,
 				inner_border.right, inner_border.top, inner_border.bottom);
 #endif
@@ -899,7 +899,7 @@ inner_border.top=%i inner_border.bottom=%i\n", __func__, inner_border.left,
 			char_width = vte_terminal_get_char_width(VTE_TERMINAL(widget));
 			char_height = vte_terminal_get_char_height(VTE_TERMINAL(widget));
 #ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s:() xpad=%i ypad=%i char_width=%li char_height=%li\n",
+			fprintf(stderr, "%s(): xpad=%i ypad=%i char_width=%li char_height=%li\n",
 				__func__, xpad, ypad, char_width, char_height);
 #endif
 			if (width != -1) width = width * char_width + xpad;

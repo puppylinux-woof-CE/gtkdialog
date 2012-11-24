@@ -1,6 +1,23 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Nov 24 2012 Thunor <thunorsif@hotmail.com>
+- Added support for:
+  <action>if file(filename) function:parameter</action>,
+  <action>if ! file(filename) function:parameter</action>,
+  <action>if command(shell command) function:parameter</action> and
+  <action>if ! command(shell command) function:parameter</action>.
+- The existing if true and if false conditions for toggle widgets were
+  being unneccessarily restricted to the default signals but now the
+  prefixes of all <action signal="type"> directives are evaluated.
+  
+* Fri Nov 23 2012 Thunor <thunorsif@hotmail.com>
+- Reinstated the GTK_WIN_POS_CENTER_ALWAYS --center command-line option
+  because GTK_WIN_POS_CENTER causes Simple Network Setup (which resizes)
+  to be off centre and it could cause other applications to do the same.
+  It's better to ignore it and use <window window-position="1"> anyway.
+- Routed the six remaining button signal callbacks through the executor.
+
 * Wed Nov 21 2012 Thunor <thunorsif@hotmail.com>
 - Changed the --center command-line option to equal GTK_WIN_POS_CENTER
   rather than the incorrect over-the-top GTK_WIN_POS_CENTER_ALWAYS.
