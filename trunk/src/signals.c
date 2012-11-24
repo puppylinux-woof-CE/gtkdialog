@@ -1466,6 +1466,7 @@ gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
 	gchar             filename[256];
 	gchar             line[64] = "";
 	gint              count;
+	gint              index;
 	gint              not;
 	gint              retval = FALSE;
 
@@ -1507,7 +1508,7 @@ gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
 		(strncasecmp(*command, "if ! file (", 11) == 0)) {
 
 		/* Are we looking for true or false? */
-		if (strchr(*command, '!')) {
+		if (strncasecmp(*command, "if !", 4) == 0) {
 #ifdef DEBUG_CONTENT
 			fprintf(stderr, "%s(): if ! file() detected\n", __func__);
 #endif
@@ -1522,15 +1523,17 @@ gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
 		/* Locate filename start and update pointer */
 		*command = strchr(*command, '(') + 1;
 
-		/* Get filename, locate end and update pointer */
+		/* Get filename, locate end [properly] and update pointer */
 		strcpy(filename, *command);
-		for (count = strlen(filename) - 1; count >= 0; count--) {
-			if (filename[count] == ')') {
-				filename[count] = 0;
-				break;
-			}
+		count = 1; index = 0;
+		while (**command) {
+			if (**command == '(') count++;
+			if (**command == ')') count--;
+			(*command)++;
+			if (!count) break;
+			index++;
 		}
-		*command += count + 1;
+		filename[index] = 0;
 
 		/* There may have been spaces inside the brackets */
 		g_strstrip(filename);
@@ -1584,7 +1587,7 @@ gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
 		(strncasecmp(*command, "if ! command (", 14) == 0)) {
 
 		/* Are we looking for true or false? */
-		if (strchr(*command, '!')) {
+		if (strncasecmp(*command, "if !", 4) == 0) {
 #ifdef DEBUG_CONTENT
 			fprintf(stderr, "%s(): if ! command() detected\n", __func__);
 #endif
@@ -1599,15 +1602,17 @@ gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
 		/* Locate filename start and update pointer */
 		*command = strchr(*command, '(') + 1;
 
-		/* Get filename, locate end and update pointer */
+		/* Get filename, locate end [properly] and update pointer */
 		strcpy(filename, *command);
-		for (count = strlen(filename) - 1; count >= 0; count--) {
-			if (filename[count] == ')') {
-				filename[count] = 0;
-				break;
-			}
+		count = 1; index = 0;
+		while (**command) {
+			if (**command == '(') count++;
+			if (**command == ')') count--;
+			(*command)++;
+			if (!count) break;
+			index++;
 		}
-		*command += count + 1;
+		filename[index] = 0;
 
 		/* There may have been spaces inside the brackets */
 		g_strstrip(filename);
