@@ -1523,20 +1523,36 @@ gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
 		/* Locate filename start and update pointer */
 		*command = strchr(*command, '(') + 1;
 
-		/* Get filename, locate end [properly] and update pointer */
+		/* Get filename, locate end and update pointer.
+		 * Now, if the action is something as intended like
+		 *   <action>if file(filename) function:parameter</action>
+		 * then locating the right parenthesis from the right is certain
+		 * but if instead of function:parameter there's a shell command
+		 * (which is legally possible) that contains a right parenthesis
+		 * then it will find the wrong parenthesis if it's unescaped and
+		 * has a trailing space, but that's all I've got to work with
+		 * here so I've done as much as I possibly can */
 		strcpy(filename, *command);
-		count = 1; index = 0;
-		while (**command) {
-			if (**command == '(') count++;
-			if (**command == ')') count--;
-			(*command)++;
-			if (!count) break;
-			index++;
+		for (index = strlen(filename) - 1; index >= 0; index--) {
+			if ((filename[index] == ')' && filename[index + 1] == ' ') &&
+				(!(index && filename[index - 1] == '\\'))) {
+				filename[index] = 0;
+				break;
+			}
 		}
-		filename[index] = 0;
+		*command += index + 1;
 
-		/* There may have been spaces inside the brackets */
+		/* There's a possibility that the application developer has
+		 * wrapped the filename in spaces so remove if present */
 		g_strstrip(filename);
+
+		/* There's a possibility that the application developer has
+		 * wrapped the filename in double quotes so remove if present */
+		if (filename[0] == '"' && filename[strlen(filename)- 1] == '"') {
+			filename[0] = ' ';
+			filename[strlen(filename)- 1] = ' ';
+			g_strstrip(filename);
+		}
 
 		if (infile = fopen(filename, "r")) {
 			/* Just one line */
@@ -1599,23 +1615,39 @@ gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
 			not = FALSE;
 		}
 
-		/* Locate filename start and update pointer */
+		/* Locate command start and update pointer */
 		*command = strchr(*command, '(') + 1;
 
-		/* Get filename, locate end [properly] and update pointer */
+		/* Get command, locate end and update pointer.
+		 * Now, if the action is something as intended like
+		 *   <action>if command(echo true) function:parameter</action>
+		 * then locating the right parenthesis from the right is certain
+		 * but if instead of function:parameter there's a shell command
+		 * (which is legally possible) that contains a right parenthesis
+		 * then it will find the wrong parenthesis if it's unescaped and
+		 * has a trailing space, but that's all I've got to work with
+		 * here so I've done as much as I possibly can */
 		strcpy(filename, *command);
-		count = 1; index = 0;
-		while (**command) {
-			if (**command == '(') count++;
-			if (**command == ')') count--;
-			(*command)++;
-			if (!count) break;
-			index++;
+		for (index = strlen(filename) - 1; index >= 0; index--) {
+			if ((filename[index] == ')' && filename[index + 1] == ' ') &&
+				(!(index && filename[index - 1] == '\\'))) {
+				filename[index] = 0;
+				break;
+			}
 		}
-		filename[index] = 0;
+		*command += index + 1;
 
-		/* There may have been spaces inside the brackets */
+		/* There's a possibility that the application developer has
+		 * wrapped the command in spaces so remove if present */
 		g_strstrip(filename);
+
+		/* There's a possibility that the application developer has
+		 * wrapped the command in double quotes so remove if present */
+		if (filename[0] == '"' && filename[strlen(filename)- 1] == '"') {
+			filename[0] = ' ';
+			filename[strlen(filename)- 1] = ' ';
+			g_strstrip(filename);
+		}
 
 		/* Do as action_shellcommand() does */
 		variables_export_all();
