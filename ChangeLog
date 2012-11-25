@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Nov 25 2012 Thunor <thunorsif@hotmail.com>
+- Updated the newly added code for parsing filenames and commands from
+  the start of actions to be as robust as I can possibly make it.
+
 * Sat Nov 24 2012 Thunor <thunorsif@hotmail.com>
 - Added support for:
   <action>if file(filename) function:parameter</action>,
