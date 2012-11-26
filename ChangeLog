@@ -1,6 +1,14 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Mon Nov 26 2012 Thunor <thunorsif@hotmail.com>
+- Moved the action conditions into their own tag attribute belonging to
+  the action directive e.g. <action condition="if file(filename)">...
+- Added support for:
+  condition="if active(varname)",
+  condition="if sensitive(varname)",
+  condition="if visible(varname)" and it's trivial to add more.
+
 * Sun Nov 25 2012 Thunor <thunorsif@hotmail.com>
 - Updated the newly added code for parsing filenames and commands from
   the start of actions to be as robust as I can possibly make it.
