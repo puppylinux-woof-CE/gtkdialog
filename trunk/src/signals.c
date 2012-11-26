@@ -39,8 +39,17 @@
 //#define DEBUG_CONTENT
 //#define DEBUG_TRANSITS
 
+/* Local variables */
+char *condexpr[] = {
+	"if active(", "if !active(", "if ! active(", "if active (", "if !active (", "if ! active (",
+	"if command(", "if !command(", "if ! command(", "if command (", "if !command (", "if ! command (",
+	"if file(", "if !file(", "if ! file(", "if file (", "if !file (", "if ! file (",
+	"if sensitive(", "if !sensitive(", "if ! sensitive(", "if sensitive (", "if !sensitive (", "if ! sensitive (",
+	"if visible(", "if !visible(", "if ! visible(", "if visible (", "if !visible (", "if ! visible ("
+};
+
 /* Local function prototypes */
-gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active);
+gboolean widget_signal_executor_eval_condition(gchar *condition);
 
 /* Notes: */
 
@@ -1234,9 +1243,8 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	const gchar *signal_name)
 {
 	GList            *element;
-	gchar            *command, *type, *signal;
+	gchar            *command, *condition, *type, *signal;
 	gint              execute, is_active;
-	variable         *var = find_variable_by_widget(widget);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -1254,6 +1262,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
+		condition = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "condition");
 
 		if (signal && g_ascii_strcasecmp(signal, signal_name) == 0) {
 			/***********************************************************
@@ -1269,70 +1278,35 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			/* There's a class hierarchy to be aware of here */
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
 			if (GTK_IS_TOGGLE_BUTTON(widget)) {
-				/* togglebuttons support conditional function execution on their active state */
 				is_active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
 			} else if (GTK_IS_EXPANDER(widget)) {
-				/* expanders support conditional function execution on their expanded state */
 				is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkCheckMenuItem */
 			} else if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-				/* checkbox menuitems support conditional function execution on their active state */
 				is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-			}
-
-			execute = widget_signal_executor_eval_prefix(&command, is_active);
-
-#if 0	/* Redundant: Was also restricting conditional execution to certain
-		 * signals which surely isn't correct: it should be that if it is a
-		 * particular class of widget then it can check against its state.
-		 * Maybe in the future I can even expand upon that state checking */
-		 
-			/* Some widgets support conditional function execution on certain signals */
-			if (strncasecmp(command, "if true ", 8) == 0) {
-				if (strcasecmp(signal_name, "activate") == 0) {
-					/* There's a class hierarchy to be aware of here */
-					if (GTK_IS_EXPANDER(widget)) {
-						is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
-						command += 8;
-						if (is_active) execute = TRUE;
-					}
-				} else if (strcasecmp(signal_name, "toggled") == 0) {
-					/* There's a class hierarchy to be aware of here */
-					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-						command += 8;
-						if (is_active) execute = TRUE;
-					} else if (GTK_IS_TOGGLE_BUTTON(widget)) {
-						is_active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
-						command += 8;
-						if (is_active) execute = TRUE;
-					}
-				}
-			} else if (strncasecmp(command, "if false ", 9) == 0) {
-				if (strcasecmp(signal_name, "activate") == 0) {
-					/* There's a class hierarchy to be aware of here */
-					if (GTK_IS_EXPANDER(widget)) {
-						is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
-						command += 9;
-						if (!is_active) execute = TRUE;
-					}
-				} else if (strcasecmp(signal_name, "toggled") == 0) {
-					/* There's a class hierarchy to be aware of here */
-					if (GTK_IS_CHECK_MENU_ITEM(widget)) {
-						is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-						command += 9;
-						if (!is_active) execute = TRUE;
-					} else if (GTK_IS_TOGGLE_BUTTON(widget)) {
-						is_active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
-						command += 9;
-						if (!is_active) execute = TRUE;
-					}
-				}
 			} else {
-				execute = TRUE;
+				execute = widget_signal_executor_eval_condition(condition);
 			}
-#endif	/* Redundant ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
+
+			/* Deal with toggle widgets here as they can have a conditional
+			 * prefix within the action in addition to a possible condition
+			 * tag attribute in which case the latter is applied last */
+			if (is_active > -1) {
+				if (strncasecmp(command, "if true ", 8) == 0) {
+					command += 8;
+					if (is_active) execute = TRUE;
+					if (condition)
+						execute = widget_signal_executor_eval_condition(condition);
+				} else if (strncasecmp(command, "if false ", 9) == 0) {
+					command += 9;
+					if (!is_active) execute = TRUE;
+					if (condition)
+						execute = widget_signal_executor_eval_condition(condition);
+				} else {
+					execute = widget_signal_executor_eval_condition(condition);
+				}
+			}
 
 		} else if (signal == NULL) {
 			/***********************************************************
@@ -1349,98 +1323,112 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
 			if (GTK_IS_TOGGLE_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* togglebuttons support conditional function execution on their active state */
 					is_active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkColorButton */
 			} else if (GTK_IS_COLOR_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "color-set") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkFontButton */
 			} else if (GTK_IS_FONT_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "font-set") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton */
 			} else if (GTK_IS_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "clicked") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
 			} else if (GTK_IS_EXPANDER(widget)) {
 				if (strcasecmp(signal_name, "activate") == 0) {
-					/* expanders support conditional function execution on their expanded state */
 					is_active = gtk_expander_get_expanded(GTK_EXPANDER(widget));
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkCheckMenuItem */
 			} else if (GTK_IS_CHECK_MENU_ITEM(widget)) {
 				if (strcasecmp(signal_name, "toggled") == 0) {
-					/* checkbox menuitems support conditional function execution on their active state */
 					is_active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
 				}
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem */
 			} else if (GTK_IS_MENU_ITEM(widget)) {
 				if (strcasecmp(signal_name, "activate") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkCombo */
 			} else if (GTK_IS_COMBO_BOX(widget)) {
 				if (strcasecmp(signal_name, "changed") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkCList */
 			} else if (GTK_IS_CLIST(widget)) {
 				if (strcasecmp(signal_name, "select-row") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkList */
 			} else if (GTK_IS_LIST(widget)) {
 				if (strcasecmp(signal_name, "selection-changed") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkTreeView */
 			} else if (GTK_IS_TREE_VIEW(widget)) {
 				if (strcasecmp(signal_name, "row-activated") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkEntry-->GtkSpinButton */
 			} else if (GTK_IS_SPIN_BUTTON(widget)) {
 				if (strcasecmp(signal_name, "value-changed") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkEntry */
 			} else if (GTK_IS_ENTRY(widget)) {
 				if (strcasecmp(signal_name, "changed") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkMisc--->GtkLabel */
 			} else if (GTK_IS_LABEL(widget)) {
 				/* A GtkLabel that ticks is a timer */
 				if (strcasecmp(signal_name, "tick") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkProgress--->GtkProgressBar */
 			} else if (GTK_IS_PROGRESS_BAR(widget)) {
 				if (strcasecmp(signal_name, "time-out") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkRange--->GtkScale */
 			} else if (GTK_IS_SCALE(widget)) {
 				if (strcasecmp(signal_name, "value-changed") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 #if HAVE_VTE
 /* GtkWidget--->VteTerminal */
 			} else if (VTE_IS_TERMINAL(widget)) {
 				if (strcasecmp(signal_name, "child-exited") == 0) {
-					execute = widget_signal_executor_eval_prefix(&command, is_active);
+					execute = widget_signal_executor_eval_condition(condition);
 				}
 #endif
 			}
+
+			/* Deal with toggle widgets here as they can have a conditional
+			 * prefix within the action in addition to a possible condition
+			 * tag attribute in which case the latter is applied last */
+			if (is_active > -1) {
+				if (strncasecmp(command, "if true ", 8) == 0) {
+					command += 8;
+					if (is_active) execute = TRUE;
+					if (condition)
+						execute = widget_signal_executor_eval_condition(condition);
+				} else if (strncasecmp(command, "if false ", 9) == 0) {
+					command += 9;
+					if (!is_active) execute = TRUE;
+					if (condition)
+						execute = widget_signal_executor_eval_condition(condition);
+				} else {
+					execute = widget_signal_executor_eval_condition(condition);
+				}
+			}
+
 		}
 
 		if (execute) execute_action(widget, command, type);
@@ -1454,253 +1442,258 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 }
 
 /***********************************************************************
- * Widget Signal Executor - Evaluate Prefix                            *
+ * Widget Signal Executor - Evaluate Condition                         *
  ***********************************************************************/
-/* On entry: command is a pointer to a pointer to the command string
- *           is_active = 1, 0 or -1 if not applicable
- *  On exit: returns true if action valid or false */
+/* On entry: condition is a pointer to the action's condition
+ *                   tag attribute which could be null
+ *  On exit: returns true if condition was null
+ *           returns true if condition wasn't null but was unknown
+ *           returns true if condition evaluated as such else false */
 
-gboolean widget_signal_executor_eval_prefix(gchar **command, gint is_active)
+gboolean widget_signal_executor_eval_condition(gchar *condition)
 {
+	#define           TYPE_CONDFUNC_UNKNOWN 0
+	#define           TYPE_CONDFUNC_ACTIVE 1
+	#define           TYPE_CONDFUNC_COMMAND 2
+	#define           TYPE_CONDFUNC_FILE 3
+	#define           TYPE_CONDFUNC_SENSITIVE 4
+	#define           TYPE_CONDFUNC_VISIBLE 5
 	FILE             *infile;
-	gchar             filename[256];
+	gchar             argument[256];
 	gchar             line[64] = "";
+	gint              condfunc = TYPE_CONDFUNC_UNKNOWN;
 	gint              count;
 	gint              index;
 	gint              not;
 	gint              retval = FALSE;
+	gint              state = -1;
+	variable         *var;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "\n%s(): Entering.\n", __func__);
-	fprintf(stderr, "%s():    *command=%s\n", __func__, *command);
+	fprintf(stderr, "%s():    condition=%s\n", __func__, condition);
 #endif
 
-	/*****************************************************
-	 * Active state true conditional function execution  *
-	 *****************************************************/
-	if ((strncasecmp(*command, "if true ", 8) == 0) && (is_active > -1)) {
+	if (condition != NULL) {
 
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): if true detected\n", __func__);
-#endif
-		*command += 8;
-		if (is_active) retval = TRUE;
-
-	/*****************************************************
-	 * Active state false conditional function execution *
-	 *****************************************************/
-	} else if ((strncasecmp(*command, "if false ", 9) == 0) && (is_active > -1)) {
-
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): if false detected\n", __func__);
-#endif
-		*command += 9;
-		if (!is_active) retval = TRUE;
-
-	/*****************************************************
-	 * Input file conditional function execution         *
-	 *****************************************************/
-	} else if ((strncasecmp(*command, "if file(", 8) == 0) ||
-		(strncasecmp(*command, "if file (", 9) == 0) ||
-		(strncasecmp(*command, "if !file(", 9) == 0) ||
-		(strncasecmp(*command, "if ! file(", 10) == 0) ||
-		(strncasecmp(*command, "if !file (", 10) == 0) ||
-		(strncasecmp(*command, "if ! file (", 11) == 0)) {
-
-		/* Are we looking for true or false? */
-		if (strncasecmp(*command, "if !", 4) == 0) {
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): if ! file() detected\n", __func__);
-#endif
-			not = TRUE;
-		} else {
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): if file() detected\n", __func__);
-#endif
-			not = FALSE;
-		}
-
-		/* Locate filename start and update pointer */
-		*command = strchr(*command, '(') + 1;
-
-		/* Get filename, locate end and update pointer.
-		 * Now, if the action is something as intended like
-		 *   <action>if file(filename) function:parameter</action>
-		 * then locating the right parenthesis from the right is certain
-		 * but if instead of function:parameter there's a shell command
-		 * (which is legally possible) that contains a right parenthesis
-		 * then it will find the wrong parenthesis if it's unescaped and
-		 * has a trailing space, but that's all I've got to work with
-		 * here so I've done as much as I possibly can */
-		strcpy(filename, *command);
-		for (index = strlen(filename) - 1; index >= 0; index--) {
-			if ((filename[index] == ')' && filename[index + 1] == ' ') &&
-				(!(index && filename[index - 1] == '\\'))) {
-				filename[index] = 0;
+		/* Try and find one of the expressions within the condition */
+		for (count = 0; count < TYPE_CONDFUNC_VISIBLE * 6; count++) {
+			if (strncasecmp(condition, condexpr[count],
+				strlen(condexpr[count])) == 0) {
+				condfunc = count / 6 + TYPE_CONDFUNC_ACTIVE;
 				break;
 			}
 		}
-		*command += index + 1;
 
-		/* There's a possibility that the application developer has
-		 * wrapped the filename in spaces so remove if present */
-		g_strstrip(filename);
+		if (condfunc != TYPE_CONDFUNC_UNKNOWN) {
 
-		/* There's a possibility that the application developer has
-		 * wrapped the filename in double quotes so remove if present */
-		if (filename[0] == '"' && filename[strlen(filename)- 1] == '"') {
-			filename[0] = ' ';
-			filename[strlen(filename)- 1] = ' ';
-			g_strstrip(filename);
-		}
-
-		if (infile = fopen(filename, "r")) {
-			/* Just one line */
-			if (fgets(line, 64, infile)) {
-				/* Enforce end of string in case of max chars read */
-				line[64 - 1] = 0;
-				/* Remove the trailing [CR]LFs */
-				for (count = strlen(line) - 1; count >= 0; count--)
-					if (line[count] == 13 || line[count] == 10) line[count] = 0;
-			}
-
-			if (not) {
-				if ((strcasecmp(line, "false") == 0) ||
-					(strcasecmp(line, "no") == 0) ||
-					(strcasecmp(line, "0") == 0)) {
-					retval = TRUE;
-				}
+			/* Are we looking for true or false? */
+			if (strncasecmp(condition, "if !", 4) == 0) {
+				not = TRUE;
 			} else {
-				if ((strcasecmp(line, "true") == 0) ||
-					(strcasecmp(line, "yes") == 0) ||
-					(atoi(line))) {
-					retval = TRUE;
+				not = FALSE;
+			}
+
+			/* Locate argument start and update pointer */
+			condition = strchr(condition, '(') + 1;
+
+			/* Get argument and locate end */
+			strcpy(argument, condition);
+			for (index = strlen(argument) - 1; index >= 0; index--) {
+				if (argument[index] == ')') {
+					argument[index] = 0;
+					break;
 				}
 			}
 
-			/* Close the file */
-			fclose(infile);
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
-				filename);
-		}
+			/* Fix any escaped double-quotes if present */
+			for (index = 0; index < strlen(argument); index++)
+				if (argument[index] == '\\' && argument[index + 1] == '"' )
+					for (count = index; count < strlen(argument); count++)
+						argument[count] = argument[count + 1];
 
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s():        filename=%s\n", __func__, filename);
-		fprintf(stderr, "%s():        line=%s\n", __func__, line);
-		fprintf(stderr, "%s():        *command=%s\n", __func__, *command);
-		fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
-#endif
+			/* Remove enveloping spaces if present */
+			g_strstrip(argument);
 
-	/*****************************************************
-	 * Shell command conditional function execution      *
-	 *****************************************************/
-	} else if ((strncasecmp(*command, "if command(", 11) == 0) ||
-		(strncasecmp(*command, "if command (", 12) == 0) ||
-		(strncasecmp(*command, "if !command(", 12) == 0) ||
-		(strncasecmp(*command, "if ! command(", 13) == 0) ||
-		(strncasecmp(*command, "if !command (", 13) == 0) ||
-		(strncasecmp(*command, "if ! command (", 14) == 0)) {
-
-		/* Are we looking for true or false? */
-		if (strncasecmp(*command, "if !", 4) == 0) {
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): if ! command() detected\n", __func__);
-#endif
-			not = TRUE;
-		} else {
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): if command() detected\n", __func__);
-#endif
-			not = FALSE;
-		}
-
-		/* Locate command start and update pointer */
-		*command = strchr(*command, '(') + 1;
-
-		/* Get command, locate end and update pointer.
-		 * Now, if the action is something as intended like
-		 *   <action>if command(echo true) function:parameter</action>
-		 * then locating the right parenthesis from the right is certain
-		 * but if instead of function:parameter there's a shell command
-		 * (which is legally possible) that contains a right parenthesis
-		 * then it will find the wrong parenthesis if it's unescaped and
-		 * has a trailing space, but that's all I've got to work with
-		 * here so I've done as much as I possibly can */
-		strcpy(filename, *command);
-		for (index = strlen(filename) - 1; index >= 0; index--) {
-			if ((filename[index] == ')' && filename[index + 1] == ' ') &&
-				(!(index && filename[index - 1] == '\\'))) {
-				filename[index] = 0;
-				break;
-			}
-		}
-		*command += index + 1;
-
-		/* There's a possibility that the application developer has
-		 * wrapped the command in spaces so remove if present */
-		g_strstrip(filename);
-
-		/* There's a possibility that the application developer has
-		 * wrapped the command in double quotes so remove if present */
-		if (filename[0] == '"' && filename[strlen(filename)- 1] == '"') {
-			filename[0] = ' ';
-			filename[strlen(filename)- 1] = ' ';
-			g_strstrip(filename);
-		}
-
-		/* Do as action_shellcommand() does */
-		variables_export_all();
-
-		/* Opening pipe for reading... */
-		if (infile = widget_opencommand(filename)) {
-			/* Just one line */
-			if (fgets(line, 64, infile)) {
-				/* Enforce end of string in case of max chars read */
-				line[64 - 1] = 0;
-				/* Remove the trailing [CR]LFs */
-				for (count = strlen(line) - 1; count >= 0; count--)
-					if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			/* Remove enveloping double-quotes if present */
+			if (argument[0] == '"' && argument[strlen(argument)- 1] == '"') {
+				argument[0] = ' ';
+				argument[strlen(argument)- 1] = ' ';
+				g_strstrip(argument);
 			}
 
-			if (not) {
-				if ((strcasecmp(line, "false") == 0) ||
-					(strcasecmp(line, "no") == 0) ||
-					(strcasecmp(line, "0") == 0)) {
-					retval = TRUE;
+			/***********************************************************
+			 * if active()                                             *
+			 ***********************************************************/
+			if (condfunc == TYPE_CONDFUNC_ACTIVE) {
+
+				if (variables_is_avail_by_name(argument)) {
+					var = variables_get_by_name(argument);
+
+					/* There's a class hierarchy to be aware of here */
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
+					if (GTK_IS_TOGGLE_BUTTON(var->Widget)) {
+						state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(var->Widget));
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
+					} else if (GTK_IS_EXPANDER(var->Widget)) {
+						state = gtk_expander_get_expanded(GTK_EXPANDER(var->Widget));
+/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkCheckMenuItem */
+					} else if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
+						state = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(var->Widget));
+					} else {
+						state = -1;
+					}
+
+					if (not) {
+						if (state == 0) {
+							retval = TRUE;
+						}
+					} else {
+						if (state == 1) {
+							retval = TRUE;
+						}
+					}
 				}
-			} else {
-				if ((strcasecmp(line, "true") == 0) ||
-					(strcasecmp(line, "yes") == 0) ||
-					(atoi(line))) {
-					retval = TRUE;
+
+			/***********************************************************
+			 * if command()                                            *
+			 ***********************************************************/
+			} else if (condfunc == TYPE_CONDFUNC_COMMAND) {
+
+				/* Do as action_shellcommand() does */
+				variables_export_all();
+
+				/* Opening pipe for reading... */
+				if (infile = widget_opencommand(argument)) {
+					/* Just one line */
+					if (fgets(line, 64, infile)) {
+						/* Enforce end of string in case of max chars read */
+						line[64 - 1] = 0;
+						/* Remove the trailing [CR]LFs */
+						for (count = strlen(line) - 1; count >= 0; count--)
+							if (line[count] == 13 || line[count] == 10) line[count] = 0;
+					}
+
+					if (not) {
+						if ((strcasecmp(line, "false") == 0) ||
+							(strcasecmp(line, "no") == 0) ||
+							(strcasecmp(line, "0") == 0)) {
+							retval = TRUE;
+						}
+					} else {
+						if ((strcasecmp(line, "true") == 0) ||
+							(strcasecmp(line, "yes") == 0) ||
+							(atoi(line))) {
+							retval = TRUE;
+						}
+					}
+
+					/* Close the file */
+					pclose(infile);
+				} else {
+					fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+						argument);
 				}
+
+			/***********************************************************
+			 * if file()                                               *
+			 ***********************************************************/
+			} else if (condfunc == TYPE_CONDFUNC_FILE) {
+
+				if (infile = fopen(argument, "r")) {
+					/* Just one line */
+					if (fgets(line, 64, infile)) {
+						/* Enforce end of string in case of max chars read */
+						line[64 - 1] = 0;
+						/* Remove the trailing [CR]LFs */
+						for (count = strlen(line) - 1; count >= 0; count--)
+							if (line[count] == 13 || line[count] == 10) line[count] = 0;
+					}
+
+					if (not) {
+						if ((strcasecmp(line, "false") == 0) ||
+							(strcasecmp(line, "no") == 0) ||
+							(strcasecmp(line, "0") == 0)) {
+							retval = TRUE;
+						}
+					} else {
+						if ((strcasecmp(line, "true") == 0) ||
+							(strcasecmp(line, "yes") == 0) ||
+							(atoi(line))) {
+							retval = TRUE;
+						}
+					}
+
+					/* Close the file */
+					fclose(infile);
+				} else {
+					fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+						argument);
+				}
+
+			/***********************************************************
+			 * if sensitive()                                          *
+			 ***********************************************************/
+			} else if (condfunc == TYPE_CONDFUNC_SENSITIVE) {
+
+				if (variables_is_avail_by_name(argument)) {
+					var = variables_get_by_name(argument);
+
+					state = gtk_widget_get_sensitive(var->Widget);
+
+					if (not) {
+						if (state == 0) {
+							retval = TRUE;
+						}
+					} else {
+						if (state == 1) {
+							retval = TRUE;
+						}
+					}
+				}
+
+			/***********************************************************
+			 * if visible()                                            *
+			 ***********************************************************/
+			} else if (condfunc == TYPE_CONDFUNC_VISIBLE) {
+
+				if (variables_is_avail_by_name(argument)) {
+					var = variables_get_by_name(argument);
+
+					state = gtk_widget_get_visible(var->Widget);
+
+					if (not) {
+						if (state == 0) {
+							retval = TRUE;
+						}
+					} else {
+						if (state == 1) {
+							retval = TRUE;
+						}
+					}
+				}
+
 			}
 
-			/* Close the file */
-			pclose(infile);
-		} else {
-			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
-				filename);
-		}
-
 #ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s():        filename=%s\n", __func__, filename);
-		fprintf(stderr, "%s():        line=%s\n", __func__, line);
-		fprintf(stderr, "%s():        *command=%s\n", __func__, *command);
-		fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
+			fprintf(stderr, "%s():        argument=%s\n", __func__, argument);
+			fprintf(stderr, "%s():        not=%i\n", __func__, not);
+			fprintf(stderr, "%s():        line=%s\n", __func__, line);
+			fprintf(stderr, "%s():        state=%i\n", __func__, state);
+			fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
 #endif
-
+		} else {
+			fprintf(stderr, "%s(): Unknown condition '%s'\n", __func__,
+				condition);
+			/* Unknown condition so ignore it */
+			retval = TRUE;
+		}
 	} else {
+		/* No condition so ignore it */
 		retval = TRUE;
 	}
 
-	/* Preceding the remainder of the command could be whitespace so
-	 * skip over it and update the pointer */
-	while (**command && **command == ' ') (*command)++;
-
 #ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s():    *command=%s\n", __func__, *command);
 	fprintf(stderr, "%s():    retval=%i\n", __func__, retval);
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
