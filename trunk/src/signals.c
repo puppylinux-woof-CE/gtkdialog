@@ -41,11 +41,11 @@
 
 /* Local variables */
 char *condexpr[] = {
-	"if active(", "if !active(", "if ! active(", "if active (", "if !active (", "if ! active (",
-	"if command(", "if !command(", "if ! command(", "if command (", "if !command (", "if ! command (",
-	"if file(", "if !file(", "if ! file(", "if file (", "if !file (", "if ! file (",
-	"if sensitive(", "if !sensitive(", "if ! sensitive(", "if sensitive (", "if !sensitive (", "if ! sensitive (",
-	"if visible(", "if !visible(", "if ! visible(", "if visible (", "if !visible (", "if ! visible ("
+	"if active_is_true(", "if active_is_false(", "if active_is_true (", "if active_is_false (",
+	"if command_is_true(", "if command_is_false(", "if command_is_true (", "if command_is_false (",
+	"if file_is_true(", "if file_is_false(", "if file_is_true (", "if file_is_false (",
+	"if sensitive_is_true(", "if sensitive_is_false(", "if sensitive_is_true (", "if sensitive_is_false (",
+	"if visible_is_true(", "if visible_is_false(", "if visible_is_true (", "if visible_is_false ("
 };
 
 /* Local function prototypes */
@@ -1477,22 +1477,16 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	if (condition != NULL) {
 
 		/* Try and find one of the expressions within the condition */
-		for (count = 0; count < TYPE_CONDFUNC_VISIBLE * 6; count++) {
+		for (count = 0; count < TYPE_CONDFUNC_VISIBLE * 4; count++) {
 			if (strncasecmp(condition, condexpr[count],
 				strlen(condexpr[count])) == 0) {
-				condfunc = count / 6 + TYPE_CONDFUNC_ACTIVE;
+				condfunc = count / 4 + TYPE_CONDFUNC_ACTIVE;
+				not = count % 2;
 				break;
 			}
 		}
 
 		if (condfunc != TYPE_CONDFUNC_UNKNOWN) {
-
-			/* Are we looking for true or false? */
-			if (strncasecmp(condition, "if !", 4) == 0) {
-				not = TRUE;
-			} else {
-				not = FALSE;
-			}
 
 			/* Locate argument start and update pointer */
 			condition = strchr(condition, '(') + 1;
@@ -1683,7 +1677,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
 #endif
 		} else {
-			fprintf(stderr, "%s(): Unknown condition '%s'\n", __func__,
+			fprintf(stderr, "%s(): Unknown expression '%s'\n", __func__,
 				condition);
 			/* Unknown condition so ignore it */
 			retval = TRUE;

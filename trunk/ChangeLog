@@ -1,6 +1,12 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Nov 27 2012 Thunor <thunorsif@hotmail.com>
+- Changed "if function(argument)" and "if ! function(argument)" to
+  "if function_is_true(argument)" and "if function_is_false(argument)"
+  because the not symbol will be interpreted as notting. Not only is it
+  now clearer, it was easier to implement and it could be expanded upon.
+
 * Mon Nov 26 2012 Thunor <thunorsif@hotmail.com>
 - Moved the action conditions into their own tag attribute belonging to
   the action directive e.g. <action condition="if file(filename)">...
