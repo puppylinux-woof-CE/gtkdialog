@@ -50,6 +50,8 @@ Some of these may have tag attribute equivalents.
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || 0.7.21 ||
 || action signal="_type_" || Execute command on signal || Shell command || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_ || ||
+|| action signal="_type_" condition="_type_" || Execute command on signal conditionally || Shell command || 0.8.3 ||
+|| action signal="_type_" condition="_type_" || Perform function on signal conditionally || _function_:_parameter_ || 0.8.3 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
@@ -87,6 +89,26 @@ The following general functions can be performed by any widget capable of emitti
 || launch || Launch dialog || Variable name || ||
 || presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
+
+== Conditions ==
+
+The following conditions can be used within the condition attribute of action directives:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Argument* || *Since* ||
+|| active_is_true(_argument_) || Active state of toggle widget || Variable name || 0.8.3 ||
+|| active_is_false(_argument_) || Active state of toggle widget || Variable name || 0.8.3 ||
+|| command_is_true(_argument_) || Output of shell command || Shell command || 0.8.3 ||
+|| command_is_false(_argument_) || Output of shell command || Shell command || 0.8.3 ||
+|| file_is_true(_argument_) || Contents of a file || Filename || 0.8.3 ||
+|| file_is_false(_argument_) || Contents of a file || Filename || 0.8.3 ||
+|| sensitive_is_true(_argument_) || Sensitive state of widget || Variable name || 0.8.3 ||
+|| sensitive_is_false(_argument_) || Sensitive state of widget || Variable name || 0.8.3 ||
+|| visible_is_true(_argument_) || Visible state of widget || Variable name || 0.8.3 ||
+|| visible_is_false(_argument_) || Visible state of widget || Variable name || 0.8.3 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+true means "true", "yes" or a non-zero value, false means "false", "no" or zero, therefore the shell command is expected to echo one of these values to stdout.
 
 == Notes ==
 

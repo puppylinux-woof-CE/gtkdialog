@@ -16,19 +16,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkSeparatorMenuItem.html GtkSeparatorMen
 
 None.
 
-The following custom tag attributes are available:
-
-None.
-
 == Directives ==
-
-None.
-
-== Signals ==
-
-None.
-
-== Functions ==
 
 None.
 

@@ -22,7 +22,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkToggleButton.html GtkToggleButton] con
 	<sensitive>state</sensitive>
 	<action>activity</action>...
 	<action signal="type">activity</action>...
-	<action type="function">parameter</action>...
+	<action function="type">parameter</action>...
 </togglebutton>
 }}}
 
@@ -64,11 +64,16 @@ Some of these may have tag attribute equivalents.
 || input file icon="_image_"^[3]^ || GTK theme icon name || || ||
 || input file stock="_gtk-image_"^[4]^ || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || ||
 || sensitive || Sensitive state || {{{true}}} or {{{false}}} || ||
-|| action || Execute command on default signal || Shell command || ||
+|| action || Execute command on default signal || Shell command^[5]^ || ||
 || action || Perform function on default signal || _function_:_parameter_^[5]^ || ||
-|| action signal="_type_" || Execute command on signal || Shell command || ||
+|| action signal="_type_" || Execute command on signal || Shell command^[5]^ || ||
 || action signal="_type_" || Perform function on signal || _function_:_parameter_^[5]^ || ||
-|| action type="_function_" || Perform function on default signal || _parameter_ || ||
+|| action function="_type_" || Perform function on default signal || _parameter_^[5]^ || 0.8.3 ||
+|| action condition="_type_" || Execute command on default signal conditionally || Shell command^[5]^ || 0.8.3 ||
+|| action condition="_type_" || Perform function on default signal conditionally || _function_:_parameter_^[5]^ || 0.8.3 ||
+|| action signal="_type_" condition="_type_" || Execute command on signal conditionally || Shell command^[5]^ || 0.8.3 ||
+|| action signal="_type_" condition="_type_" || Perform function on signal conditionally || _function_:_parameter_^[5]^ || 0.8.3 ||
+|| action function="_type_" condition="_type_" || Perform function on default signal conditionally || _parameter_^[5]^ || 0.8.3 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Signals ==
@@ -107,6 +112,26 @@ The following general functions can be performed by any widget capable of emitti
 || presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
+== Conditions ==
+
+The following conditions can be used within the condition attribute of action directives:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Argument* || *Since* ||
+|| active_is_true(_argument_) || Active state of toggle widget || Variable name || 0.8.3 ||
+|| active_is_false(_argument_) || Active state of toggle widget || Variable name || 0.8.3 ||
+|| command_is_true(_argument_) || Output of shell command || Shell command || 0.8.3 ||
+|| command_is_false(_argument_) || Output of shell command || Shell command || 0.8.3 ||
+|| file_is_true(_argument_) || Contents of a file || Filename || 0.8.3 ||
+|| file_is_false(_argument_) || Contents of a file || Filename || 0.8.3 ||
+|| sensitive_is_true(_argument_) || Sensitive state of widget || Variable name || 0.8.3 ||
+|| sensitive_is_false(_argument_) || Sensitive state of widget || Variable name || 0.8.3 ||
+|| visible_is_true(_argument_) || Visible state of widget || Variable name || 0.8.3 ||
+|| visible_is_false(_argument_) || Visible state of widget || Variable name || 0.8.3 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
+true means "true", "yes" or a non-zero value, false means "false", "no" or zero, therefore the shell command is expected to echo one of these values to stdout.
+
 == Notes ==
 
 1. The existing "[http://developer.gnome.org/gtk/2.24/GtkButton.html#GtkButton--image-position image-position]" GTK+ property -- normally only applicable to stock buttons -- has been extended to apply to all Gtkdialog buttons.
@@ -117,7 +142,7 @@ The following general functions can be performed by any widget capable of emitti
 
 4. Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the "stock-icon-size" custom tag attribute can be used to request a size).
 
-5. This widget supports conditional function execution by prepending _function_:_parameter_ with {{{if true}}} or {{{if false}}}.
+5. This widget's actions can be conditionally executed (based upon its active state) by prepending its contents with {{{if true}}} or {{{if false}}} although 0.8.3 introduced a dedicated condition attribute which may be more suitable.
 
 This widget was introduced in version 0.7.21.
 
