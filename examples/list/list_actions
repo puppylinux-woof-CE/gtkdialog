@@ -11,7 +11,7 @@ funcbtnCreate() {
 	echo '<button>
 				<label>'$2'</label>
 				<action>echo "'$3' '$1'"</action>
-				<action type="'$2'">'$1'</action>
+				<action function="'$2'">'$1'</action>
 			</button>'
 }
 

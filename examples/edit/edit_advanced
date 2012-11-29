@@ -12,7 +12,7 @@ funcbtnCreate() {
 			<label>"'"$3"'"</label>
 			<input file stock="'$4'"></input>
 			<action>echo "'"$5"' '$1'"</action>
-			<action type="'"$3"'">'$1'</action>
+			<action function="'"$3"'">'$1'</action>
 		</button>'
 }
 

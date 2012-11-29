@@ -83,21 +83,21 @@ export MAIN_DIALOG='
 			<hbox space-expand="false" space-fill="false">
 				<button>
 					<label>Activate color/fontbutton</label>
-					<action type="activate">colorbutton</action>
-					<action type="activate">fontbutton</action>
+					<action function="activate">colorbutton</action>
+					<action function="activate">fontbutton</action>
 				</button>
 				<button>
 					<label>Activate everything else</label>
-					<action type="activate">menu</action>
-					<action type="activate">menuitem</action>
-					<action type="activate">radiomenuitem1</action>
-					<action type="activate">checkmenuitem</action>
-					<action type="activate">button</action>
-					<action type="activate">checkbox</action>
-					<action type="activate">entry</action>
-					<action type="activate">radiobutton1</action>
-					<action type="activate">spinbutton</action>
-					<action type="activate">togglebutton</action>
+					<action function="activate">menu</action>
+					<action function="activate">menuitem</action>
+					<action function="activate">radiomenuitem1</action>
+					<action function="activate">checkmenuitem</action>
+					<action function="activate">button</action>
+					<action function="activate">checkbox</action>
+					<action function="activate">entry</action>
+					<action function="activate">radiobutton1</action>
+					<action function="activate">spinbutton</action>
+					<action function="activate">togglebutton</action>
 				</button>
 				<vseparator></vseparator>
 				<button use-stock="true" label="gtk-quit"></button>

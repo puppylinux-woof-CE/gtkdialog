@@ -9,7 +9,7 @@ funcbtnCreate() {
 	echo '<button>
 			<label>"'"$2"'"</label>
 			<action>echo "'"$3"' cboComboBox'$1'"</action>
-			<action type="'"$4"'">cboComboBox'$1'</action>
+			<action function="'"$4"'">cboComboBox'$1'</action>
 		</button>'
 }
 
@@ -68,7 +68,7 @@ funccboEntryCreate() {
 			<output file>'"$TMPDIR"'/outputfile</output>
 			<action signal="changed">echo "cboComboBoxEntry'$1' changed to $cboComboBoxEntry'$1'"</action>
 			<action>echo "cboComboBoxEntry'$1' action for default signal triggered"</action>
-			<action type="command">echo "cboComboBoxEntry'$1' action type for default signal triggered"</action>
+			<action function="command">echo "cboComboBoxEntry'$1' action function for default signal triggered"</action>
 			<action signal="activate">echo "cboComboBoxEntry'$1' Enter key-press detected"</action>
 		</comboboxentry>
 		<hbox homogeneous="true">

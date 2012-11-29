@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog
 funcbtnCreate() {
 	echo '<button>
 			<label>presentwindow winLaunch'$1'</label>
-			<action type="presentwindow">winLaunch'$1'</action>
+			<action function="presentwindow">winLaunch'$1'</action>
 		</button>'
 }
 

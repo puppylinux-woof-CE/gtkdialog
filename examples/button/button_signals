@@ -32,11 +32,11 @@ export MAIN_DIALOG='
 		<hbox>
 			<button cancel>
 				<action signal="enter">echo Do you really want to exit?</action>
-				<action type="exit">Cancel</action>
+				<action function="exit">Cancel</action>
 			</button>
 			<button ok>
 				<action signal="enter">echo Do you really want to exit?</action>
-				<action type="exit">OK</action>
+				<action function="exit">OK</action>
 			</button>
 		</hbox>
 	</vbox>
