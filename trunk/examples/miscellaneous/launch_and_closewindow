@@ -19,11 +19,11 @@ funcframeCreate() {
 	fi
 	echo '			<button>
 				<label>launch '$1'</label>
-				<action type="launch">'$1'</action>
+				<action function="launch">'$1'</action>
 			</button>
 			<button>
 				<label>closewindow '$1'</label>
-				<action type="closewindow">'$1'</action>
+				<action function="closewindow">'$1'</action>
 			</button>
 		</frame>'
 }

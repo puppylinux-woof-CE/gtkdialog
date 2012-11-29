@@ -9,7 +9,7 @@ funcbtnCreate() {
 	echo '<button>
 			<label>"'"$2"'"</label>
 			<action>echo "'"$3"' entEntry'$1'"</action>
-			<action type="'"$4"'">entEntry'$1'</action>
+			<action function="'"$4"'">entEntry'$1'</action>
 		</button>'
 }
 

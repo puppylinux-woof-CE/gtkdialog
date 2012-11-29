@@ -28,8 +28,8 @@ export MAIN_DIALOG='
 				<input file>'"$TMPDIR"'/toggle.svg</input>
 				<label>"Toggle Me!"</label>
 				<action>funcImageToggle</action>
-				<action type="refresh">TOGGLEME</action>
-				<action type="refresh">TOGGLEMETOO</action>
+				<action function="refresh">TOGGLEME</action>
+				<action function="refresh">TOGGLEMETOO</action>
 			</button>
 			<button tooltip-text="Toggle me too!">
 				<variable>TOGGLEMETOO</variable>

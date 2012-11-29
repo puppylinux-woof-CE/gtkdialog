@@ -41,11 +41,11 @@
 
 /* Local variables */
 char *condexpr[] = {
-	"if active_is_true(", "if active_is_false(", "if active_is_true (", "if active_is_false (",
-	"if command_is_true(", "if command_is_false(", "if command_is_true (", "if command_is_false (",
-	"if file_is_true(", "if file_is_false(", "if file_is_true (", "if file_is_false (",
-	"if sensitive_is_true(", "if sensitive_is_false(", "if sensitive_is_true (", "if sensitive_is_false (",
-	"if visible_is_true(", "if visible_is_false(", "if visible_is_true (", "if visible_is_false ("
+	"active_is_true(", "active_is_false(", "active_is_true (", "active_is_false (",
+	"command_is_true(", "command_is_false(", "command_is_true (", "command_is_false (",
+	"file_is_true(", "file_is_false(", "file_is_true (", "file_is_false (",
+	"sensitive_is_true(", "sensitive_is_false(", "sensitive_is_true (", "sensitive_is_false (",
+	"visible_is_true(", "visible_is_false(", "visible_is_true (", "visible_is_false ("
 };
 
 /* Local function prototypes */
@@ -1243,7 +1243,10 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	const gchar *signal_name)
 {
 	GList            *element;
-	gchar            *command, *condition, *type, *signal;
+	gchar            *command;
+	gchar            *condition;
+	gchar            *function;
+	gchar            *signal;
 	gint              execute, is_active;
 
 #ifdef DEBUG_TRANSITS
@@ -1260,7 +1263,11 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 		execute = FALSE;
 		is_active = -1;
 
-		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		function = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "function");
+		if (function == NULL) {
+			/* function has replaced type in 0.8.3 so type is now deprecated */
+			function = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
+		}
 		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
 		condition = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "condition");
 
@@ -1271,8 +1278,8 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			 ***********************************************************/
 
 #ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): command=%s type=%s signal=%s signal_name=%s\n",
-				__func__, command, type, signal, signal_name);
+			fprintf(stderr, "%s(): command=%s function=%s signal=%s signal_name=%s\n",
+				__func__, command, function, signal, signal_name);
 #endif
 
 			/* There's a class hierarchy to be aware of here */
@@ -1310,13 +1317,13 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 		} else if (signal == NULL) {
 			/***********************************************************
-			 * This manages <action> and <action type="function">      *
+			 * This manages <action> and <action function="type">      *
 			 * i.e. the default widget signal                          *
 			 ***********************************************************/
 
 #ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): command=%s type=%s signal=%s signal_name=%s\n",
-				__func__, command, type, signal, signal_name);
+			fprintf(stderr, "%s(): command=%s function=%s signal=%s signal_name=%s\n",
+				__func__, command, function, signal, signal_name);
 #endif
 
 			/* There's a class hierarchy to be aware of here */
@@ -1431,7 +1438,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 		}
 
-		if (execute) execute_action(widget, command, type);
+		if (execute) execute_action(widget, command, function);
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 
 	}

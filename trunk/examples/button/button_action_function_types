@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #
-# Some action types are still missing. See execute_action() for more 
-# information.
+# Some action function types are still missing.
+# See execute_action() for more information.
 #
 
 GTKDIALOG=gtkdialog
@@ -15,7 +15,7 @@ export DIALOG='
 		</text>
 		<button>
 			<label>Close</label>
-			<action type="closewindow">DIALOG</action>
+			<action function="closewindow">DIALOG</action>
 		</button>
 	</vbox>
 	<variable>DIALOG</variable>
@@ -40,43 +40,43 @@ export MAIN_DIALOG='
 				<button>
 					<label>exit</label>
 					<action>echo You pressed the exit button</action>
-					<action type="exit">Exit by button</action>
+					<action function="exit">Exit by button</action>
 				</button>
 			</hbox>
 			<hbox>
 				<button>
 					<label>launch</label>
-					<action type="launch">DIALOG</action>
+					<action function="launch">DIALOG</action>
 				</button>
 				<button>
 					<label>closewindow</label>
-					<action type="closewindow">DIALOG</action>
+					<action function="closewindow">DIALOG</action>
 				</button>
 			</hbox>
 			<hbox>
 				<button>
 					<label>enable</label>
-					<action type="enable">ENTRY</action>
-					<action type="enable">CHECKBOX</action>
+					<action function="enable">ENTRY</action>
+					<action function="enable">CHECKBOX</action>
 				</button>
 				<button>
 					<label>disable</label>
-					<action type="disable">ENTRY</action>
-					<action type="disable">CHECKBOX</action>
+					<action function="disable">ENTRY</action>
+					<action function="disable">CHECKBOX</action>
 				</button>
 			</hbox>
 			<hbox>
 				<button>
 					<label>refresh</label>
-					<action type="refresh">ENTRY</action>
+					<action function="refresh">ENTRY</action>
 				</button>
 				<button>
 					<label>clear</label>
-					<action type="clear">ENTRY</action>
+					<action function="clear">ENTRY</action>
 				</button>
 				<button>
 					<label>fileselect</label>
-					<action type="fileselect">ENTRY</action>
+					<action function="fileselect">ENTRY</action>
 				</button>
 			</hbox>
 		</frame>

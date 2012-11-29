@@ -21,11 +21,11 @@ export MAIN_DIALOG='
 				</entry>
 				<button>
 					<input file stock="gtk-add"></input>
-					<action type="insert">ENTRY,TREE</action>
+					<action function="insert">ENTRY,TREE</action>
 				</button>
 				<button>
 					<input file stock="gtk-remove"></input>
-					<action type="removeselected">TREE</action>
+					<action function="removeselected">TREE</action>
 				</button>
 			</hbox>    
 		</frame>

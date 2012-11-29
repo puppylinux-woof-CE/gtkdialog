@@ -23,11 +23,11 @@ functreCreate() {
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-delete">
 				<action>echo "Deleting $'$1'"</action>
-				<action type="removeselected">'$1'</action>
+				<action function="removeselected">'$1'</action>
 			</button>
 			<button use-stock="true" label="gtk-refresh">
 				<action>echo Reloading file'$1'</action>
-				<action type="refresh">'$1'</action>
+				<action function="refresh">'$1'</action>
 			</button>
 		</hbox>'
 }

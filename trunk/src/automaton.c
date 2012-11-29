@@ -114,10 +114,8 @@ execute_action(GtkWidget *widget,
 	CommandType t;
 
 	/* Thunor: I've re-engineered my signal blocking mechanism.
-	 * There are a multitude of signal callbacks -- not just the
-	 * widget_signal_executor -- but they all end up here, so if the
-	 * global flag is true then the action functions simply don't
-	 * get executed */
+	 * All signal callbacks end up here, so if the global flag is
+	 * true then the action functions simply don't get executed */
 	if (!function_signals_block) {
 
 		if (type == NULL || g_utf8_strlen(type, -1) == 0) {

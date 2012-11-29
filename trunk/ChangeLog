@@ -1,6 +1,14 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Wed Nov 28 2012 Thunor <thunorsif@hotmail.com>
+- Changed <action type="function"> to <action function="type"> because
+  that's what it should be which is especially obvious now that we have
+  signal="type" and condition="type"; type="function" is now deprecated.
+- Updated some examples to use the new <action function="type">.
+- Removed "if " from conditions since we only need the conditions now.
+- Updated the reference docs.
+
 * Tue Nov 27 2012 Thunor <thunorsif@hotmail.com>
 - Changed "if function(argument)" and "if ! function(argument)" to
   "if function_is_true(argument)" and "if function_is_false(argument)"

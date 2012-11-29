@@ -132,6 +132,8 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkLabel.html">GtkLabel</a>
 <tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.7.21 </td></tr>
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" condition="<i>type</i>" </td><td class="wiki"> Execute command on signal conditionally </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> action signal="<i>type</i>" condition="<i>type</i>" </td><td class="wiki"> Perform function on signal conditionally </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> 0.8.3 </td></tr>
 </table>
 
 <h2> Signals </h2>
@@ -169,6 +171,26 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkLabel.html">GtkLabel</a>
 <tr><td class="wiki"> launch </td><td class="wiki"> Launch dialog </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> presentwindow </td><td class="wiki"> <a href="http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present">Present</a> dialog </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.1 </td></tr>
 </table>
+
+<h2> Conditions </h2>
+
+<p>The following conditions can be used within the condition attribute of action directives:</p>
+
+<table class="wiki" border="1" cellpadding="5px">
+<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Argument</b> </th><th class="wiki"> <b>Since</b> </th></tr>
+<tr><td class="wiki"> active_is_true(<i>argument</i>) </td><td class="wiki"> Active state of toggle widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> active_is_false(<i>argument</i>) </td><td class="wiki"> Active state of toggle widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> command_is_true(<i>argument</i>) </td><td class="wiki"> Output of shell command </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> command_is_false(<i>argument</i>) </td><td class="wiki"> Output of shell command </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> file_is_true(<i>argument</i>) </td><td class="wiki"> Contents of a file </td><td class="wiki"> Filename </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> file_is_false(<i>argument</i>) </td><td class="wiki"> Contents of a file </td><td class="wiki"> Filename </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> sensitive_is_true(<i>argument</i>) </td><td class="wiki"> Sensitive state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> sensitive_is_false(<i>argument</i>) </td><td class="wiki"> Sensitive state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> visible_is_true(<i>argument</i>) </td><td class="wiki"> Visible state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
+<tr><td class="wiki"> visible_is_false(<i>argument</i>) </td><td class="wiki"> Visible state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
+</table>
+
+<p>true means "true", "yes" or a non-zero value, false means "false", "no" or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 
 <h2> Notes </h2>
 
@@ -222,7 +244,7 @@ A <a href="http://developer.gnome.org/gtk/2.24/GtkLabel.html">GtkLabel</a>
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-11-22 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2012-11-29 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>

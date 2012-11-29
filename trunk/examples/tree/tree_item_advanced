@@ -11,7 +11,7 @@ funcbtnCreate() {
 	echo '<button>
 			<input file stock="'$3'"></input>
 			<action>echo "'"$4"' '$1'"</action>
-			<action type="'"$2"'">'$1'</action>
+			<action function="'"$2"'">'$1'</action>
 		</button>'
 }
 

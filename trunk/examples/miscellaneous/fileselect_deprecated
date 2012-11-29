@@ -16,7 +16,7 @@ export MAIN_DIALOG='
 				<button>
 					<input file stock="gtk-open"></input>
 					<variable>FILE_BROWSE</variable>
-					<action type="fileselect">FILE</action>
+					<action function="fileselect">FILE</action>
 				</button>
 			</hbox>
 		</frame>
@@ -29,7 +29,7 @@ export MAIN_DIALOG='
 				<button>
 					<input file stock="gtk-open"></input>
 					<variable>FILE_BROWSE_FILENAME</variable>
-					<action type="fileselect">FILE_FILENAME</action>
+					<action function="fileselect">FILE_FILENAME</action>
 				</button>
 			</hbox>
 		</frame>
@@ -42,7 +42,7 @@ export MAIN_DIALOG='
 				<button>
 					<input file stock="gtk-open"></input>
 					<variable>FILE_BROWSE_SAVEFILENAME</variable>
-					<action type="fileselect">FILE_SAVEFILENAME</action>
+					<action function="fileselect">FILE_SAVEFILENAME</action>
 				</button>
 			</hbox>
 		</frame>
@@ -55,7 +55,7 @@ export MAIN_DIALOG='
 				<button>
 					<input file stock="gtk-open"></input>
 					<variable>FILE_BROWSE_DIRECTORY</variable>
-					<action type="fileselect">FILE_DIRECTORY</action>
+					<action function="fileselect">FILE_DIRECTORY</action>
 				</button>
 			</hbox>
 		</frame>
@@ -68,7 +68,7 @@ export MAIN_DIALOG='
 				<button>
 					<input file stock="gtk-open"></input>
 					<variable>FILE_BROWSE_NEWDIRECTORY</variable>
-					<action type="fileselect">FILE_NEWDIRECTORY</action>
+					<action function="fileselect">FILE_NEWDIRECTORY</action>
 				</button>
 			</hbox>
 		</frame>

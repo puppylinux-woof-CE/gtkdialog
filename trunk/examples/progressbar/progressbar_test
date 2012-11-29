@@ -35,14 +35,14 @@ export BAR_DIALOG='
 				<variable>PROGRESS_BAR</variable>
 				<label>Some Text</label>
 				<input>progress_fast</input>
-				<action type="refresh">ENTRY</action>
-				<action type="closewindow">BAR_DIALOG</action>
+				<action function="refresh">ENTRY</action>
+				<action function="closewindow">BAR_DIALOG</action>
 				<action>echo ready</action>
 			</progressbar>
 		</frame>
 		<hbox>
 			<button cancel>
-				<action type="closewindow">BAR_DIALOG</action>
+				<action function="closewindow">BAR_DIALOG</action>
 			</button>
 		</hbox>
 	</vbox>
@@ -61,11 +61,11 @@ export MAIN_DIALOG='
 			<button cancel></button>
 			<button>
 				<label>Launch</label>
-				<action type="launch">BAR_DIALOG</action>
+				<action function="launch">BAR_DIALOG</action>
 			</button>
 			<button>
 				<label>Close</label>
-				<action type="exit">CLOSE</action>
+				<action function="exit">CLOSE</action>
 			</button>
 		</hbox>
 	</vbox>
