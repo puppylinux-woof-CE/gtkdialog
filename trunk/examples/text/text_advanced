@@ -11,7 +11,7 @@ funcbtnCreate() {
 		</button>'
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Text Advanced" resizable="false">
 	<vbox>
 		<vbox border-width="10" spacing="10">
@@ -20,7 +20,7 @@ export MAIN_DIALOG='
 			</text>
 			<vbox scrollable="true" width="600" height="300">
 				<text wrap="false" xalign="0">
-					<variable>txt0</variable>
+					<variable export="false">txt0</variable>
 					<label>This is a static text.</label>
 					<input file>'$0'</input>
 				</text>
@@ -67,6 +67,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

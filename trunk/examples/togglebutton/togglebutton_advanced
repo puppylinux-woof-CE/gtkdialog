@@ -2,14 +2,14 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 cp true.svg false.svg "$TMPDIR"/
 ln -sf "$TMPDIR"/true.svg "$TMPDIR"/tgb0.svg
 ln -sf "$TMPDIR"/false.svg "$TMPDIR"/tgb1.svg
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="ToggleButton Advanced" resizable="false" border-width="0">
 	<vbox>
 		<menubar>
@@ -58,6 +58,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

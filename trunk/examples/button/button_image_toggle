@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 GTKDIALOG=gtkdialog
+
+# This example requires bash.
 
 export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"

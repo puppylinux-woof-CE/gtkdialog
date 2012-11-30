@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 # You may notice that the last line of this demo contains "qecho":
@@ -25,7 +25,7 @@ echo 0 > "$TMPDIR"/demoindex
 echo 13 > "$TMPDIR"/democount
 sed -n 1p "$TMPDIR"/demo > "$TMPDIR"/feed
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Terminal Widget" resizable="true">
 	<vbox>
 		<timer interval="2" visible="false">
@@ -87,6 +87,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

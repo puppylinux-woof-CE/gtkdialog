@@ -28,7 +28,7 @@ funcframeCreate() {
 		</frame>'
 }
 
-export winMain='
+winMain='
 <window title="winMain" width-request="250" modal="'$modal'">
 	<vbox>
 		'"$(funcframeCreate winMain 1)"'
@@ -41,8 +41,9 @@ export winMain='
 	<variable>winMain</variable>
 </window>
 '
+export winMain
 
-export winLaunch1='
+winLaunch1='
 <window title="winLaunch1" width-request="250" modal="'$modal'">
 	<vbox>
 		'"$(funcframeCreate winMain 0)"'
@@ -55,8 +56,9 @@ export winLaunch1='
 	<variable>winLaunch1</variable>
 </window>
 '
+export winLaunch1
 
-export winLaunch2='
+winLaunch2='
 <window title="winLaunch2" width-request="250" modal="'$modal'">
 	<vbox>
 		'"$(funcframeCreate winMain 0)"'
@@ -69,6 +71,7 @@ export winLaunch2='
 	<variable>winLaunch2</variable>
 </window>
 '
+export winLaunch2
 
 case $1 in
 	-d | --dump) echo "$winMain" "$winLaunch1" "$winLaunch2" ;;

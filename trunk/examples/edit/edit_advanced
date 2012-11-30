@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 ediWidth=150; ediHeight=75; gap=25
@@ -30,7 +30,7 @@ funcediCreate() {
 
 echo > "$TMPDIR"/inoutfile
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Edit Advanced" resizable="false">
 	<vbox border-width="5" spacing="10">
 		<hbox spacing="10">
@@ -125,6 +125,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

@@ -3,12 +3,15 @@
 GTKDIALOG=gtkdialog
 
 funcentCreate() {
-	for ((f = $1; f < $2; f++)); do
+	local f=$1
+
+	while [ $f -lt $2 ]; do
 		echo '<entry editable="false"><default>"'$f'"</default></entry>'
+		f=$((f + 1))
 	done
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="VBox Scrollable" resizable="false">
 	<vbox>
 		<frame vbox widget scrolled window functionality>
@@ -35,6 +38,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

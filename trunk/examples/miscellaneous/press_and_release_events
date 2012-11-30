@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 funcenvvarCreate() {
@@ -19,7 +19,7 @@ funcenvvarCreate() {
 			</hbox>'
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Press and Release Events" width-request="560" height-request="530">
 	<vbox>
 		<edit>
@@ -100,6 +100,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

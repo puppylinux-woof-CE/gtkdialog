@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 ## Create a custom style for specific widgets.
@@ -45,10 +45,11 @@ funcSignalsCreate() {
 		<action signal="key-release-event">echo "'$1' - key-release-event"</action>
 		<action signal="map-event">echo "'$1' - map-event"</action>
 		<action signal="unmap-event">echo "'$1' - unmap-event"</action>
-		<action signal="show">echo "'$1' - show"</action>'
+		<action signal="show">echo "'$1' - show"</action>
+		<action signal="realize">echo "'$1' - realize"</action>'
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="EventBox">
 	<vbox>
 		<hbox homogeneous="true">
@@ -60,7 +61,7 @@ click around and
 watch events in
 the terminal."</label>
 					<input file stock="gtk-dialog-info"></input>
-					<action>echo "Button - click"</action>
+					<action>echo "Button0 - click"</action>
 					'$(funcSignalsCreate Button0)'
 				</button>
 				'$(funcSignalsCreate EventBox0)'
@@ -73,7 +74,7 @@ causes all events
 to be received
 by the eventbox."</label>
 					<input file stock="gtk-dialog-authentication"></input>
-					<action>echo "Button - click"</action>
+					<action>echo "Button1 - click"</action>
 					'$(funcSignalsCreate Button1)'
 				</button>
 				'$(funcSignalsCreate EventBox1)'
@@ -95,6 +96,7 @@ you can paint with colour or tile with pixmaps.</span>"</label>
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -93,7 +93,7 @@ if [ ! -f "$TMPDIR"/inoutfile ]; then
 	echo "cboComboBoxEntry3" > "$TMPDIR"/inoutfile
 fi
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="ComboBoxEntry Advanced" resizable="false">
 	<vbox>
 		<hbox>
@@ -137,6 +137,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

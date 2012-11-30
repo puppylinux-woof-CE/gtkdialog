@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window>
 	<vbox>
 		<hbox>
@@ -69,6 +69,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Activate" border-width="0">
 	<vbox>
 		<menubar space-expand="false" space-fill="false">
@@ -106,6 +106,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

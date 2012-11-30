@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Signals" icon-name="gtk-dialog-warning">
 	<vbox>
 		<frame Widgets>
@@ -19,6 +19,7 @@ export MAIN_DIALOG='
 				<action signal="key-release-event">echo Label: key-release-event</action>
 				<action signal="hide">echo Label: hide</action>
 				<action signal="show">echo Label: show</action>
+				<action signal="realize">echo Label: realize</action>
 				<action signal="map-event">echo Label: map-event</action>
 				<action signal="unmap-event">echo Label: unmap-event</action>
 			</text>
@@ -35,6 +36,7 @@ export MAIN_DIALOG='
 				<action signal="key-release-event">echo Entry: key-release-event</action>
 				<action signal="hide">echo Entry: hide</action>
 				<action signal="show">echo Entry: show</action>
+				<action signal="realize">echo Entry: realize</action>
 				<action signal="map-event">echo Entry: map-event</action>
 				<action signal="unmap-event">echo Entry: unmap-event</action>
 			</entry>
@@ -52,6 +54,7 @@ export MAIN_DIALOG='
 				<action signal="key-release-event">echo Button: key-release-event</action>
 				<action signal="hide">echo Button: hide</action>
 				<action signal="show">echo Button: show</action>
+				<action signal="realize">echo Button: realize</action>
 				<action signal="map-event">echo Button: map-event</action>
 				<action signal="unmap-event">echo Button: unmap-event</action>
 			</button>
@@ -70,10 +73,12 @@ export MAIN_DIALOG='
 	<action signal="key-release-event">echo Window: key-release-event</action>
 	<action signal="hide">echo Window: hide</action>
 	<action signal="show">echo Window: show</action>
+	<action signal="realize">echo Window: realize</action>
 	<action signal="map-event">echo Window: map-event</action>
 	<action signal="unmap-event">echo Window: unmap-event</action>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

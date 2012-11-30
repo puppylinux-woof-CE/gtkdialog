@@ -28,7 +28,7 @@ funcbtnCreate() {
 
 interval=250
 
-export winLaunch0='
+winLaunch0='
 <window title="winLaunch0" width-request="250" resizable="false">
 	<vbox>
 		<timer milliseconds="true" interval="'$interval'" visible="false">
@@ -63,8 +63,9 @@ export winLaunch0='
 	<variable>winLaunch0</variable>
 </window>
 '
+export winLaunch0
 
-export winLaunch1='
+winLaunch1='
 <window title="winLaunch1" width-request="250" resizable="false">
 	<vbox>
 		'"$(funcbtnCreate 0)"'
@@ -78,8 +79,9 @@ export winLaunch1='
 	<action signal="show">echo "winLaunch1 - I'"'"'ve been launched!"</action>
 </window>
 '
+export winLaunch1
 
-export winLaunch2='
+winLaunch2='
 <window title="winLaunch2" width-request="250" resizable="false">
 	<vbox>
 		'"$(funcbtnCreate 0)"'
@@ -93,8 +95,9 @@ export winLaunch2='
 	<action signal="show">echo "winLaunch2 - I'"'"'ve been launched!"</action>
 </window>
 '
+export winLaunch2
 
-export winLaunch3='
+winLaunch3='
 <window title="winLaunch3" width-request="250" resizable="false">
 	<vbox>
 		'"$(funcbtnCreate 0)"'
@@ -108,6 +111,7 @@ export winLaunch3='
 	<action signal="show">echo "winLaunch3 - I'"'"'ve been launched!"</action>
 </window>
 '
+export winLaunch3
 
 case $1 in
 	-d | --dump) echo "$winLaunch0" "$winLaunch1" "$winLaunch2" "$winLaunch3" ;;

@@ -1,6 +1,10 @@
 #!/bin/sh
 
-export GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog
+
+funcRandom() {
+	od -An -N2 -tu2 < /dev/urandom
+}
 
 funcExampleCreate() {
 	if [ $1 = 0 ]; then echo '
@@ -34,7 +38,7 @@ funcExampleCreate() {
 				<colorbutton space-expand="false" use-alpha="true">'
 	fi
 	echo '
-					<default>#'$(for f in 0 1 2; do printf "%02x" $(($RANDOM % 256)); done)'|43934"</default>
+					<default>#'$(for f in 0 1 2; do printf "%02x" $((`funcRandom` % 256)); done)'|43934"</default>
 				</colorbutton>
 			</vbox>
 			<vseparator></vseparator>
@@ -51,11 +55,11 @@ funcExampleCreate() {
 				<label>Next example</label>
 				<input file stock="gtk-go-forward"></input>'
 	if [ $1 = 0 ]; then echo '
-				<action>$GTKDIALOG --space-expand=true --program=CLI_EXPAND_METHOD &</action>'
+				<action>'"$GTKDIALOG"' --space-expand=true --program=CLI_EXPAND_METHOD &</action>'
 	elif [ $1 = 1 ]; then echo '
-				<action>$GTKDIALOG --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_METHOD &</action>'
+				<action>'"$GTKDIALOG"' --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_METHOD &</action>'
 	elif [ $1 = 2 ]; then echo '
-				<action>$GTKDIALOG --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD &</action>'
+				<action>'"$GTKDIALOG"' --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD &</action>'
 	else echo '
 				<sensitive>false</sensitive>'
 	fi
@@ -69,10 +73,14 @@ funcExampleCreate() {
 '
 }
 
-export ORIGINAL_METHOD="$(funcExampleCreate 0)"
-export CLI_EXPAND_METHOD="$(funcExampleCreate 1)"
-export CLI_EXPAND_PLUS_FILL_METHOD="$(funcExampleCreate 2)"
-export CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD="$(funcExampleCreate 3)"
+ORIGINAL_METHOD="$(funcExampleCreate 0)"
+export ORIGINAL_METHOD
+CLI_EXPAND_METHOD="$(funcExampleCreate 1)"
+export CLI_EXPAND_METHOD
+CLI_EXPAND_PLUS_FILL_METHOD="$(funcExampleCreate 2)"
+export CLI_EXPAND_PLUS_FILL_METHOD
+CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD="$(funcExampleCreate 3)"
+export CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD
 
 case $1 in
 	-d | --dump)

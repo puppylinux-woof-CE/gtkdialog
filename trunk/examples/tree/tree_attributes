@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 cat <<EOF > "$TMPDIR"/inputfile
@@ -13,7 +13,7 @@ gtk-network  | Network Drive | /network/  | ak.pdf
 gtk-delete   | Trash         | /trash/    | 
 EOF
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window>
 	<vbox>
 		<frame With Rules, Without Headers>
@@ -50,6 +50,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

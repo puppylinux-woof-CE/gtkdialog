@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+
+# This example requires bash.
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 funcnbkCreate() {

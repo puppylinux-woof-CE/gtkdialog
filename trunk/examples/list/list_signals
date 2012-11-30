@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window>
 	<vbox>
 		<list>
@@ -24,6 +24,7 @@ export MAIN_DIALOG='
 			<action signal="map-event">echo "LIST=\"$LIST\" - map-event"</action>
 			<action signal="unmap-event">echo "LIST=\"$LIST\" - unmap-event"</action>
 			<action signal="show">echo "LIST=\"$LIST\" - show"</action>
+			<action signal="realize">echo "LIST=\"$LIST\" - realize"</action>
 		</list>
 		<hbox>
 			<button cancel></button>
@@ -32,6 +33,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

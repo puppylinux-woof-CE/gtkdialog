@@ -3,18 +3,24 @@
 GTKDIALOG=gtkdialog
 
 funchspCreate() {
-	for ((f = 0; f < $1; f++)); do
+	local f=0
+
+	while [ $f -lt $1 ]; do
 		echo '<hseparator width-request="'$2'"></hseparator>'
+		f=$((f + 1))
 	done
 }
 
 funcvspCreate() {
-	for ((f = 0; f < $1; f++)); do
+	local f=0
+
+	while [ $f -lt $1 ]; do
 		echo '<vseparator height-request="'$2'"></vseparator>'
+		f=$((f + 1))
 	done
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="HSeparator Advanced" resizable="false">
 	<vbox>
 		<frame hseparator and vseparator widgets>
@@ -41,6 +47,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
