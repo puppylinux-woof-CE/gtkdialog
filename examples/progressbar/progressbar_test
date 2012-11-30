@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+# This example requires bash.
 
 GTKDIALOG=gtkdialog
 
@@ -10,7 +12,6 @@ progress() {
 		[ "$i" -gt 60 ] && echo "End..."
 		sleep 0.3 
 	done; 
-	echo ready
 }; export -f progress
 
 progress_fast() {
@@ -21,7 +22,6 @@ progress_fast() {
 		[ "$i" -gt 6000 ] && echo "End..."
 		#sleep 0.1
 	done; 
-	echo ready
 }; export -f progress_fast
 
 export BAR_DIALOG='

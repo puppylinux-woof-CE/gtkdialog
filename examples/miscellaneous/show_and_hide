@@ -10,7 +10,7 @@ functgbCreate() {
 				</togglebutton>'
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Show and Hide" border-width="0">
 	<vbox>
 		<menubar>
@@ -171,8 +171,10 @@ export MAIN_DIALOG='
 	<variable>MAIN_DIALOG</variable>
 </window>
 '
+export MAIN_DIALOG
 
-export GTKDIALOG_PIXMAP_PATH=/usr/share/icons/hicolor/48x48/apps:/usr/share/pixmaps
+GTKDIALOG_PIXMAP_PATH=/usr/share/icons/hicolor/48x48/apps:/usr/share/pixmaps
+export GTKDIALOG_PIXMAP_PATH
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

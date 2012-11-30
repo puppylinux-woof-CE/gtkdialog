@@ -1,13 +1,13 @@
 #!/bin/sh
 
 #
-# Some action types are still missing. See execute_action() for more 
-# information.
+# Some action function types are still missing.
+# See execute_action() for more information.
 #
 
 GTKDIALOG=gtkdialog
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window>
 	<vbox>
 		<frame Button signals>
@@ -42,6 +42,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

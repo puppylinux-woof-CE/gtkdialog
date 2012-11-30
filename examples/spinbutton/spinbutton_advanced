@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -30,7 +30,7 @@ funcspbCreate() {
 
 if [ ! -f "$TMPDIR"/inputfile ]; then echo "0.9881" > "$TMPDIR"/inputfile; fi
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="SpinButton Advanced" resizable="false">
 	<vbox>
 		<frame spinbutton widget>
@@ -84,6 +84,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

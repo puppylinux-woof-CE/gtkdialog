@@ -18,7 +18,7 @@ funcrdoCreate() {
 		</radiobutton>'
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="RadioButton Advanced" resizable="false">
 	<vbox border-width="15" spacing="10">
 		<text>
@@ -72,6 +72,7 @@ i.e. the notebook, vbox, hbox and frame widgets."</label>
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

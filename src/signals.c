@@ -782,7 +782,14 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 
 	widget_set_tag_attributes(widget, tag_attributes);
 
-	widget_signal_executor(widget, var->Attributes, "realize");
+	/* Thunor: I've recently (0.8.3) included this call since the
+	 * signal was connected-up for use anyway, but we don't have an
+	 * AttributeSet coming in and so we have to find the widget's
+	 * variable which will result in the variable being NULL if the
+	 * widget has a more recent duplicate variable name */
+	if (var) {
+		widget_signal_executor(widget, var->Attributes, "realize");
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -1206,7 +1213,21 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 
 	//Redundant: variables_drop_by_parent(NULL, widget);
 	var = find_variable_by_widget(widget);
-	variables_drop_by_window_id(NULL, var->window_id);
+	if (var) {
+		variables_drop_by_window_id(NULL, var->window_id);
+	} else {
+		/* Thunor: Here's how to experience this error:
+		 * Launch a window with the same variable name as the main window
+		 * and then close the main window via the window manager.
+		 * Read my notes atop variables_new_with_widget() to understand
+		 * why this might happen and why it has to be accepted.
+		 * 
+		 * Simply put, a widget's variable including all of its assets
+		 * will be stolen by a widget with a duplicate variable name */
+		fprintf(stderr, "%s(): Window widget with NULL variable detected.\n",
+			__func__);
+		exit(EXIT_FAILURE);
+	}
 
 #ifdef DEBUG_CONTENT
 	fprintf(stderr, "%s(): variables_count_widgets()=%i\n", __func__,

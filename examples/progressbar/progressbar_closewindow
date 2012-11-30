@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+# This example requires bash.
 
 GTKDIALOG=gtkdialog
 
@@ -10,7 +12,6 @@ progress() {
 		[ "$i" -gt 60 ] && echo "End..."
 		sleep 0.3
 	done;
-	echo ready
 }; export -f progress
 
 export BAR_DIALOG='
@@ -23,7 +24,7 @@ export BAR_DIALOG='
 			<progressbar>
 				<label>Some Text</label>
 				<input>progress</input>
-				<action function="closewindow">Ready</action>
+				<action function="closewindow">BAR_DIALOG</action>
 			</progressbar>
 		</frame>
 		<hbox>

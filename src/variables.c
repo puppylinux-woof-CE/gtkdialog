@@ -148,7 +148,30 @@ variable *variables_new(const char *name)
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
-/* This function will create a new variable with widget and type */
+/* This function will create a new variable with widget and type.
+ * 
+ * Thunor: The way in which this operates is flawed but it works:
+ * Attempting to create a variable with a duplicate name results in the
+ * original variable's widget pointer being overwritten and in fact all
+ * of the original widget's attributes will be overwritten too. So if
+ * you call find_variable_by_widget() you'll get NULL for the original
+ * widget and in any case surely the application will be compromised?
+ * 
+ * Now, if you try to enforce unique variable names you'll encounter a
+ * problem in that launched windows' widget's are destroyed but their
+ * variables aren't, and if you launch the same window again then the
+ * variables will already exist and an attempt will be made to recreate
+ * them but because they already exist they'll be reused, therefore
+ * enforcing unique variable names is not going to be possible.
+ * 
+ * Basically you have accept that the system has been designed to reuse
+ * variables even though it could result in widgets with NULL variables
+ * and a compromised application.
+ * 
+ * It's not even possible to detect duplicate variable names after the
+ * initial window has been created so it's pointless making the effort
+ * to warn the user.
+ */
 
 variable *variables_new_with_widget(AttributeSet *Attr,
 	tag_attr *widget_tag_attr, GtkWidget *widget, int type)
@@ -179,12 +202,13 @@ variable *variables_new_with_widget(AttributeSet *Attr,
 
 	/* 
 	 ** If the variable exists we simply returns without making a 
-	 ** a warning. 
+	 ** a warning.
 	 */
-	if (!variables_is_avail_by_name(name))
+	if (!variables_is_avail_by_name(name)) {
 		var = variables_new(name);
-	else
+	} else {
 		var = variables_get_by_name(name);
+	}
 
 	g_assert(var != NULL);
 

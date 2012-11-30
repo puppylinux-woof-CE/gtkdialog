@@ -14,7 +14,7 @@ funcactCreate() {
 		<action signal="focus-in-event">echo "'$1' focus-in-event"</action>'
 }
 
-export winWindow='
+MAIN_DIALOG='
 <window title="GrabFocus">
 	<vbox>
 		<hbox>
@@ -135,12 +135,13 @@ export winWindow='
 			</vbox>
 		</hbox>
 	</vbox>
-	<variable>winWindow</variable>
-	'"$(funcactCreate winWindow)"'
+	<variable>MAIN_DIALOG</variable>
+	'"$(funcactCreate MAIN_DIALOG)"'
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
-	-d | --dump) echo "$winWindow" ;;
-	*) $GTKDIALOG --space-expand=true --space-fill=true --program=winWindow ;;
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
 esac

@@ -18,7 +18,7 @@ funcchkCreate() {
 		</checkbox>'
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="CheckBox Advanced" resizable="false" border-width="0">
 	<vbox spacing="0">
 		<menubar>
@@ -73,6 +73,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

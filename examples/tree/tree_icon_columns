@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # The <input> tags can have attributes setting which input column holds the
@@ -6,6 +6,8 @@
 #   o stock-column
 #   o icon-column
 #
+
+# This example requires bash.
 
 GTKDIALOG=gtkdialog
 

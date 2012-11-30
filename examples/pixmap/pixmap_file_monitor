@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 # Get the filenames of the first two images in /usr/share/pixmaps
@@ -10,13 +10,13 @@ IMAGEFILES="$(find /usr/share/pixmaps -maxdepth 1 -type f | head -2)"
 index=0
 for f in $IMAGEFILES; do
 	eval IMAGEFILE$index="$f"
-	index=$(($index + 1))
+	index=$((index + 1))
 done
 cp "$IMAGEFILE0" "$TMPDIR"/inputfile
 
 funcpmpCreate() {
 	echo '			<pixmap file-monitor="true">
-				<variable>'$1'</variable>
+				<variable export="false">'$1'</variable>
 				<width>32</width>
 				<height>32</height>
 				<input file>'"$TMPDIR"'/inputfile</input>
@@ -32,7 +32,7 @@ funcpmpCreate() {
 width=10
 height=10
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Pixmap File Monitor">
 	<vbox>
 		'$(y=0; while [ $y -lt $height ]; do
@@ -64,6 +64,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

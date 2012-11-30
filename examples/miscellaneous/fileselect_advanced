@@ -9,7 +9,7 @@ funcbtnCreate() {
 		</button>'
 }
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="Fileselect Advanced" resizable="false" width-request="500">
 	<vbox>
 		<vbox border-width="20" spacing="10">
@@ -66,6 +66,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

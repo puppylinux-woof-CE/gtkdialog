@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -16,7 +16,7 @@ funcbtnCreate() {
 
 echo "Nimbus Sans L Regular 15" > "$TMPDIR"/inputfile
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="FontButton">
 	<vbox>
 		<vbox border-width="30">
@@ -88,6 +88,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

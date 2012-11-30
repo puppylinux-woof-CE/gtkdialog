@@ -2,10 +2,17 @@
 
 GTKDIALOG=gtkdialog
 
-IMAGEFILE=( $(find /usr/share/icons -maxdepth 1 -type f | head -3) )
+# Get the filenames of the first three images in /usr/share/icons
+IMAGEFILES="$(find /usr/share/icons -maxdepth 1 -type f | head -3)"
+index=0
+for f in $IMAGEFILES; do
+	eval IMAGEFILE$index="$f"
+	index=$((index + 1))
+done
 
-export MAIN_DIALOG='
-<window title="MenuBar" resizable="false" width-request="360" height-request="240"  border-width="0">
+MAIN_DIALOG='
+<window title="MenuBar" resizable="false" width-request="360"
+	height-request="240" border-width="0">
 	<vbox spacing="0">
 		<menubar>
 			<menu label="_Stock Images" use-underline="true">
@@ -27,13 +34,13 @@ export MAIN_DIALOG='
 				<label>"_Theme Images"</label>
 			</menu>
 			<menu use-underline="true">
-				<menuitem image-name="'"${IMAGEFILE[0]}"'" label="Original Size"></menuitem>
-				<menuitem image-name="'"${IMAGEFILE[1]}"'">
+				<menuitem image-name="'"$IMAGEFILE0"'" label="Original Size"></menuitem>
+				<menuitem image-name="'"$IMAGEFILE1"'">
 					<label>32px</label>
 					<height>32</height>
 					<width>32</width>
 				</menuitem>
-				<menuitem image-name="'"${IMAGEFILE[2]}"'" label="48px">
+				<menuitem image-name="'"$IMAGEFILE2"'" label="48px">
 					<height>48</height>
 					<width>48</width>
 				</menuitem>
@@ -43,6 +50,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

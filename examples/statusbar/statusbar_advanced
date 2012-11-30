@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -16,7 +16,7 @@ funcbtnCreate() {
 
 echo "This message originates from an input file" > "$TMPDIR"/inputfile
 
-export MAIN_DIALOG='
+MAIN_DIALOG='
 <window title="StatusBar Advanced" resizable="false" border-width="0">
 	<vbox spacing="0">
 		<menubar>
@@ -46,6 +46,7 @@ export MAIN_DIALOG='
 	</vbox>
 </window>
 '
+export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;

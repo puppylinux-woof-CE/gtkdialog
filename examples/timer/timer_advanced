@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+# This example requires bash.
 
 GTKDIALOG=gtkdialog
 
@@ -8,7 +10,7 @@ mkdir -p "$TMPDIR"
 funcpixCreate() {
 	for f in 0 1 2 3; do
 		echo '<pixmap>
-				<variable>pix'$1$f'</variable>
+				<variable export="false">pix'$1$f'</variable>
 				<input file>'"$TMPDIR"'/pix'$f'.svg</input>
 			</pixmap>'
 	done
