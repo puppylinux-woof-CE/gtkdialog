@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Dec 1 2012 Thunor <thunorsif@hotmail.com>
+- Added examples/miscellaneous/conditional_actions.
+
 * Thu Nov 29 2012 Thunor <thunorsif@hotmail.com>
 - Fixed bashisms within examples where possible, changed /bin/sh to
   /bin/bash where it wasn't.
