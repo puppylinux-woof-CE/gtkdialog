@@ -1,0 +1,89 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+echo "Middle is sensitive" > "$TMPDIR"/ent0
+echo "Middle is visible" > "$TMPDIR"/ent1
+
+MAIN_DIALOG='
+<window title="Conditional Actions" window-position="1" default-width="300">
+	<vbox>
+		<hscale update-policy="2" range-value="50">
+			<variable>hsc0</variable>
+			<action>disable:txtLeft0</action>
+			<action>disable:txtMiddle0</action>
+			<action>disable:txtRight0</action>
+			<action condition="command_is_true([ $hsc0 -lt 33 ] && echo true)">enable:txtLeft0</action>
+			<action condition="command_is_true([ $hsc0 -ge 33 ] && [ $hsc0 -le 66 ] && echo true)">enable:txtMiddle0</action>
+			<action condition="command_is_true([ $hsc0 -gt 66 ] && echo true)">enable:txtRight0</action>
+			<action condition="sensitive_is_true(txtLeft0)">echo "Left is sensitive" > '"$TMPDIR"'/ent0</action>
+			<action condition="sensitive_is_true(txtMiddle0)">echo "Middle is sensitive" > '"$TMPDIR"'/ent0</action>
+			<action condition="sensitive_is_true(txtRight0)">echo "Right is sensitive" > '"$TMPDIR"'/ent0</action>
+			<action>refresh:ent0</action>
+		</hscale>
+		<hbox>
+			<text sensitive="false">
+				<variable>txtLeft0</variable>
+				<label>Left</label>
+			</text>
+			<text>
+				<variable>txtMiddle0</variable>
+				<label>Middle</label>
+			</text>
+			<text sensitive="false">
+				<variable>txtRight0</variable>
+				<label>Right</label>
+			</text>
+		</hbox>
+		<entry editable="false" can-focus="false">
+			<variable>ent0</variable>
+			<input file>'"$TMPDIR"'/ent0</input>
+		</entry>
+		<hseparator></hseparator>
+		<hscale update-policy="2" range-value="50">
+			<variable>hsc1</variable>
+			<action>hide:txtLeft1</action>
+			<action>hide:txtMiddle1</action>
+			<action>hide:txtRight1</action>
+			<action condition="command_is_true([ $hsc1 -lt 33 ] && echo true)">show:txtLeft1</action>
+			<action condition="command_is_true([ $hsc1 -ge 33 ] && [ $hsc1 -le 66 ] && echo true)">show:txtMiddle1</action>
+			<action condition="command_is_true([ $hsc1 -gt 66 ] && echo true)">show:txtRight1</action>
+			<action condition="visible_is_true(txtLeft1)">echo "Left is visible" > '"$TMPDIR"'/ent1</action>
+			<action condition="visible_is_true(txtMiddle1)">echo "Middle is visible" > '"$TMPDIR"'/ent1</action>
+			<action condition="visible_is_true(txtRight1)">echo "Right is visible" > '"$TMPDIR"'/ent1</action>
+			<action>refresh:ent1</action>
+		</hscale>
+		<hbox>
+			<text visible="false">
+				<variable>txtLeft1</variable>
+				<label>Left</label>
+			</text>
+			<text>
+				<variable>txtMiddle1</variable>
+				<label>Middle</label>
+			</text>
+			<text visible="false">
+				<variable>txtRight1</variable>
+				<label>Right</label>
+			</text>
+		</hbox>
+		<entry editable="false" can-focus="false">
+			<variable>ent1</variable>
+			<input file>'"$TMPDIR"'/ent1</input>
+		</entry>
+		<hseparator></hseparator>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac

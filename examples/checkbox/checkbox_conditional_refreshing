@@ -1,0 +1,88 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+mkdir -p "$TMPDIR"
+
+functxtCreate() {
+	echo '<text name="FontSize48">
+				<variable export="false">txt'$1'</variable>
+				<input>"printf $((`od -An -N2 -tu2 < /dev/urandom` % 10))"</input>
+			</text>'
+}
+
+## Create a custom style for specific widgets.
+funcgtkrcCreate() {
+	echo '
+style "styleFontSize48" {
+	font_name = "48"
+}
+widget "*FontSize48" style "styleFontSize48"
+' > "$TMPDIR"/.gtkrc-2.0
+
+	GTK2_RC_FILES="$TMPDIR"/.gtkrc-2.0:~/.gtkrc-2.0
+	export GTK2_RC_FILES
+
+}; funcgtkrcCreate
+
+echo false > "$TMPDIR"/chkCheck
+
+MAIN_DIALOG='
+<window title="Checkbox Conditional Refreshing" window-position="1">
+	<vbox>
+		<hbox>
+			'"$(functxtCreate 0)"'
+			'"$(functxtCreate 1)"'
+			'"$(functxtCreate 2)"'
+			'"$(functxtCreate 3)"'
+		</hbox>
+		<hbox>
+			'"$(functxtCreate 4)"'
+			'"$(functxtCreate 5)"'
+			'"$(functxtCreate 6)"'
+			'"$(functxtCreate 7)"'
+		</hbox>
+		<hseparator></hseparator>
+		<text>
+			<label>"Click the apply button below to write the inverse of
+the checkbox'"'"'s current state to its input file causing
+it to refresh the various widgets via the timer."</label>
+		</text>
+		<button use-stock="true" label="gtk-apply">
+			<action>"if [ $chkCheck = true ]; then
+						echo false > '"$TMPDIR"'/chkCheck
+					else
+						echo true > '"$TMPDIR"'/chkCheck
+					fi"</action>
+		</button>
+		<hbox>
+			<timer>
+				<action>refresh:chkCheck</action>
+			</timer>
+			<checkbox sensitive="false">
+				<variable>chkCheck</variable>
+				<input file>'"$TMPDIR"'/chkCheck</input>
+				<action>refresh:txt0</action>
+				<action>refresh:txt1</action>
+				<action>refresh:txt2</action>
+				<action>refresh:txt3</action>
+				<action>refresh:txt4</action>
+				<action>refresh:txt5</action>
+				<action>refresh:txt6</action>
+				<action>refresh:txt7</action>
+			</checkbox>
+		</hbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac
