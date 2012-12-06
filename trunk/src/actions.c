@@ -40,8 +40,25 @@
 extern gchar *option_include_file;
 
 /* Local function prototypes */
+void action_closewindow(GtkWidget *widget, char *string);
+void action_launchwindow(GtkWidget *widget, char *string);
+void action_exitprogram(GtkWidget *widget, char *string);
+void action_refreshwidget(GtkWidget *widget, char *string);
+void action_savewidget(GtkWidget *widget, char *string);
+void action_fileselect(GtkWidget *widget, char *string);
 void action_fileselection_made(GtkWidget *w, actioncommand *ac);
 void action_fileselection_destroy(GtkWidget *w, actioncommand *ac);
+void action_clearwidget(GtkWidget *widget, char *string);
+void action_removeselected(GtkWidget *widget, char *string);
+int action_append(GtkWidget *widget, char *string);
+void action_enable(GtkWidget *widget, char *string);
+void action_disable(GtkWidget *widget, char *string);
+void action_show(GtkWidget *widget, char *string);
+void action_hide(GtkWidget *widget, char *string);
+void action_activate(GtkWidget *widget, char *string);
+void action_grabfocus(GtkWidget *widget, char *string);
+void action_presentwindow(GtkWidget *widget, char *string);
+void action_shellcommand(GtkWidget *widget, char *string);
 
 /***********************************************************************
  * Action closewindow                                                  *
@@ -52,7 +69,7 @@ void action_fileselection_destroy(GtkWidget *w, actioncommand *ac);
  * directive.
  */
 
-int action_closewindow(GtkWidget *widget, char *string)
+void action_closewindow(GtkWidget *widget, char *string)
 {
 	GtkWidget        *window;
 	variable         *existing;
@@ -117,8 +134,6 @@ int action_closewindow(GtkWidget *widget, char *string)
 #ifdef DEBUG
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
-
-	return 0;
 }
 
 /***********************************************************************
@@ -137,7 +152,7 @@ int action_closewindow(GtkWidget *widget, char *string)
  * is a warning message once the new window has been loaded. 
  */
 
-int action_launchwindow(GtkWidget *widget, char *string)
+void action_launchwindow(GtkWidget *widget, char *string)
 {
 #ifdef DEBUG
 	extern gchar     *program_src;
@@ -223,15 +238,13 @@ try launching after the originating window has fully loaded.\n",
 try launching from a checkbox which is activated by the timer.\n",
 			__func__, string);
 	}
-
-	return 0;
 }
 
 /***********************************************************************
- *                                                                     *
+ * Action exit                                                         *
  ***********************************************************************/
 
-int action_exitprogram(GtkWidget *widget, char *string)
+void action_exitprogram(GtkWidget *widget, char *string)
 {
 	print_variables(NULL);
 
@@ -249,23 +262,21 @@ int action_exitprogram(GtkWidget *widget, char *string)
 }
 
 /***********************************************************************
- *                                                                     *
+ * Action refresh                                                      *
  ***********************************************************************/
 
-int action_refreshwidget(GtkWidget *widget, char *string)
+void action_refreshwidget(GtkWidget *widget, char *string)
 {
 	variables_refresh(string);
-	return (0);
 }
 
 /***********************************************************************
- *                                                                     *
+ * Action save                                                         *
  ***********************************************************************/
 
-int action_savewidget(GtkWidget *widget, char *string)
+void action_savewidget(GtkWidget *widget, char *string)
 {
 	variables_save(string);
-	return (0);
 }
 
 /***********************************************************************
@@ -276,7 +287,7 @@ int action_savewidget(GtkWidget *widget, char *string)
  * the selected file name */
 
 #if GTK_CHECK_VERSION(2,4,0)
-int action_fileselect(GtkWidget *widget, char *string)
+void action_fileselect(GtkWidget *widget, char *string)
 {
 	list_t                 *mime_types = NULL;
 	list_t                 *patterns = NULL;
@@ -429,12 +440,11 @@ int action_fileselect(GtkWidget *widget, char *string)
 		gtk_widget_destroy(chooser);
 	}
 
-	return 0;
 }
 
 #else
 
-int action_fileselect(GtkWidget *widget, char *string)
+void action_fileselect(GtkWidget *widget, char *string)
 {
 	actioncommand *ac;
 	/*
@@ -461,7 +471,6 @@ int action_fileselect(GtkWidget *widget, char *string)
 			  cancel_button), "clicked",
 			 G_CALLBACK(action_fileselection_destroy),
 			 (gpointer) ac);
-	return;
 }
 #endif
 
@@ -503,27 +512,24 @@ void action_fileselection_destroy(GtkWidget *w, actioncommand *ac)
 	free(ac);
 }
 
-
 /***********************************************************************
- *                                                                     *
+ * Action clear                                                        *
  ***********************************************************************/
 /* This action removes all elements from a widget */
 
-int action_clearwidget(GtkWidget *widget, char *string)
+void action_clearwidget(GtkWidget *widget, char *string)
 {
 	variables_clear(string);
-	return (0);
 }
 
 /***********************************************************************
- *                                                                     *
+ * Action removeselected                                               *
  ***********************************************************************/
 /* This action removes a selected element from a widget */
 
-int action_removeselected(GtkWidget *widget, char *string)
+void action_removeselected(GtkWidget *widget, char *string)
 {
 	remove_selected_variable(string);
-	return 0;
 }
 
 /***********************************************************************
@@ -568,81 +574,74 @@ int action_append(GtkWidget *widget, char *string)
 }
 
 /***********************************************************************
- *                                                                     *
+ * Action enable                                                       *
  ***********************************************************************/
 
-int action_enable(GtkWidget *widget, char *string)
+void action_enable(GtkWidget *widget, char *string)
 {
 	variables_enable(string);
-	return (0);
 }
 
 /***********************************************************************
- *                                                                     *
+ * Action disable                                                      *
  ***********************************************************************/
 
-int action_disable(GtkWidget *widget, char *string)
+void action_disable(GtkWidget *widget, char *string)
 {
 	variables_disable(string);
-	return (0);
 }
 
 /***********************************************************************
  * Action show                                                         *
  ***********************************************************************/
 
-int action_show(GtkWidget *widget, char *string)
+void action_show(GtkWidget *widget, char *string)
 {
 	variables_show(string);
-	return 0;
 }
 
 /***********************************************************************
  * Action hide                                                         *
  ***********************************************************************/
 
-int action_hide(GtkWidget *widget, char *string)
+void action_hide(GtkWidget *widget, char *string)
 {
 	variables_hide(string);
-	return 0;
 }
 
 /***********************************************************************
  * Action activate                                                     *
  ***********************************************************************/
 
-int action_activate(GtkWidget *widget, char *string)
+void action_activate(GtkWidget *widget, char *string)
 {
 	variables_activate(string);
-	return 0;
 }
 
 /***********************************************************************
  * Action grabfocus                                                    *
  ***********************************************************************/
 
-int action_grabfocus(GtkWidget *widget, char *string)
+void action_grabfocus(GtkWidget *widget, char *string)
 {
 	variables_grabfocus(string);
-	return 0;
 }
 
 /***********************************************************************
  * Action presentwindow                                                *
  ***********************************************************************/
 
-int action_presentwindow(GtkWidget *widget, char *string)
+void action_presentwindow(GtkWidget *widget, char *string)
 {
 	variables_presentwindow(string);
-	return 0;
 }
 
 /***********************************************************************
- *                                                                     *
+ * Action command                                                      *
  ***********************************************************************/
 /* This fuction will export variables and run a shell command */
 
-int action_shellcommand(GtkWidget *widget, char *string)
+void action_shellcommand(GtkWidget *widget, char *string)
 {
 	char *command;
 	int result;
@@ -650,15 +649,145 @@ int action_shellcommand(GtkWidget *widget, char *string)
 	variables_export_all();
 
 	if (option_include_file == NULL) {
+
 		result = system(string);
-		return (0);
+
+	} else {
+
+		/* Debian 01_bashism patch: use dot rather than source.
+		command = g_strdup_printf("source %s; %s", */
+		command = g_strdup_printf(". %s; %s",
+				option_include_file, string);
+		result = system(command);
+		g_free(command);
+
 	}
 
-	/* Debian 01_bashism patch: use dot rather than source.
-	command = g_strdup_printf("source %s; %s", */
-	command = g_strdup_printf(". %s; %s",
-			option_include_file, string);
-	result = system(command);
-	g_free(command);
-	return;
+}
+
+/***********************************************************************
+ * Execute Action                                                      *
+ ***********************************************************************/
+/* On exit: returns 0 if action function is unknown
+ *                  1 if action function is valid
+ *                  2 if break function detected */
+
+int execute_action(GtkWidget *widget, const char *command, const char *type)
+{
+	gchar            *command_prefix;
+	gchar            *command_string;
+	gint              retval = 1;
+	CommandType       t;
+
+	/* Thunor: I've re-engineered my signal blocking mechanism.
+	 * All signal callbacks end up here, so if the global flag is
+	 * true then the action functions simply don't get executed */
+	if (!function_signals_block) {
+
+		if (type == NULL || g_utf8_strlen(type, -1) == 0) {
+			command_get_prefix(command, &command_prefix, &command_string);
+		} else {
+			command_prefix = g_strdup(type);
+			command_string = g_strdup(command);
+		}
+
+#ifdef DEBUG
+		fprintf(stderr, "%s(): command: '%s' type: '%s'.\n", __func__,
+			command_string, command_prefix);
+#endif
+
+		t = command_prefix_get_type(command_prefix);
+		switch (t) {
+			case CommandShellCommand:
+				action_shellcommand(widget, command_string);
+				break;
+
+			case CommandExit:
+				action_exitprogram(widget, command_string);
+				break;
+
+			case CommandCloseWindow:
+				action_closewindow(widget, command_string);
+				break;
+
+			case CommandLaunch:
+				action_launchwindow(widget, command_string);
+				break;
+
+			case CommandEnable:
+				action_enable(widget, command_string);
+				break;
+
+			case CommandDisable:
+				action_disable(widget, command_string);
+				break;
+
+			case CommandShow:
+				action_show(widget, command_string);
+				break;
+
+			case CommandHide:
+				action_hide(widget, command_string);
+				break;
+
+			case CommandActivate:
+				action_activate(widget, command_string);
+				break;
+
+			case CommandGrabFocus:
+				action_grabfocus(widget, command_string);
+				break;
+
+			case CommandPresentWindow:
+				action_presentwindow(widget, command_string);
+				break;
+
+			case CommandRefresh:
+				variables_export_all();
+				action_refreshwidget(widget, command_string);
+				break;
+
+			case CommandSave:
+				action_savewidget(widget, command_string);
+				break;
+
+			case CommandFileSelect:
+				action_fileselect(widget, command_string);
+				break;
+
+			case CommandClear:
+				action_clearwidget(widget, command_string);
+				break;
+
+			case CommandRemoveSelected:
+				action_removeselected(widget, command_string);
+				break;
+
+			case CommandBreak:
+				retval = 2;
+				break;
+
+			/* Thunor: It looks like work on insert and append was started
+			 * but there's not much code so I wouldn't expect it to work
+			 * (I haven't tried it since it's not documented). Note that
+			 * both are calling action_append() which is strange */
+			case CommandInsert:
+				action_append(widget, command_string);
+				break;
+
+			case CommandAppend:
+				action_append(widget, command_string);
+				break;
+
+			default:
+				g_error("%s(): Unknown action type", __func__);
+				retval = 0;
+				break;
+		}
+			
+		g_free(command_prefix);
+		g_free(command_string);
+	}
+
+	return retval;
 }

@@ -54,8 +54,9 @@ typedef enum {
 	CommandFileSelect        = 13,
 	CommandClear             = 14,
 	CommandRemoveSelected    = 15,
-	CommandInsert            = 16,
-	CommandAppend            = 17
+	CommandBreak             = 16,
+	CommandInsert            = 17,
+	CommandAppend            = 18
 } CommandType;
 
 #ifdef G_OS_WIN32

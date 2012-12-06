@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 #include "config.h"
 #include "gtkdialog.h"
+#include "actions.h"
 #include "attributes.h"
 #include "signals.h"
 #include "tag_attributes.h"
@@ -1459,7 +1460,9 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 		}
 
-		if (execute) execute_action(widget, command, function);
+		if (execute)
+			if (execute_action(widget, command, function) == 2)
+				break;
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 
 	}
@@ -1722,6 +1725,8 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 
 	return retval;
 }
+#undef DEBUG_TRANSITS
+#undef DEBUG_CONTENT
 
 /***********************************************************************
  * Widget File Monitor Try Create                                      *
