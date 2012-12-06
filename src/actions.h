@@ -35,22 +35,6 @@
 #include "automaton.h"
 
 /* Function prototypes */
-int action_closewindow(GtkWidget *widget, char *string);
-int action_launchwindow(GtkWidget *widget, char *string);
-int action_exitprogram(GtkWidget *widget, char *string);
-int action_refreshwidget(GtkWidget *widget, char *string);
-int action_savewidget(GtkWidget *widget, char *string);
-int action_fileselect(GtkWidget *widget, char *string);
-int action_clearwidget(GtkWidget *widget, char *string);
-int action_removeselected(GtkWidget *widget, char *string);
-int action_append(GtkWidget *widget, char *string);
-int action_enable(GtkWidget *widget, char *string);
-int action_disable(GtkWidget *widget, char *string);
-int action_show(GtkWidget *widget, char *string);
-int action_hide(GtkWidget *widget, char *string);
-int action_activate(GtkWidget *widget, char *string);
-int action_grabfocus(GtkWidget *widget, char *string);
-int action_presentwindow(GtkWidget *widget, char *string);
-int action_shellcommand(GtkWidget *widget, char *string);
+int execute_action(GtkWidget *widget, const char *command, const char *type);
 
 #endif

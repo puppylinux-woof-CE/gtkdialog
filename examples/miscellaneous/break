@@ -1,0 +1,31 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog
+
+MAIN_DIALOG='
+<window title="Break" window-position="1" border-width="50">
+	<vbox>
+		<checkbox>
+			<variable>CHECKBOX</variable>
+			<label>Break state</label>
+			<action condition="active_is_true(CHECKBOX)">echo CHECKBOX: break is active</action>
+			<action condition="active_is_false(CHECKBOX)">echo CHECKBOX: break is inactive</action>
+		</checkbox>
+		<button label="Break">
+			<action>echo BUTTON: This action is above the break</action>
+			<action condition="active_is_true(CHECKBOX)" function="break">""</action>
+			<action>echo BUTTON: This action is below the break</action>
+		</button>
+		<hseparator></hseparator>
+		<hbox>
+			<button use-stock="true" label="gtk-quit"></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac

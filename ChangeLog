@@ -3,6 +3,9 @@ for announcements.
 
 * Thu Dec 6 2012 Thunor <thunorsif@hotmail.com>
 - Corrected to backticks and tested with dash all examples up to frame.
+- Added support for break i.e. don't process any more actions.
+- Added examples/miscellaneous/break.
+- Updated the reference docs.
 
 * Wed Dec 5 2012 Thunor <thunorsif@hotmail.com>
 - Applied any existing use-markup="true" tag attributes to text widgets
