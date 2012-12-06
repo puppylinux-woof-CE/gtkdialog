@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 echo "false" > "$TMPDIR"/inoutfile
@@ -46,16 +46,16 @@ MAIN_DIALOG='
 			<action>if false echo "exp0 is false"</action>
 		</expander>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate exp0 Disable Disabling)"'
-			'"$(funcbtnCreate exp0 Enable Enabling)"'
-			'"$(funcbtnCreate exp0 Hide Hiding)"'
-			'"$(funcbtnCreate exp0 Show Showing)"'
+			'"`funcbtnCreate exp0 Disable Disabling`"'
+			'"`funcbtnCreate exp0 Enable Enabling`"'
+			'"`funcbtnCreate exp0 Hide Hiding`"'
+			'"`funcbtnCreate exp0 Show Showing`"'
 		</hbox>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate exp0 Activate Activating)"'
-			'"$(funcbtnCreate exp0 GrabFocus Focusing)"'
-			'"$(funcbtnCreate exp0 Refresh Refreshing)"'
-			'"$(funcbtnCreate exp0 Save Saving)"'
+			'"`funcbtnCreate exp0 Activate Activating`"'
+			'"`funcbtnCreate exp0 GrabFocus Focusing`"'
+			'"`funcbtnCreate exp0 Refresh Refreshing`"'
+			'"`funcbtnCreate exp0 Save Saving`"'
 		</hbox>
 		<hbox homogeneous="true" space-expand="false" space-fill="false">
 			<button use-stock="true" label="gtk-quit">

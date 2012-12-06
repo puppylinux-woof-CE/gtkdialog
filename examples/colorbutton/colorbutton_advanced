@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -36,29 +36,29 @@ MAIN_DIALOG='
 		<vbox border-width="30">
 			<hbox>
 				<colorbutton>
-					'"$(funcclbCreate clb0 "All defaults." 1)"'
+					'"`funcclbCreate clb0 "All defaults." 1`"'
 				<colorbutton title="Choose something asthetically pleasing">
 					<default>#cc4488</default>
-					'"$(funcclbCreate clb1 "Colour from default directive, title from tag attribute." 1)"'
+					'"`funcclbCreate clb1 "Colour from default directive, title from tag attribute." 1`"'
 				<colorbutton use-alpha="true" alpha="49152">
 					<default>#88cc44</default>
-					'"$(funcclbCreate clb2 "Colour from default directive, alpha from tag attribute." 1)"'
+					'"`funcclbCreate clb2 "Colour from default directive, alpha from tag attribute." 1`"'
 				<colorbutton use-alpha="true">
 					<default>#4488cc|32768</default>
-					'"$(funcclbCreate clb3 "Colour and alpha from default directive." 1)"'
+					'"`funcclbCreate clb3 "Colour and alpha from default directive." 1`"'
 				<colorbutton>
 					<input>echo "#cc8844"</input>
-					'"$(funcclbCreate clb4 "Colour from input directive." 1)"'
+					'"`funcclbCreate clb4 "Colour from input directive." 1`"'
 				<colorbutton use-alpha="true">
 					<input file>'"$TMPDIR"'/inputfile</input>
 					<output file>'"$TMPDIR"'/outputfile</output>
-					'"$(funcclbCreate clb5 "Colour and alpha from input file directive." 0)"'
-		<hbox>
-			'"$(funcbtnCreate clb5 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate clb5 Enable gtk-yes Enabling)"'
-			'"$(funcbtnCreate clb5 Refresh gtk-refresh Refreshing)"'
-			'"$(funcbtnCreate clb5 Save gtk-save Saving)"'
-		</hbox>
+					'"`funcclbCreate clb5 "Colour and alpha from input file directive." 0`"'
+			<hbox>
+				'"`funcbtnCreate clb5 Disable gtk-no Disabling`"'
+				'"`funcbtnCreate clb5 Enable gtk-yes Enabling`"'
+				'"`funcbtnCreate clb5 Refresh gtk-refresh Refreshing`"'
+				'"`funcbtnCreate clb5 Save gtk-save Saving`"'
+			</hbox>
 		</vbox>
 		<hseparator></hseparator>
 		<hbox homogeneous="true">

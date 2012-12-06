@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Thu Dec 6 2012 Thunor <thunorsif@hotmail.com>
+- Corrected to backticks and tested with dash all examples up to frame.
+
 * Wed Dec 5 2012 Thunor <thunorsif@hotmail.com>
 - Applied any existing use-markup="true" tag attributes to text widgets
   on widget creation to prevent visible resizing when being shown.

@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -73,12 +73,12 @@ MAIN_DIALOG='
 				<action>echo ftb5 changed to $ftb5</action>
 			</fontbutton>
 			<hbox>
-				'"$(funcbtnCreate 0 Disable gtk-no ftb5)"'
-				'"$(funcbtnCreate 0 Enable gtk-yes ftb5)"'
-				'"$(funcbtnCreate 0 Hide gtk-no ftb5)"'
-				'"$(funcbtnCreate 0 Show gtk-yes ftb5)"'
-				'"$(funcbtnCreate 0 Refresh gtk-refresh ftb5)"'
-				'"$(funcbtnCreate 0 Save gtk-save ftb5)"'
+				'"`funcbtnCreate 0 Disable gtk-no ftb5`"'
+				'"`funcbtnCreate 0 Enable gtk-yes ftb5`"'
+				'"`funcbtnCreate 0 Hide gtk-no ftb5`"'
+				'"`funcbtnCreate 0 Show gtk-yes ftb5`"'
+				'"`funcbtnCreate 0 Refresh gtk-refresh ftb5`"'
+				'"`funcbtnCreate 0 Save gtk-save ftb5`"'
 			</hbox>
 			<hseparator></hseparator>
 		</vbox>

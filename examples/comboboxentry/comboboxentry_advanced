@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -35,8 +35,8 @@ funccboCreate() {
 	fi
 	echo '</combobox>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate $1 Clear Clearing clear)"'
-			'"$(funcbtnCreate $1 Refresh Reloading refresh)"'
+			'"`funcbtnCreate $1 Clear Clearing clear`"'
+			'"`funcbtnCreate $1 Refresh Reloading refresh`"'
 		</hbox>'
 	if [ $1 -lt 2 ]; then echo '<hseparator></hseparator>'; fi
 }
@@ -72,15 +72,15 @@ funccboEntryCreate() {
 			<action signal="activate">echo "cboComboBoxEntry'$1' Enter key-press detected"</action>
 		</comboboxentry>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate Entry$1 Clear Clearing clear)"'
-			'"$(funcbtnCreate Entry$1 Delete Deleting removeselected)"'
-			'"$(funcbtnCreate Entry$1 Refresh Reloading refresh)"'
-			'"$(funcbtnCreate Entry$1 Save Saving save)"'
+			'"`funcbtnCreate Entry$1 Clear Clearing clear`"'
+			'"`funcbtnCreate Entry$1 Delete Deleting removeselected`"'
+			'"`funcbtnCreate Entry$1 Refresh Reloading refresh`"'
+			'"`funcbtnCreate Entry$1 Save Saving save`"'
 		</hbox>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate Entry$1 Disable Disabling disable)"'
-			'"$(funcbtnCreate Entry$1 Enable Enabling enable)"'
-			'"$(funcbtnCreate Entry$1 Fileselect """Inserting into""" fileselect)"'
+			'"`funcbtnCreate Entry$1 Disable Disabling disable`"'
+			'"`funcbtnCreate Entry$1 Enable Enabling enable`"'
+			'"`funcbtnCreate Entry$1 Fileselect """Inserting into""" fileselect`"'
 		</hbox>'
 	if [ $1 -lt 2 ]; then echo '<hseparator></hseparator>'; fi
 }
@@ -99,16 +99,16 @@ MAIN_DIALOG='
 		<hbox>
 			<vbox>
 				<frame combobox widget (deprecated)>
-					'"$(funccboCreate 0)"'
-					'"$(funccboCreate 1)"'
-					'"$(funccboCreate 2)"'
+					'"`funccboCreate 0`"'
+					'"`funccboCreate 1`"'
+					'"`funccboCreate 2`"'
 				</frame>
 			</vbox>
 			<vbox>
 				<frame comboboxentry widget>
-					'"$(funccboEntryCreate 0)"'
-					'"$(funccboEntryCreate 1)"'
-					'"$(funccboEntryCreate 2)"'
+					'"`funccboEntryCreate 0`"'
+					'"`funccboEntryCreate 1`"'
+					'"`funccboEntryCreate 2`"'
 				</frame>
 				<frame Practical example>
 					<text width-request="300">

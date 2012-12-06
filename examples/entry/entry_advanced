@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -39,7 +39,7 @@ MAIN_DIALOG='
 				<hbox>
 					<entry activates-default="true">
 						<default>activates-default</default>
-						'"$(funcentCreate 0 0 0)"'
+						'"`funcentCreate 0 0 0`"'
 					<button can-default="true" has-default="true" tooltip-text="can-default, has-default">
 						<label>Default</label>
 						<variable>btnDefault</variable>
@@ -50,89 +50,89 @@ MAIN_DIALOG='
 				<hbox>
 					<entry editable="false">
 						<default>editable</default>
-						'"$(funcentCreate 1 1 0)"'
+						'"`funcentCreate 1 1 0`"'
 					<entry has-frame="false">
 						<default>has-frame</default>
-						'"$(funcentCreate 2 0 1)"'
+						'"`funcentCreate 2 0 1`"'
 					<entry max-length="16">
 						<default>max-length</default>
-						'"$(funcentCreate 3 1 0)"'
+						'"`funcentCreate 3 1 0`"'
 					<entry primary-icon-name="gnumeric">
 						<default>primary-icon-name</default>
-						'"$(funcentCreate 4 0 1)"'
+						'"`funcentCreate 4 0 1`"'
 					<entry primary-icon-stock="gtk-about" primary-icon-activatable="false">
 						<default>primary-icon-stock, primary-icon-activatable</default>
-						'"$(funcentCreate 5 1 0)"'
+						'"`funcentCreate 5 1 0`"'
 					<entry primary-icon-stock="gtk-select-font"
 						primary-icon-tooltip-markup="<span fgcolor='"'darkred'"'><b>primary-icon</b></span>-<i>tooltip</i>-<u>markup</u>">
 						<default>primary-icon-stock, primary-icon-tooltip-markup</default>
-						'"$(funcentCreate 6 0 1)"'
+						'"`funcentCreate 6 0 1`"'
 					<entry primary-icon-stock="gtk-help" primary-icon-tooltip-text="primary-icon-tooltip-text">
 						<default>primary-icon-stock, primary-icon-tooltip-text</default>
-						'"$(funcentCreate 7 1 0)"'
+						'"`funcentCreate 7 1 0`"'
 					<entry progress-fraction="0.25">
 						<default>progress-fraction</default>
-						'"$(funcentCreate 8 0 1)"'
+						'"`funcentCreate 8 0 1`"'
 					<entry secondary-icon-name="gnumeric">
 						<default>secondary-icon-name</default>
-						'"$(funcentCreate 9 1 0)"'
+						'"`funcentCreate 9 1 0`"'
 					<entry secondary-icon-stock="gtk-about" secondary-icon-activatable="false">
 						<default>secondary-icon-stock, secondary-icon-activatable</default>
-						'"$(funcentCreate 10 0 1)"'
+						'"`funcentCreate 10 0 1`"'
 					<entry secondary-icon-stock="gtk-select-font"
 						secondary-icon-tooltip-markup="<span fgcolor='"'darkblue'"'><b>secondary-icon</b></span>-<i>tooltip</i>-<u>markup</u>">
 						<default>secondary-icon-stock, secondary-icon-tooltip-markup</default>
-						'"$(funcentCreate 11 1 0)"'
+						'"`funcentCreate 11 1 0`"'
 					<entry secondary-icon-stock="gtk-help" secondary-icon-tooltip-text="secondary-icon-tooltip-text">
 						<default>secondary-icon-stock, secondary-icon-tooltip-text</default>
-						'"$(funcentCreate 12 0 1)"'
+						'"`funcentCreate 12 0 1`"'
 					<entry truncate-multiline="true">
 						<default>truncate-multiline</default>
-						'"$(funcentCreate 13 1 0)"'
+						'"`funcentCreate 13 1 0`"'
 					<entry text="text (similar to <default> except that GTK sets it after widget realization which emits a signal)">
-						'"$(funcentCreate 14 0 1)"'
+						'"`funcentCreate 14 0 1`"'
 					<entry width-chars="30">
 						<default>width-chars</default>
-						'"$(funcentCreate 15 1 0)"'
+						'"`funcentCreate 15 1 0`"'
 					<entry visibility="false" invisible-char="120" tooltip-text="visibility, invisible-char">
 						<default>The password is Fidelio</default>
-						'"$(funcentCreate 16 0 1)"'
+						'"`funcentCreate 16 0 1`"'
 					<entry>
 						<default>"<width>, <height> (equivalent to width-request and height-request)"</default>
 						<height>50</height>
 						<width>250</width>
-						'"$(funcentCreate 17 1 0)"'
+						'"`funcentCreate 17 1 0`"'
 					<entry xalign="0.5">
 						<default>xalign</default>
-						'"$(funcentCreate 18 0 0)"'
+						'"`funcentCreate 18 0 0`"'
 				</hbox>
 				<hseparator></hseparator>
 				<entry fs-action="file" block-function-signals="true">
 					<input>echo "This came from a shell command, and function signals are blocked"</input>
 					<output file>'"$TMPDIR"'/outputfile</output>
-					'"$(funcentCreate 19 0 0)"'
+					'"`funcentCreate 19 0 0`"'
 				<hbox homogeneous="true">
-					'"$(funcbtnCreate 19 Disable Disabling disable)"'
-					'"$(funcbtnCreate 19 Enable Enabling enable)"'
-					'"$(funcbtnCreate 19 Clear Clearing clear)"'
-					'"$(funcbtnCreate 19 Delete Deleting removeselected)"'
-					'"$(funcbtnCreate 19 Refresh Reloading refresh)"'
-					'"$(funcbtnCreate 19 Save Saving save)"'
-					'"$(funcbtnCreate 19 Fileselect """Inserting into""" fileselect)"'
+					'"`funcbtnCreate 19 Disable Disabling disable`"'
+					'"`funcbtnCreate 19 Enable Enabling enable`"'
+					'"`funcbtnCreate 19 Clear Clearing clear`"'
+					'"`funcbtnCreate 19 Delete Deleting removeselected`"'
+					'"`funcbtnCreate 19 Refresh Reloading refresh`"'
+					'"`funcbtnCreate 19 Save Saving save`"'
+					'"`funcbtnCreate 19 Fileselect """Inserting into""" fileselect`"'
 				</hbox>
 				<hseparator></hseparator>
 				<entry fs-action="folder">
 					<input file>'"$TMPDIR"'/inputfile</input>
 					<output file>'"$TMPDIR"'/outputfile</output>
-					'"$(funcentCreate 20 0 0)"'
+					'"`funcentCreate 20 0 0`"'
 				<hbox homogeneous="true">
-					'"$(funcbtnCreate 20 Disable Disabling disable)"'
-					'"$(funcbtnCreate 20 Enable Enabling enable)"'
-					'"$(funcbtnCreate 20 Clear Clearing clear)"'
-					'"$(funcbtnCreate 20 Delete Deleting removeselected)"'
-					'"$(funcbtnCreate 20 Refresh Reloading refresh)"'
-					'"$(funcbtnCreate 20 Save Saving save)"'
-					'"$(funcbtnCreate 20 Fileselect """Inserting into""" fileselect)"'
+					'"`funcbtnCreate 20 Disable Disabling disable`"'
+					'"`funcbtnCreate 20 Enable Enabling enable`"'
+					'"`funcbtnCreate 20 Clear Clearing clear`"'
+					'"`funcbtnCreate 20 Delete Deleting removeselected`"'
+					'"`funcbtnCreate 20 Refresh Reloading refresh`"'
+					'"`funcbtnCreate 20 Save Saving save`"'
+					'"`funcbtnCreate 20 Fileselect """Inserting into""" fileselect`"'
 				</hbox>
 			</vbox>
 		</frame>
