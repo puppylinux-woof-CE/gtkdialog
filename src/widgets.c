@@ -527,6 +527,10 @@ void widget_show_all(void)
 	if (widget_show_list) {
 		element = widget_show_list;
 		while (element) {
+#ifdef DEBUG_CONTENT
+			fprintf(stderr, "%s(): showing Name='%s'\n",
+				__func__, find_variable_by_widget(element->data)->Name);
+#endif
 			gtk_widget_show(element->data);
 			element = element->next;
 		}

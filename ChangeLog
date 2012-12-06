@@ -6,6 +6,8 @@ for announcements.
 - Added support for break i.e. don't process any more actions.
 - Added examples/miscellaneous/break.
 - Updated the reference docs.
+- Added the GtkMenuShell to the widget visibility list which I missed.
+  This is the pop-up rectangle that contains the menuitems.
 
 * Wed Dec 5 2012 Thunor <thunorsif@hotmail.com>
 - Applied any existing use-markup="true" tag attributes to text widgets

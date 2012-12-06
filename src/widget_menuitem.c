@@ -124,6 +124,9 @@ GtkWidget *widget_menu_create(
 	widget = widget_menuitem_create(Attr, attr, WIDGET_MENU);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(widget), menu);
 
+	/* This widget has one or more children which require registering */
+	widget_visibility_list_add(menu, attr);
+
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
