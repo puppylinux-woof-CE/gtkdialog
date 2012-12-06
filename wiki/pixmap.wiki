@@ -83,6 +83,18 @@ The following functions can be performed upon this widget by any widget capable 
 || refresh || Reload input data || Variable name || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
+The following general functions can be performed by any widget capable of emitting signals:
+
+<wiki:comment>ExportTableStart</wiki:comment>
+|| *Type* || *Description* || *Parameter* || *Since* ||
+|| break || Break out of actions list || None || 0.8.3 ||
+|| command || Execute command || Shell command || ||
+|| exit || Exit dialog || A value for the {{{EXIT}}} variable || ||
+|| closewindow || Close dialog || Variable name || ||
+|| launch || Launch dialog || Variable name || ||
+|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
+<wiki:comment>ExportTableEnd</wiki:comment>
+
 == Conditions ==
 
 The following conditions can be used within the condition attribute of action directives:

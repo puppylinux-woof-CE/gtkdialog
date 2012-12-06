@@ -103,6 +103,7 @@ The following general functions can be performed by any widget capable of emitti
 
 <wiki:comment>ExportTableStart</wiki:comment>
 || *Type* || *Description* || *Parameter* || *Since* ||
+|| break || Break out of actions list || None || 0.8.3 ||
 || command || Execute command || Shell command || ||
 || exit || Exit dialog || A value for the {{{EXIT}}} variable || ||
 || closewindow || Close dialog || Variable name || ||
