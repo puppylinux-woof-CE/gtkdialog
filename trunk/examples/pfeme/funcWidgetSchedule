@@ -1,0 +1,32 @@
+#!/bin/sh
+
+## Includes.
+. functmpSet
+
+## Schedule a checkbox widget to trigger its default action.
+## On entry: $1 = the variable name
+##           $2 = the input file name
+
+funcWidgetSchedule() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcWidgetSchedule; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: IN"; fi
+
+	## Local variables.
+	local value
+
+	## Indirect referencing (bash uses ${!1} too but it's not portable).
+	eval value=\$$1
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		echo "$FUNCNAME: $1=$value input-file=$2"
+	fi
+
+	## Store the inverse value of the widget.
+	if [ $value = true ]; then
+		functmpSet $2 false
+	else
+		functmpSet $2 true
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi
+}

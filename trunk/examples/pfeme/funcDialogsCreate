@@ -1,0 +1,96 @@
+#!/bin/sh
+
+## Create the XML for the pop-up dialogs.
+
+funcDialogsCreate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcDialogsCreate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Create the XML for the profile not saved on change warning dialog.
+	winProfileNotSavedOnChange='
+<window title=" " icon-name="'$TARGET'" window-position="1" modal="true"
+	resizable="false">
+	<vbox>
+		<hbox>
+			<vbox>
+				<pixmap stock-icon-size="6">
+					<input file stock="gtk-dialog-question"></input>
+				</pixmap>
+				<text><label>"'$DebugSpacer'"</label></text>
+			</vbox>
+			<text use-markup="true">
+				<label>"<big><b>The visible profile is not saved.</b></big>
+
+Do you want to save it now?
+"</label>
+			</text>
+		</hbox>
+		<hbox homogeneous="true">
+			<button cancel>
+				<action>closewindow:winProfileNotSavedOnChange</action>
+			</button>
+			<button use-underline="true">
+				<label>_Don'"'"'t save</label>
+				<input file stock="gtk-clear"></input>
+				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
+				<action>refresh:chkProfileChangeCheck</action>
+				<action>closewindow:winProfileNotSavedOnChange</action>
+			</button>
+			<button use-underline="true">
+				<label>_Save</label>
+				<input file stock="gtk-save"></input>
+				<action>. funcProfileSave; funcProfileSave</action>
+				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
+				<action>refresh:chkProfileChangeCheck</action>
+				<action>closewindow:winProfileNotSavedOnChange</action>
+			</button>
+		</hbox>
+	</vbox>
+	<variable export="false">winProfileNotSavedOnChange</variable>
+</window>
+'
+	## Create the XML for the profile not saved on quit warning dialog.
+	winProfileNotSavedOnQuit='
+<window title=" " icon-name="'$TARGET'" window-position="1" modal="true"
+	resizable="false">
+	<vbox>
+		<hbox>
+			<vbox>
+				<pixmap stock-icon-size="6">
+					<input file stock="gtk-dialog-question"></input>
+				</pixmap>
+				<text><label>"'$DebugSpacer'"</label></text>
+			</vbox>
+			<text use-markup="true">
+				<label>"<big><b>The visible profile is not saved.</b></big>
+
+Do you want to save it now?
+"</label>
+			</text>
+		</hbox>
+		<hbox homogeneous="true">
+			<button cancel>
+				<action>closewindow:winProfileNotSavedOnQuit</action>
+			</button>
+			<button use-underline="true">
+				<label>_Don'"'"'t save</label>
+				<input file stock="gtk-clear"></input>
+				<action>. funcWidgetSchedule; funcWidgetSchedule chkQuitCheck QuitCheck</action>
+				<action>refresh:chkQuitCheck</action>
+				<action>closewindow:winProfileNotSavedOnQuit</action>
+			</button>
+			<button use-underline="true">
+				<label>_Save</label>
+				<input file stock="gtk-save"></input>
+				<action>. funcProfileSave; funcProfileSave</action>
+				<action>. funcWidgetSchedule; funcWidgetSchedule chkQuitCheck QuitCheck</action>
+				<action>refresh:chkQuitCheck</action>
+				<action>closewindow:winProfileNotSavedOnQuit</action>
+			</button>
+		</hbox>
+	</vbox>
+	<variable export="false">winProfileNotSavedOnQuit</variable>
+</window>
+'
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

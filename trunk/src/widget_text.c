@@ -28,6 +28,7 @@
 #include "automaton.h"
 #include "widgets.h"
 #include "signals.h"
+#include "tag_attributes.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
@@ -68,6 +69,7 @@ GtkWidget *widget_text_create(
 {
 	GList            *element;
 	GtkWidget        *widget;
+	gchar            *value;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -77,6 +79,14 @@ GtkWidget *widget_text_create(
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "text");
 
 	widget = gtk_label_new(attributeset_get_first(&element, Attr, ATTR_LABEL));
+
+	/* Apply this property now to prevent visible resizing when shown */
+	if (attr &&
+		(value = get_tag_attribute(attr, "use-markup")) &&
+		((strcasecmp(value, "true") == 0) ||
+		(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+		gtk_label_set_use_markup(GTK_LABEL(widget), TRUE);
+	}
 
 	/* Enable line wrapping by default */
 	gtk_label_set_line_wrap(GTK_LABEL(widget), TRUE);

@@ -29,14 +29,14 @@ export MAIN_DIALOG='
 				<variable>TOGGLEME</variable>
 				<input file>'"$TMPDIR"'/toggle.svg</input>
 				<label>"Toggle Me!"</label>
-				<action>funcImageToggle</action>
+				<action>/bin/bash -c funcImageToggle</action>
 				<action function="refresh">TOGGLEME</action>
 				<action function="refresh">TOGGLEMETOO</action>
 			</button>
 			<button tooltip-text="Toggle me too!">
 				<variable>TOGGLEMETOO</variable>
 				<input file>'"$TMPDIR"'/toggle.svg</input>
-				<action>funcImageToggle</action>
+				<action>/bin/bash -c funcImageToggle</action>
 				<action signal="clicked">refresh:TOGGLEMETOO</action>
 				<action signal="clicked">refresh:TOGGLEME</action>
 			</button>
