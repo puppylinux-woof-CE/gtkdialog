@@ -69,7 +69,7 @@ funcAppVersionGet() {
 	local index=0
 
 	for field in `$1`; do
-		if [ $((index++)) -eq $2 ]; then break; fi
+		if [ $index -eq $2 ]; then break; fi; index=$((index + 1))
 	done
 	major_version=${field%%.*}; field=${field#*.}
 	minor_version=${field%%.*}

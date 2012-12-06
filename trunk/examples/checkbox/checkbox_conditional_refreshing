@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 functxtCreate() {
@@ -32,16 +32,16 @@ MAIN_DIALOG='
 <window title="Checkbox Conditional Refreshing" window-position="1">
 	<vbox>
 		<hbox>
-			'"$(functxtCreate 0)"'
-			'"$(functxtCreate 1)"'
-			'"$(functxtCreate 2)"'
-			'"$(functxtCreate 3)"'
+			'"`functxtCreate 0`"'
+			'"`functxtCreate 1`"'
+			'"`functxtCreate 2`"'
+			'"`functxtCreate 3`"'
 		</hbox>
 		<hbox>
-			'"$(functxtCreate 4)"'
-			'"$(functxtCreate 5)"'
-			'"$(functxtCreate 6)"'
-			'"$(functxtCreate 7)"'
+			'"`functxtCreate 4`"'
+			'"`functxtCreate 5`"'
+			'"`functxtCreate 6`"'
+			'"`functxtCreate 7`"'
 		</hbox>
 		<hseparator></hseparator>
 		<text>

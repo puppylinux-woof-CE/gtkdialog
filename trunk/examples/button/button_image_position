@@ -100,7 +100,7 @@ export MAIN_DIALOG='
 				<variable>btnimgControl</variable>
 				<input file>'"$TMPDIR"'/image.svg</input>
 				<width>16</width>
-				<action>if [ ! -f '"$TMPDIR"'/image.svg ]; then funcimgCreate; else rm '"$TMPDIR"'/image.svg; fi</action>
+				<action>if [ ! -f '"$TMPDIR"'/image.svg ]; then /bin/bash -c funcimgCreate; else rm '"$TMPDIR"'/image.svg; fi</action>
 				<action>refresh:btnimgControl</action>
 			</button>
 			<button ok></button>

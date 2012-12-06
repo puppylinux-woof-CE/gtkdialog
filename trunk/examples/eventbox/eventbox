@@ -2,12 +2,12 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 ## Create a custom style for specific widgets.
 funcgtkrcCreate() {
-	IMAGEFILE="$(find /usr/share/pixmaps -maxdepth 1 -type f | head -1)"
+	IMAGEFILE="`find /usr/share/pixmaps -maxdepth 1 -type f | head -1`"
 
 	echo '
 style "styleBgGreen" {
@@ -17,10 +17,10 @@ style "styleBgBlue" {
 	bg[NORMAL] = "#0000a0"
 }
 
-pixmap_path "'"$(dirname $IMAGEFILE)"'"
+pixmap_path "'"`dirname $IMAGEFILE`"'"
 
 style "styleBgPixmap" {
-	bg_pixmap[NORMAL] = "'"$(basename $IMAGEFILE)"'"
+	bg_pixmap[NORMAL] = "'"`basename $IMAGEFILE`"'"
 }
 widget "*BgGreen" style "styleBgGreen"
 widget "*BgBlue" style "styleBgBlue"

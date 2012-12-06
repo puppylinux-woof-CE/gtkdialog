@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 ediWidth=150; ediHeight=75; gap=25
@@ -37,86 +37,86 @@ MAIN_DIALOG='
 			<edit accepts-tab="false" wrap-mode="0">
 				<action signal="show">echo "wrap-mode=\"0\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "accepts-tab=\"false\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi00 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi00 $ediWidth $ediHeight 1 1`"'
 			<edit cursor-visible="false" wrap-mode="0">
 				<action signal="show">echo "wrap-mode=\"0\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "cursor-visible=\"false\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi01 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi01 $ediWidth $ediHeight 1 1`"'
 			<edit editable="false" wrap-mode="0">
 				<action signal="show">echo "wrap-mode=\"0\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "editable=\"false\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi02 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi02 $ediWidth $ediHeight 1 1`"'
 			<edit indent="'$gap'" wrap-mode="0">
 				<action signal="show">echo "wrap-mode=\"0\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "indent=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi03 $ediWidth $ediHeight 1 0)"'
+				'"`funcediCreate edi03 $ediWidth $ediHeight 1 0`"'
 		</hbox>
 		<hseparator></hseparator>
 		<hbox spacing="10">
 			<edit justification="0" wrap-mode="1">
 				<action signal="show">echo "wrap-mode=\"1\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "justification=\"0\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi04 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi04 $ediWidth $ediHeight 1 1`"'
 			<edit justification="1" wrap-mode="1">
 				<action signal="show">echo "wrap-mode=\"1\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "justification=\"1\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi05 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi05 $ediWidth $ediHeight 1 1`"'
 			<edit justification="2" wrap-mode="1">
 				<action signal="show">echo "wrap-mode=\"1\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "justification=\"2\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi06 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi06 $ediWidth $ediHeight 1 1`"'
 			<edit justification="3" wrap-mode="1">
 				<action signal="show">echo "wrap-mode=\"1\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "justification=\"3\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi07 $ediWidth $ediHeight 1 0)"'
+				'"`funcediCreate edi07 $ediWidth $ediHeight 1 0`"'
 		</hbox>
 		<hseparator></hseparator>
 		<hbox spacing="10">
 			<edit left-margin="'$gap'" wrap-mode="2">
 				<action signal="show">echo "wrap-mode=\"2\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "left-margin=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi08 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi08 $ediWidth $ediHeight 1 1`"'
 			<edit right-margin="'$gap'" wrap-mode="2">
 				<action signal="show">echo "wrap-mode=\"2\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "right-margin=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi09 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi09 $ediWidth $ediHeight 1 1`"'
 			<edit overwrite="true" wrap-mode="2">
 				<action signal="show">echo "wrap-mode=\"2\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "overwrite=\"true\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi10 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi10 $ediWidth $ediHeight 1 1`"'
 			<edit pixels-above-lines="'$gap'" wrap-mode="2">
 				<action signal="show">echo "wrap-mode=\"2\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "pixels-above-lines=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi11 $ediWidth $ediHeight 1 0)"'
+				'"`funcediCreate edi11 $ediWidth $ediHeight 1 0`"'
 		</hbox>
 		<hseparator></hseparator>
 		<hbox spacing="10">
 			<edit pixels-below-lines="'$gap'" wrap-mode="3">
 				<action signal="show">echo "wrap-mode=\"3\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "pixels-below-lines=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi12 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi12 $ediWidth $ediHeight 1 1`"'
 			<edit pixels-inside-wrap="'$gap'" wrap-mode="3">
 				<action signal="show">echo "wrap-mode=\"3\"" > '"$TMPDIR"'/inoutfile</action>
 				<action signal="show">echo "pixels-inside-wrap=\"'$gap'\"" >> '"$TMPDIR"'/inoutfile</action>
-				'"$(funcediCreate edi13 $ediWidth $ediHeight 1 1)"'
+				'"`funcediCreate edi13 $ediWidth $ediHeight 1 1`"'
 			<edit wrap-mode="3">
 				<default>This text originates from the default directive.</default>
-				'"$(funcediCreate edi14 $ediWidth $ediHeight 0 0)"'
+				'"`funcediCreate edi14 $ediWidth $ediHeight 0 0`"'
 		</hbox>
 		<hseparator></hseparator>
 		<hbox spacing="10">
 			<edit>
 				<action signal="show">echo "Type something here and press some buttons." > '"$TMPDIR"'/inoutfile</action>
 				<output file>'"$TMPDIR"'/inoutfile</output>
-				'"$(funcediCreate edi15 $ediWidth $ediHeight 1 0)"'
+				'"`funcediCreate edi15 $ediWidth $ediHeight 1 0`"'
 		</hbox>
 		<hbox spacing="32">
-			'"$(funcbtnCreate edi15 0 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate edi15 0 Enable gtk-yes Enabling)"'
-			'"$(funcbtnCreate edi15 0 Clear gtk-clear Clearing)"'
-			'"$(funcbtnCreate edi15 0 Removeselected gtk-delete Deleting)"'
-			'"$(funcbtnCreate edi15 0 Refresh gtk-refresh Refreshing)"'
-			'"$(funcbtnCreate edi15 0 Save gtk-save Saving)"'
+			'"`funcbtnCreate edi15 0 Disable gtk-no Disabling`"'
+			'"`funcbtnCreate edi15 0 Enable gtk-yes Enabling`"'
+			'"`funcbtnCreate edi15 0 Clear gtk-clear Clearing`"'
+			'"`funcbtnCreate edi15 0 Removeselected gtk-delete Deleting`"'
+			'"`funcbtnCreate edi15 0 Refresh gtk-refresh Refreshing`"'
+			'"`funcbtnCreate edi15 0 Save gtk-save Saving`"'
 		</hbox>
 		<hseparator></hseparator>
 		<hbox homogeneous="true">
