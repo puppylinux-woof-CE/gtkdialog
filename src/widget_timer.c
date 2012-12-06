@@ -87,10 +87,8 @@ GtkWidget *widget_timer_create(
 	 * I can't create the timer here as I need a pointer to its variable
 	 * and this isn't created until after widget creation.
 	 * 
-	 * I can't set the widget invisible here because gtk_widget_show_all
-	 * in automaton.c will unhide everything, so it must be managed by
-	 * the user with the "visible" tag attribute -- GTK+ will apply this
-	 * on widget realization.
+	 * The developer can hide the widget by using the visible="false"
+	 * tag attribute which will be applied on widget realization.
 	 * 
 	 * These things are accomplished in the refresh function which is
 	 * called next */

@@ -53,7 +53,7 @@ funcrcCreate() {
 				fi
 			done
 		done
-		p=$(($p + 1))
+		p=$((p + 1))
 	done
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi

@@ -1,3 +1,6 @@
+* Wed Dec 5 2012 Thunor <thunorsif@hotmail.com>
+- Added and implemented the profile-not-saved warning dialogs.
+
 * Thu Nov 8 2012 Thunor <thunorsif@hotmail.com>
 - Changed --tmpdir to -t.
 

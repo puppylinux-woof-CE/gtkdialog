@@ -43,6 +43,7 @@ ReadmeFontName="Monospace 10"
 
 PATH=$PACKAGE_DATA_DIR:$PATH
 
+. funcDialogsCreate
 . funcGameListCreate
 . funcgtkrcCreate
 . funcProfileLoad
@@ -96,12 +97,12 @@ funcTabGamesCreate() {
 ## preferential to having everything freeze and then update all at once.
 ## `'
 				<togglebutton use-stock="true" label="gtk-refresh">
-					<variable>btnGameListRefresh</variable>
+					<variable export="false">tgbGameListRefresh</variable>
 					<action>if true clear:treGameList</action>
 					<action>if true clear:stbGameCount</action>
 					<action>if true disable:tgbGamePlay</action>
 					<action>if true disable:entProfileCommandLineArgs</action>
-					<action>if true activate:btnGameListRefresh</action>
+					<action>if true activate:tgbGameListRefresh</action>
 					<action>if false . funcGameListCreate; funcGameListCreate</action>
 					<action>if false refresh:treGameList</action>
 					<action>if false refresh:stbGameCount</action>
@@ -115,7 +116,7 @@ funcTabGamesCreate() {
 ## emulator but I managed to combine the two into a tidier togglebutton.
 ## `'
 				<togglebutton use-underline="true">
-					<variable>tgbGamePlay</variable>
+					<variable export="false">tgbGamePlay</variable>
 					<label>_Play</label>
 					<sensitive>false</sensitive>
 					<input file stock="gtk-execute"></input>
@@ -140,30 +141,21 @@ funcTabProfilesCreate() {
 			<hbox>'
 	f=0; while [ $f -lt $ProfileMax ]; do
 		echo '<button>
-				<variable>btnProfile'$f'</variable>
+				<variable export="false">btnProfile'$f'</variable>
 				<width>32</width><height>32</height>
 				<input file>'$TEMP_DIR'/Profile'$f'</input>
-				<action>. funcProfileLoad; funcProfileLoad '$f'</action>
-
-				<action>refresh:entProfileExecutable</action>
-				<action>refresh:entProfileArguments</action>
-				<action>refresh:entProfileReadme</action>
-				<action>refresh:entProfileROMsPath0</action>
-				<action>refresh:entProfileROMsPattern0</action>
-				<action>refresh:entProfileROMsPath1</action>
-				<action>refresh:entProfileROMsPattern1</action>
-				<action>refresh:entProfileROMsPath2</action>
-				<action>refresh:entProfileROMsPattern2</action>
-				<action>refresh:entProfileImagesPath0</action>
-				<action>refresh:entProfileImagesPattern0</action>
-				<action>refresh:entProfileImagesPath1</action>
-				<action>refresh:entProfileImagesPattern1</action>
-				<action>refresh:entProfileImagesPath2</action>
-				<action>refresh:entProfileImagesPattern2</action>
-
-				<action>disable:btnProfileApply</action>
+				<action>. functmpSet; functmpSet ProfileChangeTo '$f'</action>
+				<action condition="sensitive_is_true(btnProfileApply)">launch:winProfileNotSavedOnChange</action>
+'`Comment ##
+## If btnProfileApply was sensitive and winProfileNotSavedOnChange was
+## launched then we won't reach this point because launching doesn't
+## return to process the remaining actions so we can safely assume that
+## btnProfileApply is not sensitive which makes a condition redundant.
+## `'
+				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
+				<action>refresh:chkProfileChangeCheck</action>
 			</button>'
-		f=$(($f + 1))
+		f=$((f + 1))
 	done
 	echo '</hbox>
 			<frame>'
@@ -179,6 +171,7 @@ funcTabProfilesCreate() {
 					<variable>entProfile'$f'</variable>
 					<input file>'$TEMP_DIR'/Profile'$f'</input>
 					<action signal="changed">enable:btnProfileApply</action>
+					<action signal="changed">disable:btnProfileSelect</action>
 				</entry>
 				<vbox>'
 		## Arguments doesn't require a fileselect button so we'll use a
@@ -223,14 +216,15 @@ funcTabProfilesCreate() {
 				<entry fs-action="folder" fs-folder="'$HOME'" fs-title="'$TITLE'"
 					space-expand="true" space-fill="true"
 					width-request="220">
-					<variable>entProfile'$tab'Path'$(($f % 3))'</variable>
-					<input file>'$TEMP_DIR'/Profile'$tab'Path'$(($f % 3))'</input>
+					<variable>entProfile'$tab'Path'$((f % 3))'</variable>
+					<input file>'$TEMP_DIR'/Profile'$tab'Path'$((f % 3))'</input>
 					<action signal="changed">enable:btnProfileApply</action>
+					<action signal="changed">disable:btnProfileSelect</action>
 				</entry>
 				<vbox>
 					<button space-expand="true" space-fill="false">
 						<input file stock="gtk-open"></input>
-						<action>fileselect:entProfile'$tab'Path'$(($f % 3))'</action>
+						<action>fileselect:entProfile'$tab'Path'$((f % 3))'</action>
 					</button>
 				</vbox>
 				<text space-expand="false" space-fill="false">
@@ -238,9 +232,10 @@ funcTabProfilesCreate() {
 				</text>
 				<entry space-expand="true" space-fill="true"
 					width-request="80">
-					<variable>entProfile'$tab'Pattern'$(($f % 3))'</variable>
-					<input file>'$TEMP_DIR'/Profile'$tab'Pattern'$(($f % 3))'</input>
+					<variable>entProfile'$tab'Pattern'$((f % 3))'</variable>
+					<input file>'$TEMP_DIR'/Profile'$tab'Pattern'$((f % 3))'</input>
 					<action signal="changed">enable:btnProfileApply</action>
+					<action signal="changed">disable:btnProfileSelect</action>
 				</entry>
 			</hbox>'
 		if [ $f -eq 2 ]; then
@@ -253,13 +248,15 @@ funcTabProfilesCreate() {
 			<hbox homogeneous="true" space-expand="false" space-fill="true">
 				<text><label>"'$DebugSpacer'"</label></text>
 				<button use-stock="true" label="gtk-apply">
-					<variable>btnProfileApply</variable>
+					<variable export="false">btnProfileApply</variable>
 					<sensitive>false</sensitive>
 					<action>. funcProfileSave; funcProfileSave</action>
 					<action>disable:btnProfileApply</action>
+					<action>disable:btnProfileSelect</action>
+					<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
 				</button>
 				<button use-underline="true">
-					<variable>btnProfileSelect</variable>
+					<variable export="false">btnProfileSelect</variable>
 					<label>_Select</label>
 					<sensitive>false</sensitive>
 					<input file stock="gtk-ok"></input>
@@ -295,7 +292,7 @@ funcTabReadmeCreate() {
 						<action>""</action>
 					</fontbutton>
 					<button use-stock="true" label="gtk-apply">
-						<variable>btnReadmeApply</variable>
+						<variable export="false">btnReadmeApply</variable>
 						<sensitive>false</sensitive>
 						<action>""</action>
 					</button>
@@ -320,7 +317,7 @@ funcTabsImagesCreate() {
 	for f in 0 1 2; do
 		echo '<eventbox name="TabsImages" border-width="5">
 				<pixmap>
-					<variable>pmpImage'$f'</variable>
+					<variable export="false">pmpImage'$f'</variable>
 					<width>'$ImageSize'</width>
 					<height>'$ImageSize'</height>
 					<input file>'$TEMP_DIR'/Image'$f'</input>
@@ -395,6 +392,11 @@ else
 	functmpSet Readme ""
 fi
 functmpSet Output ""
+functmpSet ProfileChangeCheck false
+functmpSet QuitCheck false
+
+## Create the XML for the pop-up dialogs.
+funcDialogsCreate
 
 ## Create the XML for the main dialog.
 echo '
@@ -403,9 +405,13 @@ echo '
 		<menubar space-expand="false" space-fill="false">
 			<menu use-underline="true" label="_File">
 				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
-					<variable>muiQuit</variable>
-					<action>. funcProfileSave; funcProfileSave 1</action>
-					<action>exit:Quit</action>
+					<variable export="false">muiQuit</variable>
+					<action condition="sensitive_is_true(btnProfileApply)">launch:winProfileNotSavedOnQuit</action>
+'`Comment ##
+## We won't reach this point if winProfileNotSavedOnQuit was launched.
+## `'
+					<action>. funcWidgetSchedule; funcWidgetSchedule chkQuitCheck QuitCheck</action>
+					<action>refresh:chkQuitCheck</action>
 				</menuitem>
 			</menu>
 		</menubar>
@@ -445,11 +451,49 @@ echo '
 			</hbox>
 		</vbox>
 		<statusbar space-expand="false" space-fill="false">
-			<variable>stbGameCount</variable>
+			<variable export="false">stbGameCount</variable>
 			<input file>'$TEMP_DIR'/GameCount</input>
 		</statusbar>
+'`Comment ##
+## This checkbox -- used by all of the buttons that change the visible
+## profile -- is being used here to load a profile and refresh the many
+## widgets. Not only does it cut down on code duplication but it also
+## allows this task to be executed conditionally which is what we need.
+## `'
+		<checkbox visible="false">
+			<variable>chkProfileChangeCheck</variable>
+			<input file>'$TEMP_DIR'/ProfileChangeCheck</input>
+			<action>. funcProfileLoad; funcProfileLoad `. functmpGet; functmpGet ProfileChangeTo`</action>
+			<action>refresh:entProfileExecutable</action>
+			<action>refresh:entProfileArguments</action>
+			<action>refresh:entProfileReadme</action>
+			<action>refresh:entProfileROMsPath0</action>
+			<action>refresh:entProfileROMsPattern0</action>
+			<action>refresh:entProfileROMsPath1</action>
+			<action>refresh:entProfileROMsPattern1</action>
+			<action>refresh:entProfileROMsPath2</action>
+			<action>refresh:entProfileROMsPattern2</action>
+			<action>refresh:entProfileImagesPath0</action>
+			<action>refresh:entProfileImagesPattern0</action>
+			<action>refresh:entProfileImagesPath1</action>
+			<action>refresh:entProfileImagesPattern1</action>
+			<action>refresh:entProfileImagesPath2</action>
+			<action>refresh:entProfileImagesPattern2</action>
+			<action>disable:btnProfileApply</action>
+			<action>disable:btnProfileSelect</action>
+			<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
+		</checkbox>
+'`Comment ##
+## Another checkbox trick to enable a conditional exit.
+## `'
+		<checkbox visible="false">
+			<variable>chkQuitCheck</variable>
+			<input file>'$TEMP_DIR'/QuitCheck</input>
+			<action>. funcProfileSave; funcProfileSave 1</action>
+			<action>exit:Quit</action>
+		</checkbox>
 	</vbox>
-	<variable>winMain</variable>
+	<variable export="false">winMain</variable>
 </window>
 ' > $TEMP_DIR/winMain
 
@@ -465,6 +509,8 @@ export DEBUG_TRANSITS
 export PATH
 export TEMP_DIR
 export GTK2_RC_FILES
+export winProfileNotSavedOnChange
+export winProfileNotSavedOnQuit
 
 ## And off we go...
 $GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain

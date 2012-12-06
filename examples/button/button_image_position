@@ -4,7 +4,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+export TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnType0Create() {
@@ -64,34 +64,34 @@ export MAIN_DIALOG='
 	<vbox>
 		<frame Stock images (and labels) using GTK properties>
 			<hbox homogeneous="true">
-				'"$(funcbtnType0Create 0 about)"'
-				'"$(funcbtnType0Create 1 add)"'
-				'"$(funcbtnType0Create 2 apply)"'
-				'"$(funcbtnType0Create 3 bold)"'
+				'"`funcbtnType0Create 0 about`"'
+				'"`funcbtnType0Create 1 add`"'
+				'"`funcbtnType0Create 2 apply`"'
+				'"`funcbtnType0Create 3 bold`"'
 			</hbox>
 		</frame>
 		<frame Stock images using Gtkdialog directives>
 			<hbox homogeneous="true">
-				'"$(funcbtnType1Create Left about)"'
-				'"$(funcbtnType1Create Right add)"'
-				'"$(funcbtnType1Create Top apply)"'
-				'"$(funcbtnType1Create Bottom bold)"'
+				'"`funcbtnType1Create Left about`"'
+				'"`funcbtnType1Create Right add`"'
+				'"`funcbtnType1Create Top apply`"'
+				'"`funcbtnType1Create Bottom bold`"'
 			</hbox>
 		</frame>
 		<frame Images from files using Gtkdialog directives>
 			<hbox homogeneous="true">
-				'"$(funcbtnType2Create Left Woden)"'
-				'"$(funcbtnType2Create Right Woden)"'
-				'"$(funcbtnType2Create Top Woden)"'
-				'"$(funcbtnType2Create Bottom Woden)"'
+				'"`funcbtnType2Create Left Woden`"'
+				'"`funcbtnType2Create Right Woden`"'
+				'"`funcbtnType2Create Top Woden`"'
+				'"`funcbtnType2Create Bottom Woden`"'
 			</hbox>
 		</frame>
 		<frame Scaled images from files using Gtkdialog directives>
 			<hbox homogeneous="true">
-				'"$(funcbtnType3Create Left Frige)"'
-				'"$(funcbtnType3Create Right Frige)"'
-				'"$(funcbtnType3Create Top Frige)"'
-				'"$(funcbtnType3Create Bottom Frige)"'
+				'"`funcbtnType3Create Left Frige`"'
+				'"`funcbtnType3Create Right Frige`"'
+				'"`funcbtnType3Create Top Frige`"'
+				'"`funcbtnType3Create Bottom Frige`"'
 			</hbox>
 		</frame>
 		<hbox homogeneous="true">
