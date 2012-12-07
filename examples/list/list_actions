@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 printf "First item\nSecond item\nThird item" > "$TMPDIR"/inputfile
@@ -27,16 +27,16 @@ MAIN_DIALOG='
 			<action>echo "The chosen item is \"$LIST\""</action>
 		</list>
 		<hbox>
-			'"$(funcbtnCreate LIST Disable Disabling)"'
-			'"$(funcbtnCreate LIST Enable Enabling)"'
-			'"$(funcbtnCreate LIST Hide Hiding)"'
-			'"$(funcbtnCreate LIST Show Showing)"'
+			'"`funcbtnCreate LIST Disable Disabling`"'
+			'"`funcbtnCreate LIST Enable Enabling`"'
+			'"`funcbtnCreate LIST Hide Hiding`"'
+			'"`funcbtnCreate LIST Show Showing`"'
 		</hbox>
 		<hbox>
-			'"$(funcbtnCreate LIST Save Saving)"'
-			'"$(funcbtnCreate LIST Refresh Refreshing)"'
-			'"$(funcbtnCreate LIST Clear Clearing)"'
-			'"$(funcbtnCreate LIST Removeselected Deleting)"'
+			'"`funcbtnCreate LIST Save Saving`"'
+			'"`funcbtnCreate LIST Refresh Refreshing`"'
+			'"`funcbtnCreate LIST Clear Clearing`"'
+			'"`funcbtnCreate LIST Removeselected Deleting`"'
 		</hbox>
 		<hseparator space-expand="false" space-fill="false"></hseparator>
 		<hbox space-expand="false" space-fill="false">

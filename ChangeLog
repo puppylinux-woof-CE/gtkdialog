@@ -2,6 +2,10 @@ Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
 * Thu Dec 6 2012 Thunor <thunorsif@hotmail.com>
+- Corrected to backticks and tested with dash all examples up to
+  menuitemseparator.
+
+* Thu Dec 6 2012 Thunor <thunorsif@hotmail.com>
 - Corrected to backticks and tested with dash all examples up to frame.
 - Added support for break i.e. don't process any more actions.
 - Added examples/miscellaneous/break.

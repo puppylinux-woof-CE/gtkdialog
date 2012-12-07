@@ -18,24 +18,24 @@ MAIN_DIALOG='
 			<hbox>
 				<hbox width-request="200" height-request="200">
 					<hbox scrollable="true">
-						'"$(funcentCreate 0 10)"'
+						'"`funcentCreate 0 10`"'
 					</hbox>
 				</hbox>
 				<hbox width-request="400" height-request="200">
 					<hbox scrollable="true" width-request="500">
-						'"$(funcentCreate 0 10)"'
+						'"`funcentCreate 0 10`"'
 					</hbox>
 				</hbox>
 			</hbox>
 			<hbox>
 				<hbox width-request="400" height-request="200">
 					<hbox scrollable="true" height-request="500">
-						'"$(funcentCreate 0 10)"'
+						'"`funcentCreate 0 10`"'
 					</hbox>
 				</hbox>
 				<hbox width-request="200" height-request="200">
 					<hbox scrollable="true" width-request="500" height-request="500">
-						'"$(funcentCreate 0 10)"'
+						'"`funcentCreate 0 10`"'
 					</hbox>
 				</hbox>
 			</hbox>
