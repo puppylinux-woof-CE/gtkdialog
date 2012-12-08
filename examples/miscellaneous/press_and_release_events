@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcenvvarCreate() {
@@ -67,11 +67,11 @@ MAIN_DIALOG='
 					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> Last Key Release </span>"</label>
 				</text>
 			</hbox>
-			'"$(funcenvvarCreate KEY_VAL)"'
-			'"$(funcenvvarCreate KEY_SYM)"'
-			'"$(funcenvvarCreate KEY_UNI)"'
-			'"$(funcenvvarCreate KEY_MOD)"'
-			'"$(funcenvvarCreate KEY_RAW)"'
+			'"`funcenvvarCreate KEY_VAL`"'
+			'"`funcenvvarCreate KEY_SYM`"'
+			'"`funcenvvarCreate KEY_UNI`"'
+			'"`funcenvvarCreate KEY_MOD`"'
+			'"`funcenvvarCreate KEY_RAW`"'
 		</vbox>
 		<hseparator></hseparator>
 		<vbox>
@@ -86,12 +86,12 @@ MAIN_DIALOG='
 					<label>"<span fgcolor='"'white'"' bgcolor='"'black'"'> Last Button Release </span>"</label>
 				</text>
 			</hbox>
-			'"$(funcenvvarCreate PTR_BTN)"'
-			'"$(funcenvvarCreate PTR_MOD)"'
-			'"$(funcenvvarCreate PTR_X)"'
-			'"$(funcenvvarCreate PTR_Y)"'
-			'"$(funcenvvarCreate PTR_X_ROOT)"'
-			'"$(funcenvvarCreate PTR_Y_ROOT)"'
+			'"`funcenvvarCreate PTR_BTN`"'
+			'"`funcenvvarCreate PTR_MOD`"'
+			'"`funcenvvarCreate PTR_X`"'
+			'"`funcenvvarCreate PTR_Y`"'
+			'"`funcenvvarCreate PTR_X_ROOT`"'
+			'"`funcenvvarCreate PTR_Y_ROOT`"'
 		</vbox>
 		<hseparator></hseparator>
 		<hbox homogeneous="true" space-expand="false" space-fill="false">

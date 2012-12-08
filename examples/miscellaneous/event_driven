@@ -2,6 +2,11 @@
 
 # This example requires bash.
 
+# Notice that the function print_this() is also being executed using /bin/bash
+# within the action directive and the reason for this is that Gtkdialog is a
+# C program and the C library will execute a system command using /bin/sh.
+# Ubuntu users whose /bin/sh links to dash especially should be aware of this.
+
 GTKDIALOG=gtkdialog
 
 print_this() {
@@ -13,7 +18,7 @@ export MAIN_DIALOG='
 	<vbox>
 		<button>
 			<label>function</label>
-			<action>print_this button</action>
+			<action>/bin/bash -c "print_this button"</action>
 		</button>
 		<button>
 			<label>Exit</label>

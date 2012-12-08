@@ -22,28 +22,28 @@ MAIN_DIALOG='
 				<button label="button (GtkButton)">
 					<variable>btnButton</variable>
 					<action>""</action>
-					'"$(funcactCreate btnButton)"'
+					'"`funcactCreate btnButton`"'
 				</button>
 				<checkbox active="true" label="checkbox (GtkCheckButton)">
 					<variable>chkCheckbox</variable>
-					'"$(funcactCreate chkCheckbox)"'
+					'"`funcactCreate chkCheckbox`"'
 				</checkbox>
 				<colorbutton use-alpha="true"
 					tooltip-text="colorbutton (GtkColorButton)">
 					<variable>clbColorbutton</variable>
 					<default>#4488cc|32768</default>
-					'"$(funcactCreate clbColorbutton)"'
+					'"`funcactCreate clbColorbutton`"'
 				</colorbutton>
 				<comboboxentry>
 					<variable>cbeComboboxentry</variable>
 					<default>comboboxentry</default>
-					'"$(funcactCreate cbeComboboxentry)"'
+					'"`funcactCreate cbeComboboxentry`"'
 					<item>comboboxentry</item>
 					<item>(GtkComboBoxEntry)</item>
 				</comboboxentry>
 				<comboboxtext>
 					<variable>cbtComboboxtext</variable>
-					'"$(funcactCreate cbtComboboxtext)"'
+					'"`funcactCreate cbtComboboxtext`"'
 					<item>comboboxtext</item>
 					<item>(GtkComboBox)</item>
 				</comboboxtext>
@@ -51,7 +51,7 @@ MAIN_DIALOG='
 					<variable>ediEdit</variable>
 					<default>"edit
 (GtkTextView)"</default>
-					'"$(funcactCreate ediEdit)"'
+					'"`funcactCreate ediEdit`"'
 				</edit>
 			</vbox>
 			<vseparator></vseparator>
@@ -59,51 +59,51 @@ MAIN_DIALOG='
 				<entry>
 					<variable>entEntry</variable>
 					<default>entry (GtkEntry)</default>
-					'"$(funcactCreate entEntry)"'
+					'"`funcactCreate entEntry`"'
 				</entry>
 				<fontbutton use-font="true" use-size="true"
 					tooltip-text="fontbutton (GtkFontButton)">
 					<variable>ftbFontbutton</variable>
 					<default>Liberation Serif Bold Italic 14</default>
-					'"$(funcactCreate ftbFontbutton)"'
+					'"`funcactCreate ftbFontbutton`"'
 				</fontbutton>
 				<hscale range-value="50" tooltip-text="hscale (GtkHScale)">
 					<variable>hscHscale</variable>
-					'"$(funcactCreate hscHscale)"'
+					'"`funcactCreate hscHscale`"'
 				</hscale>
 				<notebook tab-labels="radiobutton|spinbutton">
 					<radiobutton label="(GtkRadioButton)">
 						<variable>rdoRadiobutton</variable>
-						'"$(funcactCreate rdoRadiobutton)"'
+						'"`funcactCreate rdoRadiobutton`"'
 					</radiobutton>
 					<spinbutton value="50"
 						tooltip-text="spinbutton (GtkSpinButton)">
 						<variable>spbSpinbutton</variable>
-						'"$(funcactCreate spbSpinbutton)"'
+						'"`funcactCreate spbSpinbutton`"'
 					</spinbutton>
 					<variable>ntbNotebook</variable>
-					'"$(funcactCreate ntbNotebook)"'
+					'"`funcactCreate ntbNotebook`"'
 				</notebook>
 			</vbox>
 			<vseparator></vseparator>
 			<vscale range-value="50" tooltip-text="vscale (GtkVScale)">
 				<variable>vscVscale</variable>
-				'"$(funcactCreate vscVscale)"'
+				'"`funcactCreate vscVscale`"'
 			</vscale>
 			<vbox>
 				<table>
 					<variable>tblTable</variable>
-					'"$(funcactCreate tblTable)"'
+					'"`funcactCreate tblTable`"'
 					<item>table</item>
 					<item>(GtkCList)</item>
 				</table>
 				<togglebutton label="togglebutton (GtkToggleButton)">
 					<variable>tgbTogglebutton</variable>
-					'"$(funcactCreate tgbTogglebutton)"'
+					'"`funcactCreate tgbTogglebutton`"'
 				</togglebutton>
 				<tree>
 					<variable>treTree</variable>
-					'"$(funcactCreate treTree)"'
+					'"`funcactCreate treTree`"'
 					<item>tree</item>
 					<item>(GtkTreeView)</item>
 				</tree>
@@ -112,31 +112,31 @@ MAIN_DIALOG='
 		<hseparator></hseparator>
 		<hbox>
 			<vbox>
-				'"$(funcbtnCreate button btnButton)"'
-				'"$(funcbtnCreate checkbox chkCheckbox)"'
-				'"$(funcbtnCreate colorbutton clbColorbutton)"'
-				'"$(funcbtnCreate comboboxentry cbeComboboxentry)"'
-				'"$(funcbtnCreate comboboxtext cbtComboboxtext)"'
-				'"$(funcbtnCreate edit ediEdit)"'
+				'"`funcbtnCreate button btnButton`"'
+				'"`funcbtnCreate checkbox chkCheckbox`"'
+				'"`funcbtnCreate colorbutton clbColorbutton`"'
+				'"`funcbtnCreate comboboxentry cbeComboboxentry`"'
+				'"`funcbtnCreate comboboxtext cbtComboboxtext`"'
+				'"`funcbtnCreate edit ediEdit`"'
 			</vbox>
 			<vbox>
-				'"$(funcbtnCreate entry entEntry)"'
-				'"$(funcbtnCreate fontbutton ftbFontbutton)"'
-				'"$(funcbtnCreate hscale hscHscale)"'
-				'"$(funcbtnCreate notebook ntbNotebook)"'
-				'"$(funcbtnCreate radiobutton rdoRadiobutton)"'
-				'"$(funcbtnCreate spinbutton spbSpinbutton)"'
+				'"`funcbtnCreate entry entEntry`"'
+				'"`funcbtnCreate fontbutton ftbFontbutton`"'
+				'"`funcbtnCreate hscale hscHscale`"'
+				'"`funcbtnCreate notebook ntbNotebook`"'
+				'"`funcbtnCreate radiobutton rdoRadiobutton`"'
+				'"`funcbtnCreate spinbutton spbSpinbutton`"'
 			</vbox>
 			<vbox>
-				'"$(funcbtnCreate table tblTable)"'
-				'"$(funcbtnCreate togglebutton tgbTogglebutton)"'
-				'"$(funcbtnCreate tree treTree)"'
-				'"$(funcbtnCreate vscale vscVscale)"'
+				'"`funcbtnCreate table tblTable`"'
+				'"`funcbtnCreate togglebutton tgbTogglebutton`"'
+				'"`funcbtnCreate tree treTree`"'
+				'"`funcbtnCreate vscale vscVscale`"'
 			</vbox>
 		</hbox>
 	</vbox>
 	<variable>MAIN_DIALOG</variable>
-	'"$(funcactCreate MAIN_DIALOG)"'
+	'"`funcactCreate MAIN_DIALOG`"'
 </window>
 '
 export MAIN_DIALOG

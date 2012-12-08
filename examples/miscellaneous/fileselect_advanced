@@ -18,7 +18,7 @@ MAIN_DIALOG='
 				<entry>
 					<variable>ent0</variable>
 				</entry>
-				'"$(funcbtnCreate 0 new)"'
+				'"`funcbtnCreate 0 new`"'
 			</hbox>
 			<hseparator></hseparator>
 			<hbox>
@@ -28,7 +28,7 @@ MAIN_DIALOG='
 					fs-title="Select an existing file">
 					<variable>ent1</variable>
 				</entry>
-				'"$(funcbtnCreate 1 new)"'
+				'"`funcbtnCreate 1 new`"'
 			</hbox>
 			<hseparator></hseparator>
 			<hbox>
@@ -38,7 +38,7 @@ MAIN_DIALOG='
 					fs-title="Select an existing file or type in a new filename">
 					<variable>ent2</variable>
 				</entry>
-				'"$(funcbtnCreate 2 new)"'
+				'"`funcbtnCreate 2 new`"'
 			</hbox>
 			<hseparator></hseparator>
 			<hbox>
@@ -46,7 +46,7 @@ MAIN_DIALOG='
 				<entry fs-title="Select an existing folder" fs-action="folder">
 					<variable>ent3</variable>
 				</entry>
-				'"$(funcbtnCreate 3 open)"'
+				'"`funcbtnCreate 3 open`"'
 			</hbox>
 			<hseparator></hseparator>
 			<hbox>
@@ -56,7 +56,7 @@ MAIN_DIALOG='
 					<default>This fileselect action type is temperamental</default>
 					<variable>ent4</variable>
 				</entry>
-				'"$(funcbtnCreate 4 open)"'
+				'"`funcbtnCreate 4 open`"'
 			</hbox>
 		</vbox>
 		<hseparator></hseparator>
