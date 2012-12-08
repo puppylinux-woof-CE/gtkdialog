@@ -5,7 +5,7 @@
 GTKDIALOG=gtkdialog
 
 window_width=800
-icon_names=(echo $(<icon_names.txt))
+icon_names=(echo `<icon_names.txt`)
 type=stock
 
 mnuCreate() {
@@ -68,16 +68,16 @@ export MAIN_DIALOG='
 	border-width="0" resizable="false">
 	<vbox spacing="0">
 		<menubar>
-			'"$(mnuCreate)"'
+			'"`mnuCreate`"'
 		</menubar>
 		<hbox spacing="0" height-request="200">
-			'"$(pixCreate)"'
+			'"`pixCreate`"'
 		</hbox>
 		<hbox spacing="0" height-request="200">
-			'"$(btnCreate)"'
+			'"`btnCreate`"'
 		</hbox>
 		<hbox spacing="0" height-request="200">
-			'"$(treCreate)"'
+			'"`treCreate`"'
 		</hbox>
 	</vbox>
 </window>

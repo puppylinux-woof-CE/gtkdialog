@@ -53,9 +53,9 @@ winLaunch0='
 			<action>launch:winLaunch3</action>
 			<action>echo "chkLaunch3 - You'"'"'ll never see this message."</action>
 		</checkbox>
-		'"$(funcbtnCreate 1)"'
-		'"$(funcbtnCreate 2)"'
-		'"$(funcbtnCreate 3)"'
+		'"`funcbtnCreate 1`"'
+		'"`funcbtnCreate 2`"'
+		'"`funcbtnCreate 3`"'
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
@@ -68,9 +68,9 @@ export winLaunch0
 winLaunch1='
 <window title="winLaunch1" width-request="250" resizable="false">
 	<vbox>
-		'"$(funcbtnCreate 0)"'
-		'"$(funcbtnCreate 2)"'
-		'"$(funcbtnCreate 3)"'
+		'"`funcbtnCreate 0`"'
+		'"`funcbtnCreate 2`"'
+		'"`funcbtnCreate 3`"'
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
@@ -84,9 +84,9 @@ export winLaunch1
 winLaunch2='
 <window title="winLaunch2" width-request="250" resizable="false">
 	<vbox>
-		'"$(funcbtnCreate 0)"'
-		'"$(funcbtnCreate 1)"'
-		'"$(funcbtnCreate 3)"'
+		'"`funcbtnCreate 0`"'
+		'"`funcbtnCreate 1`"'
+		'"`funcbtnCreate 3`"'
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
@@ -100,9 +100,9 @@ export winLaunch2
 winLaunch3='
 <window title="winLaunch3" width-request="250" resizable="false">
 	<vbox>
-		'"$(funcbtnCreate 0)"'
-		'"$(funcbtnCreate 1)"'
-		'"$(funcbtnCreate 2)"'
+		'"`funcbtnCreate 0`"'
+		'"`funcbtnCreate 1`"'
+		'"`funcbtnCreate 2`"'
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>

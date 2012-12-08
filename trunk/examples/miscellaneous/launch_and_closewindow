@@ -31,9 +31,9 @@ funcframeCreate() {
 winMain='
 <window title="winMain" width-request="250" modal="'$modal'">
 	<vbox>
-		'"$(funcframeCreate winMain 1)"'
-		'"$(funcframeCreate winLaunch1 0)"'
-		'"$(funcframeCreate winLaunch2 0)"'
+		'"`funcframeCreate winMain 1`"'
+		'"`funcframeCreate winLaunch1 0`"'
+		'"`funcframeCreate winLaunch2 0`"'
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
@@ -46,9 +46,9 @@ export winMain
 winLaunch1='
 <window title="winLaunch1" width-request="250" modal="'$modal'">
 	<vbox>
-		'"$(funcframeCreate winMain 0)"'
-		'"$(funcframeCreate winLaunch1 1)"'
-		'"$(funcframeCreate winLaunch2 0)"'
+		'"`funcframeCreate winMain 0`"'
+		'"`funcframeCreate winLaunch1 1`"'
+		'"`funcframeCreate winLaunch2 0`"'
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
@@ -61,9 +61,9 @@ export winLaunch1
 winLaunch2='
 <window title="winLaunch2" width-request="250" modal="'$modal'">
 	<vbox>
-		'"$(funcframeCreate winMain 0)"'
-		'"$(funcframeCreate winLaunch1 0)"'
-		'"$(funcframeCreate winLaunch2 1)"'
+		'"`funcframeCreate winMain 0`"'
+		'"`funcframeCreate winLaunch1 0`"'
+		'"`funcframeCreate winLaunch2 1`"'
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
