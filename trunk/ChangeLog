@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Dec 9 2012 Thunor <thunorsif@hotmail.com>
+- Corrected to backticks and tested with dash all examples up to
+  playmusic (so far show_and_hide progressbar with dash is unstable!).
+
 * Sat Dec 8 2012 Thunor <thunorsif@hotmail.com>
 - Corrected to backticks and tested with dash all examples up to
   miscellaneous.

@@ -4,7 +4,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcnbkCreate() {
@@ -44,11 +44,16 @@ funcnbkCreate() {
 	if [ $1 -eq 0 -o $1 -eq 2 ]; then
 		echo '<input file>'"$TMPDIR"'/inputfile</input>'
 	elif [ $1 -eq 1 ]; then
-		echo '<input>echo $(($RANDOM % 4))</input>'
+		echo '<input>/bin/bash -c "echo \$((\$RANDOM % 4))"</input>'
 	elif [ $1 -eq 3 ]; then
-		echo '<input>"if [ $(<'"$TMPDIR"'/inputfile) -eq 4 ]; then echo 0 > '"$TMPDIR"'/inputfile
-			else echo $(($(<'"$TMPDIR"'/inputfile) + 1)) > '"$TMPDIR"'/inputfile; fi
-			echo $(<'"$TMPDIR"'/inputfile)"</input>'
+		echo '<input>"f=`cat '"$TMPDIR"'/inputfile`
+			if [ $f -eq 4 ]; then
+				f=0
+			else
+				f=$((f + 1))
+			fi
+			echo $f > '"$TMPDIR"'/inputfile
+			echo $f"</input>'
 	fi
 }
 
@@ -59,12 +64,12 @@ funcnbkMainCreate() {
 					<hbox homogeneous="true" width-request="500">'
 		if [ $f -eq 0 ]; then
 			echo '<notebook>
-					'"$(funcnbkCreate $f)"'
+					'"`funcnbkCreate $f`"'
 				</notebook>'
 		elif [ $f -eq 1 ]; then
 			echo '<notebook tab-labels="One|Two|Three|Four|Five"
 					page="04" tab-vborder="12" tab-pos="0">
-					'"$(funcnbkCreate $f)"'
+					'"`funcnbkCreate $f`"'
 				</notebook>'
 		elif [ $f -eq 2 ]; then
 			echo '<vbox>
@@ -75,7 +80,7 @@ funcnbkMainCreate() {
 						<output file>'"$TMPDIR"'/inputfile</output>
 					</hscale>
 					<notebook show-tabs="false">
-						'"$(funcnbkCreate $f)"'
+						'"`funcnbkCreate $f`"'
 					</notebook>
 				</vbox>'
 		elif [ $f -eq 3 ]; then
@@ -84,7 +89,7 @@ funcnbkMainCreate() {
 						<action>refresh:nbk'$f'</action>
 					</timer>
 					<notebook show-tabs="false" show-border="false">
-						'"$(funcnbkCreate $f)"'
+						'"`funcnbkCreate $f`"'
 					</notebook>
 				</vbox>'
 		fi
@@ -122,7 +127,7 @@ export MAIN_DIALOG='
 <window title="Notebook Advanced" resizable="false">
 	<vbox>
 		<notebook show-tabs="false" show-border="false">
-			'"$(funcnbkMainCreate)"'
+			'"`funcnbkMainCreate`"'
 			<variable>nbkMain</variable>
 			<input file>'"$TMPDIR"'/inputfile</input>
 		</notebook>
