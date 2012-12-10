@@ -4,10 +4,10 @@
 
 GTKDIALOG=gtkdialog
 
-list() {
-  ls -lha | grep ^d | awk '{print "dir_o|" $1 "|" $8}'
-  ls -lha | grep ^- | awk '{print "gexec|" $1 "|" $8}'
-}; export -f list
+funcList() {
+	ls -lha | grep ^d | awk '{print "dir_o|" $1 "|" $8}'
+	ls -lha | grep ^- | awk '{print "gexec|" $1 "|" $8}'
+}; export -f funcList
 
 export MAIN_DIALOG='
 <window>
@@ -17,7 +17,7 @@ export MAIN_DIALOG='
 			<variable>TREE1</variable>
 			<height>150</height>
 			<width>400</width>
-			<input icon-column="0">list</input>
+			<input icon-column="0">bash -c funcList</input>
 		</tree>
 		<hseparator></hseparator>
 		<tree stock-id="gtk-file">
@@ -25,7 +25,7 @@ export MAIN_DIALOG='
 			<variable>TREE2</variable>
 			<height>150</height>
 			<width>400</width>
-			<input>list</input>
+			<input>bash -c funcList</input>
 		</tree>
 		<hseparator></hseparator>
 		<tree>

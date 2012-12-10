@@ -18,7 +18,7 @@ MAIN_DIALOG='
 			<text use-markup="true">
 				<label>"<span fgcolor='"'black'"' bgcolor='"'white'"'> Text from file inside a scrollable vbox </span>"</label>
 			</text>
-			<vbox scrollable="true" width="600" height="300">
+			<vbox scrollable="true" height="200">
 				<text wrap="false" xalign="0">
 					<variable export="false">txt0</variable>
 					<label>This is a static text.</label>
@@ -26,11 +26,13 @@ MAIN_DIALOG='
 				</text>
 			</vbox>
 			<hbox homogeneous="true">
-				'"$(funcbtnCreate txt0 Disable gtk-no Disabling)"'
-				'"$(funcbtnCreate txt0 Enable gtk-yes Enabling)"'
-				'"$(funcbtnCreate txt0 Clear gtk-clear Clearing)"'
-				'"$(funcbtnCreate txt0 Fileselect gtk-file "Inserting into")"'
-				'"$(funcbtnCreate txt0 Refresh gtk-refresh Refreshing)"'
+				'"`funcbtnCreate txt0 Disable gtk-no Disabling`"'
+				'"`funcbtnCreate txt0 Enable gtk-yes Enabling`"'
+				'"`funcbtnCreate txt0 Hide gtk-no Hiding`"'
+				'"`funcbtnCreate txt0 Show gtk-yes Showing`"'
+				'"`funcbtnCreate txt0 Clear gtk-clear Clearing`"'
+				'"`funcbtnCreate txt0 Refresh gtk-refresh Refreshing`"'
+				'"`funcbtnCreate txt0 Fileselect gtk-file "Inserting into"`"'
 			</hbox>
 			<hseparator></hseparator>
 			<text use-markup="true">
@@ -48,7 +50,7 @@ MAIN_DIALOG='
 			<text wrap="false" xalign="0.5" selectable="true">
 				<variable>txt2</variable>
 				<label>This text will be overwritten with the data from the command.</label>
-				<input>sh --version</input>
+				<input>ps | grep "'"`basename $0`"'"</input>
 			</text>
 			<hseparator></hseparator>
 			<text use-markup="true">

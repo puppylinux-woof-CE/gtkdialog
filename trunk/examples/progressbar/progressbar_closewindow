@@ -23,7 +23,7 @@ export BAR_DIALOG='
 			</text>
 			<progressbar>
 				<label>Some Text</label>
-				<input>progress</input>
+				<input>bash -c progress</input>
 				<action function="closewindow">BAR_DIALOG</action>
 			</progressbar>
 		</frame>

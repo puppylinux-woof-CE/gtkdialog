@@ -40,11 +40,11 @@ functreCreate() {
 			<action signal="cursor-changed">echo "'$1'=$'$1' cursor-changed signal detected"</action>
 		</tree>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate $1 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate $1 Enable gtk-yes Enabling)"'
-			'"$(funcbtnCreate $1 Clear gtk-clear Clearing)"'
-			'"$(funcbtnCreate $1 Removeselected gtk-delete Deleting)"'
-			'"$(funcbtnCreate $1 Refresh gtk-refresh Refreshing)"'
+			'"`funcbtnCreate $1 Disable gtk-no Disabling`"'
+			'"`funcbtnCreate $1 Enable gtk-yes Enabling`"'
+			'"`funcbtnCreate $1 Clear gtk-clear Clearing`"'
+			'"`funcbtnCreate $1 Removeselected gtk-delete Deleting`"'
+			'"`funcbtnCreate $1 Refresh gtk-refresh Refreshing`"'
 		</hbox>'
 }
 
@@ -60,8 +60,8 @@ selection-mode='0' (none)
 exported-column='0' (default)"'"</label>
 				</text>
 				<tree selection-mode="0">
-					<input>funcinputCreate 0</input>
-					'"$(functreCreate tre0)"'
+					<input>bash -c "funcinputCreate 0"</input>
+					'"`functreCreate tre0`"'
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
@@ -72,8 +72,8 @@ headers-visible='false'
 exported-column='1'"'"</label>
 				</text>
 				<tree exported-column="1" headers-visible="false">
-					<input stock-column="0">funcinputCreate 1</input>
-					'"$(functreCreate tre1)"'
+					<input stock-column="0">bash -c "funcinputCreate 1"</input>
+					'"`functreCreate tre1`"'
 			</vbox>
 		</hbox>
 		<hseparator></hseparator>
@@ -86,8 +86,8 @@ headers-clickable='false'
 exported-column='2'"'"</label>
 				</text>
 				<tree selection-mode="2" exported-column="2" headers-clickable="false">
-					<input icon-column="0">funcinputCreate 2</input>
-					'"$(functreCreate tre2)"'
+					<input icon-column="0">bash -c "funcinputCreate 2"</input>
+					'"`functreCreate tre2`"'
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
@@ -98,8 +98,8 @@ rules-hint='true'
 exported-column='3'"'"</label>
 				</text>
 				<tree icon-name="geany" selection-mode="3" exported-column="3" rules-hint="true">
-					<input>funcinputCreate 0</input>
-					'"$(functreCreate tre3)"'
+					<input>bash -c "funcinputCreate 0"</input>
+					'"`functreCreate tre3`"'
 			</vbox>
 		</hbox>
 		<hseparator></hseparator>

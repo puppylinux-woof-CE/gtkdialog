@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcfiletreCreate() {
@@ -46,15 +46,15 @@ MAIN_DIALOG='
 		<frame tree widget selection modes>
 			<hbox>
 				<vbox>
-					'"$(functreCreate treNone 0)"'
+					'"`functreCreate treNone 0`"'
 					<hseparator></hseparator>
-					'"$(functreCreate treSingle 1 gtk-file)"'
+					'"`functreCreate treSingle 1 gtk-file`"'
 				</vbox>
 				<vseparator></vseparator>
 				<vbox>
-					'"$(functreCreate treBrowse 2 gtk-justify-center)"'
+					'"`functreCreate treBrowse 2 gtk-justify-center`"'
 					<hseparator></hseparator>
-					'"$(functreCreate treMultiple 3 gtk-copy)"'
+					'"`functreCreate treMultiple 3 gtk-copy`"'
 				</vbox>
 			</hbox>
 		</frame>

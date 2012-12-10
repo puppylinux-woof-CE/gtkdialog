@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# Thunor: This won't work on *nix as the "insert/append" function has
-# only been written for G_OS_WIN32 -- I don't know why that is.
+# Thunor: It looks like work on insert and append was started several years ago
+# but there's not much code so I wouldn't expect it to work. It would be nice
+# to fully add support for inserting and appending data in the future but this
+# example was probably written to test some initial code that wasn't finished.
 
 GTKDIALOG=gtkdialog
 

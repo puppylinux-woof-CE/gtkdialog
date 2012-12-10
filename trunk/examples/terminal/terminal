@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 # You may notice that the last line of this demo contains "qecho":
@@ -31,11 +31,11 @@ MAIN_DIALOG='
 		<timer interval="2" visible="false">
 			<action>"read < '"$TMPDIR"'/demoindex; index=$REPLY
 				read < '"$TMPDIR"'/democount; count=$REPLY
-				index=$(($index + 1))
+				index=$((index + 1))
 				if [ $index -ge $count ]; then
 					index=0
 				fi
-				line=$(($index + 1))
+				line=$((index + 1))
 				sed -n ${line}p '"$TMPDIR"'/demo > '"$TMPDIR"'/feed
 				echo $index > '"$TMPDIR"'/demoindex
 			"</action>

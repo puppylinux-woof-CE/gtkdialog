@@ -85,15 +85,15 @@ export MAIN_DIALOG='
 			<menu use-underline="true">
 				<menu use-stock="true" label="gtk-select-color">
 					<menuitem radiobutton="true" use-underline="true" accel-key="0xffbf" accel-mods="0">
-						<action>if true /bin/bash -c "funcimageCreate 1"</action>
+						<action>if true bash -c "funcimageCreate 1"</action>
 						<action>refresh:mui01_04</action>
 						'"`funcmuiCreate mui03_00_00 1 "File Image Scaled _Red"`"'
 					<menuitem radiobutton="false" use-underline="true" accel-key="0xffc0" accel-mods="0">
-						<action>if true /bin/bash -c "funcimageCreate 2"</action>
+						<action>if true bash -c "funcimageCreate 2"</action>
 						<action>refresh:mui01_04</action>
 						'"`funcmuiCreate mui03_00_01 1 "File Image Scaled _Green"`"'
 					<menuitem radiobutton="no" use-underline="true" accel-key="0xffc1" accel-mods="">
-						<action>if true /bin/bash -c "funcimageCreate 3"</action>
+						<action>if true bash -c "funcimageCreate 3"</action>
 						<action>refresh:mui01_04</action>
 						'"`funcmuiCreate mui03_00_02 1 "File Image Scaled _Blue"`"'
 					'"`funcmuiCreate mnu03_00 0 "Select Colour"`"'

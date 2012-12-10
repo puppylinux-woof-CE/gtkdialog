@@ -44,7 +44,7 @@ funcnbkCreate() {
 	if [ $1 -eq 0 -o $1 -eq 2 ]; then
 		echo '<input file>'"$TMPDIR"'/inputfile</input>'
 	elif [ $1 -eq 1 ]; then
-		echo '<input>/bin/bash -c "echo \$((\$RANDOM % 4))"</input>'
+		echo '<input>bash -c "echo \$((\$RANDOM % 4))"</input>'
 	elif [ $1 -eq 3 ]; then
 		echo '<input>"f=`cat '"$TMPDIR"'/inputfile`
 			if [ $f -eq 4 ]; then

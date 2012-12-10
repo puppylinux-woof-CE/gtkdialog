@@ -17,18 +17,18 @@ MAIN_DIALOG='
 		<frame vbox widget scrolled window functionality>
 			<hbox>
 				<vbox scrollable="true" width="200" height="200">
-					'"$(funcentCreate 0 10)"'
+					'"`funcentCreate 0 10`"'
 				</vbox>
 				<vbox scrollable="true" width-request="500" width="400" height="200">
-					'"$(funcentCreate 0 10)"'
+					'"`funcentCreate 0 10`"'
 				</vbox>
 			</hbox>
 			<hbox>
 				<vbox scrollable="true" height-request="500" width="400" height="200">
-					'"$(funcentCreate 0 10)"'
+					'"`funcentCreate 0 10`"'
 				</vbox>
 				<vbox scrollable="true" width-request="500" height-request="500" width="200" height="200">
-					'"$(funcentCreate 0 10)"'
+					'"`funcentCreate 0 10`"'
 				</vbox>
 			</hbox>
 		</frame>

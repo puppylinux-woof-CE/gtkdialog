@@ -4,7 +4,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 treWidth=320; treHeight=200
@@ -45,11 +45,11 @@ functreCreate() {
 			<action signal="cursor-changed">echo "'$1'=$'$1' cursor-changed signal detected"</action>
 		</tree>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate $1 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate $1 Enable gtk-yes Enabling)"'
-			'"$(funcbtnCreate $1 Clear gtk-clear Clearing)"'
-			'"$(funcbtnCreate $1 Removeselected gtk-delete Deleting)"'
-			'"$(funcbtnCreate $1 Refresh gtk-refresh Refreshing)"'
+			'"`funcbtnCreate $1 Disable gtk-no Disabling`"'
+			'"`funcbtnCreate $1 Enable gtk-yes Enabling`"'
+			'"`funcbtnCreate $1 Clear gtk-clear Clearing`"'
+			'"`funcbtnCreate $1 Removeselected gtk-delete Deleting`"'
+			'"`funcbtnCreate $1 Refresh gtk-refresh Refreshing`"'
 		</hbox>'
 }
 
@@ -70,7 +70,7 @@ exported-column='0' (default)"'"</label>
 				</text>
 				<tree selection-mode="0">
 					<input file>'"$TMPDIR"'/inputfile0</input>
-					'"$(functreCreate tre0)"'
+					'"`functreCreate tre0`"'
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
@@ -82,7 +82,7 @@ exported-column='1'"'"</label>
 				</text>
 				<tree exported-column="1" headers-visible="false">
 					<input file stock-column="0">'"$TMPDIR"'/inputfile1</input>
-					'"$(functreCreate tre1)"'
+					'"`functreCreate tre1`"'
 			</vbox>
 		</hbox>
 		<hseparator></hseparator>
@@ -96,7 +96,7 @@ exported-column='2'"'"</label>
 				</text>
 				<tree selection-mode="2" exported-column="2" headers-clickable="false">
 					<input file icon-column="0">'"$TMPDIR"'/inputfile2</input>
-					'"$(functreCreate tre2)"'
+					'"`functreCreate tre2`"'
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
@@ -108,7 +108,7 @@ exported-column='3'"'"</label>
 				</text>
 				<tree stock-id="gtk-justify-center" selection-mode="3" exported-column="3" rules-hint="true">
 					<input file>'"$TMPDIR"'/inputfile0</input>
-					'"$(functreCreate tre3)"'
+					'"`functreCreate tre3`"'
 			</vbox>
 		</hbox>
 		<hseparator></hseparator>

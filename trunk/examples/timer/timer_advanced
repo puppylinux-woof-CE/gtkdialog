@@ -4,7 +4,7 @@
 
 GTKDIALOG=gtkdialog
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+export TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcpixCreate() {
@@ -28,7 +28,7 @@ funcbtnCreate() {
 
 functmrCreate() {
 	echo '<variable>tmr'$1'</variable>
-			<action>funcpixRandomise</action>
+			<action>bash -c funcpixRandomise</action>
 			<action>refresh:pix'$1'0</action>
 			<action>refresh:pix'$1'1</action>
 			<action>refresh:pix'$1'2</action>
@@ -42,7 +42,7 @@ funcimageCreate() {
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<rect x="0" y="0" height="64" width="64" fill="#'${colours[$1]}'"/>
 </svg>' > "$TMPDIR"/image$1.svg
-}; export -f funcimageCreate
+}
 
 funcpixRandomise() {
 	local rand=
@@ -66,29 +66,29 @@ export MAIN_DIALOG='
 			<vbox border-width="20">
 				<hbox>
 					<timer>
-						'"$(functmrCreate 0)"'
-					'"$(funcpixCreate 0)"'
+						'"`functmrCreate 0`"'
+					'"`funcpixCreate 0`"'
 				</hbox>
 				<hbox>
 					<timer interval="2">
-						'"$(functmrCreate 1)"'
-					'"$(funcpixCreate 1)"'
+						'"`functmrCreate 1`"'
+					'"`funcpixCreate 1`"'
 				</hbox>
 				<hbox>
 					<timer milliseconds="true" visible="false">
-						'"$(functmrCreate 2)"'
-					'"$(funcpixCreate 2)"'
+						'"`functmrCreate 2`"'
+					'"`funcpixCreate 2`"'
 				</hbox>
 				<hbox>
 					<timer milliseconds="true" interval="500" visible="false">
-						'"$(functmrCreate 3)"'
-					'"$(funcpixCreate 3)"'
+						'"`functmrCreate 3`"'
+					'"`funcpixCreate 3`"'
 				</hbox>
 			</vbox>
 		</frame>
 		<hbox>
-			'"$(funcbtnCreate gtk-no disable)"'
-			'"$(funcbtnCreate gtk-yes enable)"'
+			'"`funcbtnCreate gtk-no disable`"'
+			'"`funcbtnCreate gtk-yes enable`"'
 			<button ok></button>
 		</hbox>
 	</vbox>
