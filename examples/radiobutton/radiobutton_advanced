@@ -29,39 +29,39 @@ i.e. the notebook, vbox, hbox and frame widgets."</label>
 		<hbox homogeneous="true">
 			<radiobutton>
 				<action>if true enable:btnCancel</action>
-				'"$(funcrdoCreate rdo0_0 "Enable the Cancel button")"'
+				'"`funcrdoCreate rdo0_0 "Enable the Cancel button"`"'
 			<radiobutton>
 				<action>if true disable:btnCancel</action>
-				'"$(funcrdoCreate rdo0_1 "Disable the Cancel button")"'
+				'"`funcrdoCreate rdo0_1 "Disable the Cancel button"`"'
 		</hbox>
 		<hbox homogeneous="true">
-			'"$(funcbtnCreate rdo0_0 0 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate rdo0_0 0 Enable gtk-yes Enabling)"'
-			'"$(funcbtnCreate rdo0_1 0 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate rdo0_1 0 Enable gtk-yes Enabling)"'
+			'"`funcbtnCreate rdo0_0 0 Disable gtk-no Disabling`"'
+			'"`funcbtnCreate rdo0_0 0 Enable gtk-yes Enabling`"'
+			'"`funcbtnCreate rdo0_1 0 Disable gtk-no Disabling`"'
+			'"`funcbtnCreate rdo0_1 0 Enable gtk-yes Enabling`"'
 		</hbox>
 		<frame>
 			<radiobutton>
 				<action>if true enable:btnOK</action>
-				'"$(funcrdoCreate rdo1_0 "Enable the OK button")"'
+				'"`funcrdoCreate rdo1_0 "Enable the OK button"`"'
 			<radiobutton active="true">
 				<action>if true disable:btnOK</action>
-				'"$(funcrdoCreate rdo1_1 "Disable the OK button (initially active=\"true\")")"'
+				'"`funcrdoCreate rdo1_1 "Disable the OK button (initially active=\"true\")"`"'
  		</frame>
 		<hbox spacing="20">
 			<vbox>
 				<radiobutton draw-indicator="false">
-					'"$(funcrdoCreate rdo2_0 "draw-indicator=\"false\"")"'
+					'"`funcrdoCreate rdo2_0 "draw-indicator=\"false\""`"'
 				<radiobutton draw-indicator="false">
 					<default>true</default>
-					'"$(funcrdoCreate rdo2_1 "default directive contains \"true\"")"'
+					'"`funcrdoCreate rdo2_1 "default directive contains \"true\""`"'
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
 				<radiobutton>
-					'"$(funcrdoCreate rdo3_0 "Some label")"'
+					'"`funcrdoCreate rdo3_0 "Some label"`"'
 				<radiobutton inconsistent="true">
-					'"$(funcrdoCreate rdo3_1 "inconsistent=\"true\"")"'
+					'"`funcrdoCreate rdo3_1 "inconsistent=\"true\""`"'
 			</vbox>
 		</hbox>
 		<hseparator></hseparator>

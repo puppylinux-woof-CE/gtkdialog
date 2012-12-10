@@ -34,7 +34,7 @@ export BAR_DIALOG='
 			<progressbar>
 				<variable>PROGRESS_BAR</variable>
 				<label>Some Text</label>
-				<input>progress_fast</input>
+				<input>bash -c progress_fast</input>
 				<action function="refresh">ENTRY</action>
 				<action function="closewindow">BAR_DIALOG</action>
 				<action>echo ready</action>

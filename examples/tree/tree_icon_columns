@@ -11,7 +11,7 @@
 
 GTKDIALOG=gtkdialog
 
-inputstock() {
+funcInputstock() {
 	echo "gtk-open | | gtk-open | 2 "
 	echo "gtk-about | | gtk-about | 2 "
 	echo "gtk-add | | gtk-add | 2 "
@@ -23,9 +23,9 @@ inputstock() {
 	echo "gtk-close | | gtk-close | 2 "
 	echo "gtk-color-picker | | gtk-color-picker | 2 "
 	echo "gtk-convert | | gtk-convert | 2 "
-}; export -f inputstock
+}; export -f funcInputstock
 
-inputicon() {
+funcInputicon() {
 	echo "gimp | | gimp | 2 "
 	echo "gnumeric | | gnumeric | 2 "
 	echo "geany | | geany | 2 "
@@ -37,7 +37,7 @@ inputicon() {
 	echo "top | | top | 2 "
 	echo "midori | | midori | 2 "
 	echo "abiword | | abiword | 2 "
-}; export -f inputicon
+}; export -f funcInputicon
 
 export MAIN_DIALOG='
 <window>
@@ -49,7 +49,7 @@ export MAIN_DIALOG='
 					<height>300</height>
 					<width>200</width>
 					<label>0 | 1 | 2</label>
-					<input stock-column="0">inputstock</input>
+					<input stock-column="0">bash -c funcInputstock</input>
 				</tree>
 			</frame>
 			<frame Theme icons from input command>
@@ -58,7 +58,7 @@ export MAIN_DIALOG='
 					<height>300</height>
 					<width>200</width>
 					<label>0 | 1 | 2</label>
-					<input icon-column="0">inputicon</input>
+					<input icon-column="0">bash -c funcInputicon</input>
 				</tree>
 			</frame>
 		</hbox>

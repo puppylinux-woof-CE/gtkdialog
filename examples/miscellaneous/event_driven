@@ -18,7 +18,7 @@ export MAIN_DIALOG='
 	<vbox>
 		<button>
 			<label>function</label>
-			<action>/bin/bash -c "print_this button"</action>
+			<action>bash -c "print_this button"</action>
 		</button>
 		<button>
 			<label>Exit</label>

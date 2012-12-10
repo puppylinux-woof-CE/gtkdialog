@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -39,42 +39,42 @@ MAIN_DIALOG='
 					<spinbutton update-policy="1" wrap="true">
 						<default>20</default>
 						<input>echo 4</input>
-						'"$(funcspbCreate 0)"'
+						'"`funcspbCreate 0`"'
 					<hbox>
-						'"$(funcbtnCreate 0 gtk-no disable Disabling)"'
-						'"$(funcbtnCreate 0 gtk-yes enable Enabling)"'
-						'"$(funcbtnCreate 0 gtk-refresh refresh Reloading)"'
-						'"$(funcbtnCreate 0 gtk-save save Saving)"'
+						'"`funcbtnCreate 0 gtk-no disable Disabling`"'
+						'"`funcbtnCreate 0 gtk-yes enable Enabling`"'
+						'"`funcbtnCreate 0 gtk-refresh refresh Reloading`"'
+						'"`funcbtnCreate 0 gtk-save save Saving`"'
 					</hbox>
 					<hseparator></hseparator>
 					<spinbutton block-function-signals="true" digits="4"
 						range-min="0" range-max="1" range-step="0.01"
 						tooltip-text="block-function-signals='"'true'"'">
 						<input file>'"$TMPDIR"'/inputfile</input>
-						'"$(funcspbCreate 1)"'
+						'"`funcspbCreate 1`"'
 					<hbox>
-						'"$(funcbtnCreate 1 gtk-no disable Disabling)"'
-						'"$(funcbtnCreate 1 gtk-yes enable Enabling)"'
-						'"$(funcbtnCreate 1 gtk-refresh refresh Reloading)"'
-						'"$(funcbtnCreate 1 gtk-save save Saving)"'
+						'"`funcbtnCreate 1 gtk-no disable Disabling`"'
+						'"`funcbtnCreate 1 gtk-yes enable Enabling`"'
+						'"`funcbtnCreate 1 gtk-refresh refresh Reloading`"'
+						'"`funcbtnCreate 1 gtk-save save Saving`"'
 					</hbox>
 				</vbox>
 				<vseparator></vseparator>
 				<vbox width-request="100">
 					<spinbutton range-value="44" editable="false">
-						'"$(funcspbCreate 2)"'
+						'"`funcspbCreate 2`"'
 					<hseparator></hseparator>
 					<spinbutton range-value="33" xalign="1" primary-icon-name="gnumeric"
 						primary-icon-tooltip-markup="<span fgcolor='"'darkred'"'><b>primary-icon</b></span>-<i>tooltip</i>-<u>markup</u>">
-						'"$(funcspbCreate 3)"'
+						'"`funcspbCreate 3`"'
 					<hseparator></hseparator>
 					<spinbutton range-value="56" secondary-icon-stock="gtk-about"
 						secondary-icon-tooltip-markup="<span fgcolor='"'darkblue'"'><b>secondary-icon</b></span>-<i>tooltip</i>-<u>markup</u>">
-						'"$(funcspbCreate 4)"'
+						'"`funcspbCreate 4`"'
 					<hseparator></hseparator>
 					<spinbutton range-min="0" range-max="255" range-step="8" range-value="123"
 						xalign="0.5" max-length="3" progress-fraction="0.6">
-						'"$(funcspbCreate 5)"'
+						'"`funcspbCreate 5`"'
 				</vbox>
 			</hbox>
 		</frame>

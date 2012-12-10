@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -49,10 +49,10 @@ funcscaType2Create() {
 			<output file>'"$TMPDIR"'/outputfile</output>
 		</'$2'scale>
 		<'$2'box homogeneous="true">
-			'"$(funcbtnCreate $1 Disable $8 gtk-no Disabling disable)"'
-			'"$(funcbtnCreate $1 Enable $8 gtk-yes Enabling enable)"'
-			'"$(funcbtnCreate $1 Refresh $8 gtk-refresh Reloading refresh)"'
-			'"$(funcbtnCreate $1 Save $8 gtk-save Saving save)"'
+			'"`funcbtnCreate $1 Disable $8 gtk-no Disabling disable`"'
+			'"`funcbtnCreate $1 Enable $8 gtk-yes Enabling enable`"'
+			'"`funcbtnCreate $1 Refresh $8 gtk-refresh Reloading refresh`"'
+			'"`funcbtnCreate $1 Save $8 gtk-save Saving save`"'
 		</'$2'box>
 		<'$2'separator></'$2'separator>'
 }
@@ -68,10 +68,10 @@ funcscaType3Create() {
 			<output file>'"$TMPDIR"'/outputfile</output>
 		</'$2'scale>
 		<'$2'box homogeneous="true">
-			'"$(funcbtnCreate $1 Disable $5 gtk-no Disabling disable)"'
-			'"$(funcbtnCreate $1 Enable $5 gtk-yes Enabling enable)"'
-			'"$(funcbtnCreate $1 Refresh $5 gtk-refresh Reloading refresh)"'
-			'"$(funcbtnCreate $1 Save $5 gtk-save Saving save)"'
+			'"`funcbtnCreate $1 Disable $5 gtk-no Disabling disable`"'
+			'"`funcbtnCreate $1 Enable $5 gtk-yes Enabling enable`"'
+			'"`funcbtnCreate $1 Refresh $5 gtk-refresh Reloading refresh`"'
+			'"`funcbtnCreate $1 Save $5 gtk-save Saving save`"'
 		</'$2'box>'
 }
 
@@ -85,10 +85,10 @@ MAIN_DIALOG='
 		<hbox>
 			<frame vscale widget>
 				<hbox>
-					'"$(funcscaType0Create vscVScale0 v 50 410)"'
-					'"$(funcscaType1Create vscVScale1 v 50 410 1 1 1)"'
-					'"$(funcscaType2Create vscVScale2 v -1 410 0 1 0 2)"'
-					'"$(funcscaType3Create vscVScale3 v 50 410 2)"'
+					'"`funcscaType0Create vscVScale0 v 50 410`"'
+					'"`funcscaType1Create vscVScale1 v 50 410 1 1 1`"'
+					'"`funcscaType2Create vscVScale2 v -1 410 0 1 0 2`"'
+					'"`funcscaType3Create vscVScale3 v 50 410 2`"'
 				</hbox>
 			</frame>
 		</hbox>

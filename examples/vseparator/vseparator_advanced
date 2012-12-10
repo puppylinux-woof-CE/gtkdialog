@@ -26,18 +26,18 @@ MAIN_DIALOG='
 		<frame hseparator and vseparator widgets>
 			<hbox>
 				<hbox>
-					'"$(funcvspCreate 30 200)"'
+					'"`funcvspCreate 30 200`"'
 				</hbox>
 				<vbox>
-					'"$(funchspCreate 34 400)"'
+					'"`funchspCreate 34 400`"'
 				</vbox>
 			</hbox>
 			<hbox>
 				<vbox>
-					'"$(funchspCreate 34 400)"'
+					'"`funchspCreate 34 400`"'
 				</vbox>
 				<hbox>
-					'"$(funcvspCreate 30 200)"'
+					'"`funcvspCreate 30 200`"'
 				</hbox>
 			</hbox>
 		</frame>

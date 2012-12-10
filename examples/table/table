@@ -4,7 +4,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcinputfileCreate() {
@@ -38,25 +38,25 @@ column-header-active='"'true|true|true|false'"'"</label>
 			<width>400</width>
 			<variable>tbl0</variable>
 			<label>Column 0    |Column 1    |Column 2    |Column 3</label>
-			<input>echo "0|$RANDOM|1002|$RANDOM"</input>
+			<input>bash -c "echo \"0|\$RANDOM|1002|\$RANDOM\""</input>
 			<input file>'"$TMPDIR"'/inputfile</input>
 			<item>1002|'$RANDOM'|0|'$RANDOM'</item>
 			<action>echo "tbl0=$tbl0"</action>
 		</table>
 		<hbox>
 			<vbox>
-				'"$(funcbtnCreate tbl0 Disable gtk-no Disabling)"'
-				'"$(funcbtnCreate tbl0 Hide gtk-cancel Hiding)"'
-				'"$(funcbtnCreate tbl0 Clear gtk-clear Clearing)"'
+				'"`funcbtnCreate tbl0 Disable gtk-no Disabling`"'
+				'"`funcbtnCreate tbl0 Hide gtk-cancel Hiding`"'
+				'"`funcbtnCreate tbl0 Clear gtk-clear Clearing`"'
 			</vbox>
 			<vbox>
-				'"$(funcbtnCreate tbl0 Enable gtk-yes Enabling)"'
-				'"$(funcbtnCreate tbl0 Show gtk-apply Showing)"'
-				'"$(funcbtnCreate tbl0 Refresh gtk-refresh Refreshing)"'
+				'"`funcbtnCreate tbl0 Enable gtk-yes Enabling`"'
+				'"`funcbtnCreate tbl0 Show gtk-apply Showing`"'
+				'"`funcbtnCreate tbl0 Refresh gtk-refresh Refreshing`"'
 			</vbox>
 			<vbox>
-				'"$(funcbtnCreate tbl0 Grabfocus gtk-index Focusing)"'
-				'"$(funcbtnCreate tbl0 Removeselected gtk-delete Removing)"'
+				'"`funcbtnCreate tbl0 Grabfocus gtk-index Focusing`"'
+				'"`funcbtnCreate tbl0 Removeselected gtk-delete Removing`"'
 				<button use-stock="true" label="gtk-quit"></button>
 			</vbox>
 		</hbox>

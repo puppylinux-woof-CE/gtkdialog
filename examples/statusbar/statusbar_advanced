@@ -2,7 +2,7 @@
 
 GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
@@ -27,12 +27,12 @@ MAIN_DIALOG='
 			</menu>
 		</menubar>
 		<hbox border-width="20" spacing="10">
-			'"$(funcbtnCreate stb0 2 Disable gtk-no Disabling)"'
-			'"$(funcbtnCreate stb0 2 Enable gtk-yes Enabling)"'
-			'"$(funcbtnCreate stb0 2 Clear gtk-clear Clearing)"'
-			'"$(funcbtnCreate stb0 2 Refresh gtk-refresh Refreshing)"'
-			'"$(funcbtnCreate stb0 2 Save gtk-save Saving)"'
-			'"$(funcbtnCreate stb0 2 Fileselect gtk-new "Inserting into")"'
+			'"`funcbtnCreate stb0 2 Disable gtk-no Disabling`"'
+			'"`funcbtnCreate stb0 2 Enable gtk-yes Enabling`"'
+			'"`funcbtnCreate stb0 2 Clear gtk-clear Clearing`"'
+			'"`funcbtnCreate stb0 2 Refresh gtk-refresh Refreshing`"'
+			'"`funcbtnCreate stb0 2 Save gtk-save Saving`"'
+			'"`funcbtnCreate stb0 2 Fileselect gtk-new "Inserting into"`"'
 		</hbox>
 		<statusbar has-resize-grip="false">
 			<label>This message originates from the label directive</label>
