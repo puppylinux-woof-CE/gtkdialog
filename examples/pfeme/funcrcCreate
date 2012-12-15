@@ -28,6 +28,12 @@ funcrcCreate() {
 	if [ ! -f $LOCAL_DATA_DIR/ProfileSelected ]; then
 		funcrcSet ProfileSelected "$ProfileSelected"
 	fi
+	if [ ! -f $LOCAL_DATA_DIR/WindowWidth ]; then
+		funcrcSet WindowWidth "$WindowWidth"
+	fi
+	if [ ! -f $LOCAL_DATA_DIR/WindowHeight ]; then
+		funcrcSet WindowHeight "$WindowHeight"
+	fi
 
 	## Create the profiles.
 	p=0; while [ $p -lt $ProfileMax ]; do

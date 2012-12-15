@@ -8,6 +8,38 @@ GTKDIALOG=gtkdialog
 
 ## Strip comments from the entire project using:
 ## for f in func* main; do sed -i -e '/## /d' -e '/ ##/d' $f; done
+## 
+## Exiting and Restarting
+## ----------------------
+## 
+## It's possible to exit via the menu or the button but the button will
+## activate the menuitem because it's faster -- presumably because it
+## doesn't require animating like a button -- which is useful to know.
+## 
+##  +---------+       +-------------------------------+
+##  | btnQuit |       |        btnReadmeApply         |
+##  +---------+       +-------------------------------+
+##       |                            |
+##       |                            v Launches
+##       |                            |
+##       |            +-------------------------------+
+##       v            | winReadmeApplyRestartRequired |
+##       |            +-------------------------------+
+##       |                            |
+##       |                            v Activates
+##       | Activates                  |
+##       |            +-------------------------------+            +--------------------------+
+##       +----->------|            muiQuit            |------>-----| winProfileNotSavedOnQuit |
+##                    +-------------------------------+  Launches  +--------------------------+
+##                                    |                                         |
+##                                    v Refreshes                               |
+##                                    |                                         v
+##                    +-------------------------------+               Refreshes |
+##                    |      chkProfileQuitCheck      |                         |
+##                    |                               |------------<------------+
+##                    |           exit:Quit           |
+##                    +-------------------------------+
+## 
 
 ## ----------------------------------------------------------------------------
 ## Constants
@@ -20,11 +52,12 @@ VERSION=0.1.0
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
 ## Setting these to non-zero will generate lots of useful debugging info.
-DEBUG_CONTENT=1
-DEBUG_TRANSITS=1
+DEBUG_CONTENT=0
+DEBUG_TRANSITS=0
 
 ## These don't require exporting.
-DebugSpacer="[]"
+DebugSpacer=
+#"[]"
 ImageSize=200
 OutputForeground="#ffffff"
 OutputBackground="#000000"
@@ -35,6 +68,8 @@ ProfileVisible=0
 ReadmeForeground="#000000"
 ReadmeBackground="#ffffff"
 ReadmeFontName="Monospace 10"
+WindowWidth=600
+WindowHeight=400
 
 ## ----------------------------------------------------------------------------
 ## Includes
@@ -144,7 +179,7 @@ funcTabProfilesCreate() {
 				<variable export="false">btnProfile'$f'</variable>
 				<width>32</width><height>32</height>
 				<input file>'$TEMP_DIR'/Profile'$f'</input>
-				<action>. functmpSet; functmpSet ProfileChangeTo '$f'</action>
+				<action>. functmpSet; functmpSet ProfileTarget '$f'</action>
 				<action condition="sensitive_is_true(btnProfileApply)">launch:winProfileNotSavedOnChange</action>
 '`Comment ##
 ## If btnProfileApply was sensitive and winProfileNotSavedOnChange was
@@ -251,6 +286,7 @@ funcTabProfilesCreate() {
 					<variable export="false">btnProfileApply</variable>
 					<sensitive>false</sensitive>
 					<action>. funcProfileSave; funcProfileSave</action>
+					<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -eq `. functmpGet; functmpGet ProfileVisible` ] && echo true)">refresh:ediReadme</action>
 					<action>disable:btnProfileApply</action>
 					<action>disable:btnProfileSelect</action>
 					<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
@@ -277,16 +313,19 @@ funcTabReadmeCreate() {
 			<expander use-underline="true" space-expand="false" space-fill="true">
 				<hbox>
 					<colorbutton tooltip-text="Foreground">
+						<variable>clbReadmeForeground</variable>
 						<default>'$ReadmeForeground'</default>
 						<action>enable:btnReadmeApply</action>
 						<action>""</action>
 					</colorbutton>
 					<colorbutton tooltip-text="Background">
+						<variable>clbReadmeBackground</variable>
 						<default>'$ReadmeBackground'</default>
 						<action>enable:btnReadmeApply</action>
 						<action>""</action>
 					</colorbutton>
 					<fontbutton tooltip-text="Font Name">
+						<variable>ftbReadmeFontName</variable>
 						<default>'$ReadmeFontName'</default>
 						<action>enable:btnReadmeApply</action>
 						<action>""</action>
@@ -294,10 +333,13 @@ funcTabReadmeCreate() {
 					<button use-stock="true" label="gtk-apply">
 						<variable export="false">btnReadmeApply</variable>
 						<sensitive>false</sensitive>
-						<action>""</action>
+						<action>. funcrcSet; funcrcSet ReadmeForeground "$clbReadmeForeground"; funcrcSet ReadmeBackground "$clbReadmeBackground"; funcrcSet ReadmeFontName "$ftbReadmeFontName"</action>
+						<action>launch:winReadmeApplyRestartRequired</action>
 					</button>
 				</hbox>
+				<variable>expReadmeOptions</variable>
 				<label>_Options</label>
+				<input file>'$TEMP_DIR'/ReadmeOptions</input>
 			</expander>
 		</vbox>'
 }
@@ -372,35 +414,52 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-## Load the initial rcfiles required.
-ReadmeForeground="`funcrcGet ReadmeForeground`"
-ReadmeBackground="`funcrcGet ReadmeBackground`"
-ReadmeFontName="`funcrcGet ReadmeFontName`"
-ProfileSelected="`funcrcGet ProfileSelected`"
-ProfileReadme="`funcrcGet Profile${ProfileSelected}Readme`"
+## Application restart loop if required.
+while [ true ]; do
 
-## Create a custom style.
-funcgtkrcCreate
+	## Load the initial rcfiles required.
+	ReadmeForeground="`funcrcGet ReadmeForeground`"
+	ReadmeBackground="`funcrcGet ReadmeBackground`"
+	ReadmeFontName="`funcrcGet ReadmeFontName`"
+	ProfileSelected="`funcrcGet ProfileSelected`"
+	ProfileReadme="`funcrcGet Profile${ProfileSelected}Readme`"
+	WindowWidth="`funcrcGet WindowWidth`"
+	WindowHeight="`funcrcGet WindowHeight`"
 
-## Create the initial files required.
-funcProfileLoad $ProfileSelected 1
-funcGameListCreate 1
-if [ -n "$ProfileReadme" ]; then
-	ln -fs "$ProfileReadme" $TEMP_DIR/Readme
-else
-	rm $TEMP_DIR/Readme
-	functmpSet Readme ""
-fi
-functmpSet Output ""
-functmpSet ProfileChangeCheck false
-functmpSet QuitCheck false
+	## Create a custom style.
+	funcgtkrcCreate
 
-## Create the XML for the pop-up dialogs.
-funcDialogsCreate
+	## Create the initial files required.
+	functmpSet Output ""
+	functmpSet ProfileChangeCheck false
+	functmpSet ProfileQuitCheck false
+	functmpSet ApplicationRestart false
+	funcProfileLoad $ProfileSelected 1
+	funcGameListCreate 1
+	if [ -f "$ProfileReadme" ]; then
+		ln -fs "$ProfileReadme" $TEMP_DIR/Readme
+	else
+		if [ -e $TEMP_DIR/Readme ]; then rm $TEMP_DIR/Readme; fi
+		functmpSet Readme ""
+	fi
+	## These are retained on an application restart.
+	if [ ! -f $TEMP_DIR/NotebookMainPage ]; then
+		functmpSet NotebookMainPage 0
+	fi
+	if [ ! -f $TEMP_DIR/NotebookImagesPage ]; then
+		functmpSet NotebookImagesPage 0
+	fi
+	if [ ! -f $TEMP_DIR/ReadmeOptions ]; then
+		functmpSet ReadmeOptions false
+	fi
 
-## Create the XML for the main dialog.
-echo '
-<window title="'$TITLE'" icon-name="'$TARGET'" window-position="1" border-width="0">
+	## Create the XML for the pop-up dialogs.
+	funcDialogsCreate
+
+	## Create the XML for the main dialog.
+	echo '
+<window title="'$TITLE'" icon-name="'$TARGET'" window-position="1"
+	default-width="'$WindowWidth'" default-height="'$WindowHeight'" border-width="0">
 	<vbox spacing="0">
 		<menubar space-expand="false" space-fill="false">
 			<menu use-underline="true" label="_File">
@@ -410,8 +469,8 @@ echo '
 '`Comment ##
 ## We won't reach this point if winProfileNotSavedOnQuit was launched.
 ## `'
-					<action>. funcWidgetSchedule; funcWidgetSchedule chkQuitCheck QuitCheck</action>
-					<action>refresh:chkQuitCheck</action>
+					<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileQuitCheck ProfileQuitCheck</action>
+					<action>refresh:chkProfileQuitCheck</action>
 				</menuitem>
 			</menu>
 		</menubar>
@@ -423,11 +482,15 @@ echo '
 						'"`funcTabProfilesCreate`"'
 						'"`funcTabReadmeCreate`"'
 						'"`funcTabOutputCreate`"'
+						<variable>nbkMain</variable>
+						<input file>'$TEMP_DIR'/NotebookMainPage</input>
 					</notebook>
 				</vbox>
 				<vbox>
 					<notebook tab-prefix="Image ">
 						'"`funcTabsImagesCreate`"'
+						<variable>nbkImages</variable>
+						<input file>'$TEMP_DIR'/NotebookImagesPage</input>
 					</notebook>
 					<text height-request=""><label>"'$DebugSpacer'"</label></text>
 				</vbox>
@@ -463,7 +526,7 @@ echo '
 		<checkbox visible="false">
 			<variable>chkProfileChangeCheck</variable>
 			<input file>'$TEMP_DIR'/ProfileChangeCheck</input>
-			<action>. funcProfileLoad; funcProfileLoad `. functmpGet; functmpGet ProfileChangeTo`</action>
+			<action>. funcProfileLoad; funcProfileLoad `. functmpGet; functmpGet ProfileTarget`</action>
 			<action>refresh:entProfileExecutable</action>
 			<action>refresh:entProfileArguments</action>
 			<action>refresh:entProfileReadme</action>
@@ -484,36 +547,50 @@ echo '
 			<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
 		</checkbox>
 '`Comment ##
-## Another checkbox trick to enable a conditional exit.
+## The application is exited via this checkbox so that anything that
+## needs to be saved can be managed here and only here.
 ## `'
 		<checkbox visible="false">
-			<variable>chkQuitCheck</variable>
-			<input file>'$TEMP_DIR'/QuitCheck</input>
-			<action>. funcProfileSave; funcProfileSave 1</action>
+			<variable>chkProfileQuitCheck</variable>
+			<input file>'$TEMP_DIR'/ProfileQuitCheck</input>
+			<action>. funcProfileSave; funcProfileSave 1; . funcWindowDimSave; funcWindowDimSave "'$TITLE'"; . functmpSet; functmpSet ReadmeOptions $expReadmeOptions; functmpSet NotebookMainPage $nbkMain; functmpSet NotebookImagesPage $nbkImages</action>
 			<action>exit:Quit</action>
 		</checkbox>
 	</vbox>
 	<variable export="false">winMain</variable>
+'`Comment ##
+## Notebook pages are set from here because the initial input from file
+## doesn't have an effect as the notebook widget isn't realized then.
+## The page property isn't suitable because I need the widgets on page0
+## to realize first otherwise several widgets don't get initialised.
+## `'
+	<action signal="show">refresh:nbkMain</action>
+	<action signal="show">refresh:nbkImages</action>
 </window>
 ' > $TEMP_DIR/winMain
 
-## Export everything necessary.
-export GTKDIALOG
-export TARGET
-export TITLE
-export VERSION
-export LOCAL_DATA_DIR
-export PACKAGE_DATA_DIR
-export DEBUG_CONTENT
-export DEBUG_TRANSITS
-export PATH
-export TEMP_DIR
-export GTK2_RC_FILES
-export winProfileNotSavedOnChange
-export winProfileNotSavedOnQuit
+	## Export everything necessary.
+	export GTKDIALOG
+	export TARGET
+	export TITLE
+	export VERSION
+	export LOCAL_DATA_DIR
+	export PACKAGE_DATA_DIR
+	export DEBUG_CONTENT
+	export DEBUG_TRANSITS
+	export PATH
+	export TEMP_DIR
+	export GTK2_RC_FILES
+	export winProfileNotSavedOnChange
+	export winProfileNotSavedOnQuit
+	export winReadmeApplyRestartRequired
 
-## And off we go...
-$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
+	## And off we go...
+	$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
+
+	if [ `functmpGet ApplicationRestart` = false ]; then break; fi
+
+done
 
 ## Remove the temporary files.
 rm -rf $TEMP_DIR

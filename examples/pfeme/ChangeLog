@@ -1,3 +1,10 @@
+* Sat Dec 15 2012 Thunor <thunorsif@hotmail.com>
+- Added restoring of the window dimensions from rcfiles.
+- Added support for application restarts.
+- Added and implemented the application restart dialog so now it's
+  possible to change the Readme options and restart.
+- Saving the selected profile now refreshes the Readme.
+
 * Thu Dec 6 2012 Thunor <thunorsif@hotmail.com>
 - Changed index++ because dash didn't like it, and tested to work.
 
