@@ -19,7 +19,7 @@ funcDialogsCreate() {
 				<text><label>"'$DebugSpacer'"</label></text>
 			</vbox>
 			<text use-markup="true">
-				<label>"<big><b>The visible profile is not saved.</b></big>
+				<label>"<b>The visible profile is not saved.</b>
 
 Do you want to save it now?
 "</label>
@@ -40,6 +40,7 @@ Do you want to save it now?
 				<label>_Save</label>
 				<input file stock="gtk-save"></input>
 				<action>. funcProfileSave; funcProfileSave</action>
+				<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -eq `. functmpGet; functmpGet ProfileVisible` ] && echo true)">refresh:ediReadme</action>
 				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
 				<action>refresh:chkProfileChangeCheck</action>
 				<action>closewindow:winProfileNotSavedOnChange</action>
@@ -62,7 +63,7 @@ Do you want to save it now?
 				<text><label>"'$DebugSpacer'"</label></text>
 			</vbox>
 			<text use-markup="true">
-				<label>"<big><b>The visible profile is not saved.</b></big>
+				<label>"<b>The visible profile is not saved.</b>
 
 Do you want to save it now?
 "</label>
@@ -75,21 +76,59 @@ Do you want to save it now?
 			<button use-underline="true">
 				<label>_Don'"'"'t save</label>
 				<input file stock="gtk-clear"></input>
-				<action>. funcWidgetSchedule; funcWidgetSchedule chkQuitCheck QuitCheck</action>
-				<action>refresh:chkQuitCheck</action>
-				<action>closewindow:winProfileNotSavedOnQuit</action>
+				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileQuitCheck ProfileQuitCheck</action>
+				<action>refresh:chkProfileQuitCheck</action>
 			</button>
 			<button use-underline="true">
 				<label>_Save</label>
 				<input file stock="gtk-save"></input>
 				<action>. funcProfileSave; funcProfileSave</action>
-				<action>. funcWidgetSchedule; funcWidgetSchedule chkQuitCheck QuitCheck</action>
-				<action>refresh:chkQuitCheck</action>
-				<action>closewindow:winProfileNotSavedOnQuit</action>
+				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileQuitCheck ProfileQuitCheck</action>
+				<action>refresh:chkProfileQuitCheck</action>
 			</button>
 		</hbox>
 	</vbox>
 	<variable export="false">winProfileNotSavedOnQuit</variable>
+</window>
+'
+	## Create the XML for the Readme Apply restart required dialog.
+	winReadmeApplyRestartRequired='
+<window title=" " icon-name="'$TARGET'" window-position="1" modal="true"
+	resizable="false">
+	<vbox>
+		<hbox>
+			<vbox>
+				<pixmap stock-icon-size="6">
+					<input file stock="gtk-dialog-question"></input>
+				</pixmap>
+				<text><label>"'$DebugSpacer'"</label></text>
+			</vbox>
+			<text use-markup="true">
+				<label>"<b>A restart is required for the
+changes to take effect.</b>
+
+Do you want to restart now?
+"</label>
+			</text>
+		</hbox>
+		<hbox homogeneous="true">
+			<button cancel>
+				<action>. functmpSet; functmpSet ApplicationRestart false</action>
+				<action>closewindow:winReadmeApplyRestartRequired</action>
+			</button>
+			<button use-underline="true">
+				<label>_Restart now</label>
+				<input file stock="gtk-refresh"></input>
+				<action>. functmpSet; functmpSet ApplicationRestart true</action>
+				<action>activate:muiQuit</action>
+			</button>
+		</hbox>
+	</vbox>
+	<variable export="false">winReadmeApplyRestartRequired</variable>
+'`Comment ##
+## The delete-event is triggered when closing via the window manager.
+## `'
+	<action signal="delete-event">. functmpSet; functmpSet ApplicationRestart false</action>
 </window>
 '
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi

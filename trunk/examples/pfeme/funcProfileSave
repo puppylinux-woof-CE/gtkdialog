@@ -4,6 +4,7 @@
 . funcrcGet
 . funcrcSet
 . functmpGet
+. functmpSet
 
 ## Save profile data.
 ## On entry: $1 = 0 to save profile only to visible profile
@@ -44,6 +45,16 @@ funcProfileSave() {
 		funcrcSet Profile${ProfileVisible}ImagesPattern1 "$entProfileImagesPattern1"
 		funcrcSet Profile${ProfileVisible}ImagesPath2 "$entProfileImagesPath2"
 		funcrcSet Profile${ProfileVisible}ImagesPattern2 "$entProfileImagesPattern2"
+
+		if [ $ProfileSelected -eq $ProfileVisible ]; then
+			if [ -f "$entProfileReadme" ]; then
+				ln -fs "$entProfileReadme" $TEMP_DIR/Readme
+			else
+				rm $TEMP_DIR/Readme
+				functmpSet Readme ""
+			fi
+		fi
+
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
