@@ -52,12 +52,11 @@ VERSION=0.1.0
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
 ## Setting these to non-zero will generate lots of useful debugging info.
-DEBUG_CONTENT=0
-DEBUG_TRANSITS=0
+DEBUG_CONTENT=1
+DEBUG_TRANSITS=1
 
 ## These don't require exporting.
-DebugSpacer=
-#"[]"
+DebugSpacer="[]"
 ImageSize=200
 OutputForeground="#ffffff"
 OutputBackground="#000000"
