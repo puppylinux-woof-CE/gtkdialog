@@ -2,7 +2,7 @@
 
 = menuitemseparator widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkSeparatorMenuItem.html GtkSeparatorMenuItem]
+A [http://developer.gnome.org/gtk2/2.24/GtkSeparatorMenuItem.html GtkSeparatorMenuItem]
 
 ----
 

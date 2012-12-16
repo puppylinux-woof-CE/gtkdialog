@@ -2,7 +2,7 @@
 
 = notebook widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkNotebook.html GtkNotebook]
+A [http://developer.gnome.org/gtk2/2.24/GtkNotebook.html GtkNotebook]
 
 ----
 
@@ -24,7 +24,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkNotebook.html GtkNotebook]
 
 == Tag Attributes ==
 
-See the [http://developer.gnome.org/gtk/2.24/GtkNotebook.html#GtkNotebook.object-hierarchy GtkNotebook] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk2/2.24/GtkNotebook.html#GtkNotebook.object-hierarchy GtkNotebook] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 
@@ -67,7 +67,7 @@ The "file-changed" signal is emitted if file-monitor is true and the input file 
 
 The following signals are connected-up for all widgets:
 
-[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
+[http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
 
 == Functions ==
 
@@ -93,7 +93,7 @@ The following general functions can be performed by any widget capable of emitti
 || exit || Exit dialog || A value for the {{{EXIT}}} variable || ||
 || closewindow || Close dialog || Variable name || ||
 || launch || Launch dialog || Variable name || ||
-|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
+|| presentwindow || [http://developer.gnome.org/gtk2/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Conditions ==
@@ -118,6 +118,6 @@ true means "true", "yes" or a non-zero value, false means "false", "no" or zero,
 
 == Notes ==
 
-1. This widget does not accept setting a default page before being shown (there's a note about it [http://developer.gnome.org/gtk/2.24/GtkNotebook.html#gtk-notebook-set-current-page here]) which will result in input data being discarded at start-up. This issue can be overcome by using the "[http://developer.gnome.org/gtk/2.24/GtkNotebook.html#GtkNotebook--page page]" tag attribute which will be applied after the widget is shown.
+1. This widget does not accept setting a default page before being shown (there's a note about it [http://developer.gnome.org/gtk2/2.24/GtkNotebook.html#gtk-notebook-set-current-page here]) which will result in input data being discarded at start-up. This issue can be overcome by using the "[http://developer.gnome.org/gtk2/2.24/GtkNotebook.html#GtkNotebook--page page]" tag attribute which will be applied after the widget is shown.
 
 ----

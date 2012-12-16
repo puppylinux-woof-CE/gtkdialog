@@ -2,7 +2,7 @@
 
 = colorbutton widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkColorButton.html GtkColorButton]
+A [http://developer.gnome.org/gtk2/2.24/GtkColorButton.html GtkColorButton]
 
 ----
 
@@ -26,7 +26,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkColorButton.html GtkColorButton]
 
 == Tag Attributes ==
 
-See the [http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton.object-hierarchy GtkColorButton] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk2/2.24/GtkColorButton.html#GtkColorButton.object-hierarchy GtkColorButton] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 
@@ -66,13 +66,13 @@ Some of these may have tag attribute equivalents.
 
 == Signals ==
 
-The default signal is "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton-color-set color-set]", emitted when the user selects a colour.
+The default signal is "[http://developer.gnome.org/gtk2/2.24/GtkColorButton.html#GtkColorButton-color-set color-set]", emitted when the user selects a colour.
 
 The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.
 
 The following signals are connected-up for all widgets:
 
-[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
+[http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
 
 == Functions ==
 
@@ -99,7 +99,7 @@ The following general functions can be performed by any widget capable of emitti
 || exit || Exit dialog || A value for the {{{EXIT}}} variable || ||
 || closewindow || Close dialog || Variable name || ||
 || launch || Launch dialog || Variable name || ||
-|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
+|| presentwindow || [http://developer.gnome.org/gtk2/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Conditions ==
@@ -124,7 +124,7 @@ true means "true", "yes" or a non-zero value, false means "false", "no" or zero,
 
 == Notes ==
 
-1. Setting the "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton--use-alpha use-alpha]" tag attribute to true will enable alpha selection. Alpha can be passed in following the _#rrggbb_ value separated by a '{{{|}}}' character, or via the "[http://developer.gnome.org/gtk/2.24/GtkColorButton.html#GtkColorButton--alpha alpha]" tag attribute. Although the colour selection dialog displays alpha as an 8bit 0-255 value, GTK+ and Gtkdialog manage it as a 16bit 0-65535 value and therefore it'll require converting between the two formats. To convert from 8bit to 16bit use {{{alpha * 257}}} and from 16bit to 8bit use {{{(alpha + 257 / 2) / 257}}}.
+1. Setting the "[http://developer.gnome.org/gtk2/2.24/GtkColorButton.html#GtkColorButton--use-alpha use-alpha]" tag attribute to true will enable alpha selection. Alpha can be passed in following the _#rrggbb_ value separated by a '{{{|}}}' character, or via the "[http://developer.gnome.org/gtk2/2.24/GtkColorButton.html#GtkColorButton--alpha alpha]" tag attribute. Although the colour selection dialog displays alpha as an 8bit 0-255 value, GTK+ and Gtkdialog manage it as a 16bit 0-65535 value and therefore it'll require converting between the two formats. To convert from 8bit to 16bit use {{{alpha * 257}}} and from 16bit to 8bit use {{{(alpha + 257 / 2) / 257}}}.
 
 This widget was introduced in version 0.7.21.
 

@@ -2,7 +2,7 @@
 
 = vbox widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox] optionally packed inside a [http://developer.gnome.org/gtk/2.24/GtkViewport.html GtkViewport] inside a [http://developer.gnome.org/gtk/2.24/GtkScrolledWindow.html GtkScrolledWindow]
+A [http://developer.gnome.org/gtk2/2.24/GtkVBox.html GtkVBox] optionally packed inside a [http://developer.gnome.org/gtk2/2.24/GtkViewport.html GtkViewport] inside a [http://developer.gnome.org/gtk2/2.24/GtkScrolledWindow.html GtkScrolledWindow]
 
 ----
 
@@ -23,7 +23,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkVBox.html GtkVBox] optionally packed i
 
 == Tag Attributes ==
 
-See the [http://developer.gnome.org/gtk/2.24/GtkVBox.html#GtkVBox.object-hierarchy GtkVBox] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk2/2.24/GtkVBox.html#GtkVBox.object-hierarchy GtkVBox] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 
@@ -37,7 +37,7 @@ The following custom tag attributes are available:
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
 || width || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
-|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (see [http://developer.gnome.org/gtk/2.24/gtk-Standard-Enumerations.html#GtkShadowType GtkShadowType]) || 0.8.1 ||
+|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (see [http://developer.gnome.org/gtk2/2.24/gtk-Standard-Enumerations.html#GtkShadowType GtkShadowType]) || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
@@ -63,7 +63,7 @@ There is no default signal for this widget.
 
 The following signals are connected-up for all widgets:
 
-[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
+[http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
 
 == Functions ==
 
@@ -86,7 +86,7 @@ The following general functions can be performed by any widget capable of emitti
 || exit || Exit dialog || A value for the {{{EXIT}}} variable || 0.8.1 ||
 || closewindow || Close dialog || Variable name || 0.8.1 ||
 || launch || Launch dialog || Variable name || 0.8.1 ||
-|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
+|| presentwindow || [http://developer.gnome.org/gtk2/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Conditions ==
@@ -115,6 +115,6 @@ true means "true", "yes" or a non-zero value, false means "false", "no" or zero,
 
 2. The scrolled window has a default dimension of 200x100 which can be overridden with the height and/or width directives.
 
-This widget has a default spacing of 5 which can be overridden with the "[http://developer.gnome.org/gtk/2.24/GtkBox.html#GtkBox--spacing spacing]" tag attribute.
+This widget has a default spacing of 5 which can be overridden with the "[http://developer.gnome.org/gtk2/2.24/GtkBox.html#GtkBox--spacing spacing]" tag attribute.
 
 ----

@@ -2,7 +2,7 @@
 
 = hseparator widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html GtkHSeparator]
+A [http://developer.gnome.org/gtk2/2.24/GtkHSeparator.html GtkHSeparator]
 
 ----
 
@@ -17,7 +17,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html GtkHSeparator]
 
 == Tag Attributes ==
 
-See the [http://developer.gnome.org/gtk/2.24/GtkHSeparator.html#GtkHSeparator.object-hierarchy GtkHSeparator] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk2/2.24/GtkHSeparator.html#GtkHSeparator.object-hierarchy GtkHSeparator] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 

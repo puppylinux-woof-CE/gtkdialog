@@ -2,7 +2,7 @@
 
 = menuitem widget =
 
-A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html GtkImageMenuItem]
+A [http://developer.gnome.org/gtk2/2.24/GtkMenuItem.html GtkMenuItem], [http://developer.gnome.org/gtk2/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem GtkCheckMenuItem], [http://developer.gnome.org/gtk2/2.24/GtkRadioMenuItem.html GtkRadioMenuItem] or [http://developer.gnome.org/gtk2/2.24/GtkImageMenuItem.html GtkImageMenuItem]
 
 ----
 
@@ -28,7 +28,7 @@ A [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html GtkMenuItem], [http://de
 
 == Tag Attributes ==
 
-See the [http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem], [http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#gtk-gtkcheckmenuitem.object-hierarchy GtkCheckMenuItem], [http://developer.gnome.org/gtk/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.object-hierarchy GtkRadioMenuItem] or [http://developer.gnome.org/gtk/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
+See the [http://developer.gnome.org/gtk2/2.24/GtkMenuItem.html#GtkMenuItem.object-hierarchy GtkMenuItem], [http://developer.gnome.org/gtk2/2.24/gtk-gtkcheckmenuitem.html#gtk-gtkcheckmenuitem.object-hierarchy GtkCheckMenuItem], [http://developer.gnome.org/gtk2/2.24/GtkRadioMenuItem.html#GtkRadioMenuItem.object-hierarchy GtkRadioMenuItem] or [http://developer.gnome.org/gtk2/2.24/GtkImageMenuItem.html#GtkImageMenuItem.object-hierarchy GtkImageMenuItem] widget and ancestor class properties.
 
 The following custom tag attributes are available:
 
@@ -40,7 +40,7 @@ The following custom tag attributes are available:
 || accel-key || Accelerator key || A decimal or hexadecimal value ([http://git.gnome.org/browse/gtk+/plain/gdk/gdkkeysyms.h full list]) || 0.7.21 ||
 || accel-mods^[1]^ || Accelerator modifiers || A decimal or hexadecimal value ([http://git.gnome.org/browse/gtk+/plain/gdk/gdktypes.h full list]) || 0.7.21 ||
 || icon-name^[2]^ || GTK theme icon name ||  || 0.7.21 ||
-|| stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || 0.7.21 ||
+|| stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk2/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || 0.7.21 ||
 || image-name || Image filename ||  || 0.7.21 ||
 || checkbox || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
 || radiobutton || Active state || {{{true}}} or {{{false}}} || 0.7.21 ||
@@ -75,7 +75,7 @@ Some of these may have tag attribute equivalents.
 
 == Signals ==
 
-The default signal for the checkbox and radiobutton menuitem widgets is "[http://developer.gnome.org/gtk/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem-toggled toggled]", emitted when the state is changed, otherwise the default signal is "[http://developer.gnome.org/gtk/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
+The default signal for the checkbox and radiobutton menuitem widgets is "[http://developer.gnome.org/gtk2/2.24/gtk-gtkcheckmenuitem.html#GtkCheckMenuItem-toggled toggled]", emitted when the state is changed, otherwise the default signal is "[http://developer.gnome.org/gtk2/2.24/GtkMenuItem.html#GtkMenuItem-activate activate]", emitted when the item is activated.
 
 All widgets emit the "activate" signal.
 
@@ -83,7 +83,7 @@ The "file-changed" signal is emitted if file-monitor is true and the input file 
 
 The following signals are connected-up for all widgets:
 
-[http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
+[http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event button-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event button-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event configure-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event enter-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event leave-notify-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event focus-in-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event focus-out-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide hide], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show show], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize realize], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event key-press-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event key-release-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event map-event], [http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event unmap-event]
 
 == Functions ==
 
@@ -109,7 +109,7 @@ The following general functions can be performed by any widget capable of emitti
 || exit || Exit dialog || A value for the {{{EXIT}}} variable || ||
 || closewindow || Close dialog || Variable name || ||
 || launch || Launch dialog || Variable name || ||
-|| presentwindow || [http://developer.gnome.org/gtk/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
+|| presentwindow || [http://developer.gnome.org/gtk2/2.24/GtkWindow.html#gtk-window-present Present] dialog || Variable name || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Conditions ==
