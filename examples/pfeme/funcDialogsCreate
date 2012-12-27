@@ -40,7 +40,8 @@ Do you want to save it now?
 				<label>_Save</label>
 				<input file stock="gtk-save"></input>
 				<action>. funcProfileSave; funcProfileSave</action>
-				<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -eq `. functmpGet; functmpGet ProfileVisible` ] && echo true)">refresh:ediReadme</action>
+				<action>if [ `. funcrcGet; funcrcGet ProfileSelected` -eq `. functmpGet; functmpGet ProfileVisible` ]; then . funcWidgetSchedule; funcWidgetSchedule chkContentRefreshCheck ContentRefreshCheck; fi</action>
+				<action>refresh:chkContentRefreshCheck</action>
 				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
 				<action>refresh:chkProfileChangeCheck</action>
 				<action>closewindow:winProfileNotSavedOnChange</action>

@@ -51,13 +51,15 @@ TITLE=Pfeme
 VERSION=0.1.0
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
+IMAGE_DEFAULT=$PACKAGE_DATA_DIR/default.png
 ## Setting these to non-zero will generate lots of useful debugging info.
-DEBUG_CONTENT=1
-DEBUG_TRANSITS=1
+DEBUG_CONTENT=0
+DEBUG_TRANSITS=0
 
 ## These don't require exporting.
-DebugSpacer="[]"
-ImageSize=200
+DebugSpacer=
+#"[]"
+ImageSize=240
 OutputForeground="#ffffff"
 OutputBackground="#000000"
 OutputFontName="Monospace 10"
@@ -80,7 +82,9 @@ PATH=$PACKAGE_DATA_DIR:$PATH
 . funcDialogsCreate
 . funcGameListCreate
 . funcgtkrcCreate
+. funcImagesUpdate
 . funcProfileLoad
+. funcReadmeUpdate
 . funcrcCreate
 . funcrcGet
 . funcrcSet
@@ -122,7 +126,9 @@ funcTabGamesCreate() {
 				<action>activate:tgbGamePlay</action>
 				<action signal="cursor-changed">enable:tgbGamePlay</action>
 				<action signal="cursor-changed">enable:entProfileCommandLineArgs</action>
-			</tree>
+				<action signal="cursor-changed">. funcImagesUpdate; funcImagesUpdate</action>
+				<action signal="cursor-changed">refresh:chkImagesRefreshCheck</action>
+		</tree>
 			<hbox homogeneous="true" space-expand="false" space-fill="true">
 				<text><label>"'$DebugSpacer'"</label></text>
 '`Comment ##
@@ -136,11 +142,13 @@ funcTabGamesCreate() {
 					<action>if true clear:stbGameCount</action>
 					<action>if true disable:tgbGamePlay</action>
 					<action>if true disable:entProfileCommandLineArgs</action>
+					<action>if true . funcImagesUpdate; funcImagesUpdate 1</action>
 					<action>if true activate:tgbGameListRefresh</action>
 					<action>if false . funcGameListCreate; funcGameListCreate</action>
 					<action>if false refresh:treGameList</action>
 					<action>if false refresh:stbGameCount</action>
 					<action>if false grabfocus:treGameList</action>
+					<action>if false refresh:chkImagesRefreshCheck</action>
 				</togglebutton>
 '`Comment ##
 ## Getting the window to hide before executing the emulator requires that
@@ -156,8 +164,8 @@ funcTabGamesCreate() {
 					<input file stock="gtk-execute"></input>
 					<action>if true hide:winMain</action>
 					<action>if true activate:tgbGamePlay</action>
-					<action>if false . funcProfileSave; funcProfileSave 1</action>
-					<action>if false . funcGamePlay; funcGamePlay</action>
+					<action>if false . funcProfileSave; funcProfileSave 1; . funcGamePlay; funcGamePlay; . funcImagesUpdate; funcImagesUpdate</action>
+					<action>if false refresh:chkImagesRefreshCheck</action>
 					<action>if false clear:ediOutput</action>
 					<action>if false refresh:ediOutput</action>
 					<action>if false show:winMain</action>
@@ -285,17 +293,22 @@ funcTabProfilesCreate() {
 					<variable export="false">btnProfileApply</variable>
 					<sensitive>false</sensitive>
 					<action>. funcProfileSave; funcProfileSave</action>
-					<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -eq `. functmpGet; functmpGet ProfileVisible` ] && echo true)">refresh:ediReadme</action>
 					<action>disable:btnProfileApply</action>
+					<action>enable:btnProfileSelect</action>
+					<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)" function="break">""</action>
+					<action>. funcWidgetSchedule; funcWidgetSchedule chkContentRefreshCheck ContentRefreshCheck</action>
+					<action>refresh:chkContentRefreshCheck</action>
 					<action>disable:btnProfileSelect</action>
-					<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
 				</button>
 				<button use-underline="true">
 					<variable export="false">btnProfileSelect</variable>
 					<label>_Select</label>
 					<sensitive>false</sensitive>
 					<input file stock="gtk-ok"></input>
-					<action>""</action>
+					<action>. funcProfileSelect; funcProfileSelect</action>
+					<action>refresh:entProfileCommandLineArgs</action>
+					<action>refresh:chkContentRefreshCheck</action>
+					<action>disable:btnProfileSelect</action>
 				</button>
 				<text><label>"'$DebugSpacer'"</label></text>
 			</hbox>
@@ -315,19 +328,16 @@ funcTabReadmeCreate() {
 						<variable>clbReadmeForeground</variable>
 						<default>'$ReadmeForeground'</default>
 						<action>enable:btnReadmeApply</action>
-						<action>""</action>
 					</colorbutton>
 					<colorbutton tooltip-text="Background">
 						<variable>clbReadmeBackground</variable>
 						<default>'$ReadmeBackground'</default>
 						<action>enable:btnReadmeApply</action>
-						<action>""</action>
 					</colorbutton>
 					<fontbutton tooltip-text="Font Name">
 						<variable>ftbReadmeFontName</variable>
 						<default>'$ReadmeFontName'</default>
 						<action>enable:btnReadmeApply</action>
-						<action>""</action>
 					</fontbutton>
 					<button use-stock="true" label="gtk-apply">
 						<variable export="false">btnReadmeApply</variable>
@@ -421,7 +431,6 @@ while [ true ]; do
 	ReadmeBackground="`funcrcGet ReadmeBackground`"
 	ReadmeFontName="`funcrcGet ReadmeFontName`"
 	ProfileSelected="`funcrcGet ProfileSelected`"
-	ProfileReadme="`funcrcGet Profile${ProfileSelected}Readme`"
 	WindowWidth="`funcrcGet WindowWidth`"
 	WindowHeight="`funcrcGet WindowHeight`"
 
@@ -431,24 +440,18 @@ while [ true ]; do
 	## Create the initial files required.
 	functmpSet Output ""
 	functmpSet ProfileChangeCheck false
+	functmpSet ContentRefreshCheck false
+	functmpSet ImagesRefreshCheck false
 	functmpSet ProfileQuitCheck false
-	functmpSet ApplicationRestart false
 	funcProfileLoad $ProfileSelected 1
 	funcGameListCreate 1
-	if [ -f "$ProfileReadme" ]; then
-		ln -fs "$ProfileReadme" $TEMP_DIR/Readme
-	else
-		if [ -e $TEMP_DIR/Readme ]; then rm $TEMP_DIR/Readme; fi
-		functmpSet Readme ""
-	fi
+	funcReadmeUpdate
+	funcImagesUpdate 1
 	## These are retained on an application restart.
-	if [ ! -f $TEMP_DIR/NotebookMainPage ]; then
+	if [ ! -f $TEMP_DIR/ApplicationRestart ]; then
+		functmpSet ApplicationRestart false
 		functmpSet NotebookMainPage 0
-	fi
-	if [ ! -f $TEMP_DIR/NotebookImagesPage ]; then
 		functmpSet NotebookImagesPage 0
-	fi
-	if [ ! -f $TEMP_DIR/ReadmeOptions ]; then
 		functmpSet ReadmeOptions false
 	fi
 
@@ -470,6 +473,18 @@ while [ true ]; do
 ## `'
 					<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileQuitCheck ProfileQuitCheck</action>
 					<action>refresh:chkProfileQuitCheck</action>
+				</menuitem>
+			</menu>
+			<menu use-underline="true" label="_Help">
+				<menuitem stock-id="gtk-help" accel-key="0xffbe" accel-mods="0">
+
+				</menuitem>
+				<menuitem use-underline="true" label="_Website">
+
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem stock-id="gtk-about">
+
 				</menuitem>
 			</menu>
 		</menubar>
@@ -546,6 +561,26 @@ while [ true ]; do
 			<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
 		</checkbox>
 '`Comment ##
+## This enables the conditional refreshing of the main content.
+## `'
+		<checkbox visible="false">
+			<variable>chkContentRefreshCheck</variable>
+			<input file>'$TEMP_DIR'/ContentRefreshCheck</input>
+			<action>. funcReadmeUpdate; funcReadmeUpdate</action>
+			<action>refresh:ediReadme</action>
+			<action>activate:tgbGameListRefresh</action>
+		</checkbox>
+'`Comment ##
+## This enables the conditional refreshing of the game images.
+## `'
+		<checkbox visible="false">
+			<variable>chkImagesRefreshCheck</variable>
+			<input file>'$TEMP_DIR'/ImagesRefreshCheck</input>
+			<action>refresh:pmpImage0</action>
+			<action>refresh:pmpImage1</action>
+			<action>refresh:pmpImage2</action>
+		</checkbox>
+'`Comment ##
 ## The application is exited via this checkbox so that anything that
 ## needs to be saved can be managed here and only here.
 ## `'
@@ -563,6 +598,8 @@ while [ true ]; do
 ## The page property isn't suitable because I need the widgets on page0
 ## to realize first otherwise several widgets don't get initialised.
 ## `'
+	<action signal="show" condition="command_is_true([ `. functmpGet; functmpGet ApplicationRestart` = false ] && echo true)" function="break">""</action>
+	<action signal="show">. functmpSet; functmpSet ApplicationRestart false</action>
 	<action signal="show">refresh:nbkMain</action>
 	<action signal="show">refresh:nbkImages</action>
 </window>
@@ -575,6 +612,7 @@ while [ true ]; do
 	export VERSION
 	export LOCAL_DATA_DIR
 	export PACKAGE_DATA_DIR
+	export IMAGE_DEFAULT
 	export DEBUG_CONTENT
 	export DEBUG_TRANSITS
 	export PATH
