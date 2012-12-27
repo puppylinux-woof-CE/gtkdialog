@@ -1,3 +1,8 @@
+* Thu Dec 27 2012 Thunor <thunorsif@hotmail.com>
+- Added a default image and project icon from the Elementary icon set.
+- Added support for up to three images per game.
+- It's now possible to select profiles.
+
 * Sat Dec 15 2012 Thunor <thunorsif@hotmail.com>
 - Added restoring of the window dimensions from rcfiles.
 - Added support for application restarts.

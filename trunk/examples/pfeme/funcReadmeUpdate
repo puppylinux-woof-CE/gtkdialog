@@ -1,0 +1,25 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+. functmpSet
+
+## Update the symlink used within ediReadme.
+
+funcReadmeUpdate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcReadmeUpdate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local ProfileSelected="`funcrcGet ProfileSelected`"
+	local ProfileReadme="`funcrcGet Profile${ProfileSelected}Readme`"
+
+	if [ -f "$ProfileReadme" ]; then
+		ln -fs "$ProfileReadme" $TEMP_DIR/Readme
+	else
+		if [ -e $TEMP_DIR/Readme ]; then rm $TEMP_DIR/Readme; fi
+		functmpSet Readme ""
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

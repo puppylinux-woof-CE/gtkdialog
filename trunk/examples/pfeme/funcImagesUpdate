@@ -1,0 +1,89 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+. funcWidgetSchedule
+
+## Update the symlinks used within nbkImages.
+## On entry: $1 = 0 to update the symlinks for the selected profile
+##                1 to initialise the symlinks to the default image
+
+funcImagesUpdate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcImagesUpdate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local ProfileSelected="`funcrcGet ProfileSelected`"
+	local ProfileImagesPath0="`funcrcGet Profile${ProfileSelected}ImagesPath0`"
+	local ProfileImagesPattern0="`funcrcGet Profile${ProfileSelected}ImagesPattern0`"
+	local ProfileImagesPath1="`funcrcGet Profile${ProfileSelected}ImagesPath1`"
+	local ProfileImagesPattern1="`funcrcGet Profile${ProfileSelected}ImagesPattern1`"
+	local ProfileImagesPath2="`funcrcGet Profile${ProfileSelected}ImagesPath2`"
+	local ProfileImagesPattern2="`funcrcGet Profile${ProfileSelected}ImagesPattern2`"
+	local existing f image name path pattern
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		if [ -n "$1" ] && [ $1 = 1 ]; then
+			echo "$FUNCNAME(): Initialising image symlinks"
+		else
+			echo "$FUNCNAME(): Updating image symlinks for profile$ProfileSelected"
+		fi
+	fi
+
+	if [ -n "$1" ] && [ $1 = 1 ]; then
+
+		ln -fs "$IMAGE_DEFAULT" $TEMP_DIR/Image0
+		ln -fs "$IMAGE_DEFAULT" $TEMP_DIR/Image1
+		ln -fs "$IMAGE_DEFAULT" $TEMP_DIR/Image2
+
+		## This is called at the start before gtkdialog is run so it
+		## is necessary to check that the widget actually exists.
+		if [ -n "$chkImagesRefreshCheck" ]; then
+			funcWidgetSchedule chkImagesRefreshCheck ImagesRefreshCheck
+		fi
+
+	else
+
+		## Get everything after the last slash.
+		name="${treGameList##*/}"
+		## Get everything before the last period or the end.
+		name="${name%.*}"
+
+		for f in 0 1 2; do
+			eval path="\$ProfileImagesPath$f"
+			eval pattern="\$ProfileImagesPattern$f"
+
+			if [ $DEBUG_CONTENT -ne 0 ]; then
+				echo "$FUNCNAME(): Searching \"$path\" for \"$name$pattern\""
+			fi
+
+			image=
+			if [ -n "$path" -a -n "$pattern" ]; then
+
+				## Add a slash to the end of the path if necessary.
+				case $path in
+					*/)
+						true ;;
+					*)
+						path="$path/" ;;
+				esac
+
+				## Get one matching file from the path or use default.
+				image=`ls "$path$name"$pattern 2> /dev/null | head -1`
+
+			fi
+			if [ -z "$image" ]; then image=$IMAGE_DEFAULT; fi
+
+			## Get the existing file that the symlink points to.
+			existing=`readlink $TEMP_DIR/Image$f`
+
+			if [ "$image" != "$existing" ]; then
+				ln -fs "$image" $TEMP_DIR/Image$f
+				funcWidgetSchedule chkImagesRefreshCheck ImagesRefreshCheck
+			fi
+
+		done
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

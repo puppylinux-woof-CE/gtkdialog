@@ -1,0 +1,26 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+. funcrcSet
+. functmpGet
+. functmpSet
+. funcWidgetSchedule
+
+## Make the visible profile the selected profile.
+
+funcProfileSelect() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcProfileSelect; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local ProfileVisible="`functmpGet ProfileVisible`"
+	local ProfileCommandLineArgs="`funcrcGet Profile${ProfileVisible}CommandLineArgs`"
+
+	functmpSet ProfileCommandLineArgs "$ProfileCommandLineArgs"
+	funcWidgetSchedule chkContentRefreshCheck ContentRefreshCheck
+
+	funcrcSet ProfileSelected $ProfileVisible
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

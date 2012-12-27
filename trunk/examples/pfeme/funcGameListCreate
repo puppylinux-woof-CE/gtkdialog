@@ -42,11 +42,11 @@ funcGameListCreate() {
 			eval pattern="\$ProfileROMsPattern$f"
 
 			if [ $DEBUG_CONTENT -ne 0 ]; then
-				echo "$FUNCNAME(): Searching $path for $pattern"
+				echo "$FUNCNAME(): Searching \"$path\" for \"$pattern\""
 			fi
 
 			if [ -n "$path" -a -n "$pattern" ]; then
-				gamelist=`find "$path" -maxdepth 1 -type f -iname "$pattern"`
+				gamelist=`find "$path" -maxdepth 1 -type f -iname "$pattern" 2> /dev/null`
 				ifs=$IFS
 				IFS='
 '
