@@ -36,7 +36,7 @@ funcrcCreate() {
 	fi
 
 	## Create the profiles.
-	p=0; while [ $p -lt $ProfileMax ]; do
+	p=0; while [ $p -lt $PROFILE_MAX ]; do
 		if [ ! -f $LOCAL_DATA_DIR/Profile${p}CommandLineArgs ]; then
 			funcrcSet Profile${p}CommandLineArgs ""
 		fi

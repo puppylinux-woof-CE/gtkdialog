@@ -32,8 +32,7 @@ Do you want to save it now?
 			<button use-underline="true">
 				<label>_Don'"'"'t save</label>
 				<input file stock="gtk-clear"></input>
-				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
-				<action>refresh:chkProfileChangeCheck</action>
+				<action>activate:muiProfileChange</action>
 				<action>closewindow:winProfileNotSavedOnChange</action>
 			</button>
 			<button use-underline="true">
@@ -42,8 +41,7 @@ Do you want to save it now?
 				<action>. funcProfileSave; funcProfileSave</action>
 				<action>if [ `. funcrcGet; funcrcGet ProfileSelected` -eq `. functmpGet; functmpGet ProfileVisible` ]; then . funcWidgetSchedule; funcWidgetSchedule chkContentRefreshCheck ContentRefreshCheck; fi</action>
 				<action>refresh:chkContentRefreshCheck</action>
-				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
-				<action>refresh:chkProfileChangeCheck</action>
+				<action>activate:muiProfileChange</action>
 				<action>closewindow:winProfileNotSavedOnChange</action>
 			</button>
 		</hbox>
@@ -77,15 +75,13 @@ Do you want to save it now?
 			<button use-underline="true">
 				<label>_Don'"'"'t save</label>
 				<input file stock="gtk-clear"></input>
-				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileQuitCheck ProfileQuitCheck</action>
-				<action>refresh:chkProfileQuitCheck</action>
+				<action>activate:muiExit</action>
 			</button>
 			<button use-underline="true">
 				<label>_Save</label>
 				<input file stock="gtk-save"></input>
 				<action>. funcProfileSave; funcProfileSave</action>
-				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileQuitCheck ProfileQuitCheck</action>
-				<action>refresh:chkProfileQuitCheck</action>
+				<action>activate:muiExit</action>
 			</button>
 		</hbox>
 	</vbox>

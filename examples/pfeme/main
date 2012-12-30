@@ -32,12 +32,10 @@ GTKDIALOG=gtkdialog
 ##       +----->------|            muiQuit            |------>-----| winProfileNotSavedOnQuit |
 ##                    +-------------------------------+  Launches  +--------------------------+
 ##                                    |                                         |
-##                                    v Refreshes                               |
-##                                    |                                         v
-##                    +-------------------------------+               Refreshes |
-##                    |      chkProfileQuitCheck      |                         |
-##                    |                               |------------<------------+
-##                    |           exit:Quit           |
+##                                    v Activates                               v
+##                                    |                               Activates |
+##                    +-------------------------------+                         |
+##                    |            muiExit            |------------<------------+
 ##                    +-------------------------------+
 ## 
 
@@ -51,7 +49,7 @@ TITLE=Pfeme
 VERSION=0.1.0
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
-IMAGE_DEFAULT=$PACKAGE_DATA_DIR/default.png
+PROFILE_MAX=5
 ## Setting these to non-zero will generate lots of useful debugging info.
 DEBUG_CONTENT=0
 DEBUG_TRANSITS=0
@@ -63,7 +61,6 @@ ImageSize=240
 OutputForeground="#ffffff"
 OutputBackground="#000000"
 OutputFontName="Monospace 10"
-ProfileMax=5
 ProfileSelected=0
 ProfileVisible=0
 ReadmeForeground="#000000"
@@ -83,6 +80,7 @@ PATH=$PACKAGE_DATA_DIR:$PATH
 . funcGameListCreate
 . funcgtkrcCreate
 . funcImagesUpdate
+. funcProfileImagesUpdate
 . funcProfileLoad
 . funcReadmeUpdate
 . funcrcCreate
@@ -181,10 +179,10 @@ funcTabProfilesCreate() {
 
 	echo '<vbox border-width="5">
 			<hbox>'
-	f=0; while [ $f -lt $ProfileMax ]; do
+	f=0; while [ $f -lt $PROFILE_MAX ]; do
 		echo '<button>
 				<variable export="false">btnProfile'$f'</variable>
-				<width>32</width><height>32</height>
+				<width>48</width><height>48</height>
 				<input file>'$TEMP_DIR'/Profile'$f'</input>
 				<action>. functmpSet; functmpSet ProfileTarget '$f'</action>
 				<action condition="sensitive_is_true(btnProfileApply)">launch:winProfileNotSavedOnChange</action>
@@ -194,8 +192,7 @@ funcTabProfilesCreate() {
 ## return to process the remaining actions so we can safely assume that
 ## btnProfileApply is not sensitive which makes a condition redundant.
 ## `'
-				<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileChangeCheck ProfileChangeCheck</action>
-				<action>refresh:chkProfileChangeCheck</action>
+				<action>activate:muiProfileChange</action>
 			</button>'
 		f=$((f + 1))
 	done
@@ -309,6 +306,7 @@ funcTabProfilesCreate() {
 					<action>refresh:entProfileCommandLineArgs</action>
 					<action>refresh:chkContentRefreshCheck</action>
 					<action>disable:btnProfileSelect</action>
+					<action>activate:muiProfileButtonsUpdate</action>
 				</button>
 				<text><label>"'$DebugSpacer'"</label></text>
 			</hbox>
@@ -439,11 +437,10 @@ while [ true ]; do
 
 	## Create the initial files required.
 	functmpSet Output ""
-	functmpSet ProfileChangeCheck false
 	functmpSet ContentRefreshCheck false
 	functmpSet ImagesRefreshCheck false
-	functmpSet ProfileQuitCheck false
 	funcProfileLoad $ProfileSelected 1
+	funcProfileImagesUpdate
 	funcGameListCreate 1
 	funcReadmeUpdate
 	funcImagesUpdate 1
@@ -471,8 +468,7 @@ while [ true ]; do
 '`Comment ##
 ## We won't reach this point if winProfileNotSavedOnQuit was launched.
 ## `'
-					<action>. funcWidgetSchedule; funcWidgetSchedule chkProfileQuitCheck ProfileQuitCheck</action>
-					<action>refresh:chkProfileQuitCheck</action>
+					<action>activate:muiExit</action>
 				</menuitem>
 			</menu>
 			<menu use-underline="true" label="_Help">
@@ -485,6 +481,57 @@ while [ true ]; do
 				<menuitemseparator></menuitemseparator>
 				<menuitem stock-id="gtk-about">
 
+				</menuitem>
+			</menu>
+			<menu visible="false">
+'`Comment ##
+## This menuitem -- activated by all of the buttons that change the
+## visible profile -- is loading a profile and refreshing the widgets.
+## This enables a list of actions to be executed as a function.
+## `'
+				<menuitem>
+					<variable export="false">muiProfileChange</variable>
+					<action>. funcProfileLoad; funcProfileLoad `. functmpGet; functmpGet ProfileTarget`</action>
+					<action>refresh:entProfileExecutable</action>
+					<action>refresh:entProfileArguments</action>
+					<action>refresh:entProfileReadme</action>
+					<action>refresh:entProfileROMsPath0</action>
+					<action>refresh:entProfileROMsPattern0</action>
+					<action>refresh:entProfileROMsPath1</action>
+					<action>refresh:entProfileROMsPattern1</action>
+					<action>refresh:entProfileROMsPath2</action>
+					<action>refresh:entProfileROMsPattern2</action>
+					<action>refresh:entProfileImagesPath0</action>
+					<action>refresh:entProfileImagesPattern0</action>
+					<action>refresh:entProfileImagesPath1</action>
+					<action>refresh:entProfileImagesPattern1</action>
+					<action>refresh:entProfileImagesPath2</action>
+					<action>refresh:entProfileImagesPattern2</action>
+					<action>disable:btnProfileApply</action>
+					<action>disable:btnProfileSelect</action>
+					<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
+					<action>activate:muiProfileButtonsUpdate</action>
+				</menuitem>
+'`Comment ##
+## This enables a list of actions to be executed as a function.
+## `'
+				<menuitem>
+					<variable export="false">muiProfileButtonsUpdate</variable>
+					<action>. funcProfileImagesUpdate; funcProfileImagesUpdate</action>
+					<action>refresh:btnProfile0</action>
+					<action>refresh:btnProfile1</action>
+					<action>refresh:btnProfile2</action>
+					<action>refresh:btnProfile3</action>
+					<action>refresh:btnProfile4</action>
+				</menuitem>
+'`Comment ##
+## The application is exited via this menuitem so that anything that
+## needs to be saved can be managed here and only here.
+## `'
+				<menuitem>
+					<variable export="false">muiExit</variable>
+					<action>. funcProfileSave; funcProfileSave 1; . funcWindowDimSave; funcWindowDimSave "'$TITLE'"; . functmpSet; functmpSet ReadmeOptions $expReadmeOptions; functmpSet NotebookMainPage $nbkMain; functmpSet NotebookImagesPage $nbkImages</action>
+					<action>exit:Quit</action>
 				</menuitem>
 			</menu>
 		</menubar>
@@ -532,35 +579,6 @@ while [ true ]; do
 			<input file>'$TEMP_DIR'/GameCount</input>
 		</statusbar>
 '`Comment ##
-## This checkbox -- used by all of the buttons that change the visible
-## profile -- is being used here to load a profile and refresh the many
-## widgets. Not only does it cut down on code duplication but it also
-## allows this task to be executed conditionally which is what we need.
-## `'
-		<checkbox visible="false">
-			<variable>chkProfileChangeCheck</variable>
-			<input file>'$TEMP_DIR'/ProfileChangeCheck</input>
-			<action>. funcProfileLoad; funcProfileLoad `. functmpGet; functmpGet ProfileTarget`</action>
-			<action>refresh:entProfileExecutable</action>
-			<action>refresh:entProfileArguments</action>
-			<action>refresh:entProfileReadme</action>
-			<action>refresh:entProfileROMsPath0</action>
-			<action>refresh:entProfileROMsPattern0</action>
-			<action>refresh:entProfileROMsPath1</action>
-			<action>refresh:entProfileROMsPattern1</action>
-			<action>refresh:entProfileROMsPath2</action>
-			<action>refresh:entProfileROMsPattern2</action>
-			<action>refresh:entProfileImagesPath0</action>
-			<action>refresh:entProfileImagesPattern0</action>
-			<action>refresh:entProfileImagesPath1</action>
-			<action>refresh:entProfileImagesPattern1</action>
-			<action>refresh:entProfileImagesPath2</action>
-			<action>refresh:entProfileImagesPattern2</action>
-			<action>disable:btnProfileApply</action>
-			<action>disable:btnProfileSelect</action>
-			<action condition="command_is_true([ `. funcrcGet; funcrcGet ProfileSelected` -ne `. functmpGet; functmpGet ProfileVisible` ] && echo true)">enable:btnProfileSelect</action>
-		</checkbox>
-'`Comment ##
 ## This enables the conditional refreshing of the main content.
 ## `'
 		<checkbox visible="false">
@@ -579,16 +597,6 @@ while [ true ]; do
 			<action>refresh:pmpImage0</action>
 			<action>refresh:pmpImage1</action>
 			<action>refresh:pmpImage2</action>
-		</checkbox>
-'`Comment ##
-## The application is exited via this checkbox so that anything that
-## needs to be saved can be managed here and only here.
-## `'
-		<checkbox visible="false">
-			<variable>chkProfileQuitCheck</variable>
-			<input file>'$TEMP_DIR'/ProfileQuitCheck</input>
-			<action>. funcProfileSave; funcProfileSave 1; . funcWindowDimSave; funcWindowDimSave "'$TITLE'"; . functmpSet; functmpSet ReadmeOptions $expReadmeOptions; functmpSet NotebookMainPage $nbkMain; functmpSet NotebookImagesPage $nbkImages</action>
-			<action>exit:Quit</action>
 		</checkbox>
 	</vbox>
 	<variable export="false">winMain</variable>
@@ -612,7 +620,7 @@ while [ true ]; do
 	export VERSION
 	export LOCAL_DATA_DIR
 	export PACKAGE_DATA_DIR
-	export IMAGE_DEFAULT
+	export PROFILE_MAX
 	export DEBUG_CONTENT
 	export DEBUG_TRANSITS
 	export PATH

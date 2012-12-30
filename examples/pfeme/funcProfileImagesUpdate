@@ -1,0 +1,34 @@
+#!/bin/sh
+
+## Includes.
+. funcrcGet
+. functmpGet
+
+funcProfileImagesUpdate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcProfileImagesUpdate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local ProfileSelected="`funcrcGet ProfileSelected`"
+	local ProfileVisible="`functmpGet ProfileVisible`"
+	local ImageProfileSelectedVisible=$PACKAGE_DATA_DIR/profileselectedvisible.png
+	local ImageProfileSelected=$PACKAGE_DATA_DIR/profileselected.png
+	local ImageProfileVisible=$PACKAGE_DATA_DIR/profilevisible.png
+	local ImageProfile=$PACKAGE_DATA_DIR/profile.png
+	local f
+
+	local f=0; while [ $f -lt $PROFILE_MAX ]; do
+		if [ $f = $ProfileSelected -a $f = $ProfileVisible ]; then
+			ln -fs $ImageProfileSelectedVisible $TEMP_DIR/Profile$f
+		elif [ $f = $ProfileSelected ]; then
+			ln -fs $ImageProfileSelected $TEMP_DIR/Profile$f
+		elif [ $f = $ProfileVisible ]; then
+			ln -fs $ImageProfileVisible $TEMP_DIR/Profile$f
+		else
+			ln -fs $ImageProfile $TEMP_DIR/Profile$f
+		fi
+		f=$((f + 1))
+	done
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}
