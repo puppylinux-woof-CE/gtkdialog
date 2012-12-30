@@ -1,3 +1,10 @@
+* Sun Dec 30 2012 Thunor <thunorsif@hotmail.com>
+- Added the profile button images:
+  The joystick icon is from the Nuvola icon set licenced under the
+  GNU LESSER GENERAL PUBLIC LICENSE.
+  The Ok/accept icon is from the Fast Forward icon set licenced under
+  the GNU GENERAL PUBLIC LICENSE.
+
 * Thu Dec 27 2012 Thunor <thunorsif@hotmail.com>
 - Added a default image and project icon from the Elementary icon set.
 - Added support for up to three images per game.

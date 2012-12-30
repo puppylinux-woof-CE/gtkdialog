@@ -20,6 +20,7 @@ funcImagesUpdate() {
 	local ProfileImagesPattern1="`funcrcGet Profile${ProfileSelected}ImagesPattern1`"
 	local ProfileImagesPath2="`funcrcGet Profile${ProfileSelected}ImagesPath2`"
 	local ProfileImagesPattern2="`funcrcGet Profile${ProfileSelected}ImagesPattern2`"
+	local ImageDefault=$PACKAGE_DATA_DIR/default.png
 	local existing f image name path pattern
 
 	if [ $DEBUG_CONTENT -ne 0 ]; then
@@ -32,9 +33,9 @@ funcImagesUpdate() {
 
 	if [ -n "$1" ] && [ $1 = 1 ]; then
 
-		ln -fs "$IMAGE_DEFAULT" $TEMP_DIR/Image0
-		ln -fs "$IMAGE_DEFAULT" $TEMP_DIR/Image1
-		ln -fs "$IMAGE_DEFAULT" $TEMP_DIR/Image2
+		ln -fs $ImageDefault $TEMP_DIR/Image0
+		ln -fs $ImageDefault $TEMP_DIR/Image1
+		ln -fs $ImageDefault $TEMP_DIR/Image2
 
 		## This is called at the start before gtkdialog is run so it
 		## is necessary to check that the widget actually exists.
@@ -72,7 +73,7 @@ funcImagesUpdate() {
 				image=`ls "$path$name"$pattern 2> /dev/null | head -1`
 
 			fi
-			if [ -z "$image" ]; then image=$IMAGE_DEFAULT; fi
+			if [ -z "$image" ]; then image=$ImageDefault; fi
 
 			## Get the existing file that the symlink points to.
 			existing=`readlink $TEMP_DIR/Image$f`
