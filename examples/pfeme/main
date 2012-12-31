@@ -474,12 +474,20 @@ while [ true ]; do
 			<menu use-underline="true" label="_Help">
 				<menuitem stock-id="gtk-help" accel-key="0xffbe" accel-mods="0">
 
+					<action>echo "*** DO SOMETHING HERE ***"</action>
+					<action>echo "*** DO SOMETHING HERE ***"</action>
+					<action>echo "*** DO SOMETHING HERE ***"</action>
+
 				</menuitem>
 				<menuitem use-underline="true" label="_Website">
-
+					<action>. funcURLOpen; funcURLOpen "http://code.google.com/p/gtkdialog/"</action>
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
 				<menuitem stock-id="gtk-about">
+
+					<action>echo "*** DO SOMETHING HERE ***"</action>
+					<action>echo "*** DO SOMETHING HERE ***"</action>
+					<action>echo "*** DO SOMETHING HERE ***"</action>
 
 				</menuitem>
 			</menu>
