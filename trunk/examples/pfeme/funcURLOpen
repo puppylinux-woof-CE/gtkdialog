@@ -1,0 +1,44 @@
+#!/bin/sh
+
+## Open a URL.
+## On entry: $1 = URL
+
+funcURLOpen() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcURLOpen; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local browser=
+
+	if [ -n "$BROWSER" ]; then
+		browser="$BROWSER"
+	elif [ -n "$DEFAULTBROWSER" ]; then
+		browser="$DEFAULTBROWSER"
+	elif [ `command -v mozilla` ]; then
+		browser=mozilla
+	elif [ `command -v firefox` ]; then
+		browser=firefox
+	elif [ `command -v chromium` ]; then
+		browser=chromium
+	elif [ `command -v opera` ]; then
+		browser=opera
+	elif [ `command -v konqueror` ]; then
+		browser=konqueror
+	elif [ `command -v midori` ]; then
+		browser=midori
+	elif [ `command -v dillo` ]; then
+		browser=dillo
+	fi
+
+	if [ $DEBUG_CONTENT -ne 0 ]; then
+		echo "$FUNCNAME(): browser=\"$browser\""
+	fi
+
+	if [ -n "$browser" ]; then
+		$browser "$1" &
+	else
+		echo "$FUNCNAME(): Couldn't find a suitable browser."
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}
