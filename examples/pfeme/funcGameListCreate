@@ -4,7 +4,8 @@
 . funcrcGet
 
 ## Create the game list using the selected profile.
-## On entry: $1 = 1 to reuse a previous session's list if one exists
+## On entry: $1 = 0 to create a new list
+##                1 to reuse a previous session's list if one exists
 
 funcGameListCreate() {
 	if [ -z "$BASH" ]; then local FUNCNAME=funcGameListCreate; fi
@@ -19,8 +20,12 @@ funcGameListCreate() {
 	local ProfileROMsPath2="`funcrcGet Profile${ProfileSelected}ROMsPath2`"
 	local ProfileROMsPattern2="`funcrcGet Profile${ProfileSelected}ROMsPattern2`"
 	local count create ext f gamelist ifs item name path pattern xplayed
+	local arg1=0
 
-	if [ -n "$1" ] && [ $1 = 1 ] && [ -f $LOCAL_DATA_DIR/GameList ]; then
+	## Get argument.
+	if [ -n "$1" ]; then arg1=$1; fi
+
+	if [ $arg1 -eq 1 ] && [ -f $LOCAL_DATA_DIR/GameList ]; then
 		create=0
 	else
 		create=1

@@ -128,5 +128,62 @@ Do you want to restart now?
 	<action signal="delete-event">. functmpSet; functmpSet ApplicationRestart false</action>
 </window>
 '
+	## Create the XML for the About dialog.
+	winAbout='
+<window title="About '$TITLE'" icon-name="'$TARGET'" window-position="1" modal="true"
+	resizable="false">
+	<vbox>
+		<eventbox name="AboutHeader">
+			<hbox>
+				<pixmap space-expand="false" space-fill="false">
+					<width>48</width>
+					<height>48</height>
+					<input file icon="'$TARGET'"></input>
+				</pixmap>
+				<text use-markup="true" space-expand="false" space-fill="false">
+					<label>"<span fgcolor='"'"'white'"'"'><big><b>'$TITLE' '$VERSION'</b></big></span>"</label>
+				</text>
+				<text><label>"'$DebugSpacer'"</label></text>
+			</hbox>
+		</eventbox>
+		<notebook tab-labels="Info|Licence">
+			<vbox border-width="5">
+				<text use-markup="true">
+					<label>"
+<b>A front-end for multiple emulators</b>"</label>
+				</text>
+				<hbox homogeneous="true" space-expand="false" space-fill="false">
+					<button relief="2">
+						<label>Made with Gtkdialog</label>
+						<action>. funcURLOpen; funcURLOpen "http://code.google.com/p/gtkdialog/"</action>
+					</button>
+				</hbox>
+				<text justify="2">
+					<label>"Copyright (c) 2013
+Thunor
+"</label>
+				</text>
+			</vbox>
+			<hbox>
+				<text justify="2">
+					<label>"'$TITLE',
+Elementary Icon,
+Fast Forward Icon:
+GNU GENERAL PUBLIC LICENSE
+
+Nuvola Icon:
+GNU LESSER GENERAL PUBLIC LICENSE"</label>
+				</text>
+			</hbox>
+		</notebook>
+		<hbox space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-close">
+				<action>closewindow:winAbout</action>
+			</button>
+		</hbox>
+	</vbox>
+	<variable export="false">winAbout</variable>
+</window>
+'
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
 }
