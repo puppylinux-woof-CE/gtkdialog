@@ -6,7 +6,8 @@
 
 ## Update the symlinks used within nbkImages.
 ## On entry: $1 = 0 to update the symlinks for the selected profile
-##                1 to initialise the symlinks to the default image
+##                1 to update the symlinks for the selected profile forcefully
+##                2 to initialise the symlinks to the default image
 
 funcImagesUpdate() {
 	if [ -z "$BASH" ]; then local FUNCNAME=funcImagesUpdate; fi
@@ -22,28 +23,22 @@ funcImagesUpdate() {
 	local ProfileImagesPattern2="`funcrcGet Profile${ProfileSelected}ImagesPattern2`"
 	local ImageDefault=$PACKAGE_DATA_DIR/default.png
 	local existing f image name path pattern
+	local arg1=0
+
+	## Get argument.
+	if [ -n "$1" ]; then arg1=$1; fi
 
 	if [ $DEBUG_CONTENT -ne 0 ]; then
-		if [ -n "$1" ] && [ $1 = 1 ]; then
-			echo "$FUNCNAME(): Initialising image symlinks"
-		else
+		if [ $arg1 -eq 0 ]; then
 			echo "$FUNCNAME(): Updating image symlinks for profile$ProfileSelected"
+		elif [ $arg1 -eq 1 ]; then
+			echo "$FUNCNAME(): Updating image symlinks for profile$ProfileSelected forcefully"
+		elif [ $arg1 -eq 2 ]; then
+			echo "$FUNCNAME(): Initialising image symlinks"
 		fi
 	fi
 
-	if [ -n "$1" ] && [ $1 = 1 ]; then
-
-		ln -fs $ImageDefault $TEMP_DIR/Image0
-		ln -fs $ImageDefault $TEMP_DIR/Image1
-		ln -fs $ImageDefault $TEMP_DIR/Image2
-
-		## This is called at the start before gtkdialog is run so it
-		## is necessary to check that the widget actually exists.
-		if [ -n "$chkImagesRefreshCheck" ]; then
-			funcWidgetSchedule chkImagesRefreshCheck ImagesRefreshCheck
-		fi
-
-	else
+	if [ $arg1 -eq 0 -o $arg1 -eq 1 ]; then
 
 		## Get everything after the last slash.
 		name="${treGameList##*/}"
@@ -78,12 +73,25 @@ funcImagesUpdate() {
 			## Get the existing file that the symlink points to.
 			existing=`readlink $TEMP_DIR/Image$f`
 
-			if [ "$image" != "$existing" ]; then
+			if [ "$image" != "$existing" -o $arg1 -eq 1 ]; then
 				ln -fs "$image" $TEMP_DIR/Image$f
 				funcWidgetSchedule chkImagesRefreshCheck ImagesRefreshCheck
 			fi
 
 		done
+
+	elif [ $arg1 -eq 2 ]; then
+
+		ln -fs $ImageDefault $TEMP_DIR/Image0
+		ln -fs $ImageDefault $TEMP_DIR/Image1
+		ln -fs $ImageDefault $TEMP_DIR/Image2
+
+		## This is called at the start before gtkdialog is run so it
+		## is necessary to check that the widget actually exists.
+		if [ -n "$chkImagesRefreshCheck" ]; then
+			funcWidgetSchedule chkImagesRefreshCheck ImagesRefreshCheck
+		fi
+
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi

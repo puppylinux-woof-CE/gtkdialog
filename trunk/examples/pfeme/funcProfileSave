@@ -17,19 +17,20 @@ funcProfileSave() {
 	## Local variables.
 	local ProfileSelected="`funcrcGet ProfileSelected`"
 	local ProfileVisible="`functmpGet ProfileVisible`"
+	local arg1=0
+
+	## Get argument.
+	if [ -n "$1" ]; then arg1=$1; fi
 
 	if [ $DEBUG_CONTENT -ne 0 ]; then
-		if [ -n "$1" ] && [ $1 = 1 ]; then
-			echo "$FUNCNAME(): Saving command line args to profile$ProfileSelected"
-		else
+		if [ $arg1 -eq 0 ]; then
 			echo "$FUNCNAME(): Saving visible profile to profile$ProfileVisible"
+		elif [ $arg1 -eq 1 ]; then
+			echo "$FUNCNAME(): Saving command line args to profile$ProfileSelected"
 		fi
 	fi
 
-	if [ -n "$1" ] && [ $1 = 1 ]; then
-		funcrcSet Profile${ProfileSelected}CommandLineArgs \
-			"$entProfileCommandLineArgs"
-	else
+	if [ $arg1 -eq 0 ]; then
 		funcrcSet Profile${ProfileVisible}Executable "$entProfileExecutable"
 		funcrcSet Profile${ProfileVisible}Arguments "$entProfileArguments"
 		funcrcSet Profile${ProfileVisible}Readme "$entProfileReadme"
@@ -45,6 +46,9 @@ funcProfileSave() {
 		funcrcSet Profile${ProfileVisible}ImagesPattern1 "$entProfileImagesPattern1"
 		funcrcSet Profile${ProfileVisible}ImagesPath2 "$entProfileImagesPath2"
 		funcrcSet Profile${ProfileVisible}ImagesPattern2 "$entProfileImagesPattern2"
+	elif [ $arg1 -eq 1 ]; then
+		funcrcSet Profile${ProfileSelected}CommandLineArgs \
+			"$entProfileCommandLineArgs"
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi

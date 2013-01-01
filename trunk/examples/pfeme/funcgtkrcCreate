@@ -28,6 +28,12 @@ style "styleTabOutput" {
 	font_name = "'"$OutputFontName"'"
 }
 widget "*TabOutput" style "styleTabOutput"
+
+style "styleAboutHeader" {
+	bg[NORMAL] = "#608080"
+}
+widget "*AboutHeader" style "styleAboutHeader"
+
 '
 	GTK2_RC_FILES=$TEMP_DIR/gtkrc:~/.gtkrc-2.0
 

@@ -140,7 +140,7 @@ funcTabGamesCreate() {
 					<action>if true clear:stbGameCount</action>
 					<action>if true disable:tgbGamePlay</action>
 					<action>if true disable:entProfileCommandLineArgs</action>
-					<action>if true . funcImagesUpdate; funcImagesUpdate 1</action>
+					<action>if true . funcImagesUpdate; funcImagesUpdate 2</action>
 					<action>if true activate:tgbGameListRefresh</action>
 					<action>if false . funcGameListCreate; funcGameListCreate</action>
 					<action>if false refresh:treGameList</action>
@@ -162,7 +162,7 @@ funcTabGamesCreate() {
 					<input file stock="gtk-execute"></input>
 					<action>if true hide:winMain</action>
 					<action>if true activate:tgbGamePlay</action>
-					<action>if false . funcProfileSave; funcProfileSave 1; . funcGamePlay; funcGamePlay; . funcImagesUpdate; funcImagesUpdate</action>
+					<action>if false . funcProfileSave; funcProfileSave 1; . funcGamePlay; funcGamePlay; . funcImagesUpdate; funcImagesUpdate 1</action>
 					<action>if false refresh:chkImagesRefreshCheck</action>
 					<action>if false clear:ediOutput</action>
 					<action>if false refresh:ediOutput</action>
@@ -443,7 +443,7 @@ while [ true ]; do
 	funcProfileImagesUpdate
 	funcGameListCreate 1
 	funcReadmeUpdate
-	funcImagesUpdate 1
+	funcImagesUpdate 2
 	## These are retained on an application restart.
 	if [ ! -f $TEMP_DIR/ApplicationRestart ]; then
 		functmpSet ApplicationRestart false
@@ -484,11 +484,7 @@ while [ true ]; do
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
 				<menuitem stock-id="gtk-about">
-
-					<action>echo "*** DO SOMETHING HERE ***"</action>
-					<action>echo "*** DO SOMETHING HERE ***"</action>
-					<action>echo "*** DO SOMETHING HERE ***"</action>
-
+					<action>launch:winAbout</action>
 				</menuitem>
 			</menu>
 			<menu visible="false">
@@ -637,6 +633,7 @@ while [ true ]; do
 	export winProfileNotSavedOnChange
 	export winProfileNotSavedOnQuit
 	export winReadmeApplyRestartRequired
+	export winAbout
 
 	## And off we go...
 	$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain

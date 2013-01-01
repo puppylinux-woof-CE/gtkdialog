@@ -1,3 +1,7 @@
+* Tue Jan 1 2013 Thunor <thunorsif@hotmail.com>
+- Game images are now forcefully refreshed after playing a game.
+- Implemented the About dialog.
+
 * Sun Dec 30 2012 Thunor <thunorsif@hotmail.com>
 - Added the profile button images:
   The joystick icon is from the Nuvola icon set licenced under the
