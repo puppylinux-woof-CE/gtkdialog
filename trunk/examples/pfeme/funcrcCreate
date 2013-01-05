@@ -34,6 +34,9 @@ funcrcCreate() {
 	if [ ! -f $LOCAL_DATA_DIR/WindowHeight ]; then
 		funcrcSet WindowHeight "$WindowHeight"
 	fi
+	if [ ! -f $LOCAL_DATA_DIR/xPlayed ]; then
+		funcrcSet xPlayed ""
+	fi
 
 	## Create the profiles.
 	p=0; while [ $p -lt $PROFILE_MAX ]; do

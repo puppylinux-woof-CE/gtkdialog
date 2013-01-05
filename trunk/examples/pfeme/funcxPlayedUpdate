@@ -1,0 +1,26 @@
+#!/bin/sh
+
+## Update the number of times the currently selected game has been
+## played or append it to the list on first play.
+
+funcxPlayedUpdate() {
+	if [ -z "$BASH" ]; then local FUNCNAME=funcxPlayedUpdate; fi
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
+
+	## Local variables.
+	local xplayed
+
+	xplayed=`grep "^$treGameList=" $LOCAL_DATA_DIR/xPlayed`
+	if [ -z "$xplayed" ]; then
+		## First time played so append to list.
+		echo "$treGameList=1" >> $LOCAL_DATA_DIR/xPlayed
+	else
+		## Get the value after the last equals.
+		xplayed="${xplayed##*=}"
+		xplayed=$((xplayed + 1))
+		## Update in place.
+		sed -i "s|^$treGameList=.*|$treGameList=$xplayed|" $LOCAL_DATA_DIR/xPlayed
+	fi
+
+	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
+}

@@ -2,6 +2,7 @@
 
 ## Includes.
 . funcrcGet
+. funcxPlayedMerge
 
 ## Create the game list using the selected profile.
 ## On entry: $1 = 0 to create a new list
@@ -19,7 +20,7 @@ funcGameListCreate() {
 	local ProfileROMsPattern1="`funcrcGet Profile${ProfileSelected}ROMsPattern1`"
 	local ProfileROMsPath2="`funcrcGet Profile${ProfileSelected}ROMsPath2`"
 	local ProfileROMsPattern2="`funcrcGet Profile${ProfileSelected}ROMsPattern2`"
-	local count create ext f gamelist ifs item name path pattern xplayed
+	local count create ext f gamelist ifs item name path pattern
 	local arg1=0
 
 	## Get argument.
@@ -65,13 +66,16 @@ funcGameListCreate() {
 						*.*) ext="${item##*.}" ;;
 						*) ext="" ;;
 					esac
-					xplayed=1
-					echo "$item|$name|$ext|$xplayed" >> $LOCAL_DATA_DIR/GameList
+
+					echo "$item|$name|$ext|0" >> $LOCAL_DATA_DIR/GameList
 				done
 				IFS=$ifs
 			fi
 		done
 	fi
+
+	## Merge the xplayed data.
+	funcxPlayedMerge
 
 	## Count the games.
 	count=`wc -l < $LOCAL_DATA_DIR/GameList`
