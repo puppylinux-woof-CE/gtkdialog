@@ -57,6 +57,8 @@ DEBUG_TRANSITS=0
 ## These don't require exporting.
 DebugSpacer=
 #"[]"
+DebugTime=
+#time
 ImageSize=240
 OutputForeground="#ffffff"
 OutputBackground="#000000"
@@ -142,7 +144,7 @@ funcTabGamesCreate() {
 					<action>if true disable:entProfileCommandLineArgs</action>
 					<action>if true . funcImagesUpdate; funcImagesUpdate 2</action>
 					<action>if true activate:tgbGameListRefresh</action>
-					<action>if false . funcGameListCreate; funcGameListCreate</action>
+					<action>if false . funcGameListCreate; '$DebugTime' funcGameListCreate</action>
 					<action>if false refresh:treGameList</action>
 					<action>if false refresh:stbGameCount</action>
 					<action>if false grabfocus:treGameList</action>
@@ -162,7 +164,7 @@ funcTabGamesCreate() {
 					<input file stock="gtk-execute"></input>
 					<action>if true hide:winMain</action>
 					<action>if true activate:tgbGamePlay</action>
-					<action>if false . funcProfileSave; funcProfileSave 1; . funcGamePlay; funcGamePlay; . funcImagesUpdate; funcImagesUpdate 1</action>
+					<action>if false . funcProfileSave; funcProfileSave 1; . funcxPlayedUpdate; funcxPlayedUpdate; . funcGamePlay; funcGamePlay; . funcImagesUpdate; funcImagesUpdate 1</action>
 					<action>if false refresh:chkImagesRefreshCheck</action>
 					<action>if false clear:ediOutput</action>
 					<action>if false refresh:ediOutput</action>
@@ -380,6 +382,10 @@ funcTabsImagesCreate() {
 ## ----------------------------------------------------------------------------
 
 ## Check requirements.
+if [ ! `command -v perl` ]; then
+	echo "Couldn't find perl"
+	exit 1
+fi
 if [ ! `command -v $GTKDIALOG` ]; then
 	echo "Couldn't find $GTKDIALOG"
 	exit 1
