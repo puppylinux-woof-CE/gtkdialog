@@ -130,8 +130,8 @@ Do you want to restart now?
 '
 	## Create the XML for the About dialog.
 	winAbout='
-<window title="About '$TITLE'" icon-name="'$TARGET'" window-position="1" modal="true"
-	resizable="false">
+<window title="About '$TITLE'" icon-name="'$TARGET'" window-position="1"
+	modal="true" resizable="false">
 	<vbox>
 		<eventbox name="AboutHeader">
 			<hbox>
@@ -177,12 +177,31 @@ GNU LESSER GENERAL PUBLIC LICENSE"</label>
 			</hbox>
 		</notebook>
 		<hbox space-expand="false" space-fill="false">
-			<button use-stock="true" label="gtk-close">
+			<button use-stock="true" label="gtk-close" width-request="90">
 				<action>closewindow:winAbout</action>
 			</button>
 		</hbox>
 	</vbox>
 	<variable export="false">winAbout</variable>
+</window>
+'
+	## Create the XML for the Help dialog.
+	winHelp='
+<window title="'$TITLE' - Help" icon-name="'$TARGET'" window-position="1"
+	default-width="600" default-height="400" resizable="true">
+	<vbox>
+		<edit name="HelpText" editable="false">
+			<input file>'$PACKAGE_DATA_DIR'/README</input>
+		</edit>
+		<hseparator space-expand="false" space-fill="false"></hseparator>
+		<hbox space-expand="false" space-fill="false">
+			<button use-stock="true" label="gtk-close" is-focus="true"
+				width-request="90">
+				<action>closewindow:winHelp</action>
+			</button>
+		</hbox>
+	</vbox>
+	<variable export="false">winHelp</variable>
 </window>
 '
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi

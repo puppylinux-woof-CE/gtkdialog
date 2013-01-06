@@ -38,6 +38,8 @@ funcWindowDimSave() {
 			funcrcSet WindowWidth $width
 			funcrcSet WindowHeight $height
 		fi
+	else
+		echo "$FUNCNAME(): xwininfo is required to save the window dimensions."
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi

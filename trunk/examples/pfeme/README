@@ -1,1 +1,136 @@
-I've yet to write the Help dialog but other than that it works - 2013-1-5.
+Pfeme - A front-end for multiple emulators.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+Installation
+============
+
+From Source
+-----------
+By default the application will run from the current folder but it is
+possible to install it using the supplied Makefile (type "make" to show
+usage examples).
+
+Install to wherever your PREFIX is currently set to:
+
+    make install
+
+To uninstall:
+
+    make uninstall
+
+DESTDIR is supported for packagers to install to an intermediate folder;
+for example:
+
+    make DESTDIR=pfeme-0.1.1 install
+
+Requirements
+============
+
+Gtkdialog >= 0.8.3 - http://code.google.com/p/gtkdialog/
+
+Operation
+=========
+
+Games Tab
+---------
+The Games list shows any game files found within the ROMs folders.
+
+The Name column shows the file name.
+The Type column shows the file extension.
+The xPlayed column shows a record of the number of times that the game
+has been played and is updated either when you restart the application
+or when the list is refreshed (Gtkdialog doesn't refresh single rows).
+
+Double-clicking an item within the list or activating a selected item
+with Enter or Space will play the game.
+
+The Refresh button will rebuild the list and update the xPlayed column
+which is useful for when the contents of folders have changed and the
+list becomes out-of-date (the list is not auto-refreshed at start-up).
+
+The Play button will play the selected game.
+
+The number of items within the list is displayed in the status bar.
+
+Profiles Tab
+------------
+The buttons along the top are used to change the visible profile.
+The visible profile is highlighted with a bolder button image.
+The selected profile has an additional tick mark image.
+
+The Executable and Arguments entry boxes are self explanatory.
+The Readme entry box contains the full path to the file that is shown
+within the Readme tab and can be any text file you wish.
+
+The ROMs paths point to the folders where the game files are located and
+modifying Pattern allows you to be more selective with the results, for
+example *.gba or *.n64
+
+The Image paths point to the folders where the selected game images are
+located with each one being shown in the corresponding image tab and
+modifying Pattern allows you to be more selective with the results, for
+example .jpg or 01.png (this is appended to the selected game's name).
+
+The Apply button will save the changes to the visible profile and if the
+visible profile is also the selected profile then the game list, readme
+and game images will be refreshed.
+
+The Select button will make the visible profile the selected profile
+which will cause the game list, readme and game images to be refreshed.
+
+Readme Tab
+----------
+This contains the file from the selected profile's Readme entry box.
+
+Clicking the Options expander shows various properties which can be
+modified and applied with the Apply button (a restart is required).
+
+Output Tab
+----------
+The executable output for the most recently played game is shown here.
+
+Image 1-3 Tabs
+--------------
+Image 1 shows the selected game's image from the selected profile's
+topmost Images path, Image 2 from the middle path and Image 3 from the
+bottom path.
+
+Command Line Args.
+------------------
+This is a place to store frequently changing command-line arguments.
+You might for example want to try an option without having to modify a
+profile's Arguments entry box causing an unnecessary refresh.
+
+Pressing Enter within this entry box will activate the Play button.
+
+The data is saved to the selected profile when a game is played, when
+another profile is selected and when the application is exited.
+
+A useful trick here is to enter "--help" and press Enter likely causing
+the executable to print its argument list to the Output tab.
+
+Quit
+----
+The window dimensions are recorded to be restored next session.
+
+Contacting Us
+=============
+
+Thunor <thunorsif@hotmail.com>
+
+http://code.google.com/p/gtkdialog/
+
+2013-01-06

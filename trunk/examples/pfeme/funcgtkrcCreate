@@ -34,6 +34,10 @@ style "styleAboutHeader" {
 }
 widget "*AboutHeader" style "styleAboutHeader"
 
+style "styleHelpText" {
+	font_name = "Monospace"
+}
+widget "*HelpText" style "styleHelpText"
 '
 	GTK2_RC_FILES=$TEMP_DIR/gtkrc:~/.gtkrc-2.0
 

@@ -5,40 +5,44 @@ funcxPlayedMerge() {
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): IN"; fi
 
 	## This is very fast.
-	perl - $LOCAL_DATA_DIR/GameList $LOCAL_DATA_DIR/xPlayed <<'END'
-	#use strict;
-	use warnings;
+	if [ `command -v perl` ]; then
+		perl - $LOCAL_DATA_DIR/GameList $LOCAL_DATA_DIR/xPlayed <<'END'
+		#use strict;
+		use warnings;
 
-	my $GameList = shift;
-	my $xPlayed = shift;
+		my $GameList = shift;
+		my $xPlayed = shift;
 
-	open(FILE, "$GameList") or die $!;
-	my @GameList = <FILE>;
-	close(FILE);
+		open(FILE, "$GameList") or die $!;
+		my @GameList = <FILE>;
+		close(FILE);
 
-	open(FILE, "$xPlayed") or die $!;
-	my @xPlayed = <FILE>;
-	close(FILE);
+		open(FILE, "$xPlayed") or die $!;
+		my @xPlayed = <FILE>;
+		close(FILE);
 
-	open(FILE, ">$GameList") or die $!;
+		open(FILE, ">$GameList") or die $!;
 
-	for my $lineA (@GameList) {
-		my @lineA = split(/\|/, $lineA);
+		for my $lineA (@GameList) {
+			my @lineA = split(/\|/, $lineA);
 
-		for my $lineB (@xPlayed) {
-			my @lineB = split(/=/, $lineB);
+			for my $lineB (@xPlayed) {
+				my @lineB = split(/=/, $lineB);
 
-			if ($lineA[0] eq $lineB[0]) {
-				$lineA[-1] = $lineB[-1];
-				last;
+				if ($lineA[0] eq $lineB[0]) {
+					$lineA[-1] = $lineB[-1];
+					last;
+				}
 			}
+
+			print FILE join('|', @lineA);
 		}
 
-		print FILE join('|', @lineA);
-	}
-
-	close(FILE);
+		close(FILE);
 END
+	else
+		echo "$FUNCNAME(): Perl is required to merge the xPlayed data."
+	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME(): OUT"; fi
 }

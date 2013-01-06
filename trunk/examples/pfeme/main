@@ -46,7 +46,7 @@ GTKDIALOG=gtkdialog
 
 TARGET=pfeme
 TITLE=Pfeme
-VERSION=0.1.0
+VERSION=0.1.1
 LOCAL_DATA_DIR=$HOME/.$TARGET
 PACKAGE_DATA_DIR=`pwd`
 PROFILE_MAX=5
@@ -304,7 +304,7 @@ funcTabProfilesCreate() {
 					<label>_Select</label>
 					<sensitive>false</sensitive>
 					<input file stock="gtk-ok"></input>
-					<action>. funcProfileSelect; funcProfileSelect</action>
+					<action>. funcProfileSave; funcProfileSave 1; . funcProfileSelect; funcProfileSelect</action>
 					<action>refresh:entProfileCommandLineArgs</action>
 					<action>refresh:chkContentRefreshCheck</action>
 					<action>disable:btnProfileSelect</action>
@@ -382,10 +382,6 @@ funcTabsImagesCreate() {
 ## ----------------------------------------------------------------------------
 
 ## Check requirements.
-if [ ! `command -v perl` ]; then
-	echo "Couldn't find perl"
-	exit 1
-fi
 if [ ! `command -v $GTKDIALOG` ]; then
 	echo "Couldn't find $GTKDIALOG"
 	exit 1
@@ -479,14 +475,10 @@ while [ true ]; do
 			</menu>
 			<menu use-underline="true" label="_Help">
 				<menuitem stock-id="gtk-help" accel-key="0xffbe" accel-mods="0">
-
-					<action>echo "*** DO SOMETHING HERE ***"</action>
-					<action>echo "*** DO SOMETHING HERE ***"</action>
-					<action>echo "*** DO SOMETHING HERE ***"</action>
-
+					<action>launch:winHelp</action>
 				</menuitem>
 				<menuitem use-underline="true" label="_Website">
-					<action>. funcURLOpen; funcURLOpen "http://code.google.com/p/gtkdialog/"</action>
+					<action>. funcURLOpen; funcURLOpen "http://www.murga-linux.com/puppy/viewtopic.php?t=83564"</action>
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
 				<menuitem stock-id="gtk-about">
@@ -640,6 +632,7 @@ while [ true ]; do
 	export winProfileNotSavedOnQuit
 	export winReadmeApplyRestartRequired
 	export winAbout
+	export winHelp
 
 	## And off we go...
 	$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain

@@ -1,3 +1,16 @@
+2013-01-06
+* 0.8.3 released
+* Solved the hidden widgets leaving artifacts at start-up problem.
+* Added support for conditional actions with <action condition="type">.
+* Added support for <variable export="false">VARNAME</variable>.
+* Added button-press/release-event signals to comboboxentry's entry.
+* Added support for break i.e. don't process any more actions.
+* Connected-up the realize signal so that it can be used within actions.
+* Refreshing markup in a text widget now works as expected.
+* Added three new examples including the Pfeme emulator front-end.
+* Fixed bashisms within examples where possible and made them portable.
+* Fixed three examples.
+
 2012-09-21
 * 0.8.2 released
 * Added eventbox, expander and fontbutton widgets.
