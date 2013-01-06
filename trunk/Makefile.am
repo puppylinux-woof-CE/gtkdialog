@@ -36,6 +36,7 @@ EXTRA_DIST = \
 	examples/spinbutton/* \
 	examples/statusbar/* \
 	examples/table/* \
+	examples/terminal/* \
 	examples/text/* \
 	examples/timer/* \
 	examples/togglebutton/* \
