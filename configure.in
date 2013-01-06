@@ -1,5 +1,5 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT([gtkdialog], [0.8.3], [thunorsif@hotmail.com], [gtkdialog],
+AC_INIT([gtkdialog], [0.8.4], [thunorsif@hotmail.com], [gtkdialog],
 	[http://code.google.com/p/gtkdialog/])
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([config.h])
