@@ -1,6 +1,10 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Jan 6 2013 Thunor <thunorsif@hotmail.com>
+- Version 0.8.3 released (r502)
+- Finished the Pfeme example application.
+
 * Mon Dec 10 2012 Thunor <thunorsif@hotmail.com>
 - Corrected to backticks and tested with dash all of the examples.
   Those that require bash also use bash where necessary within actions.

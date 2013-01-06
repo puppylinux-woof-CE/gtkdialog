@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Pfeme multiple emulator front-end
+Icon=pfeme.png
+Comment=A front-end for multiple emulators
+Exec=pfeme
+Terminal=false
+Type=Application
+Categories=Game
+GenericName=Front-end

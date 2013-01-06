@@ -53,14 +53,18 @@ funcrcCreate() {
 			funcrcSet Profile${p}Readme ""
 		fi
 		for f in 0 1 2; do
-			for t in ROMs Images; do
-				if [ ! -f $LOCAL_DATA_DIR/Profile${p}${t}Path$f ]; then
-					funcrcSet Profile${p}${t}Path$f ""
-				fi
-				if [ ! -f $LOCAL_DATA_DIR/Profile${p}${t}Pattern$f ]; then
-					funcrcSet Profile${p}${t}Pattern$f "*"
-				fi
-			done
+			if [ ! -f $LOCAL_DATA_DIR/Profile${p}ROMsPath$f ]; then
+				funcrcSet Profile${p}ROMsPath$f ""
+			fi
+			if [ ! -f $LOCAL_DATA_DIR/Profile${p}ROMsPattern$f ]; then
+				funcrcSet Profile${p}ROMsPattern$f "*"
+			fi
+			if [ ! -f $LOCAL_DATA_DIR/Profile${p}ImagesPath$f ]; then
+				funcrcSet Profile${p}ImagesPath$f ""
+			fi
+			if [ ! -f $LOCAL_DATA_DIR/Profile${p}ImagesPattern$f ]; then
+				funcrcSet Profile${p}ImagesPattern$f ".*"
+			fi
 		done
 		p=$((p + 1))
 	done

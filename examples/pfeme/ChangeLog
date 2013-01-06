@@ -1,3 +1,9 @@
+* Sun Jan 6 2013 Thunor <thunorsif@hotmail.com>
+- 0.1.1
+- Updated the README which can now be viewed via the Help menuitem.
+- Added an application desktop file.
+- Added a Makefile.
+
 * Sat Jan 5 2013 Thunor <thunorsif@hotmail.com>
 - Implemented the recording (sh) and merging (perl) of the xplayed data.
 
