@@ -66,8 +66,10 @@ void widget_list_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	gtk_list_clear_items(GTK_LIST(var->Widget), 0, -1);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -86,8 +88,10 @@ GtkWidget *widget_list_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	widget = gtk_list_new();
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -134,6 +138,7 @@ gchar *widget_list_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: 2012-09-09 GTK_SELECTION_MULTIPLE does not work. According
 	 * to http://developer.gnome.org/gtk-faq/stable/c707.html, selection
 	 * should return a pointer to the first selected item but it returns
@@ -147,6 +152,7 @@ gchar *widget_list_envvar_construct(GtkWidget *widget)
 	} else {
 		string = g_strdup("");
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -191,6 +197,7 @@ void widget_list_refresh(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
@@ -247,6 +254,7 @@ void widget_list_refresh(variable *var)
 				gtk_list_select_item(GTK_LIST(var->Widget), selected_row);
 		}
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -263,6 +271,7 @@ void widget_list_removeselected(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 #ifdef DEBUG_CONTENT
 	/* Thunor: 2012-09-09 GTK_SELECTION_MULTIPLE does not work. According
 	 * to http://developer.gnome.org/gtk-faq/stable/c707.html, selection
@@ -287,6 +296,7 @@ void widget_list_removeselected(variable *var)
 	if (GTK_LIST(var->Widget)->children != NULL)
 		gtk_list_select_item(GTK_LIST(var->Widget), 0);
 	gtk_signal_emit_by_name(GTK_OBJECT(var->Widget), "selection-changed"); */
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -312,6 +322,7 @@ void widget_list_save(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
@@ -363,6 +374,7 @@ void widget_list_save(variable *var)
 	} else {
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -386,6 +398,7 @@ static void widget_list_input_by_command(variable *var, char *filename,
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	if (command_or_file) {
 		infile = widget_opencommand(filename);
 	} else {
@@ -417,6 +430,7 @@ static void widget_list_input_by_command(variable *var, char *filename,
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			filename);
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -433,7 +447,9 @@ static void widget_list_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	widget_list_input_by_command(var, filename, FALSE);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -454,6 +470,7 @@ static void widget_list_input_by_items(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	g_assert(var->Attributes != NULL && var->Widget != NULL);
 
@@ -481,6 +498,7 @@ static void widget_list_input_by_items(variable *var)
 		gtk_container_add(GTK_CONTAINER(var->Widget), item);
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

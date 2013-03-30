@@ -1,6 +1,11 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Mar 30 2013 Thunor <thunorsif@hotmail.com>
+- Added initial support for GTK+ 3 with the --enable-gtk3=yes configure
+  option; widgets removed: combobox, list, table; require rewriting:
+  comboboxtext, comboboxentry, file selection dialog filename retrieval.
+
 * Sun Jan 6 2013 Thunor <thunorsif@hotmail.com>
 - Version 0.8.3 released (r502)
 - Finished the Pfeme example application.

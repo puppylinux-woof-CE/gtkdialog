@@ -1390,6 +1390,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 					execute = widget_signal_executor_eval_condition(condition);
 				}
 /* GtkWidget--->GtkContainer--->GtkCList */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 			} else if (GTK_IS_CLIST(widget)) {
 				if (strcasecmp(signal_name, "select-row") == 0) {
 					execute = widget_signal_executor_eval_condition(condition);
@@ -1399,6 +1400,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 				if (strcasecmp(signal_name, "selection-changed") == 0) {
 					execute = widget_signal_executor_eval_condition(condition);
 				}
+#endif
 /* GtkWidget--->GtkContainer--->GtkTreeView */
 			} else if (GTK_IS_TREE_VIEW(widget)) {
 				if (strcasecmp(signal_name, "row-activated") == 0) {

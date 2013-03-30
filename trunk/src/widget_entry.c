@@ -209,7 +209,8 @@ void widget_entry_refresh(variable *var)
 		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT) &&
 			attributeset_is_avail(var->Attributes, ATTR_WIDTH)) {
 			/* Thunor: This is all original code moved across when refactoring */
-			gtk_widget_set_usize(var->Widget,
+			/* gtk_widget_set_usize(var->Widget,	Redundant */
+			gtk_widget_set_size_request(var->Widget,
 				atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH)),
 				atoi(attributeset_get_first(&element, var->Attributes, ATTR_HEIGHT)));
 		}

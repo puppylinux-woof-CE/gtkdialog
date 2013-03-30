@@ -1306,7 +1306,9 @@ void variables_initialize_all(void)
 static void _variables_initialize(variable *actual)
 {
 	GList *element;
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 	char *socket_id;
+#endif
 	char command[128];
 	int result;
 
@@ -1323,6 +1325,7 @@ static void _variables_initialize(variable *actual)
 	if (actual->left != NULL)
 		_variables_initialize(actual->left);
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 	if (actual->Widget != NULL && actual->Type == WIDGET_GVIM) {
 		gtk_widget_show(actual->Widget);
 		socket_id = attributeset_get_first(&element, actual->Attributes,
@@ -1337,6 +1340,7 @@ static void _variables_initialize(variable *actual)
 			yywarning("Socket ID is NULL\n");
 		}
 	}
+#endif
 
 	if (actual->right != NULL)
 		_variables_initialize(actual->right);
@@ -1602,6 +1606,7 @@ next_item:
  *                                                                     *
  ***********************************************************************/
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Only used by action_append() which isn't being used anyway so purge it */
 int append_fromto_variable(const char *from, const char *to)
 {
 	GtkTreeModel *model;
@@ -1671,6 +1676,7 @@ int append_fromto_variable(const char *from, const char *to)
 	}
 	return TRUE;
 }
+#endif
 
 /***********************************************************************
  *                                                                     *

@@ -91,7 +91,12 @@ GtkWidget *widget_vbox_create(
 	/* The spacing value here is the GtkBox "spacing" property
 	 * and therefore can be overridden with a spacing="0" tag
 	 * attribute*/
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 	widget = gtk_vbox_new(FALSE, 5);
+#else
+	widget = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	gtk_box_set_homogeneous(GTK_BOX(widget), FALSE);
+#endif
 
 	if (attr &&
 		(value = get_tag_attribute(attr, "margin"))) {	/* Deprecated */

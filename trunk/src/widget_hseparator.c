@@ -76,10 +76,18 @@ GtkWidget *widget_hseparator_create(
 
 	if (Type == WIDGET_HSEPARATOR) {
 		/* Thunor: My first new widget :) */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 		widget = gtk_hseparator_new();
+#else
+		widget = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+#endif
 	} else {
 		/* Thunor: I'm on a roll now... */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 		widget = gtk_vseparator_new();
+#else
+		widget = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
+#endif
 	}
 
 #ifdef DEBUG_TRANSITS

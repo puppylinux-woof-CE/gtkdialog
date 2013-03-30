@@ -554,12 +554,12 @@ void widget_tree_refresh(variable *var)
 
 		/* Connect signals */
 		/* The default signal */
-		g_signal_connect(GTK_OBJECT(var->Widget), "row-activated",
+		g_signal_connect(G_OBJECT(var->Widget), "row-activated",
 			G_CALLBACK(on_any_widget_row_activated_event), (gpointer)var->Attributes);
 		/* This was also connected-up but I don't know if anyone is using it.
 		 * This signal is always one selection behind which connect-after
 		 * doesn't fix so it's of questionable worth */
-		g_signal_connect(GTK_OBJECT(var->Widget), "cursor-changed",
+		g_signal_connect(G_OBJECT(var->Widget), "cursor-changed",
 			G_CALLBACK(on_any_widget_cursor_changed_event), (gpointer)var->Attributes);
 		/* This signal originates from the selection object which is useful
 		 * but we need to route it through a local callback first */

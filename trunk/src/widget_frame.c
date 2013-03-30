@@ -91,7 +91,13 @@ GtkWidget *widget_frame_create(
 	/* Thunor: I'm noting this embedded unreachable vbox spacing
 	 * and the border_width that can't be overidden because of
 	 * the frame widget not supporting tag attributes temp temp */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 	vbox = gtk_vbox_new(FALSE, 5);
+#else
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	gtk_box_set_homogeneous(GTK_BOX(vbox), FALSE);
+#endif
+
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 
 	/* Calculate values for expand and fill at the container level.
