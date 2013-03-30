@@ -50,7 +50,9 @@ void action_fileselection_made(GtkWidget *w, actioncommand *ac);
 void action_fileselection_destroy(GtkWidget *w, actioncommand *ac);
 void action_clearwidget(GtkWidget *widget, char *string);
 void action_removeselected(GtkWidget *widget, char *string);
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
 int action_append(GtkWidget *widget, char *string);
+#endif
 void action_enable(GtkWidget *widget, char *string);
 void action_disable(GtkWidget *widget, char *string);
 void action_show(GtkWidget *widget, char *string);
@@ -485,9 +487,11 @@ void action_fileselection_made(GtkWidget *w, actioncommand * ac)
 	/*
 	 ** Let's copy the selected file name to the destination widget.
 	 */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: gtk_file_selection_get_filename() has gone */
 	variables_set_value((const char *)ac->destination_name,
 		gtk_file_selection_get_filename(GTK_FILE_SELECTION(ac->source_widget))
 	    );
+#endif
 	/*
 	 ** We destroy the fileselection dialog and free the actioncommand
 	 ** memory.
@@ -536,6 +540,7 @@ void action_removeselected(GtkWidget *widget, char *string)
  *                                                                     *
  ***********************************************************************/
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
 int action_append(GtkWidget *widget, char *string)
 {
 #ifndef G_OS_WIN32
@@ -572,6 +577,7 @@ int action_append(GtkWidget *widget, char *string)
 	g_warning("%s(): Unimplemented.", __func__);
 #endif
 }
+#endif
 
 /***********************************************************************
  * Action enable                                                       *
@@ -772,11 +778,15 @@ int execute_action(GtkWidget *widget, const char *command, const char *type)
 			 * (I haven't tried it since it's not documented). Note that
 			 * both are calling action_append() which is strange */
 			case CommandInsert:
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
 				action_append(widget, command_string);
+#endif
 				break;
 
 			case CommandAppend:
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
 				action_append(widget, command_string);
+#endif
 				break;
 
 			default:

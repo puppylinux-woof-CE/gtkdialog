@@ -117,9 +117,11 @@ GtkWidget *widget_window_create(
 
 	/* If we have geometry given in the command line, we set that */
 	if (have_geometry_dxdy)
-		gtk_widget_set_usize(widget, geometry_dx, geometry_dy);
+		/* gtk_widget_set_usize(widget, geometry_dx, geometry_dy);	Redundant */
+		gtk_widget_set_size_request(widget, geometry_dx, geometry_dy);
 	if (have_geometry_xy)
-		gtk_widget_set_uposition(widget, geometry_x, geometry_y);
+		/* gtk_widget_set_uposition(widget, geometry_x, geometry_y);	Redundant */
+		gtk_window_move(GTK_WINDOW(widget), geometry_x, geometry_y);
 	if (option_centering)
 		gtk_window_set_position(GTK_WINDOW(widget),
 			GTK_WIN_POS_CENTER_ALWAYS);

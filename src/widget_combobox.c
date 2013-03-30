@@ -53,9 +53,11 @@ void widget_combobox_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	empty = g_list_append(empty, "");
 	gtk_combo_set_popdown_strings(GTK_COMBO(var->Widget), empty);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -75,8 +77,10 @@ GtkWidget *widget_combobox_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	widget = gtk_combo_new();
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -123,9 +127,11 @@ gchar *widget_combobox_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	text = (gchar*)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(widget)->entry));
 	string = g_strdup(text);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -169,6 +175,7 @@ void widget_combobox_refresh(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
@@ -213,6 +220,7 @@ void widget_combobox_refresh(variable *var)
 		/* Connect signals */
 
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -314,6 +322,7 @@ static void widget_combobox_input_by_items(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	g_assert(var->Attributes != NULL && var->Widget != NULL);
 
@@ -327,6 +336,7 @@ static void widget_combobox_input_by_items(variable *var)
 	}
 
 	gtk_combo_set_popdown_strings(GTK_COMBO(var->Widget), glist);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

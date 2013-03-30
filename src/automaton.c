@@ -253,9 +253,11 @@ void print_command(instruction command)
 	case WIDGET_SCROLLEDW:
 	    printf("(new scrolledwindow(pop()))");
 	    break;
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 	case WIDGET_GVIM:
 	    printf("(new gvim())");
 	    break;
+#endif
 	case WIDGET_CHOOSER:
 	    printf("(new chooser())");
 	    break;
@@ -560,9 +562,11 @@ void print_token(token Token)
 	case WIDGET_SCROLLEDW:
 		printf("(SCROLLEDW)");
 		break;
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 	case WIDGET_GVIM:
 		printf("(GVIM)");
 		break;
+#endif
 	case WIDGET_CHOOSER:
 		printf("(CHOOSER)");
 		break;
@@ -760,7 +764,8 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 			if (width == -1) width = 200;
 			if (height == -1) height = 100;
 			/* Set the size */
-			gtk_widget_set_usize(scrolledwindow, width, height);
+			/* gtk_widget_set_usize(scrolledwindow, width, height);	Redundant */
+			gtk_widget_set_size_request(scrolledwindow, width, height);
 			/* Pack the widget */
 			gtk_scrolled_window_add_with_viewport(
 				GTK_SCROLLED_WINDOW(scrolledwindow), widget);
@@ -806,7 +811,8 @@ inner_border.top=%i inner_border.bottom=%i\n", __func__, inner_border.left,
 			if (width == -1) width = 200;
 			if (height == -1) height = 100;
 			/* Set the size */
-			gtk_widget_set_usize(scrolledwindow, width, height);
+			/* gtk_widget_set_usize(scrolledwindow, width, height);	Redundant */
+			gtk_widget_set_size_request(scrolledwindow, width, height);
 			/* Pack the widget */
 			if (Type == WIDGET_LIST || Type == WIDGET_TERMINAL) {
 				gtk_scrolled_window_add_with_viewport(
@@ -915,6 +921,7 @@ gboolean widget_moved(GtkWidget *widget,
 	return FALSE;
 }
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 static GtkWidget *
 create_gvim(AttributeSet * Attr)
 {
@@ -948,6 +955,7 @@ create_gvim(AttributeSet * Attr)
 	//		 widget_moved, Window);
 	return fake;
 }
+#endif
 
 #if GTK_CHECK_VERSION(2,4,0)
 static GtkWidget *
@@ -979,7 +987,8 @@ create_chooser(AttributeSet *Attr)
 	chooser = gtk_file_chooser_widget_new(GTK_FILE_CHOOSER_ACTION_OPEN); 
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT) &&
 	    attributeset_is_avail(Attr, ATTR_WIDTH))
-		gtk_widget_set_usize(chooser, 
+		/* gtk_widget_set_usize(chooser,	Redundant */
+		gtk_widget_set_size_request(chooser,
 				atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
 				atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
 	
@@ -994,10 +1003,14 @@ create_chooser(AttributeSet *Attr)
 		if (tagattr_value == NULL)
 			tagattr_value = "file-activated";
 		
-		gtk_signal_connect(GTK_OBJECT(chooser),
+		/* gtk_signal_connect(GTK_OBJECT(chooser),
 				   tagattr_value,
 				   GTK_SIGNAL_FUNC
-				   (button_pressed), (gpointer) act);
+				   (button_pressed), (gpointer) act);	Redundant */
+		g_signal_connect(G_OBJECT(chooser), tagattr_value,
+			G_CALLBACK(button_pressed),(gpointer)act);
+
+
 		act = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
@@ -1230,10 +1243,12 @@ instruction_execute_push(
 #endif
 		break;
 		
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 	case WIDGET_GVIM:
 		Widget = create_gvim(Attr);
 		push_widget(Widget, Widget_Type);
 		break;
+#endif
 		
 	default:
 		if (!option_no_warning)

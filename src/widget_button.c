@@ -310,20 +310,45 @@ GtkWidget *widget_button_create(
 					/* To centre the contents of the button we need to place
 					 * a homogeneous=FALSE box inside a homogeneous=TRUE box */
 					if (position == GTK_POS_BOTTOM || position == GTK_POS_TOP) {
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 						boxouter = gtk_vbox_new(TRUE, 0);
+#else
+						boxouter = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+						gtk_box_set_homogeneous(GTK_BOX(boxouter), TRUE);
+#endif
 						gtk_container_add(GTK_CONTAINER(widget), boxouter);
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 						box = gtk_vbox_new(FALSE, 2);
+#else
+						box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+						gtk_box_set_homogeneous(GTK_BOX(box), FALSE);
+#endif
 						gtk_box_pack_end(GTK_BOX(boxouter), box, FALSE, FALSE, 0);
 					} else {
 						if (homogeneous) {
 							/* We're not centring so drop boxouter and
 							 * set homogeneous to TRUE on the box */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 							box = gtk_hbox_new(TRUE, 2);
+#else
+							box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+							gtk_box_set_homogeneous(GTK_BOX(box), TRUE);
+#endif
 							gtk_container_add(GTK_CONTAINER(widget), box);
 						} else {
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 							boxouter = gtk_hbox_new(TRUE, 0);
+#else
+							boxouter = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+							gtk_box_set_homogeneous(GTK_BOX(boxouter), TRUE);
+#endif
 							gtk_container_add(GTK_CONTAINER(widget), boxouter);
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 							box = gtk_hbox_new(FALSE, 2);
+#else
+							box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+							gtk_box_set_homogeneous(GTK_BOX(box), FALSE);
+#endif
 							gtk_box_pack_end(GTK_BOX(boxouter), box, FALSE, FALSE, 0);
 						}
 					}

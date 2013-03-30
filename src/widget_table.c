@@ -42,12 +42,14 @@ static void widget_table_input_by_file(variable *var, char *filename);
 static void widget_table_input_by_items(variable *var);
 gboolean widget_table_click_column_callback(GtkWidget *widget,
 	gint column, variable *var);
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 gint widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2);
 gint widget_table_natcasecmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2);
 static gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2, gint sensitive);
+#endif
 
 /* Notes: */
 
@@ -61,7 +63,9 @@ void widget_table_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	gtk_clist_clear(GTK_CLIST(var->Widget));
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -85,6 +89,7 @@ GtkWidget *widget_table_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	if (attributeset_is_avail(Attr, ATTR_LABEL)) {
 		sliced = linecutter(g_strdup(attributeset_get_first(
 			&element, Attr, ATTR_LABEL)), '|');
@@ -152,6 +157,7 @@ GtkWidget *widget_table_create(
 			if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 		}
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -178,6 +184,7 @@ gchar *widget_table_envvar_all_construct(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Which column should we export */
 	if (var->widget_tag_attr) {
 		/* Get exported-column */
@@ -202,6 +209,7 @@ gchar *widget_table_envvar_all_construct(variable *var)
 	}
 	string = g_strconcat(line, "\"\n", NULL);
 	g_free(line);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -231,6 +239,7 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	if (var->widget_tag_attr) {
 		/* Get current selection-mode (there's no function to do this) */
 		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")))
@@ -281,6 +290,7 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 			string = g_strdup("");
 		}
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -326,6 +336,7 @@ void widget_table_refresh(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
@@ -397,6 +408,7 @@ void widget_table_refresh(variable *var)
 				gtk_clist_select_row(GTK_CLIST(var->Widget), selected_row, 0);
 		}
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -420,6 +432,7 @@ void widget_table_removeselected(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	if (var->widget_tag_attr) {
 		/* Get current selection-mode (there's no function to do this) */
 		if ((value = get_tag_attribute(var->widget_tag_attr, "selection-mode")))
@@ -457,6 +470,7 @@ void widget_table_removeselected(variable *var)
 			gtk_clist_remove(GTK_CLIST(var->Widget), row);
 		}
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -484,6 +498,7 @@ void widget_table_save(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
@@ -540,6 +555,7 @@ void widget_table_save(variable *var)
 	} else {
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -562,6 +578,7 @@ static void widget_table_input_by_command(variable *var, char *filename,
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	if (command_or_file) {
 		infile = widget_opencommand(filename);
 	} else {
@@ -587,6 +604,7 @@ static void widget_table_input_by_command(variable *var, char *filename,
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			filename);
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -603,7 +621,9 @@ static void widget_table_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	widget_table_input_by_command(var, filename, FALSE);
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -624,6 +644,7 @@ static void widget_table_input_by_items(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	g_assert(var->Attributes != NULL && var->Widget != NULL);
 
 	text = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
@@ -633,6 +654,7 @@ static void widget_table_input_by_items(variable *var)
 		if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -675,6 +697,7 @@ gboolean widget_table_click_column_callback(GtkWidget *widget,
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Set sort column to the clicked column */
 	gtk_clist_set_sort_column(GTK_CLIST(widget), column);
 
@@ -705,6 +728,7 @@ gboolean widget_table_click_column_callback(GtkWidget *widget,
 
 	/* Sit back and be amazed */
 	gtk_clist_sort(GTK_CLIST(widget));
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -722,6 +746,7 @@ gboolean widget_table_click_column_callback(GtkWidget *widget,
  * 
  * which explained how to get at the text in the rows */
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 gint widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 	gconstpointer ptr2)
 {
@@ -762,3 +787,4 @@ static gint _widget_table_natcmp(GtkCList *clist, gconstpointer ptr1,
 
 	return retval;
 }
+#endif

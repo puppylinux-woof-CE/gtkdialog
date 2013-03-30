@@ -99,9 +99,17 @@ GtkWidget *widget_hscale_create(
 	}
 
 	if (Type == WIDGET_HSCALE) {
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 		widget = gtk_hscale_new_with_range(range_min, range_max, range_step);
+#else
+		widget = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, range_min, range_max, range_step);
+#endif
 	} else {
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
 		widget = gtk_vscale_new_with_range(range_min, range_max, range_step);
+#else
+		widget = gtk_scale_new_with_range(GTK_ORIENTATION_VERTICAL, range_min, range_max, range_step);
+#endif
 	}
 	gtk_range_set_value(GTK_RANGE(widget), range_value);
 
