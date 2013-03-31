@@ -2,7 +2,8 @@
 AC_INIT([gtkdialog], [0.8.4], [thunorsif@hotmail.com], [gtkdialog],
 	[http://code.google.com/p/gtkdialog/])
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER([config.h])
+#AM_CONFIG_HEADER([config.h]) Obsolete.
+AC_CONFIG_HEADERS([config.h])
 AM_MAINTAINER_MODE
 
 # Setting config.h macros.
@@ -19,7 +20,8 @@ fi
 
 # Checks for programs.
 AC_ISC_POSIX
-AM_PROG_CC_STDC
+#AM_PROG_CC_STDC Obsolete.
+AC_PROG_CC
 AC_HEADER_STDC
 AM_PROG_LEX
 AC_PROG_YACC
