@@ -41,7 +41,7 @@ The following custom tag attributes are available:
 || auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || hscrollbar-policy || Policy for the horizontal scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
 || vscrollbar-policy || Policy for the vertical scrollbar || {{{0}}}, {{{1}}}, {{{2}}} (always, automatic, never) || 0.8.1 ||
-|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (see [http://developer.gnome.org/gtk2/2.24/gtk-Standard-Enumerations.html#GtkShadowType GtkShadowType]) || 0.8.1 ||
+|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (see [http://developer.gnome.org/gtk2/2.24/gtk2-Standard-Enumerations.html#GtkShadowType GtkShadowType]) || 0.8.1 ||
 || selected-row || The row to select on initialisation and refresh || An integer >= {{{0}}} || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
@@ -134,5 +134,7 @@ true means "true", "yes" or a non-zero value, false means "false", "no" or zero,
 1. This widget has a default dimension of 200x100 which can be overridden with the height and/or width directives.
 
 This widget has been deprecated since GTK+ 2.0 and [tree] is recommended as a replacement.
+
+This widget has been removed from GTK+ 3.
 
 ----

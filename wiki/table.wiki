@@ -145,4 +145,6 @@ true means "true", "yes" or a non-zero value, false means "false", "no" or zero,
 
 This widget has been deprecated since GTK+ 2.0 and [tree] is recommended as a replacement.
 
+This widget has been removed from GTK+ 3.
+
 ----

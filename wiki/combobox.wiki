@@ -106,4 +106,6 @@ true means "true", "yes" or a non-zero value, false means "false", "no" or zero,
 
 This widget has been deprecated since GTK+ 2.4 and [comboboxtext] or [comboboxentry] are recommended as replacements.
 
+This widget has been removed from GTK+ 3.
+
 ----

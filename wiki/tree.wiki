@@ -52,6 +52,7 @@ The following custom tag attributes are available:
 || selected-row || The row to select on initialisation and refresh || An integer >= {{{0}}} || 0.8.1 ||
 || column-header-active || Active state of column header(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
+|| column-resizeable || Resizeable state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.4 ||
 || auto-sort || Automatically sort after loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
 || sort-column || The initial sort column when auto-sorting || An integer >= {{{0}}} || 0.8.1 ||
 || sort-type || The initial sort direction when auto-sorting || {{{0}}}, {{{1}}} (ascending, descending) || 0.8.1 ||
@@ -59,7 +60,7 @@ The following custom tag attributes are available:
 || column-sort-function || The sorting algorithm for each column || _func0_ {{{|}}} _func1_ {{{|}}} ... ({{{0}}} default, {{{1}}} strnatcmp or {{{2}}} strcasenatcmp) || 0.8.1 ||
 || selection-mode || Selection method || {{{0}}}, {{{1}}}, {{{2}}}, {{{3}}} (none, single, browse, multiple) || 0.7.21 ||
 || icon-name || Default GTK theme icon name for all rows || || ||
-|| stock-id || Default GTK stock icon ID for all rows || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk2/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || ||
+|| stock-id || Default GTK stock icon ID for all rows || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk2/2.24/gtk2-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==
