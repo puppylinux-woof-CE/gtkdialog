@@ -39,7 +39,10 @@ AC_SUBST(GTHREAD_LIBS)
 
 AS_IF([test "x$enable_gtk3" = "xyes"], [
 	pkg_modules="gtk+-3.0 >= 3.0.0"
-	PKG_CHECK_MODULES(GTK, [$pkg_modules])
+	PKG_CHECK_MODULES(GTK, \
+		[$pkg_modules], \
+		AC_SUBST(HAVE_GTK, 3),\
+		AC_SUBST(HAVE_GTK, 0))
 	AC_SUBST(GTK_CFLAGS)
 	AC_SUBST(GTK_LIBS)
 
@@ -55,7 +58,10 @@ AS_IF([test "x$enable_gtk3" = "xyes"], [
 ],
 [
 	pkg_modules="gtk+-2.0 >= 2.0.0"
-	PKG_CHECK_MODULES(GTK, [$pkg_modules])
+	PKG_CHECK_MODULES(GTK, \
+		[$pkg_modules], \
+		AC_SUBST(HAVE_GTK, 2),\
+		AC_SUBST(HAVE_GTK, 0))
 	AC_SUBST(GTK_CFLAGS)
 	AC_SUBST(GTK_LIBS)
 

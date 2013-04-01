@@ -157,6 +157,9 @@ GtkWidget *widget_table_create(
 			if (sliced) list_t_free(sliced);	/* Free linecutter memory */
 		}
 	}
+#else
+	fprintf(stderr, "%s(): The table (GtkCList) widget has been removed from GTK+ 3 and tree is recommended as a replacement.\n", __func__);
+	exit(EXIT_FAILURE);
 #endif
 
 #ifdef DEBUG_TRANSITS

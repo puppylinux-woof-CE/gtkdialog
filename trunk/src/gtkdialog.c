@@ -159,11 +159,13 @@ gtkdialog_init(
 		"Get the GUI description from this Glade file.", "filename"
 	},
 #else
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 	{ 
 		"glade-xml", 'g', 
 		0, G_OPTION_ARG_STRING, &option_ignored, 
 		"Ignored, since no Glade library found.", "filename"
 	},
+#endif
 #endif
 	{ 
 		"file", 'f', 
@@ -359,8 +361,16 @@ print_version_exit(int exitcode)
 
 	printf("%s version %s %s (C) 2003-2007 Laszlo Pere, 2011-2012 Thunor\n", 
 		PACKAGE_NAME, PACKAGE_VERSION, BUILD_DETAILS);
-	printf("Built with additional support for: ");
+	printf("Built with support for: ");
+#if HAVE_GTK == 2
+	printf("GTK+ 2"); extralibs++;
+#endif
+#if HAVE_GTK == 3
+	if (extralibs) printf(", ");
+	printf("GTK+ 3"); extralibs++;
+#endif
 #if HAVE_GLADE_LIB
+	if (extralibs) printf(", ");
 	printf("Glade"); extralibs++;
 #endif
 #if HAVE_VTE

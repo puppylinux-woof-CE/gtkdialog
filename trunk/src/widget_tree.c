@@ -896,9 +896,10 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	gchar             *value;
 	gint               index;
 	gint               function;
+	list_t            *column_resizeable = NULL;
 	list_t            *column_header_active = NULL;
-	list_t            *column_sort_function = NULL;
 	list_t            *column_visible = NULL;
+	list_t            *column_sort_function = NULL;
 	list_t            *columns = NULL;
 
 #ifdef DEBUG_TRANSITS
@@ -909,12 +910,15 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	columns = linecutter(headline, '|');
 
 	if (attr) {
-		/* Get column-visible (custom) */
-		if ((value = get_tag_attribute(attr, "column-visible")))
-			column_visible = linecutter(g_strdup(value), '|');
+		/* Get column-resizeable (custom) */
+		if ((value = get_tag_attribute(attr, "column-resizeable")))
+			column_resizeable = linecutter(g_strdup(value), '|');
 		/* Get column-header-active (custom) */
 		if ((value = get_tag_attribute(attr, "column-header-active")))
 			column_header_active = linecutter(g_strdup(value), '|');
+		/* Get column-visible (custom) */
+		if ((value = get_tag_attribute(attr, "column-visible")))
+			column_visible = linecutter(g_strdup(value), '|');
 		/* Get column-sort-function (custom) */
 		if ((value = get_tag_attribute(attr, "column-sort-function")))
 			column_sort_function = linecutter(g_strdup(value), '|');
@@ -935,7 +939,7 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 		/* This makes no difference to performance in my tests (see above)
 		gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
 		gtk_tree_view_column_set_fixed_width(column, 50); */
-		gtk_tree_view_column_set_resizable(column, TRUE);
+		/* gtk_tree_view_column_set_resizable(column, TRUE);	Redundant: Now managed below by column */
 		gtk_tree_view_column_set_title(column, columns->line[index]);
 		gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
 		gtk_tree_view_column_set_sort_column_id(column, index + FirstDataColumn);
@@ -962,6 +966,15 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 				index + FirstDataColumn);
 		}
 
+		/* Resizeable column? (gtkdialog's default is resizeable) */
+		gtk_tree_view_column_set_resizable(column, TRUE);
+		if (column_resizeable && index < column_resizeable->n_lines) {
+			if ((strcasecmp(column_resizeable->line[index], "false") == 0) ||
+				(strcasecmp(column_resizeable->line[index], "no") == 0) ||
+				(strcasecmp(column_resizeable->line[index], "0") == 0)) {
+				gtk_tree_view_column_set_resizable(column, FALSE);
+			}
+		}
 		/* Deactivate column header? (the default is active) */
 		if (column_header_active && index < column_header_active->n_lines) {
 			if ((strcasecmp(column_header_active->line[index], "false") == 0) ||
@@ -1002,9 +1015,10 @@ sorting is compatible only with columns of type string.\n", __func__);
 	}
 
 	/* Free linecutter memory */
+	if (column_resizeable) list_t_free(column_resizeable);
 	if (column_header_active) list_t_free(column_header_active);
-	if (column_sort_function) list_t_free(column_sort_function);
 	if (column_visible) list_t_free(column_visible);
+	if (column_sort_function) list_t_free(column_sort_function);
 	if (columns) list_t_free(columns);
 
 #ifdef DEBUG_TRANSITS

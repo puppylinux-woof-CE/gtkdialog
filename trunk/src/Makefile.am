@@ -55,7 +55,7 @@ gtkdialog_SOURCES = \
 	widget_window.c widget_window.h
 
 AM_CFLAGS = \
-	$(GTK_CFLAGS) \
+	$(GTK_CFLAGS) -DHAVE_GTK=$(HAVE_GTK) \
 	$(GTHREAD_CFLAGS) \
 	$(GLADE_LIB_CFLAGS) -DHAVE_GLADE_LIB=$(HAVE_GLADE_LIB) \
 	$(VTE_CFLAGS) -DHAVE_VTE=$(HAVE_VTE)
