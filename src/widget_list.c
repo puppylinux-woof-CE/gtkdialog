@@ -91,6 +91,9 @@ GtkWidget *widget_list_create(
 #if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	widget = gtk_list_new();
+#else
+	fprintf(stderr, "%s(): The list (GtkList) widget has been removed from GTK+ 3 and tree is recommended as a replacement.\n", __func__);
+	exit(EXIT_FAILURE);
 #endif
 
 #ifdef DEBUG_TRANSITS

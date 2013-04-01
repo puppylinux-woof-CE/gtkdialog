@@ -46,7 +46,9 @@ void action_exitprogram(GtkWidget *widget, char *string);
 void action_refreshwidget(GtkWidget *widget, char *string);
 void action_savewidget(GtkWidget *widget, char *string);
 void action_fileselect(GtkWidget *widget, char *string);
+#if GTK_CHECK_VERSION(2,4,0)
 void action_fileselection_made(GtkWidget *w, actioncommand *ac);
+#endif
 void action_fileselection_destroy(GtkWidget *w, actioncommand *ac);
 void action_clearwidget(GtkWidget *widget, char *string);
 void action_removeselected(GtkWidget *widget, char *string);
@@ -474,7 +476,6 @@ void action_fileselect(GtkWidget *widget, char *string)
 			 G_CALLBACK(action_fileselection_destroy),
 			 (gpointer) ac);
 }
-#endif
 
 /***********************************************************************
  *                                                                     *
@@ -487,11 +488,9 @@ void action_fileselection_made(GtkWidget *w, actioncommand * ac)
 	/*
 	 ** Let's copy the selected file name to the destination widget.
 	 */
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: gtk_file_selection_get_filename() has gone */
 	variables_set_value((const char *)ac->destination_name,
 		gtk_file_selection_get_filename(GTK_FILE_SELECTION(ac->source_widget))
 	    );
-#endif
 	/*
 	 ** We destroy the fileselection dialog and free the actioncommand
 	 ** memory.
@@ -499,6 +498,7 @@ void action_fileselection_made(GtkWidget *w, actioncommand * ac)
 	gtk_widget_destroy(ac->source_widget);
 	free(ac);
 }
+#endif
 
 /***********************************************************************
  *                                                                     *

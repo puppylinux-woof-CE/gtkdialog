@@ -1,6 +1,17 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Mon Apr 1 2013 Thunor <thunorsif@hotmail.com>
+- Added gtk3 specific code to the comboboxtext and comboboxentry widgets
+  so that they now function identically to the gtk2 equivalents.
+- The file selection dialog filename retrieval issue was specific to
+  less than gtk-2.4.0 so I've wrapped it in a macro for those versions.
+- Added "GTK+ 2/3" to the supported libraries list with gtkdialog -v.
+- Added the "column-resizeable" tag attribute to the tree widget.
+- Updated a few wiki/reference pages with new info, fixed bad links.
+- Added helpful error messages when attempting to create combobox, list
+  and table widgets with GTK+ 3.
+
 * Sat Mar 30 2013 Thunor <thunorsif@hotmail.com>
 - Added initial support for GTK+ 3 with the --enable-gtk3=yes configure
   option; widgets removed: combobox, list, table; require rewriting:

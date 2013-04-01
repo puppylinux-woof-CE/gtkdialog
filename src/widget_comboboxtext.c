@@ -58,12 +58,15 @@ void widget_comboboxtext_clear(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	/* We'll manage signals ourselves */
 	GTKD_FUNCTION_SIGNALS_BLOCK;
 
 	/* Record the currently selected text if any */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 	if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
+#else
+	if ((string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget)))) {
+#endif
 		strcpy(oldselected, string);
 	} else {
 		strcpy(oldselected, "");
@@ -82,7 +85,11 @@ void widget_comboboxtext_clear(variable *var)
 #endif
 		/* Delete the rows */
 		while (rowcount--)
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 			gtk_combo_box_remove_text(GTK_COMBO_BOX(var->Widget), rowcount);
+#else
+			gtk_combo_box_text_remove(GTK_COMBO_BOX_TEXT(var->Widget), rowcount);
+#endif
 	}
 	/* The comboboxtext functions also manage the comboboxentry:
 	 * clear the entry */
@@ -101,12 +108,11 @@ void widget_comboboxtext_clear(variable *var)
 	 * and its active index will be -1, so if the recorded text
 	 * isn't null then we'll emit a changed signal */
 	if (strcmp(oldselected, "")) {
-		g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
+		g_signal_emit_by_name(G_OBJECT(var->Widget), "changed");
 #ifdef DEBUG_CONTENT
 		fprintf(stderr, "%s(): emitting 'changed' signal\n", __func__);
 #endif
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -126,20 +132,27 @@ GtkWidget *widget_comboboxtext_create(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	if (Type == WIDGET_COMBOBOXTEXT) {
 		/* Thunor: gtk_combo_box_new_text() is deprecated but
 		 * gtk_combo_box_text_new() and associated functions are
 		 * unavailable so I have to use the deprecated functions */
+
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130331 */
 		widget = gtk_combo_box_new_text();
+#else
+		widget = gtk_combo_box_text_new();
+#endif
 	} else {
 		/* Thunor: gtk_combo_box_entry_new_text() is deprectated too:
 		 * gtk_combo_box_new_with_entry() is unavailable,
 		 * gtk_combo_box_text_new_with_entry() is unavailable,
 		 * and my brain hurts badly when I read the API ;) */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130331 */
 		widget = gtk_combo_box_entry_new_text();
-	}
+#else
+		widget = gtk_combo_box_text_new_with_entry();
 #endif
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -165,7 +178,6 @@ gchar *widget_comboboxtext_envvar_all_construct(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	/* Thunor: I've noticed that the existing combobox widget isn't
 	 * completely dumped, but it's my new widget so I'll be thorough :) */
 	line = g_strdup_printf("%s_ALL=\"", var->Name);
@@ -175,7 +187,11 @@ gchar *widget_comboboxtext_envvar_all_construct(variable *var)
 	 * isn't empty */
 	if ((var->Type == WIDGET_COMBOBOXENTRY) &&
 		(gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget)) == -1) &&
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 		(text = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget))) &&
+#else
+		(text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget))) &&
+#endif
 		(strcmp(text, ""))) {
 		string = g_strconcat(line, "'", text, "'", NULL);
 		g_free(line);
@@ -199,7 +215,6 @@ gchar *widget_comboboxtext_envvar_all_construct(variable *var)
 	}
 	string = g_strconcat(line, "\"\n", NULL);
 	g_free(line);
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -220,11 +235,13 @@ gchar *widget_comboboxtext_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 	string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget));
+#else
+	string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(widget));
+#endif
 	if (string == NULL)
 		string = g_strdup("");
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -246,7 +263,6 @@ void widget_comboboxtext_fileselect(
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	index = gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget));
 
 #ifdef DEBUG_CONTENT
@@ -255,9 +271,13 @@ void widget_comboboxtext_fileselect(
 #endif
 
 	if (index < 0) index = 0;
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 	gtk_combo_box_insert_text(GTK_COMBO_BOX(var->Widget), index, value);
-	gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), index);
+#else
+	gtk_combo_box_text_insert_text(GTK_COMBO_BOX_TEXT(var->Widget), index, value);
 #endif
+
+	gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), index);
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -287,7 +307,6 @@ void widget_comboboxtext_refresh(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
 		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
@@ -296,8 +315,13 @@ void widget_comboboxtext_refresh(variable *var)
 	GTKD_FUNCTION_SIGNALS_BLOCK;
 
 	/* Record the currently selected text if any */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130331 */
 	if ((string = gtk_combo_box_get_active_text(
 		GTK_COMBO_BOX(var->Widget)))) {
+#else
+	if ((string = gtk_combo_box_text_get_active_text(
+		GTK_COMBO_BOX_TEXT(var->Widget)))) {
+#endif
 		strcpy(oldselected, string);
 	} else {
 		strcpy(oldselected, "");
@@ -318,7 +342,11 @@ void widget_comboboxtext_refresh(variable *var)
 #endif
 			/* Delete the rows */
 			while (rowcount--)
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130331 */
 				gtk_combo_box_remove_text(GTK_COMBO_BOX(var->Widget),
+#else
+				gtk_combo_box_text_remove(GTK_COMBO_BOX_TEXT(var->Widget),
+#endif
 					rowcount);
 		}
 		/* The comboboxtext functions also manage the comboboxentry:
@@ -362,8 +390,13 @@ void widget_comboboxtext_refresh(variable *var)
 	GTKD_FUNCTION_SIGNALS_UNBLOCK;
 
 	/* Record the currently selected text if any */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130331 */
 	if ((string = gtk_combo_box_get_active_text(
 		GTK_COMBO_BOX(var->Widget)))) {
+#else
+	if ((string = gtk_combo_box_text_get_active_text(
+		GTK_COMBO_BOX_TEXT(var->Widget)))) {
+#endif
 		strcpy(newselected, string);
 	} else {
 		strcpy(newselected, "");
@@ -377,7 +410,7 @@ void widget_comboboxtext_refresh(variable *var)
 #ifdef DEBUG_CONTENT
 		fprintf(stderr, "%s(): emitting 'changed' signal\n", __func__);
 #endif
-		g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
+		g_signal_emit_by_name(G_OBJECT(var->Widget), "changed");
 	}
 
 	/* Initialise these only once at start-up */
@@ -453,7 +486,6 @@ void widget_comboboxtext_refresh(variable *var)
 				(gpointer)var->Attributes);
 		}
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -475,12 +507,15 @@ void widget_comboboxtext_removeselected(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	/* Thunor: We'll manage signals ourselves */
 	GTKD_FUNCTION_SIGNALS_BLOCK;
 
 	/* Record the currently selected text if any */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 	if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
+#else
+	if ((string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget)))) {
+#endif
 		strcpy(oldselected, string);
 	} else {
 		strcpy(oldselected, "");
@@ -491,7 +526,11 @@ void widget_comboboxtext_removeselected(variable *var)
 	/* Delete the selected item */
 	index = gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget));
 	if (index >= 0) {
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 		gtk_combo_box_remove_text(GTK_COMBO_BOX(var->Widget), index);
+#else
+		gtk_combo_box_text_remove(GTK_COMBO_BOX_TEXT(var->Widget), index);
+#endif
 	}
 	/* The comboboxtext functions also manage the comboboxentry:
 	 * clear the entry */
@@ -507,7 +546,11 @@ void widget_comboboxtext_removeselected(variable *var)
 	GTKD_FUNCTION_SIGNALS_UNBLOCK;
 
 	/* Record the currently selected text if any */
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 	if ((string = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget)))) {
+#else
+	if ((string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget)))) {
+#endif
 		strcpy(newselected, string);
 	} else {
 		strcpy(newselected, "");
@@ -521,9 +564,8 @@ void widget_comboboxtext_removeselected(variable *var)
 #ifdef DEBUG_CONTENT
 		fprintf(stderr, "%s(): emitting 'changed' signal\n", __func__);
 #endif
-		g_signal_emit_by_name(GTK_OBJECT(var->Widget), "changed");
+		g_signal_emit_by_name(G_OBJECT(var->Widget), "changed");
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -549,7 +591,6 @@ void widget_comboboxtext_save(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	/* Preferably we'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
@@ -592,7 +633,11 @@ void widget_comboboxtext_save(variable *var)
 			 * isn't empty */
 			if ((var->Type == WIDGET_COMBOBOXENTRY) &&
 				(gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget)) == -1) &&
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 				(text = gtk_combo_box_get_active_text(GTK_COMBO_BOX(var->Widget))) &&
+#else
+				(text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget))) &&
+#endif
 				(strcmp(text, ""))) {
 				fprintf(outfile, "%s", text);
 				index++;
@@ -618,7 +663,6 @@ void widget_comboboxtext_save(variable *var)
 	} else {
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -639,7 +683,6 @@ static void widget_comboboxtext_input_by_command(variable *var, char *command)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 #ifdef DEBUG_CONTENT
 	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
 #endif
@@ -653,7 +696,11 @@ static void widget_comboboxtext_input_by_command(variable *var, char *command)
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 			gtk_combo_box_append_text(GTK_COMBO_BOX(var->Widget), line);
+#else
+			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(var->Widget), NULL, line);
+#endif
 		}
 		/* Close the file */
 		pclose(infile);
@@ -661,7 +708,6 @@ static void widget_comboboxtext_input_by_command(variable *var, char *command)
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			command);
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -682,7 +728,6 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	if (infile = fopen(filename, "r")) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
 		while (fgets(line, 512, infile)) {
@@ -691,7 +736,11 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 			/* Remove the trailing [CR]LFs */
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
 			gtk_combo_box_append_text(GTK_COMBO_BOX(var->Widget), line);
+#else
+			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(var->Widget), NULL, line);
+#endif
 		}
 		/* Close the file */
 		fclose(infile);
@@ -699,7 +748,6 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			filename);
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -719,13 +767,15 @@ static void widget_comboboxtext_input_by_items(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Rewrite: I'm using gtk_combo_box_new_text() and gtk_combo_box_entry_new_text() when they must now be gtk_combo_box_text_new() and gtk_combo_box_text_new_with_entry() */
 	text = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
 	while (text) {
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130331 */
 		gtk_combo_box_append_text(GTK_COMBO_BOX(var->Widget), text);
+#else
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(var->Widget), NULL, text);
+#endif
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

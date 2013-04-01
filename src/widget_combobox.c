@@ -80,6 +80,9 @@ GtkWidget *widget_combobox_create(
 #if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk2 and now gone */
 	/* Thunor: This is all original code moved across when refactoring */
 	widget = gtk_combo_new();
+#else
+	fprintf(stderr, "%s(): The combobox (GtkCombo) widget has been removed from GTK+ 3 and comboboxtext or comboboxentry are recommended as replacements.\n", __func__);
+	exit(EXIT_FAILURE);
 #endif
 
 #ifdef DEBUG_TRANSITS
