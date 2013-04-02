@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Tue Apr 2 2013 Thunor <thunorsif@hotmail.com>
+- Added examples/demoscene filled with SFR's awesome demos.
+
 * Mon Apr 1 2013 Thunor <thunorsif@hotmail.com>
 - Added gtk3 specific code to the comboboxtext and comboboxentry widgets
   so that they now function identically to the gtk2 equivalents.

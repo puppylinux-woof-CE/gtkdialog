@@ -10,6 +10,7 @@ EXTRA_DIST = \
 	examples/combobox/* \
 	examples/comboboxentry/* \
 	examples/comboboxtext/* \
+	examples/demoscene/* \
 	examples/edit/* \
 	examples/entry/* \
 	examples/eventbox/* \
