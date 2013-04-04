@@ -1,6 +1,13 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Wed Apr 3 2013 Thunor <thunorsif@hotmail.com>
+- gtk3: Added the --style-sheet command line option -- still operational
+  within a GTK+ 2 build but an unsupported warning message is displayed
+  which is preferable to a gtk unknown command line option error.
+- gtk3: Added the loadstylesheet action function -- still operational
+  within a GTK+ 2 build but an unsupported warning message is displayed.
+
 * Tue Apr 2 2013 Thunor <thunorsif@hotmail.com>
 - Added examples/demoscene filled with SFR's awesome demos.
 

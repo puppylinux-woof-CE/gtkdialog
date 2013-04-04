@@ -63,6 +63,7 @@ gchar *option_event_file = NULL;
 gchar *option_geometry = NULL;
 gchar *option_space_expand = NULL;
 gchar *option_space_fill = NULL;
+gchar *option_style_sheet = NULL;
 gboolean option_input_stdin = FALSE;
 gboolean option_no_warning = FALSE;
 gboolean option_print_ir = FALSE;
@@ -140,7 +141,7 @@ gtkdialog_init(
 	{ 
 		"version", 'v', 
 		0, G_OPTION_ARG_NONE, &option_version, 
-		"Print version information and exit.", NULL
+		"Print version and build information and exit.", NULL
 	},
 	{ 
 		"debug", 'd', 
@@ -152,21 +153,16 @@ gtkdialog_init(
 		0, G_OPTION_ARG_STRING, &option_input_variable, 
 		"Get the GUI description from the environment.", "variable"
 	},
+	{ 
+		"glade-xml", 'g', 
 #if HAVE_GLADE_LIB
-	{ 
-		"glade-xml", 'g', 
 		0, G_OPTION_ARG_STRING, &option_glade_file, 
-		"Get the GUI description from this Glade file.", "filename"
-	},
+		"GTK+ 2 only: Get GUI description from Glade.", "filename"
 #else
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Updated 20130401 */
-	{ 
-		"glade-xml", 'g', 
 		0, G_OPTION_ARG_STRING, &option_ignored, 
-		"Ignored, since no Glade library found.", "filename"
+		"GTK+ 2 only: Not supported in this build.", "filename"
+#endif
 	},
-#endif
-#endif
 	{ 
 		"file", 'f', 
 		0, G_OPTION_ARG_STRING, &option_input_file, 
@@ -216,6 +212,16 @@ gtkdialog_init(
 		"space-fill", '\0', 
 		0, G_OPTION_ARG_STRING, &option_space_fill, 
 		"The \"fill\" state for packing all widgets.", "state"
+	},
+	{ 
+		"style-sheet", '\0', 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Added 20130403 */
+		0, G_OPTION_ARG_STRING, &option_style_sheet, 
+		"GTK+ 3 only: Not supported in this build.", "filename"
+#else
+		0, G_OPTION_ARG_STRING, &option_style_sheet, 
+		"GTK+ 3 only: Load a style sheet for theming.", "filename"
+#endif
 	},
 	{
 		NULL
@@ -484,6 +490,35 @@ set_program_source(gchar *name)
 	set_program_name(name);
 } */
 
+void load_style_sheet(gchar *filename)
+{
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Added 20130403 */
+	fprintf(stderr, "%s(): GTK+ 3 only: Not supported in this build.\n",
+		__func__);
+#else
+	GtkCssProvider *css_provider;
+    GError *error = NULL;
+	GdkScreen *screen;
+	GFile *file;
+	gint result;
+
+	css_provider = gtk_css_provider_new();
+	file = g_file_new_for_path(filename);
+	/* The return value is deprecated but gtk does dump messages anyway */
+	result = gtk_css_provider_load_from_file(css_provider, file, &error);
+
+	if (error) {
+		fprintf(stderr, "%s(): Couldn't load style sheet: %s\n",
+			__func__, error->message);
+	} else {
+		screen = gdk_screen_get_default();
+		gtk_style_context_add_provider_for_screen(screen,
+			GTK_STYLE_PROVIDER(css_provider),
+			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	}
+#endif
+}
+
 int 
 main(int argc, char *argv[])
 {
@@ -576,6 +611,9 @@ gtkdialog_initialized:
 		exit(EXIT_SUCCESS);
 	}
 #endif
-	
+
+	if (option_style_sheet)
+		load_style_sheet(option_style_sheet);
+
 	gtkdialog_parse();
 }

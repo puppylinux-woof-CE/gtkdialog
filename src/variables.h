@@ -67,9 +67,7 @@ variable *find_variable_by_widget(GtkWidget *widget);
 void variables_initialize_all(void);
 void variables_export_all(void);
 void print_variables(variable *actual);
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Only used by action_append() which isn't being used anyway so purge it */
-int append_fromto_variable(const char *from, const char *to);
-#endif
+/* int append_fromto_variable(const char *from, const char *to);	Redundant: Only used by action_append() which isn't being used anyway so purge it */
 variable *variables_clear(const char *name);
 int remove_selected_variable(const char *name);
 
