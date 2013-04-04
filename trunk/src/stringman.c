@@ -317,6 +317,7 @@ static gchar *prefixes[] = {
 	"clear",
 	"removeselected",
 	"break",
+	"loadstylesheet",
 	"insert",
 	"append",
 	NULL

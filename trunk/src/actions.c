@@ -52,9 +52,7 @@ void action_fileselection_made(GtkWidget *w, actioncommand *ac);
 void action_fileselection_destroy(GtkWidget *w, actioncommand *ac);
 void action_clearwidget(GtkWidget *widget, char *string);
 void action_removeselected(GtkWidget *widget, char *string);
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
-int action_append(GtkWidget *widget, char *string);
-#endif
+/* int action_append(GtkWidget *widget, char *string);	Redundant: Isn't being used anyway so purge it */
 void action_enable(GtkWidget *widget, char *string);
 void action_disable(GtkWidget *widget, char *string);
 void action_show(GtkWidget *widget, char *string);
@@ -540,7 +538,7 @@ void action_removeselected(GtkWidget *widget, char *string)
  *                                                                     *
  ***********************************************************************/
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
+/* Redundant: Isn't being used anyway so purge it.
 int action_append(GtkWidget *widget, char *string)
 {
 #ifndef G_OS_WIN32
@@ -576,8 +574,7 @@ int action_append(GtkWidget *widget, char *string)
 #else
 	g_warning("%s(): Unimplemented.", __func__);
 #endif
-}
-#endif
+} */
 
 /***********************************************************************
  * Action enable                                                       *
@@ -773,20 +770,22 @@ int execute_action(GtkWidget *widget, const char *command, const char *type)
 				retval = 2;
 				break;
 
+			case CommandLoadStyleSheet:
+				load_style_sheet(command_string);
+				break;
+
 			/* Thunor: It looks like work on insert and append was started
 			 * but there's not much code so I wouldn't expect it to work
 			 * (I haven't tried it since it's not documented). Note that
 			 * both are calling action_append() which is strange */
 			case CommandInsert:
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
-				action_append(widget, command_string);
-#endif
+/* 				action_append(widget, command_string);	Redundant: Isn't being used anyway so purge it */
+				retval = 0;
 				break;
 
 			case CommandAppend:
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: Isn't being used anyway so purge it */
-				action_append(widget, command_string);
-#endif
+/*				action_append(widget, command_string);	Redundant: Isn't being used anyway so purge it */
+				retval = 0;
 				break;
 
 			default:
