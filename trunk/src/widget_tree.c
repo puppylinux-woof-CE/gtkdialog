@@ -896,6 +896,7 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	gchar             *value;
 	gint               index;
 	gint               function;
+	list_t            *column_width = NULL;
 	list_t            *column_resizeable = NULL;
 	list_t            *column_header_active = NULL;
 	list_t            *column_visible = NULL;
@@ -910,6 +911,9 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	columns = linecutter(headline, '|');
 
 	if (attr) {
+		/* Get column-width (custom) */
+		if ((value = get_tag_attribute(attr, "column-width")))
+			column_width = linecutter(g_strdup(value), '|');
 		/* Get column-resizeable (custom) */
 		if ((value = get_tag_attribute(attr, "column-resizeable")))
 			column_resizeable = linecutter(g_strdup(value), '|');
@@ -965,7 +969,16 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 			gtk_tree_view_column_add_attribute(column, renderer, "text",
 				index + FirstDataColumn);
 		}
-
+		/* Fixed-width column? */
+		if (column_width && index < column_width->n_lines) {
+			/* A value of 0 or "" is ignored leaving column as default */
+			if (atoi(column_width->line[index]) > 0) {
+				gtk_tree_view_column_set_sizing(column,
+					GTK_TREE_VIEW_COLUMN_FIXED);
+				gtk_tree_view_column_set_fixed_width(column,
+					atoi(column_width->line[index]));
+			}
+		}
 		/* Resizeable column? (gtkdialog's default is resizeable) */
 		gtk_tree_view_column_set_resizable(column, TRUE);
 		if (column_resizeable && index < column_resizeable->n_lines) {
@@ -1015,6 +1028,7 @@ sorting is compatible only with columns of type string.\n", __func__);
 	}
 
 	/* Free linecutter memory */
+	if (column_width) list_t_free(column_width);
 	if (column_resizeable) list_t_free(column_resizeable);
 	if (column_header_active) list_t_free(column_header_active);
 	if (column_visible) list_t_free(column_visible);

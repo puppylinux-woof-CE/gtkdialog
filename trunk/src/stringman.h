@@ -55,7 +55,7 @@ typedef enum {
 	CommandClear             = 14,
 	CommandRemoveSelected    = 15,
 	CommandBreak             = 16,
-	CommandLoadStyleSheet    = 17,
+	CommandLoadStyles        = 17,
 	CommandInsert            = 18,
 	CommandAppend            = 19
 } CommandType;
