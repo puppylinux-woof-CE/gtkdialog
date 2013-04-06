@@ -770,8 +770,9 @@ int execute_action(GtkWidget *widget, const char *command, const char *type)
 				retval = 2;
 				break;
 
-			case CommandLoadStyleSheet:
-				load_style_sheet(command_string);
+			case CommandLoadStyles:
+				load_styles_file(command_string);
+				retval = 0;
 				break;
 
 			/* Thunor: It looks like work on insert and append was started

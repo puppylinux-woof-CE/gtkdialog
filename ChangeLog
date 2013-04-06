@@ -1,6 +1,13 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sat Apr 6 2013 Thunor <thunorsif@hotmail.com>
+- Renamed the recently added --style-sheet command line option to
+  --styles which requires a gtkrc for gtk2 or a gtk.css for gtk3.
+- Renamed the loadstylesheet action function to loadstyles as it should
+  work in gtk2 too but I haven't managed to do that yet. gtk3 works now.
+- Added the "column-width" tag attribute to the tree widget.
+
 * Wed Apr 3 2013 Thunor <thunorsif@hotmail.com>
 - gtk3: Added the --style-sheet command line option -- still operational
   within a GTK+ 2 build but an unsupported warning message is displayed

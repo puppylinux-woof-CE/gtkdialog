@@ -63,7 +63,7 @@ gchar *option_event_file = NULL;
 gchar *option_geometry = NULL;
 gchar *option_space_expand = NULL;
 gchar *option_space_fill = NULL;
-gchar *option_style_sheet = NULL;
+gchar *option_styles_file = NULL;
 gboolean option_input_stdin = FALSE;
 gboolean option_no_warning = FALSE;
 gboolean option_print_ir = FALSE;
@@ -214,13 +214,13 @@ gtkdialog_init(
 		"The \"fill\" state for packing all widgets.", "state"
 	},
 	{ 
-		"style-sheet", '\0', 
+		"styles", '\0', 
 #if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Added 20130403 */
-		0, G_OPTION_ARG_STRING, &option_style_sheet, 
-		"GTK+ 3 only: Not supported in this build.", "filename"
+		0, G_OPTION_ARG_STRING, &option_styles_file, 
+		"Load styles in the form of a resource file.", "filename"
 #else
-		0, G_OPTION_ARG_STRING, &option_style_sheet, 
-		"GTK+ 3 only: Load a style sheet for theming.", "filename"
+		0, G_OPTION_ARG_STRING, &option_styles_file, 
+		"Load styles in the form of a style sheet.", "filename"
 #endif
 	},
 	{
@@ -490,11 +490,11 @@ set_program_source(gchar *name)
 	set_program_name(name);
 } */
 
-void load_style_sheet(gchar *filename)
+void load_styles_file(gchar *filename)
 {
 #if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Added 20130403 */
-	fprintf(stderr, "%s(): GTK+ 3 only: Not supported in this build.\n",
-		__func__);
+	/* Currently this works at the start but not at runtime temp temp */
+	gtk_rc_parse(filename);
 #else
 	GtkCssProvider *css_provider;
     GError *error = NULL;
@@ -612,8 +612,8 @@ gtkdialog_initialized:
 	}
 #endif
 
-	if (option_style_sheet)
-		load_style_sheet(option_style_sheet);
+	if (option_styles_file)
+		load_styles_file(option_styles_file);
 
 	gtkdialog_parse();
 }

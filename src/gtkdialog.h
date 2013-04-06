@@ -64,6 +64,6 @@ void reset_program_source(void);
 gint get_program_from_variable(gchar *name);
 void set_program_name(gchar *name);
 gchar *get_program_name(void);
-void load_style_sheet(gchar *filename);
+void load_styles_file(gchar *filename);
 
 #endif
