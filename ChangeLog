@@ -7,6 +7,7 @@ for announcements.
 - Renamed the loadstylesheet action function to loadstyles as it should
   work in gtk2 too but I haven't managed to do that yet. gtk3 works now.
 - Added the "column-width" tag attribute to the tree widget.
+- Renamed "column-width" to "column-sizing" -- value >= 2 becomes width.
 
 * Wed Apr 3 2013 Thunor <thunorsif@hotmail.com>
 - gtk3: Added the --style-sheet command line option -- still operational
