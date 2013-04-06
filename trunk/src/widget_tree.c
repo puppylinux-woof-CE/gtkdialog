@@ -971,10 +971,12 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 		}
 		/* Fixed-width column? */
 		if (column_width && index < column_width->n_lines) {
-			/* A value of 0 or "" is ignored leaving column as default */
-			if (atoi(column_width->line[index]) > 0) {
-				gtk_tree_view_column_set_sizing(column,
-					GTK_TREE_VIEW_COLUMN_FIXED);
+			if (atoi(column_width->line[index]) == GTK_TREE_VIEW_COLUMN_GROW_ONLY) {
+				/* Ignore it */
+			} else if (atoi(column_width->line[index]) == GTK_TREE_VIEW_COLUMN_AUTOSIZE) {
+				gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+			} else {
+				gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
 				gtk_tree_view_column_set_fixed_width(column,
 					atoi(column_width->line[index]));
 			}
