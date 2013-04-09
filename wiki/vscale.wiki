@@ -66,7 +66,7 @@ Some of these may have tag attribute equivalents.
 || action signal="_type_" condition="_type_" || Execute command on signal conditionally || Shell command || 0.8.3 ||
 || action signal="_type_" condition="_type_" || Perform function on signal conditionally || _function_:_parameter_ || 0.8.3 ||
 || action function="_type_" condition="_type_" || Perform function on default signal conditionally || _parameter_ || 0.8.3 ||
-|| item || Input data for marks and markup^[1]^ || _value_ {{{|}}} _[http://developer.gnome.org/gtk2/2.24/gtk-Standard-Enumerations.html#GtkPositionType position]_ {{{|}}} _[http://developer.gnome.org/pango/stable/PangoMarkupFormat.html markup]_ (optional) || ||
+|| item || Input data for marks and markup^[1]^ || _value_ {{{|}}} _[http://developer.gnome.org/gtk2/2.24/gtk2-Standard-Enumerations.html#GtkPositionType position]_ {{{|}}} _[http://developer.gnome.org/pango/stable/PangoMarkupFormat.html markup]_ (optional) || ||
 || output file || Data output target || Filename || ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 

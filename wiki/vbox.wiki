@@ -37,7 +37,7 @@ The following custom tag attributes are available:
 || scrollable || Scrolled window capability || {{{true}}} or {{{false}}} || 0.7.21 ||
 || height || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
 || width || Scrolled window dimension || An integer > {{{0}}} or {{{-1}}} to ignore || 0.7.21 ||
-|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (see [http://developer.gnome.org/gtk2/2.24/gtk-Standard-Enumerations.html#GtkShadowType GtkShadowType]) || 0.8.1 ||
+|| shadow-type || Viewport shadow type || {{{0}}} to {{{4}}} (see [http://developer.gnome.org/gtk2/2.24/gtk2-Standard-Enumerations.html#GtkShadowType GtkShadowType]) || 0.8.1 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
 == Directives ==

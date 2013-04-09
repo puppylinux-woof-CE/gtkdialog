@@ -53,6 +53,7 @@ The following custom tag attributes are available:
 || column-header-active || Active state of column header(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || column-visible || Visible state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.1 ||
 || column-resizeable || Resizeable state of column(s) || _state0_ {{{|}}} _state1_ {{{|}}} ... || 0.8.4 ||
+|| column-sizing || Sizing mode of column(s) || _mode0_ {{{|}}} _mode1_ {{{|}}} ... ({{{0}}} default, {{{1}}} autosize or >= {{{2}}} fixed width in pixels) || 0.8.4 ||
 || auto-sort || Automatically sort after loading data || {{{true}}} or {{{false}}} || 0.8.1 ||
 || sort-column || The initial sort column when auto-sorting || An integer >= {{{0}}} || 0.8.1 ||
 || sort-type || The initial sort direction when auto-sorting || {{{0}}}, {{{1}}} (ascending, descending) || 0.8.1 ||

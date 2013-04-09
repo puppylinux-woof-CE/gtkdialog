@@ -38,7 +38,7 @@ The following custom tag attributes are available:
 || file-monitor || Emit signal when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || auto-refresh || Auto refresh when input file(s) change || {{{true}}} or {{{false}}} || 0.8.1 ||
 || icon-name^[1]^ || GTK theme icon name ||  || 0.7.21 ||
-|| stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk2/2.24/gtk-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || 0.7.21 ||
+|| stock-id || GTK stock icon ID || {{{gtk-about}}}, {{{gtk-add}}}, ... ([http://developer.gnome.org/gtk2/2.24/gtk2-Stock-Items.html#GTK-STOCK-ABOUT:CAPS full list]) || 0.7.21 ||
 || image-name || Image filename ||  || 0.7.21 ||
 <wiki:comment>ExportTableEnd</wiki:comment>
 
