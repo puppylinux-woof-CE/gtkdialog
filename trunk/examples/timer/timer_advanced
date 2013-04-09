@@ -2,7 +2,7 @@
 
 # This example requires bash.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 export TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"

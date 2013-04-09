@@ -1,6 +1,8 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+# This example requires GTK+ 2.
+
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window>

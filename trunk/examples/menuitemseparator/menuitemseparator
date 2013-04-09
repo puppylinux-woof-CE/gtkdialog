@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window title="MenuItemSeparator" resizable="false" width-request="360" height-request="240"  border-width="0">

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 # Please note that the name of the exported shell variable matches the
 # window widget's variable directive which is a requirement. Not doing

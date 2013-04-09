@@ -5,7 +5,7 @@
 # See execute_action() for more information.
 #
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window>

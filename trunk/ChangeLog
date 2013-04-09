@@ -1,6 +1,13 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* Sun Apr 7 2013 Thunor <thunorsif@hotmail.com>
+- Updated a few wiki/reference pages with new info, fixed bad links.
+- Changed GTKDIALOG=gtkdialog in all examples/applications to
+  [ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog to make it easier to change
+  versions/builds e.g. GTKDIALOG=gtk3dialog ./examples/expander/expander
+- Tested all examples up to fontbutton for compatibility with GTK+ 3.
+
 * Sat Apr 6 2013 Thunor <thunorsif@hotmail.com>
 - Renamed the recently added --style-sheet command line option to
   --styles which requires a gtkrc for gtk2 or a gtk.css for gtk3.

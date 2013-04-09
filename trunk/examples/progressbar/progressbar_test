@@ -2,7 +2,7 @@
 
 # This example requires bash.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 progress() {
 	for i in $(seq 0 10 100); do 

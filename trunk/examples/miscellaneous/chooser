@@ -13,7 +13,7 @@
 # to using <action signal="type">, the signal is instead specified by
 # the application developer using <action when="type">.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window title="Chooser Widget Example" resizable="false">

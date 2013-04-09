@@ -5,7 +5,7 @@
 # but if you experience missing images then replace them with something
 # located within your /usr/share/icons or /usr/share/pixmaps folders.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window title="Theme Icon Support" resizable="false" border-width="0">

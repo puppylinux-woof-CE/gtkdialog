@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 IMAGEFILE="`find /usr/share/pixmaps -maxdepth 1 -type f | head -1`"
 

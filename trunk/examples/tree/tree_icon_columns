@@ -9,7 +9,7 @@
 
 # This example requires bash.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 funcInputstock() {
 	echo "gtk-open | | gtk-open | 2 "

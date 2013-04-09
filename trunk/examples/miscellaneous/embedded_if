@@ -2,7 +2,7 @@
 
 # Thunor: This example is broken.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window>

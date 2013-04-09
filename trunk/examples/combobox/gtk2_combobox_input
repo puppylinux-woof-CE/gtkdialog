@@ -1,9 +1,11 @@
 #!/bin/sh
 
+# This example requires GTK+ 2.
+
 # Thunor: This example is broken: input from a command has not been
 # implemented for this widget and it's now old and deprecated.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window>

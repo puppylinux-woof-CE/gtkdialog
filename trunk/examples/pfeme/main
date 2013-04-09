@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 # Pfeme (c) Thunor 2012
 # GNU GENERAL PUBLIC LICENSE Version 2, June 1991

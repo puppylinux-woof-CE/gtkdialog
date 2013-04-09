@@ -5,7 +5,7 @@
 # to fully add support for inserting and appending data in the future but this
 # example was probably written to test some initial code that wasn't finished.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 MAIN_DIALOG='
 <window>
