@@ -1,11 +1,12 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
-mkdir -p "$TMPDIR"
+## ---------------------------------------------------------------------
+## Local Functions
+## ---------------------------------------------------------------------
 
-## Create a custom style for specific widgets.
+## Create a custom GTK+ 2 style for specific widgets.
 funcgtkrcCreate() {
 	IMAGEFILE="`find /usr/share/pixmaps -maxdepth 1 -type f | head -1`"
 
@@ -29,8 +30,27 @@ widget "*BgPixmap" style "styleBgPixmap"
 
 	GTK2_RC_FILES="$TMPDIR"/.gtkrc-2.0:~/.gtkrc-2.0
 	export GTK2_RC_FILES
+}
 
-}; funcgtkrcCreate
+## Create a custom GTK+ 3 style for specific widgets.
+funcgtkcssCreate() {
+	IMAGEFILE="`find /usr/share/pixmaps -maxdepth 1 -type f | head -1`"
+
+	echo '
+#BgGreen {
+	background-color: #00a000
+}
+#BgBlue {
+	background-color: #0000a0
+}
+
+#BgPixmap {
+	background-image: url("'$IMAGEFILE'")
+}
+' > "$TMPDIR"/gtk.css
+
+	EXTRA_ARGS="$EXTRA_ARGS --styles $TMPDIR/gtk.css"
+}
 
 funcSignalsCreate() {
 	echo '<action signal="button-press-event">echo "'$1' - button-press-event"</action>
@@ -48,6 +68,20 @@ funcSignalsCreate() {
 		<action signal="show">echo "'$1' - show"</action>
 		<action signal="realize">echo "'$1' - realize"</action>'
 }
+
+## ---------------------------------------------------------------------
+## Main
+## ---------------------------------------------------------------------
+
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+mkdir -p "$TMPDIR"
+
+EXTRA_ARGS=
+
+case `$GTKDIALOG -v` in
+	*"GTK+ 3"*) funcgtkcssCreate ;;
+	*) funcgtkrcCreate ;;
+esac
 
 MAIN_DIALOG='
 <window title="EventBox">
@@ -100,5 +134,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG $EXTRA_ARGS ;;
 esac

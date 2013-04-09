@@ -2,6 +2,8 @@
 
 # This example requires bash.
 
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
 # Gtkdialog is a C program and the C library will execute a system command
 # using /bin/sh so we need to make sure that bash executes any commands.
 # Ubuntu users whose /bin/sh links to dash should take note of this fact.
@@ -87,4 +89,7 @@ export MAIN='
 </window>
 '
 
-gtkdialog -cp MAIN
+case $1 in
+	-d | --dump) echo "$MAIN" ;;
+	*) $GTKDIALOG -cp MAIN ;;
+esac

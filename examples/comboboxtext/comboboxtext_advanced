@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
@@ -11,34 +11,6 @@ funcbtnCreate() {
 			<action>echo "'"$3"' cboComboBox'$1'"</action>
 			<action function="'"$4"'">cboComboBox'$1'</action>
 		</button>'
-}
-
-funccboCreate() {
-	if [ $1 = 0 ]; then
-		echo '<combobox>'
-	elif [ $1 = 1 ]; then
-		echo '<combobox allow-empty="false" value-in-list="true">'
-	elif [ $1 = 2 ]; then
-		echo '<combobox case-sensitive="true" value-in-list="true">'
-	fi
-	echo '<variable>cboComboBox'$1'</variable>
-			<sensitive>enabled</sensitive>
-			<item>cboComboBox'$1'</item>'
-	if [ $1 = 0 ]; then
-		echo '<item>tag attributes none</item>'
-	elif [ $1 = 1 ]; then
-		echo '<item>tag attribute allow-empty="false"</item>
-			<item>tag attribute value-in-list="true"</item>'
-	elif [ $1 = 2 ]; then
-		echo '<item>tag attribute case-sensitive="true"</item>
-			<item>tag attribute value-in-list="true"</item>'
-	fi
-	echo '</combobox>
-		<hbox homogeneous="true">
-			'"`funcbtnCreate $1 Clear Clearing clear`"'
-			'"`funcbtnCreate $1 Refresh Reloading refresh`"'
-		</hbox>'
-	if [ $1 -lt 2 ]; then echo '<hseparator></hseparator>'; fi
 }
 
 funccboTextCreate() {
@@ -91,22 +63,13 @@ fi
 MAIN_DIALOG='
 <window title="ComboBoxText Advanced" resizable="false">
 	<vbox>
-		<hbox>
-			<frame combobox widget (deprecated)>
-				<vbox>
-					'"`funccboCreate 0`"'
-					'"`funccboCreate 1`"'
-					'"`funccboCreate 2`"'
-				</vbox>
-			</frame>
-			<frame comboboxtext widget>
-				<vbox width-request="300">
-					'"`funccboTextCreate 0`"'
-					'"`funccboTextCreate 1`"'
-					'"`funccboTextCreate 2`"'
-				</vbox>
-			</frame>
-		</hbox>
+		<frame comboboxtext widget>
+			<vbox width-request="300">
+				'"`funccboTextCreate 0`"'
+				'"`funccboTextCreate 1`"'
+				'"`funccboTextCreate 2`"'
+			</vbox>
+		</frame>
 		<hbox homogeneous="true">
 			<button ok></button>
 		</hbox>

@@ -2,7 +2,7 @@
 
 # This example requires bash.
 
-GTKDIALOG=gtkdialog
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
 funcList() {
 	ls -lha | grep ^d | awk '{print "dir_o|" $1 "|" $8}'
