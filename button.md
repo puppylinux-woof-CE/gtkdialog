@@ -33,6 +33,7 @@ See the [GtkButton](http://developer.gnome.org/gtk2/2.24/GtkButton.html#GtkButto
 The following custom tag attributes are available:
 
 <a href='Hidden comment: ExportTableStart'></a>
+
 | Name | Description | Value | Since |
 |:---------|:----------------|:----------|:----------|
 | space-expand | Pack widget expanding into space | `true` or `false` | 0.7.21 |
@@ -44,6 +45,7 @@ The following custom tag attributes are available:
 | homogeneous<sup>[2]</sup> | Horizontal uniformity of an image with label | `true` or `false` | 0.8.1 |
 | theme-icon-size | The size of the GTK theme icon | An integer > `0` or `-1` to ignore | 0.8.1 |
 | stock-icon-size | The size of the GTK stock icon | `0` to `6` (see [GtkIconSize](http://developer.gnome.org/gtk2/2.24/gtk2-Themeable-Stock-Images.html#GtkIconSize)) | 0.8.1 |
+
 <a href='Hidden comment: ExportTableEnd'></a>
 
 ## Directives ##
