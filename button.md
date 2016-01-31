@@ -33,7 +33,7 @@ See the [GtkButton](http://developer.gnome.org/gtk2/2.24/GtkButton.html#GtkButto
 The following custom tag attributes are available:
 
 <a href='Hidden comment: ExportTableStart'></a>
-| **Name** | **Description** | **Value** | **Since** |
+| Name | Description | Value | Since |
 |:---------|:----------------|:----------|:----------|
 | space-expand | Pack widget expanding into space | `true` or `false` | 0.7.21 |
 | space-fill | Pack widget filling space | `true` or `false` | 0.7.21 |
