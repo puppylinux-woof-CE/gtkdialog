@@ -31,7 +31,6 @@ See the [GtkComboBoxEntry](http://developer.gnome.org/gtk2/2.24/GtkComboBoxEntry
 
 The following custom tag attributes are available:
 
-<a href='Hidden comment: ExportTableStart'></a>
 | **Name** | **Description** | **Value** | **Since** |
 |:---------|:----------------|:----------|:----------|
 | space-expand | Pack widget expanding into space | `true` or `false` |  |
@@ -44,13 +43,11 @@ The following custom tag attributes are available:
 | fs-filters-mime | fileselect function mime-type file filters | _mime/type_`|`_mime/type_`|`... ([common types](http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types)) |  |
 | fs-folder | fileselect function current folder |  |  |
 | fs-title | fileselect function dialog title |  |  |
-<a href='Hidden comment: ExportTableEnd'></a>
 
 ## Directives ##
 
 Some of these may have tag attribute equivalents.
 
-<a href='Hidden comment: ExportTableStart'></a>
 | **Name** | **Description** | **Contents** | **Since** |
 |:---------|:----------------|:-------------|:----------|
 | default | Initial selection or entry text if unmatched | Text |  |
@@ -71,7 +68,6 @@ Some of these may have tag attribute equivalents.
 | action function="_type_" condition="_type_" | Perform function on default signal conditionally | _parameter_ | 0.8.3 |
 | item | Input data |  |  |
 | output file | Data output target | Filename |  |
-<a href='Hidden comment: ExportTableEnd'></a>
 
 ## Signals ##
 
@@ -89,7 +85,6 @@ The following signals are connected-up for all widgets:
 
 The following functions can be performed upon this widget by any widget capable of emitting signals:
 
-<a href='Hidden comment: ExportTableStart'></a>
 | **Type** | **Description** | **Parameter** | **Since** |
 |:---------|:----------------|:--------------|:----------|
 | enable | Sensitise widget | Variable name |  |
@@ -102,11 +97,9 @@ The following functions can be performed upon this widget by any widget capable 
 | fileselect | Launch file selection dialog | Variable name |  |
 | clear | Remove all widget data | Variable name |  |
 | removeselected | Remove selected widget data | Variable name |  |
-<a href='Hidden comment: ExportTableEnd'></a>
 
 The following general functions can be performed by any widget capable of emitting signals:
 
-<a href='Hidden comment: ExportTableStart'></a>
 | **Type** | **Description** | **Parameter** | **Since** |
 |:---------|:----------------|:--------------|:----------|
 | break | Break out of actions list | None | 0.8.3 |
@@ -115,13 +108,11 @@ The following general functions can be performed by any widget capable of emitti
 | closewindow | Close dialog | Variable name |  |
 | launch | Launch dialog | Variable name |  |
 | presentwindow | [Present](http://developer.gnome.org/gtk2/2.24/GtkWindow.html#gtk-window-present) dialog | Variable name | 0.8.1 |
-<a href='Hidden comment: ExportTableEnd'></a>
 
 ## Conditions ##
 
 The following conditions can be used within the condition attribute of action directives:
 
-<a href='Hidden comment: ExportTableStart'></a>
 | **Type** | **Description** | **Argument** | **Since** |
 |:---------|:----------------|:-------------|:----------|
 | active\_is\_true(_argument_) | Active state of toggle widget | Variable name | 0.8.3 |
@@ -134,7 +125,6 @@ The following conditions can be used within the condition attribute of action di
 | sensitive\_is\_false(_argument_) | Sensitive state of widget | Variable name | 0.8.3 |
 | visible\_is\_true(_argument_) | Visible state of widget | Variable name | 0.8.3 |
 | visible\_is\_false(_argument_) | Visible state of widget | Variable name | 0.8.3 |
-<a href='Hidden comment: ExportTableEnd'></a>
 
 true means "true", "yes" or a non-zero value, false means "false", "no" or zero, therefore the shell command is expected to echo one of these values to stdout.
 

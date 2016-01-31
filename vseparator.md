@@ -21,12 +21,10 @@ See the [GtkVSeparator](http://developer.gnome.org/gtk2/2.24/GtkVSeparator.html#
 
 The following custom tag attributes are available:
 
-<a href='Hidden comment: ExportTableStart'></a>
 | **Name** | **Description** | **Value** | **Since** |
 |:---------|:----------------|:----------|:----------|
 | space-expand | Pack widget expanding into space | `true` or `false` |  |
 | space-fill | Pack widget filling space | `true` or `false` |  |
-<a href='Hidden comment: ExportTableEnd'></a>
 
 ## Directives ##
 

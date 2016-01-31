@@ -6,7 +6,6 @@ This Google Code hosted project is the continuation of László Pere's project w
 
 ## Development ##
 
-<a href='Hidden comment: 
 Development has currently ended for this period (2011-09-26).
 '></a>
 As of 2013-04-02 I have added GTK+ 3 support but I've yet to support loading gtk.css stylesheets and all of the widgets and examples need testing so it'll be a while before I release a source package.
