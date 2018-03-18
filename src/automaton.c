@@ -722,7 +722,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	glong             char_height;
 	glong             char_width;
 #if HAVE_VTE
-#if 0 //#if VTE_CHECK_VERSION(0,26,0)
+#if VTE_CHECK_VERSION(0,26,0)
 	GtkBorder         inner_border;
 #endif
 #endif
@@ -777,7 +777,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 			 * but GLib is telling me that 'VteTerminal' has no property
 			 * named 'inner-border' so I have to go with the deprecated
 			 * vte_terminal_get_padding() */
-#if 0 //#if VTE_CHECK_VERSION(0,26,0)
+#if VTE_CHECK_VERSION(0,26,0)
 			g_object_get(G_OBJECT(widget), "inner-border", &inner_border, NULL);
 #ifdef DEBUG_CONTENT
 			fprintf(stderr, "%s(): inner_border.left=%i inner_border.right=%i \
@@ -801,7 +801,12 @@ inner_border.top=%i inner_border.bottom=%i\n", __func__, inner_border.left,
 			if (width == -1) width = 80 * char_width + xpad;
 			if (height == -1) height = 25 * char_height + ypad;
 			/* Set the size */
+#if GTK_CHECK_VERSION(2,2,0)
+			gtk_widget_set_size_request(scrolledwindow, width, height);
+#else
 			gtk_widget_set_usize(scrolledwindow, width, height);
+#endif
+
 			/* Pack the widget */
 			gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
 			break;
