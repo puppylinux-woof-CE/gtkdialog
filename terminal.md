@@ -40,11 +40,11 @@ The following custom tag attributes are available:
 | hscrollbar-policy | Policy for the horizontal scrollbar | `0`, `1`, `2` (always, automatic, never) |  |
 | vscrollbar-policy | Policy for the vertical scrollbar | `0`, `1`, `2` (always, automatic, never) |  |
 | font-name | Font description | Example: `Monospace Bold 14` |  |
-| background-tint-color<sup>[1]</sup> | Background tint colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
+| background-tint-color<sup>[1][2]</sup> | Background tint colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
 | text-background-color | Text background colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
 | text-foreground-color | Text foreground colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
 | bold-foreground-color | Bold text foreground colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
-| dim-foreground-color | Dim text foreground colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
+| dim-foreground-color<sup>[2]</sup> | Dim text foreground colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
 | cursor-background-color | Cursor background colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
 | highlight-background-color | Highlighted text background colour | A standard name,  _#rgb_ or  _#rrggbb_ |  |
 | argv? | Arguments starting at argv0 (command) | Example: `/bin/sh` |  |
@@ -131,6 +131,7 @@ true means "true", "yes" or a non-zero value, false means "false", "no" or zero,
 ## Notes ##
 
 1. There exists an equivalently named "[background-tint-color](http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--background-tint-color)" VTE property but it doesn't accept strings so it's converted by Gtkdialog.
+2. The "background-tint-color" and "dim-foreground-color" tag attributes are not permitted when using VTE >= 0.38 (which is the case for gtk3).
 
 This is a non-mandatory widget that requires [libvte](http://ftp.gnome.org/pub/gnome/sources/vte/) support be built into Gtkdialog at compile time.
 
