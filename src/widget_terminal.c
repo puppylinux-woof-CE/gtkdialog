@@ -82,10 +82,10 @@ GtkWidget *widget_terminal_create(
 	gchar             tagattribute[256];
 	gchar            *value;
 	gint              width = -1, height = -1;
-#endif
 
 #if VTE_CHECK_VERSION(0,38,0)
 	PangoFontDescription *fontdesc;
+#endif
 #endif
 
 #ifdef DEBUG_TRANSITS
