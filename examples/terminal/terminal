@@ -73,7 +73,6 @@ MAIN_DIALOG='
 				cursor-shape="2"
 				background-transparent="true"
 				background-saturation="0.2"
-				background-tint-color="#223"
 				text-foreground-color="#fff">
 				<variable>vte2</variable>
 				<input file>'"$TMPDIR"'/feed</input>

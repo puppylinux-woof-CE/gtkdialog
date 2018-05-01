@@ -82,6 +82,10 @@ GtkWidget *widget_terminal_create(
 	gchar             tagattribute[256];
 	gchar            *value;
 	gint              width = -1, height = -1;
+
+#if VTE_CHECK_VERSION(0,38,0)
+	PangoFontDescription *fontdesc;
+#endif
 #endif
 
 #ifdef DEBUG_TRANSITS
@@ -110,10 +114,16 @@ GtkWidget *widget_terminal_create(
 		 * widget_set_tag_attributes() will try to set it later */
 		strcpy(tagattribute, "font-desc");
 		if ((value = get_tag_attribute(attr, tagattribute))) {
+#if VTE_CHECK_VERSION(0,38,0)
+			fontdesc = pango_font_description_from_string (value);
+			vte_terminal_set_font(VTE_TERMINAL(widget), fontdesc);
+#else
 			vte_terminal_set_font_from_string(VTE_TERMINAL(widget), value);
+#endif
 			kill_tag_attribute(attr, tagattribute);
 		}
 
+#if ! VTE_CHECK_VERSION(0,38,0)
 		/* Again, "background-tint-color" requires a pointer to a
 		 * GdkColor struct but we can convert a string like "#ff00ff" */
 		strcpy(tagattribute, "background-tint-color");
@@ -129,10 +139,16 @@ GtkWidget *widget_terminal_create(
 			}
 			kill_tag_attribute(attr, tagattribute);
 		}
+#endif
 
 		/* Get custom tag attribute "font-name" */
 		if ((value = get_tag_attribute(attr, "font-name"))) {
+#if VTE_CHECK_VERSION(0,38,0)
+			fontdesc = pango_font_description_from_string (value);
+			vte_terminal_set_font(VTE_TERMINAL(widget), fontdesc);
+#else
 			vte_terminal_set_font_from_string(VTE_TERMINAL(widget), value);
+#endif
 		}
 
 		/* Get custom tag attribute "text-background-color" */
@@ -174,6 +190,7 @@ GtkWidget *widget_terminal_create(
 			}
 		}
 
+#if ! VTE_CHECK_VERSION(0,38,0)
 		/* Get custom tag attribute "dim-foreground-color" */
 		if ((value = get_tag_attribute(attr, "dim-foreground-color"))) {
 			/* Parse the RGB value to create the necessary GdkColor.
@@ -186,6 +203,7 @@ GtkWidget *widget_terminal_create(
 				vte_terminal_set_color_dim(VTE_TERMINAL(widget), &color);
 			}
 		}
+#endif
 
 		/* Get custom tag attribute "cursor-background-color" */
 		if ((value = get_tag_attribute(attr, "cursor-background-color"))) {
@@ -298,6 +316,22 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 #endif
 
 #if VTE_CHECK_VERSION(0,26,0)
+#if VTE_CHECK_VERSION(0,38,0)
+	retval = (vte_terminal_spawn_sync(VTE_TERMINAL(widget),
+		VTE_PTY_DEFAULT,
+		working_directory,
+		argv,
+		envv,
+		G_SPAWN_SEARCH_PATH,
+		NULL,
+		NULL,
+		&pid,
+		NULL,
+		&error));
+	if (!retval)
+		fprintf(stderr, "%s(): vte_terminal_spawn_sync(): %s\n",
+			__func__, error->message);
+#else
 	retval = (vte_terminal_fork_command_full(VTE_TERMINAL(widget),
 		VTE_PTY_DEFAULT,
 		working_directory,
@@ -311,6 +345,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 	if (!retval)
 		fprintf(stderr, "%s(): vte_terminal_fork_command_full(): %s\n",
 			__func__, error->message);
+#endif
 #else
 	pid = (vte_terminal_fork_command(VTE_TERMINAL(widget),
 		argv[0],

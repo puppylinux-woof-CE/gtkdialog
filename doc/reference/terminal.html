@@ -122,11 +122,11 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <tr><td class="wiki"> hscrollbar-policy </td><td class="wiki"> Policy for the horizontal scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> vscrollbar-policy </td><td class="wiki"> Policy for the vertical scrollbar </td><td class="wiki"> <code>0</code>, <code>1</code>, <code>2</code> (always, automatic, never) </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> font-name </td><td class="wiki"> Font description </td><td class="wiki"> Example: <code>Monospace Bold 14</code> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> background-tint-color<sup><a href="#note1">[1]</a></sup> </td><td class="wiki"> Background tint colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> background-tint-color<sup><a href="#note1">[1]</a><a href="#note2">[2]</a></sup> </td><td class="wiki"> Background tint colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> text-background-color </td><td class="wiki"> Text background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> text-foreground-color </td><td class="wiki"> Text foreground colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> bold-foreground-color </td><td class="wiki"> Bold text foreground colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> dim-foreground-color </td><td class="wiki"> Dim text foreground colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
+<tr><td class="wiki"> dim-foreground-color<sup><a href="#note2">[2]</a></sup> </td><td class="wiki"> Dim text foreground colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> cursor-background-color </td><td class="wiki"> Cursor background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> highlight-background-color </td><td class="wiki"> Highlighted text background colour </td><td class="wiki"> A standard name,  <i>#rgb </i> or  <i>#rrggbb </i> </td><td class="wiki"> </td></tr>
 <tr><td class="wiki"> argv? </td><td class="wiki"> Arguments starting at argv0 (command) </td><td class="wiki"> Example: <code>/bin/sh</code> </td><td class="wiki"> </td></tr>
@@ -218,6 +218,7 @@ A <a href="http://developer.gnome.org/vte/unstable/VteTerminal.html">VteTerminal
 <h2> Notes </h2>
 
 <p><a name="note1"></a>1. There exists an equivalently named "<a href="http://developer.gnome.org/vte/unstable/VteTerminal.html#VteTerminal--background-tint-color">background-tint-color</a>" VTE property but it doesn't accept strings so it's converted by Gtkdialog.</p>
+<p><a name="note2"></a>2. The "background-tint-color" and "dim-foreground-color" tag attributes are not permitted when using VTE >= 0.38 (which is the case for gtk3).</p>
 
 <p>This is a non-mandatory widget that requires <a href="http://ftp.gnome.org/pub/gnome/sources/vte/">libvte</a> support be built into Gtkdialog at compile time.</p>
 
