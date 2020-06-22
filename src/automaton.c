@@ -1302,7 +1302,7 @@ instruction_execute_push(
    Miert nem kapja meg az adatokat parameterben es foglalkozik
    a veremmel a hivo?
  */
-#ifdef __arm__
+#if defined( __arm__) || defined(__aarch64__) || defined(__APPLE__)
 /* 120701 BK Puppy Linux forum member jamesbond fixed this for arm cpus...*/
 stackelement _sum(stackelement b, stackelement a)
 #else
