@@ -40,6 +40,7 @@
 # include <glade/glade.h>
 #endif
 
+#define GTKDIALOG_NO_EXTERN
 #include "config.h"
 #include "gtkdialog.h"
 #include "variables.h"
@@ -81,6 +82,26 @@ gint geometry_dx = 0;
 gint geometry_dy = 0;
 gint geometry_x = 0;
 gint geometry_y = 0;
+
+/* Thunor: Used to block signal emissions from action functions */
+gint function_signals_block;
+
+/* Thunor: Used to control/override the widget packing expand and fill
+ * states at the project level */
+gint project_space_expand;
+gint project_space_fill;
+
+/* The most recently created radiobutton widget (used for grouping) */
+GtkWidget *lastradiowidget;
+
+/* An accumulated list of menu accelerator groups to be added to the window */
+GList *accel_groups;
+
+/* A list of widgets to hide and to show */
+GList *widget_hide_list, *widget_show_list;
+
+/* An auto-incremented unique id for each window created */
+gint window_id;
 
 static gboolean 
 get_geometry(const char *argument)

@@ -36,28 +36,24 @@
 #define PRG_STDIN   2
 #define PRG_FILE    3
 
-/* Thunor: Used to block signal emissions from action functions */
 #define GTKD_FUNCTION_SIGNALS_BLOCK (function_signals_block++)
 #define GTKD_FUNCTION_SIGNALS_UNBLOCK (function_signals_block--)
 #define GTKD_FUNCTION_SIGNALS_RESET (function_signals_block = FALSE)
-gint function_signals_block;
 
-/* Thunor: Used to control/override the widget packing expand and fill
- * states at the project level */
-gint project_space_expand;
-gint project_space_fill;
+#ifndef GTKDIALOG_NO_EXTERN
+extern gint function_signals_block;
 
-/* The most recently created radiobutton widget (used for grouping) */
-GtkWidget *lastradiowidget;
+extern gint project_space_expand;
+extern gint project_space_fill;
 
-/* An accumulated list of menu accelerator groups to be added to the window */
-GList *accel_groups;
+extern GtkWidget *lastradiowidget;
 
-/* A list of widgets to hide and to show */
-GList *widget_hide_list, *widget_show_list;
+extern GList *accel_groups;
 
-/* An auto-incremented unique id for each window created */
-gint window_id;
+extern GList *widget_hide_list, *widget_show_list;
+
+extern gint window_id;
+#endif
 
 void reset_program_source(void);
 //Redundant: gint set_program_source(gchar *name);
