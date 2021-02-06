@@ -27,9 +27,23 @@ AM_PROG_LEX
 AC_PROG_YACC
 AC_SUBST(YACC)
 
-# *** gtk3: Newly added to support checking for the correct libraries.
+# *** gtk3: Support automatically checking for the correct libraries.
 AC_ARG_ENABLE([gtk3], AS_HELP_STRING([--enable-gtk3],
-	[Enable support for GTK+ 3 (GTK+ 2 is currently the default)]))
+	[Enable support for GTK+ 3 (GTK+ 2 is currently the default if both available)]))
+
+AC_ARG_WITH([gtkapi],
+	[AS_HELP_STRING([--with-gtkapi],
+		[Choose GTK+ api version (2.0 or 3.0) (default is auto)])],
+	[],
+	[with_gtkapi=auto])
+
+AS_IF([test "x$with_gtkapi" = "x3.0"], [enable_gtk3=yes],
+	[test "x$with_gtkapi" = "xauto"],
+		[PKG_CHECK_EXISTS([gtk+-2.0],,
+			[PKG_CHECK_EXISTS([gtk+-3.0],
+				[enable_gtk3=yes])
+			])
+		])
 
 # Checks for libraries.
 pkg_modules="gthread-2.0"
@@ -48,11 +62,14 @@ AS_IF([test "x$enable_gtk3" = "xyes"], [
 
 	AC_SUBST(HAVE_GLADE_LIB, 0)
 
-	vte_lib="vte >= 0.29.0"
-	PKG_CHECK_MODULES([VTE], \
-		[$vte_lib], \
-		AC_SUBST(HAVE_VTE, 1),\
-		AC_SUBST(HAVE_VTE, 0))
+	PKG_CHECK_MODULES([VTE],
+		[vte-2.91 >= 0.30.0],
+		AC_SUBST(HAVE_VTE, 1),
+		[PKG_CHECK_MODULES([VTE],
+			[vte-2.90 >= 0.30.0],
+			AC_SUBST(HAVE_VTE, 1),
+			AC_SUBST(HAVE_VTE, 0))]
+)
 	AC_SUBST(VTE_CFLAGS)
 	AC_SUBST(VTE_LIBS)
 ],

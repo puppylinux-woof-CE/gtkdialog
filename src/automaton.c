@@ -722,7 +722,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	glong             char_height;
 	glong             char_width;
 #if HAVE_VTE
-#if VTE_CHECK_VERSION(0,38,0)
+#if VTE_CHECK_VERSION(0,30,0)
 	GtkBorder         padding;
 #endif
 #endif
@@ -772,12 +772,10 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 			break;
 		case WIDGET_TERMINAL:
 #if HAVE_VTE
-			/* VTE is telling me that vte_terminal_get_padding() has been
-			 * deprecated since 0.26 and that I should get 'inner-border'
-			 * but GLib is telling me that 'VteTerminal' has no property
-			 * named 'inner-border' so I have to go with the deprecated
-			 * vte_terminal_get_padding() */
-#if VTE_CHECK_VERSION(0,38,0)
+#if VTE_CHECK_VERSION(0,30,0)
+			/* vte-0-30 is the first GTK3 only version, so it becomes
+			 * possible to use gtk_style_context_get_padding() instead
+			 * of the deprecated vte_terminal_get_padding() */
 			gtk_style_context_get_padding(gtk_widget_get_style_context(widget),
 				gtk_widget_get_state_flags(widget),
 				&padding);
