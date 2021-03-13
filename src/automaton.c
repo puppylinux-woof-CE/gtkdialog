@@ -1063,12 +1063,17 @@ instruction_execute_push(
 			Widget = widget_colorbutton_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+#if !GTK_CHECK_VERSION(3,0,0)
 		case WIDGET_COMBOBOX:
 			Widget = widget_combobox_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+#endif
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
+#if GTK_CHECK_VERSION(3,0,0)
+		case WIDGET_COMBOBOX:
+#endif
 			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
@@ -1131,12 +1136,14 @@ instruction_execute_push(
 			Widget = widget_hseparator_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+#if !GTK_CHECK_VERSION(3,0,0)
 		case WIDGET_LIST:
 			Widget = widget_list_create(Attr, tag_attributes, Widget_Type);
 			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
 				tag_attributes, Widget_Type);
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);		
 			break;
+#endif
 		case WIDGET_MENU:
 			Widget = widget_menu_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
@@ -1182,12 +1189,14 @@ instruction_execute_push(
 			Widget = widget_statusbar_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
+#if !GTK_CHECK_VERSION(3,0,0)
 		case WIDGET_TABLE:
 			Widget = widget_table_create(Attr, tag_attributes, Widget_Type);
 			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
 				tag_attributes, Widget_Type);
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);		
 			break;
+#endif
 		case WIDGET_TERMINAL:
 			Widget = widget_terminal_create(Attr, tag_attributes, Widget_Type);
 			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
@@ -1204,6 +1213,10 @@ instruction_execute_push(
 			break;
 #if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_TREE:
+#if GTK_CHECK_VERSION(3,0,0)
+		case WIDGET_LIST:
+		case WIDGET_TABLE:
+#endif
 			Widget = widget_tree_create(Attr, tag_attributes, Widget_Type);
 			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
 				tag_attributes, Widget_Type);
