@@ -22,6 +22,7 @@
 /* Includes */
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
+#include <gdk/gdkwayland.h>
 #include "config.h"
 #include "gtkdialog.h"
 #include "attributes.h"
@@ -93,16 +94,20 @@ GtkWidget *widget_text_create(
 
 #if GTK_CHECK_VERSION(3,2,2)	/* gtk3: try global max-width-chars fix */
 	GdkDisplay * display = gdk_display_get_default();
-	GdkMonitor * monitor = gdk_display_get_primary_monitor(display);
-	int scale = gdk_monitor_get_scale_factor(monitor);
-	GdkRectangle workarea = {0};
-	gdk_monitor_get_workarea(monitor,&workarea);
-	int width = workarea.width / scale;
 	int max_width;
-	if ( width >= 1920 ) { /* make gui narrrower on wide screens*/
-		max_width = width / 24; 
+	if (GDK_IS_WAYLAND_DISPLAY (display)) {
+		max_width = 100; /* arbitrary but should be sane */
 	} else {
-		max_width = width / 16; 
+		GdkMonitor * monitor = gdk_display_get_primary_monitor(display);
+		int scale = gdk_monitor_get_scale_factor(monitor);
+		GdkRectangle workarea = {0};
+		gdk_monitor_get_workarea(monitor,&workarea);
+		int width = workarea.width / scale;
+		if ( width >= 1920 ) { /* make gui narrrower on wide screens*/
+			max_width = width / 24; 
+		} else {
+			max_width = width / 16; 
+		}
 	}
 	gtk_label_set_max_width_chars(GTK_LABEL(widget), max_width);
 #endif
