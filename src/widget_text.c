@@ -93,7 +93,7 @@ GtkWidget *widget_text_create(
 
 #if GTK_CHECK_VERSION(3,2,2)	/* gtk3: try global max-width-chars fix */
 	int max_width;
-	gchar *running_session = g_getenv("XDG_SESSION_TYPE"); /* work-around for wayland */
+	const gchar *running_session = g_getenv("XDG_SESSION_TYPE"); /* work-around for wayland */
 	if (g_strcmp0(running_session, "wayland") == 0) {
 		max_width = 80; /* arbitrary but should be sane */
 	} else { /* running X or can be null if XDG_SESSION_TYPE is not set*/
