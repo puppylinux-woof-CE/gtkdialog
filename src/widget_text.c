@@ -92,17 +92,22 @@ GtkWidget *widget_text_create(
 	gtk_label_set_line_wrap(GTK_LABEL(widget), TRUE);
 
 #if GTK_CHECK_VERSION(3,2,2)	/* gtk3: try global max-width-chars fix */
-	GdkDisplay * display = gdk_display_get_default();
-	GdkMonitor * monitor = gdk_display_get_primary_monitor(display);
-	int scale = gdk_monitor_get_scale_factor(monitor);
-	GdkRectangle workarea = {0};
-	gdk_monitor_get_workarea(monitor,&workarea);
-	int width = workarea.width / scale;
 	int max_width;
-	if ( width >= 1920 ) { /* make gui narrrower on wide screens*/
-		max_width = width / 24; 
-	} else {
-		max_width = width / 16; 
+	gchar *running_session = g_getenv("XDG_SESSION_TYPE"); /* work-around for wayland */
+	if (g_strcmp0(running_session, "wayland") == 0) {
+		max_width = 80; /* arbitrary but should be sane */
+	} else { /* running X or can be null if XDG_SESSION_TYPE is not set*/
+		GdkDisplay * display = gdk_display_get_default();
+		GdkMonitor * monitor = gdk_display_get_primary_monitor(display);
+		int scale = gdk_monitor_get_scale_factor(monitor);
+		GdkRectangle workarea = {0};
+		gdk_monitor_get_workarea(monitor,&workarea);
+		int width = workarea.width / scale;
+		if ( width >= 1920 ) { /* make gui narrrower on wide screens*/
+			max_width = width / 24; 
+		} else {
+			max_width = width / 16; 
+		}
 	}
 	gtk_label_set_max_width_chars(GTK_LABEL(widget), max_width);
 #endif
