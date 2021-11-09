@@ -23,6 +23,9 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
+#if HAVE_GTK_LAYER_SHELL
+#include <gtk-layer-shell.h>
+#endif
 #include "gtkdialog.h"
 #include "attributes.h"
 #include "automaton.h"
@@ -93,6 +96,29 @@ GtkWidget *widget_window_create(
 
 	/* Create the window widget */
 	widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
+
+#if HAVE_GTK_LAYER_SHELL
+	GtkLayerShellLayer layer = GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER;
+
+	value = get_tag_attribute(attr, "layer");
+	if (value) {
+		if (strcmp(value, "background") == 0)
+			layer = GTK_LAYER_SHELL_LAYER_BACKGROUND;
+		else if (strcmp(value, "bottom") == 0)
+			layer = GTK_LAYER_SHELL_LAYER_BOTTOM;
+		else if (strcmp(value, "top") == 0)
+			layer = GTK_LAYER_SHELL_LAYER_TOP;
+		else if (strcmp(value, "overlay") == 0)
+			layer = GTK_LAYER_SHELL_LAYER_OVERLAY;
+		else
+			g_warning("%s(): Unknown layer %s.", __func__, value);
+	}
+
+	if (layer != GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER) {
+		gtk_layer_init_for_window(GTK_WINDOW(widget));
+		gtk_layer_set_layer(GTK_WINDOW(widget), layer);
+	}
+#endif
 
 	/* Set a default window title */
 	attributeset_set_if_unset(Attr, ATTR_LABEL, PACKAGE);
