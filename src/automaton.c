@@ -881,6 +881,7 @@ padding.top=%i padding.bottom=%i\n", __func__, padding.left,
 	return scrolledwindow;
 }
 
+#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 static
 gboolean widget_moved(GtkWidget *widget,
                       GdkEvent *event,
@@ -926,7 +927,6 @@ gboolean widget_moved(GtkWidget *widget,
 	return FALSE;
 }
 
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
 static GtkWidget *
 create_gvim(AttributeSet * Attr)
 {
