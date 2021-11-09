@@ -1,0 +1,1 @@
+option('gtkver', type: 'integer', value: 3, description: 'GTK+ version')

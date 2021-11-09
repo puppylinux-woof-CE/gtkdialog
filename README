@@ -29,15 +29,22 @@ Get an older revision from SVN:
 Compilation and Installation
 ============================
 
-From a Source Package
----------------------
+Using Meson
+-----------
+
+    meson [configure-options] build
+    ninja -C build
+    ninja -C build install
+
+From a Source Package Using Autotools
+-------------------------------------
 
     ./configure [configure-options]
     make
     make install
 
-From SVN
---------
+From SVN Using Autotools
+------------------------
 
     ./autogen.sh [configure-options]
     make

@@ -11,12 +11,25 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -y --no-install-recommends libgtk2.0-dev libgtk-3-dev
-    - name: Build
+        sudo apt-get install -y --no-install-recommends libgtk2.0-dev libgtk-3-dev libvte-dev libvte-2.91-dev
+        python3 -m pip install meson ninja
+    - name: Copy source
       run: |
-        cp -r `pwd` ../gtk3
+        cp -r `pwd` ../gtk3-meson
+        cp -r `pwd` ../gtk3-autotools
+        cp -r `pwd` ../gtk2-autotools
+    - name: Meson build
+      run: |
+        meson --buildtype=release -Dgtkver=2 build
+        ninja -C build
+        cd ../gtk3-meson
+        meson --buildtype=release build
+        ninja -C build
+    - name: Autotools build
+      run: |
+        cd ../gtk2-autotools
         ./autogen.sh
         make -j`nproc`
-        cd ../gtk3
+        cd ../gtk3-autotools
         ./autogen.sh --enable-gtk3
         make -j`nproc`
