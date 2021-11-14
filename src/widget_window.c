@@ -113,11 +113,60 @@ GtkWidget *widget_window_create(
 		else
 			g_warning("%s(): Unknown layer %s.", __func__, value);
 	}
-
-	if (layer != GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER) {
+	
+	GtkLayerShellEdge edge = GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER;
+	GtkLayerShellEdge corner = GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER;
+	
+	value = get_tag_attribute(attr, "edge");
+	if (value) {
+		if (strcmp(value, "top") == 0)
+			edge = GTK_LAYER_SHELL_EDGE_TOP;
+		else if (strcmp(value, "bottom") == 0)
+			edge = GTK_LAYER_SHELL_EDGE_BOTTOM;
+		else if (strcmp(value, "left") == 0)
+			edge = GTK_LAYER_SHELL_EDGE_LEFT;
+		else if (strcmp(value, "right") == 0)
+			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+		else if (strcmp(value, "topleft") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_LEFT;
+			corner = GTK_LAYER_SHELL_EDGE_TOP;
+		}
+		else if (strcmp(value, "bottomleft") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_LEFT;
+			corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
+		}
+		else if (strcmp(value, "topright") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+			corner = GTK_LAYER_SHELL_EDGE_TOP;
+		}
+		else if (strcmp(value, "bottomright") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+			corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
+		}
+		else
+			g_warning("%s(): Unknown edge %s.", __func__, value); 
+	}
+	
+	if ((layer != GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER) ||
+		(edge != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER)  ||
+		(corner != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER)) {
 		gtk_layer_init_for_window(GTK_WINDOW(widget));
+	}
+	if (layer != GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER) {
 		gtk_layer_set_layer(GTK_WINDOW(widget), layer);
 	}
+	if (edge != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER) {
+		gtk_layer_auto_exclusive_zone_enable (GTK_WINDOW(widget));
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_LEFT, 20);
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_RIGHT, 20);
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_TOP, 10);
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_BOTTOM, 20);
+		gtk_layer_set_anchor(GTK_WINDOW(widget), edge, TRUE);
+		if (corner != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER) {
+			gtk_layer_set_anchor(GTK_WINDOW(widget), corner, TRUE);
+		}
+	}
+
 #endif
 
 	/* Set a default window title */
