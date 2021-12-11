@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 #include "config.h"
 #if HAVE_GTK_LAYER_SHELL
+#include <gdk/gdkwayland.h>
 #include <gtk-layer-shell.h>
 #endif
 #include "gtkdialog.h"
@@ -98,6 +99,10 @@ GtkWidget *widget_window_create(
 	widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
 
 #if HAVE_GTK_LAYER_SHELL
+	GdkWindow *window = gtk_widget_get_window(GTK_WIDGET(widget));
+	if (!GDK_IS_WAYLAND_WINDOW(window))
+		goto layer_set;
+
 	GtkLayerShellLayer layer = GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER;
 
 	value = get_tag_attribute(attr, "layer");
@@ -167,6 +172,7 @@ GtkWidget *widget_window_create(
 		}
 	}
 
+layer_set:
 #endif
 
 	/* Set a default window title */
