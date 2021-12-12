@@ -98,6 +98,9 @@ GtkWidget *widget_window_create(
 	widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
 
 #if HAVE_GTK_LAYER_SHELL
+	if (!getenv("GDK_BACKEND") || !strncmp(getenv("GDK_BACKEND"), "wayland", 7) == 0)
+		goto layer_set;
+
 	GtkLayerShellLayer layer = GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER;
 
 	value = get_tag_attribute(attr, "layer");
@@ -167,6 +170,7 @@ GtkWidget *widget_window_create(
 		}
 	}
 
+layer_set:
 #endif
 
 	/* Set a default window title */
