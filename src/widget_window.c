@@ -98,6 +98,9 @@ GtkWidget *widget_window_create(
 	widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
 
 #if HAVE_GTK_LAYER_SHELL
+	if (!attr)
+		goto layer_set;
+	
 	if (getenv("GDK_BACKEND") && strcmp(getenv("GDK_BACKEND"), "wayland") != 0)
 		goto layer_set;
 
