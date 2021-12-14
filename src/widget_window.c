@@ -103,51 +103,53 @@ GtkWidget *widget_window_create(
 
 	GtkLayerShellLayer layer = GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER;
 
-	value = get_tag_attribute(attr, "layer");
-	if (value) {
-		if (strcmp(value, "background") == 0)
-			layer = GTK_LAYER_SHELL_LAYER_BACKGROUND;
-		else if (strcmp(value, "bottom") == 0)
-			layer = GTK_LAYER_SHELL_LAYER_BOTTOM;
-		else if (strcmp(value, "top") == 0)
-			layer = GTK_LAYER_SHELL_LAYER_TOP;
-		else if (strcmp(value, "overlay") == 0)
-			layer = GTK_LAYER_SHELL_LAYER_OVERLAY;
-		else
-			g_warning("%s(): Unknown layer %s.", __func__, value);
+	if (attr) {
+		if (value = get_tag_attribute(attr, "layer")) {
+			if (strcmp(value, "background") == 0)
+				layer = GTK_LAYER_SHELL_LAYER_BACKGROUND;
+			else if (strcmp(value, "bottom") == 0)
+				layer = GTK_LAYER_SHELL_LAYER_BOTTOM;
+			else if (strcmp(value, "top") == 0)
+				layer = GTK_LAYER_SHELL_LAYER_TOP;
+			else if (strcmp(value, "overlay") == 0)
+				layer = GTK_LAYER_SHELL_LAYER_OVERLAY;
+			else
+				g_warning("%s(): Unknown layer %s.", __func__, value);
+		}
 	}
 	
 	GtkLayerShellEdge edge = GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER;
 	GtkLayerShellEdge corner = GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER;
 	
-	value = get_tag_attribute(attr, "edge");
-	if (value) {
-		if (strcmp(value, "top") == 0)
-			edge = GTK_LAYER_SHELL_EDGE_TOP;
-		else if (strcmp(value, "bottom") == 0)
-			edge = GTK_LAYER_SHELL_EDGE_BOTTOM;
-		else if (strcmp(value, "left") == 0)
-			edge = GTK_LAYER_SHELL_EDGE_LEFT;
-		else if (strcmp(value, "right") == 0)
-			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
-		else if (strcmp(value, "topleft") == 0) {
-			edge = GTK_LAYER_SHELL_EDGE_LEFT;
-			corner = GTK_LAYER_SHELL_EDGE_TOP;
+	if (attr) {
+		if (value = get_tag_attribute(attr, "edge")) {
+			if (strcmp(value, "top") == 0)
+				edge = GTK_LAYER_SHELL_EDGE_TOP;
+			else if (strcmp(value, "bottom") == 0)
+				edge = GTK_LAYER_SHELL_EDGE_BOTTOM;
+			else if (strcmp(value, "left") == 0)
+				edge = GTK_LAYER_SHELL_EDGE_LEFT;
+			else if (strcmp(value, "right") == 0)
+				edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+			else if (strcmp(value, "topleft") == 0) {
+				edge = GTK_LAYER_SHELL_EDGE_LEFT;
+				corner = GTK_LAYER_SHELL_EDGE_TOP;
+			}
+			else if (strcmp(value, "bottomleft") == 0) {
+				edge = GTK_LAYER_SHELL_EDGE_LEFT;
+				corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
+			}
+			else if (strcmp(value, "topright") == 0) {
+				edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+				corner = GTK_LAYER_SHELL_EDGE_TOP;
+			}
+			else if (strcmp(value, "bottomright") == 0) {
+				edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+				corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
+			}
+			else
+				g_warning("%s(): Unknown edge %s.", __func__, value); 
 		}
-		else if (strcmp(value, "bottomleft") == 0) {
-			edge = GTK_LAYER_SHELL_EDGE_LEFT;
-			corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
-		}
-		else if (strcmp(value, "topright") == 0) {
-			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
-			corner = GTK_LAYER_SHELL_EDGE_TOP;
-		}
-		else if (strcmp(value, "bottomright") == 0) {
-			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
-			corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
-		}
-		else
-			g_warning("%s(): Unknown edge %s.", __func__, value); 
 	}
 	
 	if ((layer != GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER) ||
