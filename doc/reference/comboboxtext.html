@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 	"http://www.w3.org/TR/html4/loose.dtd">
 
@@ -46,6 +45,9 @@
 		border: 1px dotted #b8b8c0;
 		padding: 10px;
 	}
+	tt  {
+		background-color: #e8e8f0
+	}
 	sup {
 		font-size: 10px;
 	}
@@ -81,142 +83,415 @@
 				<table bgcolor="#ffffff" cellpadding="0px" cellspacing="10px">
 					<tr>
 						<td>
-
-<h1> comboboxtext widget </h1>
-
-A <a href="http://developer.gnome.org/gtk2/2.24/GtkComboBox.html">GtkComboBox</a>
-
+<h1>comboboxtext widget</h1>
+<p>A <a href="http://developer-old.gnome.org/gtk2/2.24/GtkComboBox.html">GtkComboBox</a></p>
 <hr>
-
-<h2> Definition </h2>
-
-<pre>
-&lt;comboboxtext tag_attr="value"...&gt;
-	&lt;default&gt;text&lt;/default&gt;
-	&lt;variable&gt;varname&lt;/variable&gt;
-	&lt;input&gt;command&lt;/input&gt;...
-	&lt;input file&gt;filename&lt;/input&gt;...
-	&lt;sensitive&gt;state&lt;/sensitive&gt;
-	&lt;action&gt;activity&lt;/action&gt;...
-	&lt;action signal="type"&gt;activity&lt;/action&gt;...
-	&lt;action function="type"&gt;parameter&lt;/action&gt;...
-	&lt;item&gt;data&lt;/item&gt;...
-	&lt;output file&gt;filename&lt;/output&gt;
-&lt;/comboboxtext&gt;
-</pre>
-
-<p>"..." denotes acceptance of multiples of the same thing.</p>
-
-<h2> Tag Attributes </h2>
-
-<p>See the <a href="http://developer.gnome.org/gtk2/2.24/GtkComboBox.html#GtkComboBox.object-hierarchy">GtkComboBox</a> widget and ancestor class properties.</p>
-
+<h2>Definition</h2>
+<pre><code>&lt;comboboxtext tag_attr=&quot;value&quot;...&gt;
+    &lt;default&gt;text&lt;/default&gt;
+    &lt;variable&gt;varname&lt;/variable&gt;
+    &lt;input&gt;command&lt;/input&gt;...
+    &lt;input file&gt;filename&lt;/input&gt;...
+    &lt;sensitive&gt;state&lt;/sensitive&gt;
+    &lt;action&gt;activity&lt;/action&gt;...
+    &lt;action signal=&quot;type&quot;&gt;activity&lt;/action&gt;...
+    &lt;action function=&quot;type&quot;&gt;parameter&lt;/action&gt;...
+    &lt;item&gt;data&lt;/item&gt;...
+    &lt;output file&gt;filename&lt;/output&gt;
+&lt;/comboboxtext&gt;</code></pre>
+<p>“…” denotes acceptance of multiples of the same thing.</p>
+<h2 id="tag-attributes">Tag Attributes</h2>
+<p>See the <a href="http://developer-old.gnome.org/gtk2/2.24/GtkComboBox.html#GtkComboBox.object-hierarchy">GtkComboBox</a> widget and ancestor class properties.</p>
 <p>The following custom tag attributes are available:</p>
-
 <table class="wiki" border="1" cellpadding="5px">
-<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Value</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> space-expand </td><td class="wiki"> Pack widget expanding into space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> space-fill </td><td class="wiki"> Pack widget filling space </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> block-function-signals </td><td class="wiki"> Block signal emissions from functions </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> file-monitor </td><td class="wiki"> Emit signal when input file(s) change </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> auto-refresh </td><td class="wiki"> Auto refresh when input file(s) change </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> fs-action </td><td class="wiki"> fileselect function action type </td><td class="wiki"> <code>file</code>, <code>newfile</code>, <code>folder</code> or <code>newfolder</code> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> fs-filters </td><td class="wiki"> fileselect function pattern file filters </td><td class="wiki"> <i>pattern</i><code>|</code><i>pattern</i><code>|</code>... </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> fs-filters-mime </td><td class="wiki"> fileselect function mime-type file filters </td><td class="wiki"> <i>mime/type</i><code>|</code><i>mime/type</i><code>|</code>... (<a href="http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types">common types</a>) </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> fs-folder </td><td class="wiki"> fileselect function current folder </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> fs-title </td><td class="wiki"> fileselect function dialog title </td><td class="wiki"> </td><td class="wiki"> </td></tr>
+<tr>
+<th class="wiki"><strong>Name</strong></th>
+<th class="wiki"><strong>Description</strong></th>
+<th class="wiki"><strong>Value</strong></th>
+<th class="wiki"><strong>Since</strong></th>
+</tr>
+<tbody>
+<tr>
+<td class="wiki">space-expand</td>
+<td class="wiki">Pack widget expanding into space</td>
+<td class="wiki"><tt>true</tt> or <tt>false</tt></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">space-fill</td>
+<td class="wiki">Pack widget filling space</td>
+<td class="wiki"><tt>true</tt> or <tt>false</tt></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">block-function-signals</td>
+<td class="wiki">Block signal emissions from functions</td>
+<td class="wiki"><tt>true</tt> or <tt>false</tt></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">file-monitor</td>
+<td class="wiki">Emit signal when input file(s) change</td>
+<td class="wiki"><tt>true</tt> or <tt>false</tt></td>
+<td class="wiki">0.8.1</td>
+</tr>
+<tr>
+<td class="wiki">auto-refresh</td>
+<td class="wiki">Auto refresh when input file(s) change</td>
+<td class="wiki"><tt>true</tt> or <tt>false</tt></td>
+<td class="wiki">0.8.1</td>
+</tr>
+<tr>
+<td class="wiki">fs-action</td>
+<td class="wiki">fileselect function action type</td>
+<td class="wiki"><tt>file</tt>, <tt>newfile</tt>, <tt>folder</tt> or <tt>newfolder</tt></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">fs-filters</td>
+<td class="wiki">fileselect function pattern file filters</td>
+<td class="wiki"><em>pattern</em><tt>|</tt><em>pattern</em><tt>|</tt>…</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">fs-filters-mime</td>
+<td class="wiki">fileselect function mime-type file filters</td>
+<td class="wiki">common types</a>)</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">fs-folder</td>
+<td class="wiki">fileselect function current folder</td>
+<td class="wiki"></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">fs-title</td>
+<td class="wiki">fileselect function dialog title</td>
+<td class="wiki"></td>
+<td class="wiki"></td>
+</tr>
+</tbody>
 </table>
-
-<h2> Directives </h2>
-
+<h2 id="directives">Directives</h2>
 <p>Some of these may have tag attribute equivalents.</p>
-
 <table class="wiki" border="1" cellpadding="5px">
-<tr><th class="wiki"> <b>Name</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Contents</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> default </td><td class="wiki"> Initial selection </td><td class="wiki"> Text </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> variable </td><td class="wiki"> Variable name </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> variable export="false" </td><td class="wiki"> Variable name, not exported to shell </td><td class="wiki"> </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> input </td><td class="wiki"> Data input source </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> input file </td><td class="wiki"> Data input source </td><td class="wiki"> Filename </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> sensitive </td><td class="wiki"> Sensitive state </td><td class="wiki"> <code>true</code> or <code>false</code> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action </td><td class="wiki"> Execute command on default signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Execute command on signal </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action signal="<i>type</i>" </td><td class="wiki"> Perform function on signal </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> action function="<i>type</i>" </td><td class="wiki"> Perform function on default signal </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> action condition="<i>type</i>" </td><td class="wiki"> Execute command on default signal conditionally </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> action condition="<i>type</i>" </td><td class="wiki"> Perform function on default signal conditionally </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> action signal="<i>type</i>" condition="<i>type</i>" </td><td class="wiki"> Execute command on signal conditionally </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> action signal="<i>type</i>" condition="<i>type</i>" </td><td class="wiki"> Perform function on signal conditionally </td><td class="wiki"> <i>function</i>:<i>parameter</i> </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> action function="<i>type</i>" condition="<i>type</i>" </td><td class="wiki"> Perform function on default signal conditionally </td><td class="wiki"> <i>parameter</i> </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> item </td><td class="wiki"> Input data </td><td class="wiki"> </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> output file </td><td class="wiki"> Data output target </td><td class="wiki"> Filename </td><td class="wiki"> </td></tr>
+<tr>
+<th class="wiki"><strong>Name</strong></th>
+<th class="wiki"><strong>Description</strong></th>
+<th class="wiki"><strong>Contents</strong></th>
+<th class="wiki"><strong>Since</strong></th>
+</tr>
+<tbody>
+<tr>
+<td class="wiki">default</td>
+<td class="wiki">Initial selection</td>
+<td class="wiki">Text</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">variable</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">variable export=“false”</td>
+<td class="wiki">Variable name, not exported to shell</td>
+<td class="wiki"></td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">input</td>
+<td class="wiki">Data input source</td>
+<td class="wiki">Shell command</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">input file</td>
+<td class="wiki">Data input source</td>
+<td class="wiki">Filename</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">sensitive</td>
+<td class="wiki">Sensitive state</td>
+<td class="wiki"><tt>true</tt> or <tt>false</tt></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">action</td>
+<td class="wiki">Execute command on default signal</td>
+<td class="wiki">Shell command</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">action</td>
+<td class="wiki">Perform function on default signal</td>
+<td class="wiki"><em>function</em>:<em>parameter</em></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">action signal=“<em>type</em>”</td>
+<td class="wiki">Execute command on signal</td>
+<td class="wiki">Shell command</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">action signal=“<em>type</em>”</td>
+<td class="wiki">Perform function on signal</td>
+<td class="wiki"><em>function</em>:<em>parameter</em></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">action function=“<em>type</em>”</td>
+<td class="wiki">Perform function on default signal</td>
+<td class="wiki"><em>parameter</em></td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">action condition=“<em>type</em>”</td>
+<td class="wiki">Execute command on default signal conditionally</td>
+<td class="wiki">Shell command</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">action condition=“<em>type</em>”</td>
+<td class="wiki">Perform function on default signal conditionally</td>
+<td class="wiki"><em>function</em>:<em>parameter</em></td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">action signal=“<em>type</em>” condition=“<em>type</em>”</td>
+<td class="wiki">Execute command on signal conditionally</td>
+<td class="wiki">Shell command</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">action signal=“<em>type</em>” condition=“<em>type</em>”</td>
+<td class="wiki">Perform function on signal conditionally</td>
+<td class="wiki"><em>function</em>:<em>parameter</em></td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">action function=“<em>type</em>” condition=“<em>type</em>”</td>
+<td class="wiki">Perform function on default signal conditionally</td>
+<td class="wiki"><em>parameter</em></td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">item</td>
+<td class="wiki">Input data</td>
+<td class="wiki"></td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">output file</td>
+<td class="wiki">Data output target</td>
+<td class="wiki">Filename</td>
+<td class="wiki"></td>
+</tr>
+</tbody>
 </table>
-
-<h2> Signals </h2>
-
-<p>The default signal is "<a href="http://developer.gnome.org/gtk2/2.24/GtkComboBox.html#GtkComboBox-changed">changed</a>", emitted when the active item is changed.</p>
-
-<p>The "file-changed" signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
-
+<h2 id="signals">Signals</h2>
+<p>The default signal is “<a href="http://developer-old.gnome.org/gtk2/2.24/GtkComboBox.html#GtkComboBox-changed">changed</a>”, emitted when the active item is changed.</p>
+<p>The “file-changed” signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 <p>The following signals are connected-up for all widgets:</p>
-
-<a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="http://developer.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a>
-
-<h2> Functions </h2>
-
+<p><a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+<h2 id="functions">Functions</h2>
 <p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
-
 <table class="wiki" border="1" cellpadding="5px">
-<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> enable </td><td class="wiki"> Sensitise widget </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> disable </td><td class="wiki"> Desensitise widget </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> show </td><td class="wiki"> Show widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> hide </td><td class="wiki"> Hide widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> grabfocus </td><td class="wiki"> Grab input focus </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.1 </td></tr>
-<tr><td class="wiki"> refresh </td><td class="wiki"> Reload input data </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> save </td><td class="wiki"> Save widget data </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> fileselect </td><td class="wiki"> Launch file selection dialog </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> clear </td><td class="wiki"> Remove all widget data </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> removeselected </td><td class="wiki"> Remove selected widget data </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
+<tr>
+<th class="wiki"><strong>Type</strong></th>
+<th class="wiki"><strong>Description</strong></th>
+<th class="wiki"><strong>Parameter</strong></th>
+<th class="wiki"><strong>Since</strong></th>
+</tr>
+<tbody>
+<tr>
+<td class="wiki">enable</td>
+<td class="wiki">Sensitise widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">disable</td>
+<td class="wiki">Desensitise widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">show</td>
+<td class="wiki">Show widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.1</td>
+</tr>
+<tr>
+<td class="wiki">hide</td>
+<td class="wiki">Hide widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.1</td>
+</tr>
+<tr>
+<td class="wiki">grabfocus</td>
+<td class="wiki">Grab input focus</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.1</td>
+</tr>
+<tr>
+<td class="wiki">refresh</td>
+<td class="wiki">Reload input data</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">save</td>
+<td class="wiki">Save widget data</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">fileselect</td>
+<td class="wiki">Launch file selection dialog</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">clear</td>
+<td class="wiki">Remove all widget data</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">removeselected</td>
+<td class="wiki">Remove selected widget data</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+</tbody>
 </table>
-
 <p>The following general functions can be performed by any widget capable of emitting signals:</p>
-
 <table class="wiki" border="1" cellpadding="5px">
-<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Parameter</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> break </td><td class="wiki"> Break out of actions list </td><td class="wiki"> None </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> command </td><td class="wiki"> Execute command </td><td class="wiki"> Shell command </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> exit </td><td class="wiki"> Exit dialog </td><td class="wiki"> A value for the <code>EXIT</code> variable </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> closewindow </td><td class="wiki"> Close dialog </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> launch </td><td class="wiki"> Launch dialog </td><td class="wiki"> Variable name </td><td class="wiki"> </td></tr>
-<tr><td class="wiki"> presentwindow </td><td class="wiki"> <a href="http://developer.gnome.org/gtk2/2.24/GtkWindow.html#gtk-window-present">Present</a> dialog </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.1 </td></tr>
+<tr>
+<th class="wiki"><strong>Type</strong></th>
+<th class="wiki"><strong>Description</strong></th>
+<th class="wiki"><strong>Parameter</strong></th>
+<th class="wiki"><strong>Since</strong></th>
+</tr>
+<tbody>
+<tr>
+<td class="wiki">break</td>
+<td class="wiki">Break out of actions list</td>
+<td class="wiki">None</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">command</td>
+<td class="wiki">Execute command</td>
+<td class="wiki">Shell command</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">exit</td>
+<td class="wiki">Exit dialog</td>
+<td class="wiki">A value for the <tt>EXIT</tt> variable</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">closewindow</td>
+<td class="wiki">Close dialog</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">launch</td>
+<td class="wiki">Launch dialog</td>
+<td class="wiki">Variable name</td>
+<td class="wiki"></td>
+</tr>
+<tr>
+<td class="wiki">presentwindow</td>
+<td class="wiki">Present</a> dialog</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.1</td>
+</tr>
+</tbody>
 </table>
-
-<h2> Conditions </h2>
-
+<h2 id="conditions">Conditions</h2>
 <p>The following conditions can be used within the condition attribute of action directives:</p>
-
 <table class="wiki" border="1" cellpadding="5px">
-<tr><th class="wiki"> <b>Type</b> </th><th class="wiki"> <b>Description</b> </th><th class="wiki"> <b>Argument</b> </th><th class="wiki"> <b>Since</b> </th></tr>
-<tr><td class="wiki"> active_is_true(<i>argument</i>) </td><td class="wiki"> Active state of toggle widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> active_is_false(<i>argument</i>) </td><td class="wiki"> Active state of toggle widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> command_is_true(<i>argument</i>) </td><td class="wiki"> Output of shell command </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> command_is_false(<i>argument</i>) </td><td class="wiki"> Output of shell command </td><td class="wiki"> Shell command </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> file_is_true(<i>argument</i>) </td><td class="wiki"> Contents of a file </td><td class="wiki"> Filename </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> file_is_false(<i>argument</i>) </td><td class="wiki"> Contents of a file </td><td class="wiki"> Filename </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> sensitive_is_true(<i>argument</i>) </td><td class="wiki"> Sensitive state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> sensitive_is_false(<i>argument</i>) </td><td class="wiki"> Sensitive state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> visible_is_true(<i>argument</i>) </td><td class="wiki"> Visible state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
-<tr><td class="wiki"> visible_is_false(<i>argument</i>) </td><td class="wiki"> Visible state of widget </td><td class="wiki"> Variable name </td><td class="wiki"> 0.8.3 </td></tr>
+<tr>
+<th class="wiki"><strong>Type</strong></th>
+<th class="wiki"><strong>Description</strong></th>
+<th class="wiki"><strong>Argument</strong></th>
+<th class="wiki"><strong>Since</strong></th>
+</tr>
+<tbody>
+<tr>
+<td class="wiki">active_is_true(<em>argument</em>)</td>
+<td class="wiki">Active state of toggle widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">active_is_false(<em>argument</em>)</td>
+<td class="wiki">Active state of toggle widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">command_is_true(<em>argument</em>)</td>
+<td class="wiki">Output of shell command</td>
+<td class="wiki">Shell command</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">command_is_false(<em>argument</em>)</td>
+<td class="wiki">Output of shell command</td>
+<td class="wiki">Shell command</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">file_is_true(<em>argument</em>)</td>
+<td class="wiki">Contents of a file</td>
+<td class="wiki">Filename</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">file_is_false(<em>argument</em>)</td>
+<td class="wiki">Contents of a file</td>
+<td class="wiki">Filename</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">sensitive_is_true(<em>argument</em>)</td>
+<td class="wiki">Sensitive state of widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">sensitive_is_false(<em>argument</em>)</td>
+<td class="wiki">Sensitive state of widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">visible_is_true(<em>argument</em>)</td>
+<td class="wiki">Visible state of widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.3</td>
+</tr>
+<tr>
+<td class="wiki">visible_is_false(<em>argument</em>)</td>
+<td class="wiki">Visible state of widget</td>
+<td class="wiki">Variable name</td>
+<td class="wiki">0.8.3</td>
+</tr>
+</tbody>
 </table>
-
-<p>true means "true", "yes" or a non-zero value, false means "false", "no" or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
-
-<h2> Notes </h2>
-
+<p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
+<h2 id="notes">Notes</h2>
 <p>This widget was introduced in version 0.7.21.</p>
-
 <hr>
 <p>
 <a href="button.html">button</a>, 
@@ -259,13 +534,14 @@ A <a href="http://developer.gnome.org/gtk2/2.24/GtkComboBox.html">GtkComboBox</a
 </p>
 
 							<p>&nbsp;</p>
+							<p align="center"><strong>For GTK+ 3 reference see <a href="https://docs.gtk.org/gtk3/">the Gtk-3.0 docs</a> page</strong></p>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
-									<td class="footer" width="33%" align="center">2012-12-16 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
+									<td class="footer" width="33%" align="center">2013-04-01 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
@@ -279,3 +555,4 @@ A <a href="http://developer.gnome.org/gtk2/2.24/GtkComboBox.html">GtkComboBox</a
 
 </body>
 </html>
+
