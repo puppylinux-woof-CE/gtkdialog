@@ -29,6 +29,7 @@
 #include "widgets.h"
 #include "signals.h"
 #include "tag_attributes.h"
+#include "scrolling.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
@@ -241,6 +242,8 @@ void widget_text_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 
 		/* Connect signals */
+
+		setup_scroll_to_bottom(var);
 
 	}
 

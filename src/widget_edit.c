@@ -29,6 +29,7 @@
 #include "widgets.h"
 #include "signals.h"
 #include "tag_attributes.h"
+#include "scrolling.h"
 
 /* Defines */
 //#define DEBUG_CONTENT
@@ -229,6 +230,7 @@ void widget_edit_refresh(variable *var)
 
 		/* Connect signals */
 
+		setup_scroll_to_bottom(var);
 	}
 
 #ifdef DEBUG_TRANSITS
