@@ -1049,9 +1049,12 @@ next_command:
  * Thanks and credit go to technosaurus for the inotify code.
  */
 
-#if HAVE_SYS_INOTIFY_H
-void on_any_widget_file_changed_event(gpointer data, gint source,
-	GdkInputCondition condition)
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
+void on_any_widget_file_changed_event(GIOChannel *source, GIOCondition condition,
+	gpointer data)
+#elif HAVE_SYS_INOTIFY_H
+void on_any_widget_file_changed_event(GIOChannel *source, GdkInputCondition condition,
+	gpointer data)
 #else
 void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
@@ -1089,9 +1092,12 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
  *                                                                     *
  ***********************************************************************/
 
-#if HAVE_SYS_INOTIFY_H
-void on_any_widget_auto_refresh_event(gpointer data, gint source,
-	GdkInputCondition condition)
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
+void on_any_widget_auto_refresh_event(GIOChannel *source, GIOCondition condition,
+	gpointer data)
+#elif HAVE_SYS_INOTIFY_H
+void on_any_widget_auto_refresh_event(GIOChannel *source, GdkInputCondition condition,
+	gpointer data)
 #else
 void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
@@ -1755,6 +1761,9 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gint              count;
 	gint              fd, wd;
 	gint              index = 0;
+#if GTK_CHECK_VERSION(3,0,0)
+	GIOChannel       *gio_ch;
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -1803,15 +1812,27 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 						if (!count) {
 							/* Connect to the "changed" signal which will reach
 							 * the application as the "file-changed" signal */
+#if GTK_CHECK_VERSION(3,0,0)
+							gio_ch = g_io_channel_unix_new(fd);
+							g_io_add_watch(gio_ch, G_IO_IN,
+								on_any_widget_file_changed_event, (gpointer)var);
+#else
 							gdk_input_add(fd, GDK_INPUT_READ,
 								on_any_widget_file_changed_event, (gpointer)var); 
+#endif
 						} else {
 							/* Connect to the "changed" signal which will call
 							 * the widget's refresh function directly without
 							 * being routed through gtkdialog's signal handling
 							 * system and without emitting a signal (it's faster) */
+#if GTK_CHECK_VERSION(3,0,0)
+							gio_ch = g_io_channel_unix_new(fd);
+							g_io_add_watch(gio_ch, G_IO_IN,
+								on_any_widget_auto_refresh_event, (gpointer)var);
+#else
 							gdk_input_add(fd, GDK_INPUT_READ,
 								on_any_widget_auto_refresh_event, (gpointer)var); 
+#endif
 						}
 
 					} else {
