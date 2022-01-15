@@ -91,7 +91,7 @@ void variables_print_one(variable *var)
 	fprintf(stderr, "Name: %s\n", var->Name);
 	fprintf(stderr, "  Widget: %p\n", var->Widget);
 	fprintf(stderr, "  Type: %s\n", widgets_to_str(var->Type));
-	fprintf(stderr, "  Parent: %p\n", var->ParentWindow);
+	fprintf(stderr, "  WindowId: %d\n", var->window_id);
 	fflush(stderr);
 }
 #endif

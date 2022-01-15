@@ -32,6 +32,30 @@
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
+#include "variables.h"
+#include "widget_button.h"
+#include "widget_checkbox.h"
+#include "widget_colorbutton.h"
+#include "widget_comboboxtext.h"
+#include "widget_edit.h"
+#include "widget_entry.h"
+#include "widget_expander.h"
+#include "widget_fontbutton.h"
+#include "widget_frame.h"
+#include "widget_hscale.h"
+#include "widget_list.h"
+#include "widget_menuitem.h"
+#include "widget_notebook.h"
+#include "widget_pixmap.h"
+#include "widget_radiobutton.h"
+#include "widget_spinbutton.h"
+#include "widget_statusbar.h"
+#include "widget_table.h"
+#include "widget_terminal.h"
+#include "widget_text.h"
+#include "widget_timer.h"
+#include "widget_tree.h"
+#include "widget_window.h"
 #if HAVE_SYS_INOTIFY_H
 #include <sys/inotify.h>
 #endif
@@ -1049,7 +1073,10 @@ next_command:
  * Thanks and credit go to technosaurus for the inotify code.
  */
 
-#if HAVE_SYS_INOTIFY_H
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
+gboolean on_any_widget_file_changed_event(GIOChannel *channel,
+	GIOCondition condition, gpointer data)
+#elif HAVE_SYS_INOTIFY_H
 void on_any_widget_file_changed_event(gpointer data, gint source,
 	GdkInputCondition condition)
 #else
@@ -1057,6 +1084,9 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
 #endif
 {
+#if GTK_CHECK_VERSION(3,0,0)
+	GError   *gerror = NULL;
+#endif
 #if HAVE_SYS_INOTIFY_H
 	gchar             buffer[sizeof(struct inotify_event)];
 	variable         *var = (variable*)data;
@@ -1068,7 +1098,15 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
+#if GTK_CHECK_VERSION(3,0,0)
+	if ((G_IO_STATUS_NORMAL != g_io_channel_read_chars(channel, buffer,
+		sizeof(buffer), NULL, &gerror))) {
+		fprintf(stderr, "%s\n", gerror ? gerror->message : "");
+		return FALSE;
+	}
+#else
 	read(source, buffer, sizeof(buffer));
+#endif
 
 #else
 #ifdef DEBUG_CONTENT
@@ -1083,13 +1121,19 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
+#if GTK_CHECK_VERSION(3,0,0)
+	return TRUE;
+#endif
 }
 
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
 
-#if HAVE_SYS_INOTIFY_H
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
+gboolean on_any_widget_auto_refresh_event(GIOChannel *channel,
+	GIOCondition condition, gpointer data)
+#elif HAVE_SYS_INOTIFY_H
 void on_any_widget_auto_refresh_event(gpointer data, gint source,
 	GdkInputCondition condition)
 #else
@@ -1097,6 +1141,9 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
 #endif
 {
+#if GTK_CHECK_VERSION(3,0,0)
+	GError            *gerror = NULL;
+#endif
 #if HAVE_SYS_INOTIFY_H
 	gchar             buffer[sizeof(struct inotify_event)];
 	variable         *var = (variable*)data;
@@ -1108,7 +1155,15 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
+#if GTK_CHECK_VERSION(3,0,0)
+	if ((G_IO_STATUS_NORMAL != g_io_channel_read_chars(channel, buffer,
+		sizeof(buffer), NULL, &gerror))) {
+		fprintf(stderr, "%s\n", gerror ? gerror->message : "");
+		return FALSE;
+	}
+#else
 	read(source, buffer, sizeof(buffer));
+#endif
 
 #else
 	if (event_type == G_FILE_MONITOR_EVENT_CHANGED)
@@ -1191,11 +1246,14 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 			break;
 		default:
 			fprintf(stderr, "%s(): Unhandled widget type.\n", __func__);
-			break;
+			return FALSE;
 	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+#if GTK_CHECK_VERSION(3,0,0)
+	return TRUE;
 #endif
 }
 
@@ -1755,6 +1813,9 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gint              count;
 	gint              fd, wd;
 	gint              index = 0;
+#if GTK_CHECK_VERSION(3,0,0)
+	GIOChannel       *channel;
+#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -1803,15 +1864,43 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 						if (!count) {
 							/* Connect to the "changed" signal which will reach
 							 * the application as the "file-changed" signal */
+#if GTK_CHECK_VERSION(3,0,0)
+							if(!(channel = g_io_channel_unix_new(fd))) {
+								close(fd);
+								fd = -1;
+								break;
+							}
+							g_io_channel_set_close_on_unref(channel, TRUE);
+							g_io_channel_set_encoding(channel, NULL, NULL);
+							g_io_channel_set_buffered(channel, FALSE);
+
+							g_io_add_watch(channel, G_IO_IN | G_IO_HUP | G_IO_NVAL | G_IO_ERR,
+								on_any_widget_file_changed_event, (gpointer)var);
+#else
 							gdk_input_add(fd, GDK_INPUT_READ,
-								on_any_widget_file_changed_event, (gpointer)var); 
+								on_any_widget_file_changed_event, (gpointer)var);
+#endif
 						} else {
 							/* Connect to the "changed" signal which will call
 							 * the widget's refresh function directly without
 							 * being routed through gtkdialog's signal handling
 							 * system and without emitting a signal (it's faster) */
+#if GTK_CHECK_VERSION(3,0,0)
+							if(!(channel = g_io_channel_unix_new(fd))) {
+								close(fd);
+								fd = -1;
+								break;
+							}
+							g_io_channel_set_close_on_unref(channel, TRUE);
+							g_io_channel_set_encoding(channel, NULL, NULL);
+							g_io_channel_set_buffered(channel, FALSE);
+
+							g_io_add_watch(channel, G_IO_IN | G_IO_HUP | G_IO_NVAL | G_IO_ERR,
+								on_any_widget_auto_refresh_event, (gpointer)var);
+#else
 							gdk_input_add(fd, GDK_INPUT_READ,
-								on_any_widget_auto_refresh_event, (gpointer)var); 
+								on_any_widget_auto_refresh_event, (gpointer)var);
+#endif
 						}
 
 					} else {

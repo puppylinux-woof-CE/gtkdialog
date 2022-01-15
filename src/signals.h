@@ -80,7 +80,12 @@ void on_any_widget_row_activated_event(GtkWidget *widget,
 	GtkTreePath *path, GtkTreeViewColumn *column, AttributeSet *Attr);
 void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr);
 
-#if HAVE_SYS_INOTIFY_H
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
+gboolean on_any_widget_file_changed_event(GIOChannel *channel,
+	GIOCondition condition, gpointer data);
+gboolean on_any_widget_auto_refresh_event(GIOChannel *channel,
+	GIOCondition condition, gpointer data);
+#elif HAVE_SYS_INOTIFY_H
 void on_any_widget_file_changed_event(gpointer data, gint source,
 	GdkInputCondition condition);
 void on_any_widget_auto_refresh_event(gpointer data, gint source,
