@@ -753,6 +753,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	switch (Type) {
 		case WIDGET_HBOX:
 		case WIDGET_VBOX:
+		case WIDGET_TEXT:
 			/* Get dimensions from custom tag attributes */
 			if (attr) {
 				if (value = get_tag_attribute(attr, "width"))
@@ -1205,7 +1206,18 @@ instruction_execute_push(
 			break;
 		case WIDGET_TEXT:
 			Widget = widget_text_create(Attr, tag_attributes, Widget_Type);
-			push_widget(Widget, Widget_Type);
+			/* step: If the custom attribute "scrollable" is true
+			 * then place the widget inside a GtkScrolledWindow */
+			if (tag_attributes &&
+				(value = get_tag_attribute(tag_attributes, "scrollable")) &&
+				((strcasecmp(value, "true") == 0) ||
+				(strcasecmp(value, "yes") == 0) || (atoi(value) == 1))) {
+				scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+					tag_attributes, Widget_Type);
+				push_widget(scrolled_window, WIDGET_SCROLLEDW);
+			} else {
+				push_widget(Widget, Widget_Type);
+			}
 			break;
 		case WIDGET_TIMER:
 			Widget = widget_timer_create(Attr, tag_attributes, Widget_Type);

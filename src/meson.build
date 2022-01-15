@@ -13,6 +13,7 @@ src = [
 	'glade_support.c',
 	'gtkdialog.c',
 	'printing.c',
+	'scrolling.c',
 	'signals.c',
 	'stack.c',
 	'stringman.c',

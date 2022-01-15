@@ -35,6 +35,20 @@ MAIN_DIALOG='
 			<width>350</width>
 			<default>cursor-visible is false</default>
 		</edit>
+		<edit scroll-to-bottom="true">
+			<variable>EDIT5</variable>
+			<height>50</height>
+			<width>350</width>
+			<default>"			1 top
+			2
+			3 scroll-to-bottom is true
+			4
+			5
+			6
+			7
+			8
+			9 bottom"</default>
+			</edit>
 		<hbox>
 			<button cancel></button>
 			<button ok></button>

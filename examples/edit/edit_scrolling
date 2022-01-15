@@ -1,0 +1,39 @@
+#!/bin/sh
+
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
+TMPD=/tmp/gtkdialog/examples/"`basename $0`"
+mkdir -p "$TMPD"
+max=10
+
+MAIN_DIALOG='
+<window>
+	<vbox>
+		<edit auto-refresh="true" scroll-to-bottom="true">
+			<input file>'"$TMPD/count$max"'</input>
+			<height>100</height>
+		</edit>
+		<hbox>
+			<button cancel></button>
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG"; exit ;;
+esac
+
+(
+echo 'scroll-to-bottom="true"'
+for i in `seq $max`; do
+	sleep 1
+	echo $i of $max
+done
+echo done
+) > "$TMPD/count$max" &
+
+$GTKDIALOG --program=MAIN_DIALOG
+
