@@ -116,6 +116,24 @@
 <td class="wiki"><tt>true</tt> or <tt>false</tt></td>
 <td class="wiki">0.7.21</td>
 </tr>
+<tr>
+<td class="wiki">default-file<sup>[1]</sup></td>
+<td class="wiki">Initial file selection</td>
+<td class="wiki">A file absolute path</td>
+<td class="wiki">0.8.4+</td>
+</tr>
+<tr>
+<td class="wiki">fs-filters<sup>[2]</sup></td>
+<td class="wiki">fileselect function pattern file filters</td>
+<td class="wiki"><em>pattern</em><tt>|</tt><em>pattern</em><tt>|</tt>…</td>
+<td class="wiki">0.8.4+</td>
+</tr>
+<tr>
+<td class="wiki">fs-filters-mime<sup>[2]</sup></td>
+<td class="wiki">fileselect function mime-type file filters</td>
+<td class="wiki">... (<a href="http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types">common types</a>)</td>
+<td class="wiki">0.8.4+</td>
+</tr>
 </tbody>
 </table>
 <h2 id="directives">Directives</h2>
@@ -131,7 +149,7 @@
 <tr>
 <td class="wiki">default</td>
 <td class="wiki">Initial directory</td>
-<td class="wiki"></td>
+<td class="wiki">A directory path, empty for the run directory</td>
 <td class="wiki"></td>
 </tr>
 <tr>
@@ -147,13 +165,13 @@
 <td class="wiki">0.8.3</td>
 </tr>
 <tr>
-<td class="wiki">height<sup>[1]</sup></td>
+<td class="wiki">height<sup>[3]</sup></td>
 <td class="wiki">Initial minimum height</td>
 <td class="wiki">An integer &gt; <tt>0</tt> or <tt>-1</tt> to ignore</td>
 <td class="wiki"></td>
 </tr>
 <tr>
-<td class="wiki">width<sup>[1]</sup></td>
+<td class="wiki">width<sup>[3]</sup></td>
 <td class="wiki">Initial minimum width</td>
 <td class="wiki">An integer &gt; <tt>0</tt> or <tt>-1</tt> to ignore</td>
 <td class="wiki"></td>
@@ -165,13 +183,13 @@
 <td class="wiki"></td>
 </tr>
 <tr>
-<td class="wiki">input<sup>[2]</sup></td>
+<td class="wiki">input<sup>[4]</sup></td>
 <td class="wiki">Data input source</td>
 <td class="wiki">Shell command</td>
 <td class="wiki"></td>
 </tr>
 <tr>
-<td class="wiki">input file<sup>[2]</sup></td>
+<td class="wiki">input file<sup>[4]</sup></td>
 <td class="wiki">Data input source</td>
 <td class="wiki">Filename</td>
 <td class="wiki"></td>
@@ -201,7 +219,7 @@
 <td class="wiki">0.8.3</td>
 </tr>
 <tr>
-<td class="wiki">output file<sup>[2]</sup></td>
+<td class="wiki">output file<sup>[4]</sup></td>
 <td class="wiki">Data output target</td>
 <td class="wiki">Filename</td>
 <td class="wiki"></td>
@@ -417,10 +435,10 @@
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
 <ol type="1">
-<li>This widget has no default dimensions. Use the <tt>height</tt> and/or <tt>width</tt> directives.</li>
-<li>For <tt>input</tt> and <tt>output</tt> directives the data is always a <u>file</u> file pathname, as you would set with the <tt>default-file</tt> custom tag.
 <li>The default file path takes precedence over the default directory. Versions &lt; 0.4.8+ ignore this custom tag.  Specify both the default file path and the default directory as a fall-back.</li>
 <li>Files that match <tt>fs-filters</tt> are listed after files that match <tt>fs-filters-mine</tt>.</li>
+<li>This widget has no default dimensions. Use the <tt>height</tt> and/or <tt>width</tt> directives.</li>
+<li>For <tt>input</tt> and <tt>output</tt> directives data is always an absolute file path, as it can be set with the <tt>default-file</tt> custom tag.
 </ol>
 <hr>
 <p>

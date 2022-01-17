@@ -1,0 +1,100 @@
+#!/bin/sh
+
+# step 2021: The following new custom tag attributes, which
+# are ignored by older builds, gracefully degrade for backward compatibility.
+# "default-file"      overrides <default> - specify both if sensible
+# "fs-filters-mime"   like <entry>'s and listed before fs-filters
+# "fs-filters"        like <entry>'s
+
+# step 2022: A warning about GTK2 vs GTK3 signal differences
+#
+# The GTK3 GtkFileChooser triggers the "selection-changed" and "update-preview"
+# signals differently than the GTK2 GtkFileChooser.  If you want your
+# application to work on both GTK2 and GTK3 use this script to study which
+# events trigger on GTK2 vs GTK3.  Test what happens on application start, on a
+# single change of selection, and on applying file filters (fs-filters and
+# fs-filters-mime).  For the first two cases, the difference between GTK2 and
+# GTK3 is small but for file filters it is huge.  Unlike GTK2, which does not
+# trigger events while the filter selector is updating the file list, GTK3
+# triggers a "selection-changed" and an "update-preview" for each new file that
+# enters the file list. Thus, using the GTK3 file filter in a directory that
+# contains thousands of files can result in your application having to process
+# thousands of actions and slowing down to a crawl while the file selector is
+# being applied.
+
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
+[ -d "$1" ] && this="$1" ||
+	this="$(find "/usr/share/pixmaps" -maxdepth 1 -type f | shuf | head -1)"
+
+chooser_attrs="
+default-file=\"$this\"
+fs-filters-mime=\"image/*|image/jpeg|image/png|image/x-xpixmap|x-xpmi\"
+fs-filters=\"*|*.xpm|*.[n-z]*|[a-m]*\"
+"
+
+MAIN_DIALOG='
+<window title="Chooser 2022 Event Counters" resizable="true">
+	<vbox border-width="10">
+		<chooser '"$chooser_attrs"'>
+			<variable>CHOOSER</variable>
+			<default>'"$(dirname "$this")"'</default>
+			<width>600</width>
+			<height>400</height>
+
+			<action signal="selection-changed">refresh:SELECTION_CHANGED</action>
+			<action signal="update-preview">refresh:UPDATE_PREVIEW</action>
+			<action signal="current-folder-changed">refresh:CURRENT_FOLDER_CHANGED</action>
+			<action signal="file-activated">refresh:FILE_ACTIVATED</action>
+			<action signal="button-release-event">refresh:BUTTON_RELEASE_EVENT</action>
+
+			<action signal="button-release-event">echo "button-release-event $CHOOSER"</action>
+			<action signal="current-folder-changed">echo "current-folder-changed $CHOOSER"</action>
+			<action signal="file-activated">echo "file-activated $CHOOSER"</action>
+			<action signal="selection-changed">echo "selection-changed $CHOOSER"</action>
+			<action signal="update-preview">echo "update-preview $CHOOSER"</action>
+		</chooser>
+		<frame Event counters>
+			<hbox homogeneous="true">
+				<text label="selection changed"></text>
+				<text label="update preview"></text>
+				<text label="current folder changed"></text>
+				<text label="file activated"></text>
+				<text label="button release event"></text>
+			</hbox>
+			<hbox homogeneous="true">
+				<text label="0">
+					<variable>SELECTION_CHANGED</variable>
+					<input>printf $(($SELECTION_CHANGED +1))</input>
+				</text>
+				<text label="0">
+					<variable>UPDATE_PREVIEW</variable>
+					<input>printf $(($UPDATE_PREVIEW +1))</input>
+				</text>
+				<text label="0">
+					<variable>CURRENT_FOLDER_CHANGED</variable>
+					<input>printf $(($CURRENT_FOLDER_CHANGED +1))</input>
+				</text>
+				<text label="0">
+					<variable>FILE_ACTIVATED</variable>
+					<input>printf $(($FILE_ACTIVATED +1))</input>
+				</text>
+				<text label="0">
+					<variable>BUTTON_RELEASE_EVENT</variable>
+					<input>printf $(($BUTTON_RELEASE_EVENT +1))</input>
+				</text>
+			</hbox>
+		</frame>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# step 2022: The following new custom tag attributes, which
+# are ignored by older builds, gracefully degrade for backward compatibility.
+# "default-file"      overrides <default> - specify both if sensible
+# "fs-filters-mime"   like <entry>'s and listed before fs-filters
+# "fs-filters"        like <entry>'s
+		*/
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
+this="$(find "/usr/share/pixmaps" -maxdepth 1 -type f | shuf | head -1)"
+
+chooser_attrs="
+default-file=\"$this\"
+fs-filters-mime=\"image/*|image/png|image/x-xpixmap|x-xpmi\"
+fs-filters=\"*|*.xpm|*.[n-z]*|[a-m]*\"
+"
+
+MAIN_DIALOG='
+<window title="Chooser 2022 File Filters" resizable="true">
+	<vbox border-width="10">
+		<chooser '"$chooser_attrs"'>
+			<variable>CHOOSER</variable>
+			<default>'"$(dirname "$this")"'</default>
+			<width>600</width>
+			<height>400</height>
+			<action when="current-folder-changed">echo "current-folder-changed $CHOOSER"</action>
+			<action when="file-activated">echo "file-activated $CHOOSER"</action>
+			<action when="selection-changed">echo "selection-changed $CHOOSER"</action>
+			<action when="update-preview">echo "update-preview $CHOOSER"</action>
+		</chooser>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

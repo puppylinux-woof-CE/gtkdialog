@@ -286,11 +286,6 @@ void widget_chooser_refresh(variable *var)
 			* "fs-filters-mime"   like <entry>'s and listed before fs-filters
 			* "fs-filters"        like <entry>'s */
 
-			/*XXX step 2022: Unfortunately, GTK+-3 GtkFileChooser triggers the
-			* "selection-changed" and "update-preview" events more often than
-			* necessary when fs-filters(-mime) is used. This issue is further
-			* discussed in the sample scripts under "examples/chooser". */
-
 			/* Default file overrides <default> directory */
 			if ((tagattr_value = get_tag_attribute(var->widget_tag_attr, "default-file")))
 				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(var->Widget), tagattr_value);

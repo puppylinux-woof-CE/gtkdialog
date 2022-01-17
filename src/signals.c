@@ -2049,7 +2049,8 @@ void on_any_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet 
 /* step 2022: Work-around for GTK+-3 GtkFileChooser duplicate events issue.
  *
  * The GTK3 file chooser widget triggers duplicate "selection-changed" and
- * "update-preview" events.  Duplicates
+ * "update-preview" events when fs-filters(-mime) is used to filter the file
+ * list. See demo script "examples/chooser/chooser_event_counters".  Duplicates
  * do not occur with the GTK2 file chooser.  I have implemented a work-around
  * by defining a dedicated signal handling function for each of these two
  * signals.  The handler calls widget_signal_executor only if the current
