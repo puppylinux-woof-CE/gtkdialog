@@ -38,6 +38,7 @@
 #include "stringman.h"
 #include "widget_button.h"
 #include "widget_checkbox.h"
+#include "widget_chooser.h"
 #include "widget_colorbutton.h"
 #include "widget_combobox.h"
 #include "widget_comboboxtext.h"
@@ -232,8 +233,8 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 
 #if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_CHOOSER:
-			return gtk_file_chooser_get_filename(
-					GTK_FILE_CHOOSER(widget));
+			string = widget_chooser_envvar_construct(widget);
+			return string;
 			break;
 #endif
 
@@ -300,6 +301,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_CHECKBOX:
 			type = "CHECKBOX";
+			break;
+		case WIDGET_CHOOSER:
+			type = "CHOOSER";
 			break;
 		case WIDGET_COLORBUTTON:
 			type = "COLORBUTTON";

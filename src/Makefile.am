@@ -26,6 +26,7 @@ gtkdialog_SOURCES = \
 	scrolling.c scrolling.h \
 	widget_button.c widget_button.h \
 	widget_checkbox.c widget_checkbox.h \
+	widget_chooser.c widget_chooser.h \
 	widget_colorbutton.c widget_colorbutton.h \
 	widget_combobox.c widget_combobox.h \
 	widget_comboboxtext.c widget_comboboxtext.h \

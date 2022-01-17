@@ -1,0 +1,45 @@
+#!/bin/sh
+
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
+TMPDIR="/tmp/gtkdialog/examples/${0##*/}"
+mkdir -p "$TMPDIR"
+printf "$(dirname "${TMPDIR%/*}")" > "$TMPDIR"/out_in
+
+MAIN_DIALOG='
+<window title="Chooser 2022 Input/Output" resizable="false">
+	<vbox border-width="10">
+		<text use-markup="true" label="<b><big>Top drives Bottom</big></b>"></text>
+		<text wrap="true" label="Change the file selection in the top file browser and watch how the file selection changes in the bottom browser too"></text>
+		<hseparator></hseparator>
+		<chooser>
+			<variable>TOP</variable>
+			<width>600</width>
+			<height>300</height>
+			<output file>'"$TMPDIR/out_in"'</output>
+			<action signal="update-preview">echo Top = $TOP</action>
+			<action signal="update-preview">save:TOP</action>
+			<action signal="update-preview">refresh:BOTTOM</action>
+		</chooser>
+		<hseparator></hseparator>
+		<chooser>
+			<variable>BOTTOM</variable>
+			<width>600</width>
+			<height>300</height>
+			<input file>'"$TMPDIR/out_in"'</input>
+			<action signal="selection-changed">echo Bottom = $BOTTOM</action>
+		</chooser>
+		<hseparator></hseparator>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
