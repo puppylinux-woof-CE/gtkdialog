@@ -70,7 +70,8 @@ char *condexpr[] = {
 	"command_is_true(", "command_is_false(", "command_is_true (", "command_is_false (",
 	"file_is_true(", "file_is_false(", "file_is_true (", "file_is_false (",
 	"sensitive_is_true(", "sensitive_is_false(", "sensitive_is_true (", "sensitive_is_false (",
-	"visible_is_true(", "visible_is_false(", "visible_is_true (", "visible_is_false ("
+	"visible_is_true(", "visible_is_false(", "visible_is_true (", "visible_is_false (",
+	"variable_is_true(", "variable_is_false(", "variable_is_true (", "variable_is_false (",
 };
 
 /* Local function prototypes */
@@ -1549,6 +1550,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	#define           TYPE_CONDFUNC_FILE 3
 	#define           TYPE_CONDFUNC_SENSITIVE 4
 	#define           TYPE_CONDFUNC_VISIBLE 5
+	#define           TYPE_CONDFUNC_VARIABLE 6
 	FILE             *infile;
 	gchar             argument[256];
 	gchar             line[64] = "";
@@ -1558,6 +1560,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	gint              not;
 	gint              retval = FALSE;
 	gint              state = -1;
+	gchar             value[8] = "";
 	variable         *var;
 
 #ifdef DEBUG_TRANSITS
@@ -1568,7 +1571,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	if (condition != NULL) {
 
 		/* Try and find one of the expressions within the condition */
-		for (count = 0; count < TYPE_CONDFUNC_VISIBLE * 4; count++) {
+		for (count = 0; count < TYPE_CONDFUNC_VARIABLE * 4; count++) {
 			if (strncasecmp(condition, condexpr[count],
 				strlen(condexpr[count])) == 0) {
 				condfunc = count / 4 + TYPE_CONDFUNC_ACTIVE;
@@ -1758,6 +1761,32 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 					}
 				}
 
+			/***********************************************************
+			 * if variable()      since 0.8.4+                         *
+			 ***********************************************************/
+			} else if (condfunc == TYPE_CONDFUNC_VARIABLE) {
+
+				if (variables_is_avail_by_name(argument)) {
+					var = variables_get_by_name(argument);
+
+					strncpy(value,
+						widget_get_text_value(var->Widget, var->Type),
+						8);
+
+					if (not) {
+						if ((strcasecmp(value, "false") == 0) ||
+							(strcasecmp(value, "no") == 0) ||
+							(strcasecmp(value, "0") == 0)) {
+							retval = TRUE;
+						}
+					} else {
+						if ((strcasecmp(value, "true") == 0) ||
+							(strcasecmp(value, "yes") == 0) ||
+							(atoi(value))) {
+							retval = TRUE;
+						}
+					}
+				}
 			}
 
 #ifdef DEBUG_CONTENT
@@ -1765,6 +1794,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			fprintf(stderr, "%s():        not=%i\n", __func__, not);
 			fprintf(stderr, "%s():        line=%s\n", __func__, line);
 			fprintf(stderr, "%s():        state=%i\n", __func__, state);
+			fprintf(stderr, "%s():        value=%s\n", __func__, value);
 			fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
 #endif
 		} else {
