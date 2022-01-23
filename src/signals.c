@@ -1490,8 +1490,8 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 					execute = widget_signal_executor_eval_condition(condition);
 				}
 #endif
-/* GIinterface--->GtkFileChooser */
-			} else if (GTK_IS_FILE_CHOOSER(widget)) {
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkVBox--->GtkFileChooserWidget */
+			} else if (GTK_IS_FILE_CHOOSER_WIDGET(widget)) {
 				if (strcasecmp(signal_name, "file-activated") == 0) {
 					execute = widget_signal_executor_eval_condition(condition);
 				}
