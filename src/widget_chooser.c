@@ -376,7 +376,7 @@ void widget_chooser_save(variable *var)
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
-		if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
+		if (strlen(act) > 5 && strncasecmp(act, "file:", 5)) {
 			filename = act + 5;
 			break;
 		}
@@ -427,7 +427,7 @@ static void widget_chooser_input_by_command(variable *var, char *command)
 	/* Opening pipe for reading... */
 	if (infile = widget_opencommand(command)) {
 		/* Read the file one line at a time */
-		while (fgets(line, 512, infile)) {
+		while (fgets(line, sizeof(line), infile)) {
 			g_string_append(text, line);
 		}
 
@@ -462,7 +462,7 @@ static void widget_chooser_input_by_file(variable *var, char *filename)
 
 	if (infile = fopen(filename, "r")) {
 		/* Read the file one line at a time */
-		while (fgets(line, 512, infile)) {
+		while (fgets(line, sizeof(line), infile)) {
 			g_string_append(text, line);
 		}
 
