@@ -1,0 +1,108 @@
+#!/bin/sh
+
+# The year is 2022
+
+### Introducing signal condition "variable_is_true"
+
+# Before it executes an action with signal condition "variable_is_true", any
+# widget can test the truth value of another widget directly, that is, without
+# needing a backing file or a shell command to get the truth value.
+
+# Consider some old gtkdialog scripts that use this kind of conditional action
+# for hypothetical gtkdialog widgets W and TOGGLE:
+# <action condition="file_is_true(/some/TOGGLE)">W does something</action>
+# where the content of /some/TOGGLE reflects the truth value widget
+# TOGGLE (TOGGLE is the name inside <variable>TOGGLE</varible>).
+# For this code to work the developer needs some setup (details omitted):
+# 1) creating file /some/TOGGLE
+# 2) connecting /some/TOGGLE to the TOGGLE widget, for instance with
+#    <output file>/some/TOGGLE</file>
+# 3) saving the value of the TOGGLE widget when it changes, for instance
+#    with either one of the following actions
+#    <action>save:TOGGLE</action>
+#    <action>echo $TOGGLE > /some/TOGGLE</action>
+# (The second one is slower than the first one and not recommended).
+# The above setup is complicated if all the developer needs is some way to
+# execute widget W's actions base on widget TOGGLE's value.
+# Enter new condition "variable_is_true":
+# <action condition="variable_is_true(TOGGLE)>W does something</action>
+# No setup is necessary, it is faster and needs less code overall, which means
+# fewer bugs.
+
+# Sometimes old gtkdialog scripts use condition "command_is_true" to test a
+# truth value in a file, for example:
+# <action condition="command_is_true(echo $TOGGLE)">...<action>
+# Here too variable_is_true can replace this king of command_is_true usage:
+# <action condition="variable_is_true(TOGGLE)>...</action>
+
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
+TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+mkdir -p "$TMPDIR"
+export    True='<span font="monospace bold" fgcolor="green">TRUE</span>'
+export   False='<span font="monospace bold" fgcolor="red">FALSE</span>'
+export Neither='<span font="monospace bold"><span fgcolor="blue">NEITHER</span> true nor false</span>'
+
+MAIN_DIALOG='
+<window title="Conditional Actions 2022" window-position="1" default-width="300">
+	<vbox>
+		<vbox>
+			<text label=" " visible="false">
+				<variable>RESULT</variable>
+				<action signal="show">hide:RESULT</action>
+				<action signal="show">hide:IS_TRUE</action>
+				<action signal="show">hide:IS_FALSE</action>
+				<action signal="show">show:IS_NEITHER</action>
+				<action signal="show" condition="variable_is_true(SELECTOR)">show:IS_TRUE</action>
+				<action signal="show" condition="variable_is_false(SELECTOR)">show:IS_FALSE</action>
+				<action signal="show" condition="variable_is_true(SELECTOR)">hide:IS_NEITHER</action>
+				<action signal="show" condition="variable_is_false(SELECTOR)">hide:IS_NEITHER</action>
+				<action signal="show">refresh:DATE</action>
+			</text>
+			<text label=" ">
+				<variable>DATE</variable>
+				<input>date +"The time is %T"</input>
+			</text>
+			<text visible="false" use-markup="true">
+				<variable>IS_TRUE</variable>
+				<action signal="show">refresh:IS_TRUE</action>
+				<input>printf %s "$True ($SELECTOR)"</input>
+			</text>
+			<text visible="false" use-markup="true">
+				<variable>IS_FALSE</variable>
+				<action signal="show">refresh:IS_FALSE</action>
+				<input>printf %s "$False ($SELECTOR)"</input>
+			</text>
+			<text visible="false" use-markup="true">
+				<variable>IS_NEITHER</variable>
+				<action signal="show">refresh:IS_NEITHER</action>
+				<input>printf %s "$Neither"</input>
+			</text>
+		</vbox>
+		<frame Select a truth value>
+			<vbox width-request="300">
+				<comboboxtext>
+					<variable>SELECTOR</variable>
+					<item>true</item>
+					<item>false</item>
+					<item>yes</item>
+					<item>no</item>
+					<item>0</item>
+					<item>1</item>
+					<item>this is not a truth value</item>
+					<action>show:RESULT</action>
+				</comboboxtext>
+			</vbox>
+		</frame>
+		<hbox homogeneous="true" space-expand="false" space-fill="false">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+esac
