@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# step 2022: This widget can be used to embed a file browsing section in a
+# larger dialog, for applications such as multi-type file viewers, e.g.
+# mm_view, and desktop wallpaper setters.  Unlike the fileselect function of
+# the entry widget, chooser does not have its own window, and only implements a
+# "file open" function, therefore there is no new directory creation button.
+# File filters are implemented.  Pretty much all standard gtkdialog 0.8.4
+# features are implemented, including signal chain handling with `signal` and
+# `condition` custom tags and function `break`, and <input> and <output> tags.
+# For compatibility with older scripts, the deprecated "when" custom tag is
+# supported by translation into the "signal" tag.
+
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
+MAIN_DIALOG='
+<window title="Chooser 2022 Basic" resizable="false">
+	<vbox border-width="10">
+		<chooser>
+			<variable export="false">chooser</variable>
+			<default>/usr/share</default>
+			<width>600</width>
+			<height>400</height>
+			<sensitive>true</sensitive>
+			<action signal="current-folder-changed">echo current-folder-changed</action>
+			<action signal="file-activated">echo file-activated</action>
+			<action signal="selection-changed">echo selection-changed</action>
+			<action signal="update-preview">echo update-preview</action>
+		</chooser>
+		<hbox>
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

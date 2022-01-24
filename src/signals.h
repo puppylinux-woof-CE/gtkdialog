@@ -107,4 +107,8 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	const gchar *signal_name);
 void widget_file_monitor_try_create(variable *var, gchar *filename);
 
+void on_any_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr);
+void on_any_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet *Attr);
+void on_chooser_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr);
+void on_chooser_widget_update_preview_event(GtkWidget *widget, AttributeSet *Attr);
 #endif

@@ -45,6 +45,7 @@
 #include "widgets.h"
 #include "widget_button.h"
 #include "widget_checkbox.h"
+#include "widget_chooser.h"
 #include "widget_colorbutton.h"
 #include "widget_combobox.h"
 #include "widget_comboboxtext.h"
@@ -963,68 +964,6 @@ create_gvim(AttributeSet * Attr)
 }
 #endif
 
-#if GTK_CHECK_VERSION(2,4,0)
-static GtkWidget *
-create_chooser(AttributeSet *Attr)
-{
-	GList     *element;
-	GtkWidget *chooser;
-	char      *act;
-	char      *tagattr_value;
-
-	PIP_DEBUG("");
-/*
-	GTK_FILE_CHOOSER_ACTION_OPEN	
-	Indicates open mode. The file chooser will only let the user
-	pick an existing file.
-
-	GTK_FILE_CHOOSER_ACTION_SAVE	
-	Indicates save mode. The file chooser will let the user pick
-	an existing file, or type in a new filename.
-
-	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER	
-	Indicates an Open mode for selecting folders. The
-	file chooser will let the user pick an existing folder.
-
-	GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER	
-	Indicates a mode for creating a new folder. The file
-	chooser will let the user name an existing or new folder.
-*/
-	chooser = gtk_file_chooser_widget_new(GTK_FILE_CHOOSER_ACTION_OPEN); 
-	if (attributeset_is_avail(Attr, ATTR_HEIGHT) &&
-	    attributeset_is_avail(Attr, ATTR_WIDTH))
-		/* gtk_widget_set_usize(chooser,	Redundant */
-		gtk_widget_set_size_request(chooser,
-				atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH)),
-				atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT)));
-	
-	if (attributeset_is_avail(Attr, ATTR_DEFAULT))
-		gtk_file_chooser_set_current_folder((GtkFileChooser *)chooser, 
-				attributeset_get_first(&element, Attr, ATTR_DEFAULT));
-	
-	act = attributeset_get_first(&element, Attr, ATTR_ACTION);
-	while (act != NULL) {
-		tagattr_value = attributeset_get_this_tagattr(&element, Attr,
-			ATTR_ACTION, "when");
-		if (tagattr_value == NULL)
-			tagattr_value = "file-activated";
-		
-		/* gtk_signal_connect(GTK_OBJECT(chooser),
-				   tagattr_value,
-				   GTK_SIGNAL_FUNC
-				   (button_pressed), (gpointer) act);	Redundant */
-		g_signal_connect(G_OBJECT(chooser), tagattr_value,
-			G_CALLBACK(button_pressed),(gpointer)act);
-
-
-		act = attributeset_get_next(&element, Attr, ATTR_ACTION);
-	}
-
-	//gtk_file_chooser_set_preview_widget_active(chooser, TRUE);
-	return chooser;
-}
-#endif
-
 static gint 
 instruction_execute_push(
 		token          Token, 
@@ -1263,8 +1202,12 @@ instruction_execute_push(
 		/* Thunor: This widget is incredibly lacking in comparison to
 		 * the fileselect action function and really needs a newer
 		 * alternative (is anyone actually using this?) */
+
+		/* step 2022: This widget is used to embed a file-browsing
+		* GUI inside some file viewing applications, such as
+		* wallpaper setters and multi-type file viewers.  */
 #if GTK_CHECK_VERSION(2,4,0)
-		Widget = create_chooser(Attr);
+		Widget = widget_chooser_create(Attr, tag_attributes, Widget_Type);
 		push_widget(Widget, Widget_Type);
 #else
 		yyerror_simple("Chooser widget is not supported by"

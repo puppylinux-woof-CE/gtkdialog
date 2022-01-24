@@ -21,6 +21,7 @@ src = [
 	'variables.c',
 	'widget_button.c',
 	'widget_checkbox.c',
+	'widget_chooser.c',
 	'widget_colorbutton.c',
 	'widget_combobox.c',
 	'widget_comboboxtext.c',

@@ -35,6 +35,7 @@
 #include "variables.h"
 #include "widget_button.h"
 #include "widget_checkbox.h"
+#include "widget_chooser.h"
 #include "widget_colorbutton.h"
 #include "widget_comboboxtext.h"
 #include "widget_edit.h"
@@ -206,17 +207,6 @@ void button_leaved_attr(GtkWidget *button, AttributeSet *Attr)
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
-}
-
-/***********************************************************************
- *                                                                     *
- ***********************************************************************/
-
-/* Thunor: create_chooser() is now the only function calling this */
-
-void button_pressed(GtkWidget *button, const gchar *str)
-{
-	execute_action(GTK_WIDGET(button), str, NULL);
 }
 
 /***********************************************************************
@@ -1176,6 +1166,9 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 		case WIDGET_CHECKBOX:
 			widget_checkbox_refresh(var);
 			break;
+		case WIDGET_CHOOSER:
+			widget_chooser_refresh(var);
+			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_refresh(var);
 			break;
@@ -1497,6 +1490,11 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 					execute = widget_signal_executor_eval_condition(condition);
 				}
 #endif
+/* GtkWidget--->GtkContainer--->GtkBox--->GtkVBox--->GtkFileChooserWidget */
+			} else if (GTK_IS_FILE_CHOOSER_WIDGET(widget)) {
+				if (strcasecmp(signal_name, "file-activated") == 0) {
+					execute = widget_signal_executor_eval_condition(condition);
+				}
 			}
 
 			/* Deal with toggle widgets here as they can have a conditional
@@ -2009,3 +2007,113 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	}
 }
 #endif
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+void on_any_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "file-activated");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ *                                                                     *
+ ***********************************************************************/
+
+void on_any_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet *Attr)
+{
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	widget_signal_executor(widget, Attr, "current-folder-changed");
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ * Chooser                                                             *
+ ***********************************************************************/
+
+/* step 2022: Work-around for GTK+-3 GtkFileChooser duplicate events issue.
+ *
+ * The GTK3 file chooser widget triggers duplicate "selection-changed" and
+ * "update-preview" events when fs-filters(-mime) is used to filter the file
+ * list. See demo script "examples/chooser/chooser_event_counters".  Duplicates
+ * do not occur with the GTK2 file chooser.  I have implemented a work-around
+ * by defining a dedicated signal handling function for each of these two
+ * signals.  The handler calls widget_signal_executor only if the current
+ * widget data is non-empty and differs from the previous call, otherwise the
+ * executor isn't called.  Thus, a repeated sequence of the same file path hits
+ * execution only once, and never if the file path is empty.  This logic can
+ * only work because the signal executor handles all actions defined for a
+ * widget as a whole unit. It would not work with the older chooser
+ * implementation, which handled each <action when> independently of other
+ * actions.  Without this work-around, the demo script was showing literally
+ * thousands of duplicate or empty events when changing fs-filters in
+ * directory holding a large photo collection. The GTK2 file chooser benefits
+ * from this work-around too, because it is known to trigger signals when the
+ * file path is empty. */
+
+void on_chooser_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr)
+{
+	variable        *var   = NULL;
+	static gchar    *prev  = NULL;
+	gchar           *value = NULL;
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	value = widget_get_text_value(widget, WIDGET_CHOOSER);
+	if (value && *value) {
+		if (!prev || strcmp(prev, value) != 0)
+			widget_signal_executor(widget, Attr, "selection-changed"); /* it really did */
+		if (prev)
+			g_free(prev);
+		prev = value;
+	}
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+
+/***********************************************************************
+ * Chooser                                                             *
+ ***********************************************************************/
+
+void on_chooser_widget_update_preview_event(GtkWidget *widget, AttributeSet *Attr)
+{
+	variable        *var   = NULL;
+	static gchar    *prev  = NULL;
+	gchar           *value = NULL;
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Entering.\n", __func__);
+#endif
+
+	value = widget_get_text_value(widget, WIDGET_CHOOSER);
+	if (value && *value) {
+		if (!prev || strcmp(prev, value) != 0)
+			widget_signal_executor(widget, Attr, "update-preview"); /* it really did */
+		if (prev)
+			g_free(prev);
+		prev = value;
+	}
+
+
+#ifdef DEBUG_TRANSITS
+	fprintf(stderr, "%s(): Exiting.\n", __func__);
+#endif
+}
+

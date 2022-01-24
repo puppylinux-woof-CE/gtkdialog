@@ -25,6 +25,7 @@
 #include "widgets.h"
 #include "widget_button.h"
 #include "widget_checkbox.h"
+#include "widget_chooser.h"
 #include "widget_colorbutton.h"
 #include "widget_combobox.h"
 #include "widget_comboboxtext.h"
@@ -377,6 +378,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_CHECKBOX:
 			widget_checkbox_fileselect(toset, name, value);
 			break;
+		case WIDGET_CHOOSER:
+			widget_chooser_fileselect(toset, name, value);
+			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_fileselect(toset, name, value);
 			break;
@@ -503,6 +507,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_CHECKBOX:
 			widget_checkbox_save(var);
+			break;
+		case WIDGET_CHOOSER:
+			widget_chooser_save(var);
 			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_save(var);
@@ -650,6 +657,9 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_CHECKBOX:
 			widget_checkbox_refresh(var);
+			break;
+		case WIDGET_CHOOSER:
+			widget_chooser_refresh(var);
 			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_refresh(var);
@@ -1719,6 +1729,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_CHECKBOX:
 			widget_checkbox_clear(toclear);
 			break;
+		case WIDGET_CHOOSER:
+			widget_chooser_clear(toclear);
+			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_clear(toclear);
 			break;
@@ -1865,6 +1878,9 @@ int remove_selected_variable(const char *name)
 			break;
 		case WIDGET_CHECKBOX:
 			widget_checkbox_removeselected(toclear);
+			break;
+		case WIDGET_CHOOSER:
+			widget_chooser_removeselected(toclear);
 			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_removeselected(toclear);
