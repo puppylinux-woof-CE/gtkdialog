@@ -318,13 +318,13 @@ void widget_chooser_refresh(variable *var)
 		/* Connect signals */
 
 		g_signal_connect(G_OBJECT(var->Widget), "file-activated",
-			G_CALLBACK(on_any_widget_file_activated_event), (gpointer)var->Attributes);
+			G_CALLBACK(on_chooser_widget_file_activated_event), (gpointer)var->Attributes);
 		g_signal_connect(G_OBJECT(var->Widget), "selection-changed",
 			G_CALLBACK(on_chooser_widget_selection_changed_event), (gpointer)var->Attributes);
 		g_signal_connect(G_OBJECT(var->Widget), "update-preview",
 			G_CALLBACK(on_chooser_widget_update_preview_event), (gpointer)var->Attributes);
 		g_signal_connect(G_OBJECT(var->Widget), "current-folder-changed",
-			G_CALLBACK(on_any_widget_current_folder_changed_event), (gpointer)var->Attributes);
+			G_CALLBACK(on_chooser_widget_current_folder_changed_event), (gpointer)var->Attributes);
 		/* step: confirm-overwrite not implemented */
 	}
 

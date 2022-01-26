@@ -2039,10 +2039,10 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 #endif
 
 /***********************************************************************
- *                                                                     *
+ * Chooser                                                             *
  ***********************************************************************/
 
-void on_any_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr)
+void on_chooser_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr)
 {
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -2055,11 +2055,22 @@ void on_any_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr)
 #endif
 }
 
+/* step 2022: Folder path != data value  (GTK2 and GTK3)
+ *
+ * Note that when the current-folder-changed event is sent its data value
+ * cannot be assumed to be the folder path; instead it can be either the file
+ * list selection - subject to the quirks that are discussed futher down for
+ * signal selection-changed - or a previously visited folder path when the
+ * navigation bar is used.  Applications should assume that the data value
+ * matches the actual folder path only when the user selects and activates
+ * (enters) a folder.
+ */
+
 /***********************************************************************
- *                                                                     *
+ * Chooser                                                             *
  ***********************************************************************/
 
-void on_any_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet *Attr)
+void on_chooser_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
