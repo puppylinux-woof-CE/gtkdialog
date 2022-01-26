@@ -1,31 +1,19 @@
 #!/bin/sh
 
-# step 2021: The following new custom tag attributes, which
-# are ignored by older builds, gracefully degrade for backward compatibility.
-# "default-file"      overrides <default> - specify both if sensible
-# "fs-filters-mime"   like <entry>'s and listed before fs-filters
-# "fs-filters"        like <entry>'s
-
-# step 2022: A warning about GTK2 vs GTK3 signal differences
+# step 2022: Quirks
 #
-# The GTK3 GtkFileChooser triggers the "selection-changed" and "update-preview"
-# signals differently than the GTK2 GtkFileChooser.  If you want your
-# application to work on both GTK2 and GTK3 use this script to study which
-# events trigger on GTK2 vs GTK3.  Test what happens on application start, on a
-# single change of selection, and on applying file filters (fs-filters and
-# fs-filters-mime).  For the first two cases, the difference between GTK2 and
-# GTK3 is small but for file filters it is huge.  Unlike GTK2, which does not
-# trigger events while the filter selector is updating the file list, GTK3
-# triggers a "selection-changed" and an "update-preview" for each new file that
-# enters the file list. Thus, using the GTK3 file filter in a directory that
-# contains thousands of files can result in your application having to process
-# thousands of actions and slowing down to a crawl while the file selector is
-# being applied.
+# On signal "current-folder-changed" the <variable> value matches the currently
+# selected folder only if the user has selected and entered that folder.  There
+# are no clear rules for deriving the value otherwise. (GTK2 and GTK3)
+#
+# When fs-filters or fs-filters-mime is defined, at times the <variable> value
+# that results from the user filtering the file list does not match the
+# selection. (GTK3)
 
 [ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
-[ -d "$1" ] && this="$1" ||
-	this="$(find "/usr/share/pixmaps" -maxdepth 1 -type f | shuf | head -1)"
+[ -d "$1" ] && image_folder="$1" || image_folder="/usr/share/pixmaps"
+this="$(find "$image_folder" -maxdepth 1 -type f | shuf | head -1)"
 
 chooser_attrs="
 default-file=\"$this\"
@@ -48,11 +36,11 @@ MAIN_DIALOG='
 			<action signal="file-activated">refresh:FILE_ACTIVATED</action>
 			<action signal="button-release-event">refresh:BUTTON_RELEASE_EVENT</action>
 
-			<action signal="button-release-event">echo "button-release-event $CHOOSER"</action>
-			<action signal="current-folder-changed">echo "current-folder-changed $CHOOSER"</action>
-			<action signal="file-activated">echo "file-activated $CHOOSER"</action>
-			<action signal="selection-changed">echo "selection-changed $CHOOSER"</action>
-			<action signal="update-preview">echo "update-preview $CHOOSER"</action>
+			<action signal="button-release-event">  echo "button-release-event   ($CHOOSER)"</action>
+			<action signal="current-folder-changed">echo "current-folder-changed ($CHOOSER)"</action>
+			<action signal="file-activated">        echo "file-activated         ($CHOOSER)"</action>
+			<action signal="selection-changed">     echo "selection-changed      ($CHOOSER)"</action>
+			<action signal="update-preview">        echo "update-preview         ($CHOOSER)"</action>
 		</chooser>
 		<frame Event counters>
 			<hbox homogeneous="true">
