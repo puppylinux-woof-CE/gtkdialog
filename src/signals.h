@@ -22,6 +22,9 @@
 #ifndef SIGNALS_H
 #define SIGNALS_H
 
+#if HAVE_VTE
+#include <vte/vte.h>
+#endif
 /* Function prototypes */
 void button_clicked_attr(GtkWidget *button, AttributeSet *Attr);
 void button_entered_attr(GtkWidget *button, AttributeSet *Attr);
@@ -57,7 +60,15 @@ void on_any_widget_icon_press_event(GtkWidget *widget,
 void on_any_widget_icon_release_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr);
 #endif
+#if HAVE_VTE
+#if VTE_CHECK_VERSION(0,37,0)
+void on_any_widget_child_exited_event(GtkWidget *widget, int status, AttributeSet *Attr);
+#else
 void on_any_widget_child_exited_event(GtkWidget *widget, AttributeSet *Attr);
+#endif
+#else
+void on_any_widget_child_exited_event(GtkWidget *widget, AttributeSet *Attr);
+#endif
 gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	GdkEventKey *event, AttributeSet *Attr);
 gboolean on_any_widget_key_release_event(GtkWidget*widget,
