@@ -61,7 +61,7 @@ void on_any_widget_icon_release_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr);
 #endif
 #if HAVE_VTE
-#if VTE_CHECK_VERSION(0,36,1)
+#if VTE_CHECK_VERSION(0,37,0)
 void on_any_widget_child_exited_event(GtkWidget *widget, int status, AttributeSet *Attr);
 #else
 void on_any_widget_child_exited_event(GtkWidget *widget, AttributeSet *Attr);
