@@ -47,11 +47,13 @@ static gchar *process_string(gchar *str);
 
 extern int linenumber;
 gchar *Token;
+/* step: line number of last <action> or <input> tag */
+static int less_than_allowed_at = 0;
 
 %}
 
 	/**************************************************************
-	 * Thunor: Uncomment this to debug.
+	 * Thunor: Uncomment and unindent this to debug.
 	 **************************************************************
 	* %option debug */
 
@@ -586,7 +588,9 @@ gchar *Token;
 \<width\>        			{ Token="<width>"; return(WIDTH);   			}
 \<\/width\>      			{ Token="</width>"; return(EWIDTH);   			}
 
-\<input\>        			{ Token="<input>"; return(INPUT);   			}
+\<input\>        			{ Token="<input>";
+					  less_than_allowed_at = linenumber;
+					  return(INPUT);   					}
 \<\/input\>      			{ Token="</input>"; return(EINPUT);   			}
 \<\input\ file\> 			{ Token="<input file>"; return(INPUTFILE);   		}
 \<\input\ file[ ]+ 			{ Token="<input file>"; 
@@ -610,7 +614,9 @@ gchar *Token;
 	** The definition of action tags.
 	*/
 
-\<action\>     				{ Token="<action>"; return(ACTION);  			}
+\<action\>     				{ Token="<action>";
+					  less_than_allowed_at = linenumber;
+					  return(ACTION);					}
 \<action[ ]+   				{ Token="<action>";
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_ACTION); 					}
@@ -633,7 +639,7 @@ gchar *Token;
 					
 					/*
 					 * The quoted string. It can contain anything, except
-					 * unescaped double quote.
+					 * unescaped double quote. Multiple line OK.
 					 */
 \"	  				{
 					  Token = "double quote";
@@ -655,7 +661,7 @@ gchar *Token;
 												
 					/*
 					 * An unquoted string can contain anything except 
-					 * unescaped '<'.
+					 * unescaped '<'. Single line only.
 					 */
 [^ \n\t\>\<\"][^\n\<\\]*  		{
 					  Token = "string";
@@ -676,12 +682,26 @@ gchar *Token;
 					  yymore();
 												}
 
-<ST_STRING>"<"				{
+					/* step: special handling for shell '<' operator */
+<ST_STRING>"</"				{
 					  gtkdialog_lval.cval = g_strdup(yytext);
-					  gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 1] = '\0';
-					  unput('<');
+					  gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 2] = '\0';
+					  unput('/'); unput('<');
 					  BEGIN(0);
 					  return STRING;
+					  							}
+
+					/* step: special handling continued */
+<ST_STRING>"<"				{
+					  if (less_than_allowed_at == linenumber) {
+						yymore();
+					  } else {
+						gtkdialog_lval.cval = g_strdup(yytext);
+						gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 1] = '\0';
+						unput('<');
+						BEGIN(0);
+						return STRING;
+					}
 					  							}
 
 												
