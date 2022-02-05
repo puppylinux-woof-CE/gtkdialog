@@ -69,7 +69,7 @@ variable *variables_new(const char *name);
 /* Redundant: Not being used: variable *variables_set_widget(const char *name, GtkWidget *widget); */
 /* Redundant: Not being used: variable *variables_set_parent(const char *name, GtkWidget *parent); */
 /* Redundant: Not being used: variable *variables_set_type(const char *name, int type); */
-gboolean variables_is_avail_by_name(const char *name);
+/* Redundant: Not being used: gboolean variables_is_avail_by_name(const char *name); */
 int _tree_insert(variable *new, variable *actual);
 static variable *_tree_find(const char *name, variable *actual);
 static gint do_variables_count_widgets(variable *actual, gint n);
@@ -100,7 +100,7 @@ void variables_print_one(variable *var)
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
-/* This function will create a new variable */
+/* This function will malloc a new named variable */
 
 variable *variables_new(const char *name)
 {
@@ -110,12 +110,9 @@ variable *variables_new(const char *name)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	/* 
-	 ** If the variable exists we simply returns without making a 
-	 ** a warning. 
-	 */
-	if (variables_is_avail_by_name(name))
-		return (variables_get_by_name(name));
+	/* step: assertion guard; for what I can see variables_new isn't called
+	 * for an already allocated name but adding this guard won't hurt. */
+	g_assert(variables_get_by_name(name) == NULL);
 
 	new = g_malloc(sizeof(variable));
 	strncpy(new->Name, name, NAMELEN);
@@ -205,10 +202,9 @@ variable *variables_new_with_widget(AttributeSet *Attr,
 	 ** If the variable exists we simply returns without making a 
 	 ** a warning.
 	 */
-	if (!variables_is_avail_by_name(name)) {
+	var = variables_get_by_name(name);
+	if (var == NULL) {
 		var = variables_new(name);
-	} else {
-		var = variables_get_by_name(name);
 	}
 
 	g_assert(var != NULL);
@@ -1016,13 +1012,13 @@ variable *variables_presentwindow(const char *name)
  *                                                                     *
  ***********************************************************************/
 
-gboolean variables_is_avail_by_name(const char *name)
-{
-	if (_tree_find(name, NULL) == NULL)
-		return (FALSE);
-	else
-		return (TRUE);
-}
+/* gboolean variables_is_avail_by_name(const char *name)       Redundant */
+/* { */
+/* 	if (_tree_find(name, NULL) == NULL) */
+/* 		return (FALSE); */
+/* 	else */
+/* 		return (TRUE); */
+/* } */
 
 /***********************************************************************
  *                                                                     *
