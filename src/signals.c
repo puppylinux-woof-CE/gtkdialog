@@ -2049,10 +2049,10 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 #endif
 
 /***********************************************************************
- *                                                                     *
+ * Chooser                                                             *
  ***********************************************************************/
 
-void on_any_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr)
+void on_chooser_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr)
 {
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -2065,11 +2065,22 @@ void on_any_widget_file_activated_event(GtkWidget *widget, AttributeSet *Attr)
 #endif
 }
 
+/* step 2022: Folder path != data value  (GTK2 and GTK3)
+ *
+ * Note that when the current-folder-changed event is sent its data value
+ * cannot be assumed to be the folder path; instead it can be either the file
+ * list selection - subject to the quirks that are discussed futher down for
+ * signal selection-changed - or a previously visited folder path when the
+ * navigation bar is used.  Applications should assume that the data value
+ * matches the actual folder path only when the user selects and activates
+ * (enters) a folder.
+ */
+
 /***********************************************************************
- *                                                                     *
+ * Chooser                                                             *
  ***********************************************************************/
 
-void on_any_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet *Attr)
+void on_chooser_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -2086,42 +2097,58 @@ void on_any_widget_current_folder_changed_event(GtkWidget *widget, AttributeSet 
  * Chooser                                                             *
  ***********************************************************************/
 
-/* step 2022: Work-around for GTK+-3 GtkFileChooser duplicate events issue.
+/* step 2022: Work-around implemented for GTK3 GtkFileChooser duplicate signals.
  *
- * The GTK3 file chooser widget triggers duplicate "selection-changed" and
- * "update-preview" events when fs-filters(-mime) is used to filter the file
- * list. See demo script "examples/chooser/chooser_event_counters".  Duplicates
- * do not occur with the GTK2 file chooser.  I have implemented a work-around
- * by defining a dedicated signal handling function for each of these two
- * signals.  The handler calls widget_signal_executor only if the current
- * widget data is non-empty and differs from the previous call, otherwise the
- * executor isn't called.  Thus, a repeated sequence of the same file path hits
- * execution only once, and never if the file path is empty.  This logic can
- * only work because the signal executor handles all actions defined for a
- * widget as a whole unit. It would not work with the older chooser
- * implementation, which handled each <action when> independently of other
- * actions.  Without this work-around, the demo script was showing literally
- * thousands of duplicate or empty events when changing fs-filters in
- * directory holding a large photo collection. The GTK2 file chooser benefits
- * from this work-around too, because it is known to trigger signals when the
- * file path is empty. */
+ * When the user filters the file list using the filter pull-down selector, at
+ * times the GTK3 file chooser sends bogus and/or duplicate "update-preview"
+ * and "selection-changed" signals.  `Bogus' means that the signal indicates a
+ * file path that wasn't selected. `Duplicate' means that the file path was
+ * already sent during the current filtering action. In a test case involving a
+ * folder with 4200 jpeg/png images inside, I observed nearly 1200 bad signals.
+ * The GTK2 file chooser isn't affected.  Two work-arounds are implemented to
+ * address bad signals.  In the first work-around the handler ignores a signal
+ * if the signal's event time equals the event time of the preceding signal.
+ * Since GTK3 assigns the same event time to most signals arising from the file
+ * list filter, effectively the first work-around eliminates nearly all bad
+ * signals.  A few bad signals still manage to go across the first barrier,
+ * e.g., an empty file path, a repetition of the same file path regardless of
+ * event time.  Work-around two blocks such signals. Work-arounds are only
+ * applied if the widget does have a file filter pull-down selector.
+ * In the test case I mentioned, the two work-arounds together reduced the
+ * number of signals that went across the barriers from 1200 down to 1.
+ * However, at times the file path carried by the passing signal didn't look
+ * selected in the file list.  There is no work-around for that. */
 
 void on_chooser_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
 	variable        *var   = NULL;
+	static guint32  prev_event_time = 0;
+	guint32         event_time;
 	static gchar    *prev  = NULL;
 	gchar           *value = NULL;
+	GSList          *fl;
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	value = widget_get_text_value(widget, WIDGET_CHOOSER);
-	if (value && *value) {
-		if (!prev || strcmp(prev, value) != 0)
-			widget_signal_executor(widget, Attr, "selection-changed"); /* it really did */
-		if (prev)
-			g_free(prev);
-		prev = value;
+	fl = gtk_file_chooser_list_filters(GTK_FILE_CHOOSER(widget));
+	if (fl == NULL)
+		widget_signal_executor(widget, Attr, "selection-changed");
+	else {
+		g_slist_free(fl);
+		event_time = gtk_get_current_event_time();
+		if (event_time == prev_event_time)
+			return;
+		prev_event_time = event_time;
+
+		value = widget_get_text_value(widget, WIDGET_CHOOSER);
+		if (value && *value) {
+			if (!prev || strcmp(prev, value) != 0)
+				widget_signal_executor(widget, Attr, "selection-changed");
+			if (prev)
+				g_free(prev);
+			prev = value;
+		}
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -2136,21 +2163,34 @@ void on_chooser_widget_selection_changed_event(GtkWidget *widget, AttributeSet *
 void on_chooser_widget_update_preview_event(GtkWidget *widget, AttributeSet *Attr)
 {
 	variable        *var   = NULL;
+	static guint32  prev_event_time = 0;
+	guint32         event_time;
 	static gchar    *prev  = NULL;
 	gchar           *value = NULL;
+	GSList          *fl;
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	value = widget_get_text_value(widget, WIDGET_CHOOSER);
-	if (value && *value) {
-		if (!prev || strcmp(prev, value) != 0)
-			widget_signal_executor(widget, Attr, "update-preview"); /* it really did */
-		if (prev)
-			g_free(prev);
-		prev = value;
-	}
+	fl = gtk_file_chooser_list_filters(GTK_FILE_CHOOSER(widget));
+	if (fl == NULL)
+		widget_signal_executor(widget, Attr, "update-preview");
+	else {
+		g_slist_free(fl);
+		event_time = gtk_get_current_event_time();
+		if (event_time == prev_event_time)
+			return;
+		prev_event_time = event_time;
 
+		value = widget_get_text_value(widget, WIDGET_CHOOSER);
+		if (value && *value) {
+			if (!prev || strcmp(prev, value) != 0)
+				widget_signal_executor(widget, Attr, "update-preview");
+			if (prev)
+				g_free(prev);
+			prev = value;
+		}
+	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
