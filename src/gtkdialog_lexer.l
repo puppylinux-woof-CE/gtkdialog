@@ -58,12 +58,25 @@ gchar *Token;
 %x EMBEDDED
 %x ST_TAG_ATTR ST_QUOTED_TAGATTR
 %x ST_STRING ST_QUOTED_STRING
+%x COMMENT
 
 %%
 
 	#ifdef DEBUG
 		g_message("%s(): Start", __func__);
 	#endif
+
+	/* step: XML-style comments  <!-- .... --> work anywhere but:
+	 * inside double-quoted strings they become verbatim text;
+	 * inside a tag they are invalid;
+	 * comments cannot be nested.
+	 */
+"<!--"           { BEGIN(COMMENT); }
+<COMMENT>"-->"   { BEGIN(0); }
+<COMMENT>\n      { ++linenumber; }
+<COMMENT>[^\n-]+ { ; }
+<COMMENT>.       { ; }
+
 
 ">"       				{ Token=">"; return(yytext[0]); 			}
 <*>$[ \t\n]* 				{ Token="indent chars"; 				}
@@ -101,7 +114,12 @@ gchar *Token;
 					  Token = "double quote";
 					  BEGIN(ST_QUOTED_TAGATTR);				}
 					  
-<ST_QUOTED_TAGATTR>[^\\"]+		{
+<ST_QUOTED_TAGATTR>\n			{
+					  Token = "string";
+					  ++linenumber;
+					  yymore();						}
+
+<ST_QUOTED_TAGATTR>[^\n\\"]+		{
 					  Token = "string";
 					  yymore();						}
 
@@ -332,7 +350,7 @@ gchar *Token;
 }
 
 \<edit[ ]+ { 
-	Token="<entry>"; 
+	Token="<edit>"; 
 	BEGIN(ST_TAG_ATTR);
 	return(PART_EDIT);
 }
@@ -639,7 +657,10 @@ gchar *Token;
 					  Token = "double quote";
 					  BEGIN(ST_QUOTED_STRING);				}
 					  
-<ST_QUOTED_STRING>[^\\"]+		{
+<ST_QUOTED_STRING>\n			{ ++linenumber;
+					  yymore();						}
+
+<ST_QUOTED_STRING>[^\n\\"]+		{
 					  yymore();						}
 
 <ST_QUOTED_STRING>"\\\""		{
