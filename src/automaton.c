@@ -1231,10 +1231,11 @@ instruction_execute_push(
 	PIP_DEBUG("Widget created: %p", Widget);
 	
 	/*
-	 ** Now we create a new variable or refresh the old one for this
-	 ** new widget.
+	 ** Now we malloc a new named variable for this new widget.
+	 ** If the same variable name already exists for another widget that
+	 ** variable is reused for this new widget!
 	 */
-	variables_new_with_widget(Attr, tag_attributes, Widget, Widget_Type);
+	(void) variables_new_with_widget(Attr, tag_attributes, Widget, Widget_Type);
 
 	variables_set_attributes(attributeset_get_first(&element, Attr,
 		ATTR_VARIABLE), Attr);

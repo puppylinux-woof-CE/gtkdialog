@@ -1623,8 +1623,8 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			 ***********************************************************/
 			if (condfunc == TYPE_CONDFUNC_ACTIVE) {
 
-				if (variables_is_avail_by_name(argument)) {
-					var = variables_get_by_name(argument);
+				var = variables_get_by_name(argument);
+				if (var != NULL) {
 
 					/* There's a class hierarchy to be aware of here */
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
@@ -1732,8 +1732,8 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			 ***********************************************************/
 			} else if (condfunc == TYPE_CONDFUNC_SENSITIVE) {
 
-				if (variables_is_avail_by_name(argument)) {
-					var = variables_get_by_name(argument);
+				var = variables_get_by_name(argument);
+				if (var != NULL) {
 
 					state = gtk_widget_get_sensitive(var->Widget);
 
@@ -1753,8 +1753,8 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			 ***********************************************************/
 			} else if (condfunc == TYPE_CONDFUNC_VISIBLE) {
 
-				if (variables_is_avail_by_name(argument)) {
-					var = variables_get_by_name(argument);
+				var = variables_get_by_name(argument);
+				if (var != NULL) {
 
 					state = gtk_widget_get_visible(var->Widget);
 
@@ -1774,8 +1774,8 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			 ***********************************************************/
 			} else if (condfunc == TYPE_CONDFUNC_VARIABLE) {
 
-				if (variables_is_avail_by_name(argument)) {
-					var = variables_get_by_name(argument);
+				var = variables_get_by_name(argument);
+				if (var != NULL) {
 
 					strncpy(value,
 						widget_get_text_value(var->Widget, var->Type),
