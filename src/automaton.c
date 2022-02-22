@@ -1246,11 +1246,19 @@ instruction_execute_push(
 	widget_visibility_list_add(Widget, tag_attributes);
 	widget_visibility_list_add(scrolled_window, tag_attributes);
 
+	/* step: This is where we set the properties of some widgets
+	 * that aren't realized until viewed.  For other widgets properties
+	 * should be set in on_any_widget_realized.  Rationale: issue #18. */
+	switch (Widget_Type) {
+		case WIDGET_MENU:
+		case WIDGET_MENUITEM:
+			widget_set_tag_attributes(Widget, tag_attributes);
+			break;
+	}
+
 	/*
-	 * This is where we set the properties and connect signals 
-	 * for the widget.
+	 * This is where we connect signals for the widget.
 	 */
-	//widget_set_tag_attributes(Widget, tag_attributes);
 	g_signal_connect(G_OBJECT(Widget), "realize",
 		G_CALLBACK(on_any_widget_realized), (gpointer)tag_attributes);
 

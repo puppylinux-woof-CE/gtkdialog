@@ -806,7 +806,12 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 		widget, tag_attributes);
 #endif
 
-	widget_set_tag_attributes(widget, tag_attributes);
+	/* step: If possible, for widgets that aren't realized until viewed we
+	 * set properties early in instruction_execute_push instead of here.
+	 * Rationale: issue #18 */
+	if (!( GTK_IS_MENU(widget) || GTK_IS_MENU_ITEM(widget) )) {
+		widget_set_tag_attributes(widget, tag_attributes);
+	}
 
 	/* Thunor: I've recently (0.8.3) included this call since the
 	 * signal was connected-up for use anyway, but we don't have an
