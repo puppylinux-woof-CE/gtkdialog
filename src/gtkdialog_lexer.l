@@ -650,7 +650,8 @@ static int less_than_allowed_at = 0;
 	gtkdialog_error("Unknown end tag.");  
 }
 
-\<[^> ]*\> { 
+	/* Matching "<!" would prevent input <!--\n from starting a <COMMENT> */
+\<[^!> ]*\> {
 	Token=g_strdup(yytext); 
 	gtkdialog_error("Unknown tag.");      
 }
