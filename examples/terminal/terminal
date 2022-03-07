@@ -50,18 +50,29 @@ MAIN_DIALOG='
 				<action signal="child-exited">echo "vte0=$vte0 - New PID"</action>
 				<action signal="show">echo "vte0=$vte0 - show signal"</action>
 			</terminal>
-			<terminal argv0="/bin/sh"
+			<terminal argv0="'${SHELL:-/bin/sh}'"
 				envv0="WELCOME=Welcome to the terminal (VteTerminal) widget :)"
 				pointer-autohide="true"
 				current-directory-uri="'$HOME'"
-				cursor-background-color="#ff0"
-				highlight-background-color="#660"
-				text-background-color="#332"
-				text-foreground-color="#fff"
+
+				cursor-background-color="aqua"
+				highlight-background-color="#808000"
+				highlight-foreground-color="red"
+				text-background-color="#44d"
+				text-foreground-color="#ddd"
+
 				hscrollbar-policy="2"
 				vscrollbar-policy="2">
 				<variable>vte1</variable>
-				<input>echo echo \$WELCOME</input>
+
+				<input>echo "_info() { printf \"\033[48;2;%d;%d;%dm     \033[0m %s\n\" \"\$@\"; }"</input>
+				<input>echo " echo;echo;echo; echo \"\$WELCOME\"; echo;echo;echo"</input>
+				<input>echo "_info   0 255 255 \"cursor background color #0ff (aqua)\""</input>
+				<input>echo "_info 128 128   0 \"text select background color #222 (olive)\""</input>
+				<input>echo "_info 255   0   0 \"text select foreground color #f00 (red) GTK3 only\""</input>
+				<input>echo "_info  68  68 221 \"text background color #44d (blue)\""</input>
+				<input>echo "_info 221 221 221 \"text foreground color #ddd (gray)\""</input>
+
 				<action>echo "vte1=$vte1 - Default child-exited signal"</action>
 				<action signal="child-exited">echo "vte1=$vte1 - Resetting and re-executing command"</action>
 				<action signal="child-exited">clear:vte1</action>
@@ -69,7 +80,7 @@ MAIN_DIALOG='
 				<action signal="child-exited">refresh:vte1</action>
 				<action signal="show">echo "vte1=$vte1 - show signal"</action>
 			</terminal>
-			<terminal argv0="/bin/sh" sensitive="false"
+			<terminal argv0="'${SHELL:-/bin/sh}'" sensitive="false"
 				cursor-shape="2"
 				background-transparent="true"
 				background-saturation="0.2"
