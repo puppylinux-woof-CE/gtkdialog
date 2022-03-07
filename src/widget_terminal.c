@@ -221,6 +221,18 @@ GtkWidget *widget_terminal_create(
 				vte_terminal_set_color_highlight(VTE_TERMINAL(widget), &color);
 			}
 		}
+
+#if VTE_CHECK_VERSION(0,43,1) /* vte2 b921f1a59 */
+		/* Get custom tag attribute "highlight-foreground-color" */
+		if ((value = get_tag_attribute(attr, "highlight-foreground-color"))) {
+			if (GDK_COLOR_PARSE(value, &color)) {
+#ifdef DEBUG_CONTENT
+				fprintf(stderr, "%s:() valid colour found\n", __func__);
+#endif
+				vte_terminal_set_color_highlight_foreground(VTE_TERMINAL(widget), &color);
+			}
+		}
+#endif
 	}
 
 	/* Set width and height if both supplied */
