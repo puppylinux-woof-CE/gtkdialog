@@ -5,16 +5,6 @@
 TEMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
 mkdir -p "$TEMPDIR"
 
-#----------------------------------------------------------------------------
-# 2022 CAVEAT <input>
-# -------------------
-# if you pass the terminal some commands like this:
-# <input> echo "some commands"</input>
-# you must format "some commands" as a single line (and properly separate
-# commands with semicolons).  This is because gtkdialog passes each line in
-# echo's output as a separate command to the underlying shell.
-#----------------------------------------------------------------------------
-
 # You may notice that the last line of this demo contains "qecho":
 # the "q" is actually quitting "top". I could've just put "q" on
 # a separate line but then it sends an unnecessary newline.
