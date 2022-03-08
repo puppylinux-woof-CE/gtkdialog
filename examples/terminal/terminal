@@ -25,6 +25,22 @@ echo 0 > "$TMPDIR"/demoindex
 echo 13 > "$TMPDIR"/democount
 sed -n 1p "$TMPDIR"/demo > "$TMPDIR"/feed
 
+cat > "$TMPDIR/rc2" << \EOF
+_info() { printf "\033[48;2;%d;%d;%dm     \033[0m %s\n" "$@"; }
+_init() {
+	PS1="demo# "
+	echo
+	_info   0 255 255 "cursor background color #0ff (aqua)"
+	_info 128 128   0 "text select background color #222 (olive)"
+	_info 255   0   0 "text select foreground color #f00 (red) GTK3 only"
+	_info  68  68 221 "text background color #44d (blue)"
+	_info 221 221 221 "text foreground color #ddd (gray)"
+	echo
+}
+clear
+_init
+EOF
+
 MAIN_DIALOG='
 <window title="Terminal Widget" resizable="true">
 	<vbox>
@@ -65,13 +81,8 @@ MAIN_DIALOG='
 				vscrollbar-policy="2">
 				<variable>vte1</variable>
 
-				<input>echo "_info() { printf \"\033[48;2;%d;%d;%dm     \033[0m %s\n\" \"\$@\"; }"</input>
-				<input>echo " echo;echo;echo; echo \"\$WELCOME\"; echo;echo;echo"</input>
-				<input>echo "_info   0 255 255 \"cursor background color #0ff (aqua)\""</input>
-				<input>echo "_info 128 128   0 \"text select background color #222 (olive)\""</input>
-				<input>echo "_info 255   0   0 \"text select foreground color #f00 (red) GTK3 only\""</input>
-				<input>echo "_info  68  68 221 \"text background color #44d (blue)\""</input>
-				<input>echo "_info 221 221 221 \"text foreground color #ddd (gray)\""</input>
+				<input file>'"$TMPDIR/rc2"'</input>
+				<input>echo "echo \"\$WELCOME\""</input>
 
 				<action>echo "vte1=$vte1 - Default child-exited signal"</action>
 				<action signal="child-exited">echo "vte1=$vte1 - Resetting and re-executing command"</action>
