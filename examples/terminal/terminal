@@ -2,8 +2,8 @@
 
 [ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
-mkdir -p "$TMPDIR"
+TEMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+mkdir -p "$TEMPDIR"
 
 #----------------------------------------------------------------------------
 # 2022 CAVEAT <input>
@@ -30,12 +30,12 @@ arch
 uname -a
 /bin/sh --version
 top
-qecho restarting..." > "$TMPDIR"/demo
-echo 0 > "$TMPDIR"/demoindex
-echo 13 > "$TMPDIR"/democount
-sed -n 1p "$TMPDIR"/demo > "$TMPDIR"/feed
+qecho restarting..." > "$TEMPDIR"/demo
+echo 0 > "$TEMPDIR"/demoindex
+echo 13 > "$TEMPDIR"/democount
+sed -n 1p "$TEMPDIR"/demo > "$TEMPDIR"/feed
 
-cat > "$TMPDIR/rc2" << \EOF
+cat > "$TEMPDIR/rc2" << \EOF
 _info() { printf "\033[48;2;%d;%d;%dm     \033[0m %s\n" "$@"; }
 _init() {
 	PS1="demo# "
@@ -55,15 +55,15 @@ MAIN_DIALOG='
 <window title="Terminal Widget" resizable="true">
 	<vbox>
 		<timer interval="2" visible="false">
-			<action>"read < '"$TMPDIR"'/demoindex; index=$REPLY
-				read < '"$TMPDIR"'/democount; count=$REPLY
+			<action>"read < '"$TEMPDIR"'/demoindex; index=$REPLY
+				read < '"$TEMPDIR"'/democount; count=$REPLY
 				index=$((index + 1))
 				if [ $index -ge $count ]; then
 					index=0
 				fi
 				line=$((index + 1))
-				sed -n ${line}p '"$TMPDIR"'/demo > '"$TMPDIR"'/feed
-				echo $index > '"$TMPDIR"'/demoindex
+				sed -n ${line}p '"$TEMPDIR"'/demo > '"$TEMPDIR"'/feed
+				echo $index > '"$TEMPDIR"'/demoindex
 			"</action>
 			<action>refresh:vte2</action>
 		</timer>
@@ -91,8 +91,8 @@ MAIN_DIALOG='
 				vscrollbar-policy="2">
 				<variable>vte1</variable>
 
-				<input file>'"$TMPDIR/rc2"'</input>
-				<input>echo "echo \"\$WELCOME\""</input>
+<input file>'"$TEMPDIR/rc2"'</input>
+<input>echo "echo \"\$WELCOME\""</input>
 
 				<action>echo "vte1=$vte1 - Default child-exited signal"</action>
 				<action signal="child-exited">echo "vte1=$vte1 - Resetting and re-executing command"</action>
@@ -107,7 +107,7 @@ MAIN_DIALOG='
 				background-saturation="0.2"
 				text-foreground-color="#fff">
 				<variable>vte2</variable>
-				<input file>'"$TMPDIR"'/feed</input>
+				<input file>'"$TEMPDIR"'/feed</input>
 				<action signal="show">echo "vte2=$vte2 - show signal"</action>
 			</terminal>
 		</notebook>
