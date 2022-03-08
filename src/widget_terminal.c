@@ -69,6 +69,18 @@ void widget_terminal_clear(variable *var)
 #endif
 }
 
+#if HAVE_VTE
+#if GTK_CHECK_VERSION(3,0,0) && VTE_CHECK_VERSION(0,37,0) /* vte2 9894a095df */
+#define GDK_COLOR_TYPE GdkRGBA
+#define GDK_COLOR_PARSE(A, B)	gdk_rgba_parse((B), g_strstrip((A)))
+
+#else
+
+#define GDK_COLOR_TYPE GdkColor
+#define GDK_COLOR_PARSE(A, B)	gdk_color_parse(g_strstrip((A)), (B))
+#endif
+#endif
+
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
@@ -77,7 +89,7 @@ GtkWidget *widget_terminal_create(
 {
 	GtkWidget        *widget;
 #if HAVE_VTE
-	GdkColor          color;
+	GDK_COLOR_TYPE   color;
 	GList            *element;
 	gchar             tagattribute[256];
 	gchar            *value;
@@ -128,10 +140,7 @@ GtkWidget *widget_terminal_create(
 		 * GdkColor struct but we can convert a string like "#ff00ff" */
 		strcpy(tagattribute, "background-tint-color");
 		if ((value = get_tag_attribute(attr, tagattribute))) {
-			/* Parse the RGB value to create the necessary GdkColor.
-			 * This function doesn't like trailing whitespace so it
-			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_color_parse(g_strstrip(value), &color)) {
+			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
@@ -153,10 +162,7 @@ GtkWidget *widget_terminal_create(
 
 		/* Get custom tag attribute "text-background-color" */
 		if ((value = get_tag_attribute(attr, "text-background-color"))) {
-			/* Parse the RGB value to create the necessary GdkColor.
-			 * This function doesn't like trailing whitespace so it
-			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_color_parse(g_strstrip(value), &color)) {
+			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
@@ -166,10 +172,7 @@ GtkWidget *widget_terminal_create(
 
 		/* Get custom tag attribute "text-foreground-color" */
 		if ((value = get_tag_attribute(attr, "text-foreground-color"))) {
-			/* Parse the RGB value to create the necessary GdkColor.
-			 * This function doesn't like trailing whitespace so it
-			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_color_parse(g_strstrip(value), &color)) {
+			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
@@ -179,10 +182,7 @@ GtkWidget *widget_terminal_create(
 
 		/* Get custom tag attribute "bold-foreground-color" */
 		if ((value = get_tag_attribute(attr, "bold-foreground-color"))) {
-			/* Parse the RGB value to create the necessary GdkColor.
-			 * This function doesn't like trailing whitespace so it
-			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_color_parse(g_strstrip(value), &color)) {
+			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
@@ -193,10 +193,7 @@ GtkWidget *widget_terminal_create(
 #if ! VTE_CHECK_VERSION(0,38,0)
 		/* Get custom tag attribute "dim-foreground-color" */
 		if ((value = get_tag_attribute(attr, "dim-foreground-color"))) {
-			/* Parse the RGB value to create the necessary GdkColor.
-			 * This function doesn't like trailing whitespace so it
-			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_color_parse(g_strstrip(value), &color)) {
+			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
@@ -207,10 +204,7 @@ GtkWidget *widget_terminal_create(
 
 		/* Get custom tag attribute "cursor-background-color" */
 		if ((value = get_tag_attribute(attr, "cursor-background-color"))) {
-			/* Parse the RGB value to create the necessary GdkColor.
-			 * This function doesn't like trailing whitespace so it
-			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_color_parse(g_strstrip(value), &color)) {
+			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
@@ -220,16 +214,25 @@ GtkWidget *widget_terminal_create(
 
 		/* Get custom tag attribute "highlight-background-color" */
 		if ((value = get_tag_attribute(attr, "highlight-background-color"))) {
-			/* Parse the RGB value to create the necessary GdkColor.
-			 * This function doesn't like trailing whitespace so it
-			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_color_parse(g_strstrip(value), &color)) {
+			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
 				vte_terminal_set_color_highlight(VTE_TERMINAL(widget), &color);
 			}
 		}
+
+#if VTE_CHECK_VERSION(0,43,1) /* vte2 b921f1a59 */
+		/* Get custom tag attribute "highlight-foreground-color" */
+		if ((value = get_tag_attribute(attr, "highlight-foreground-color"))) {
+			if (GDK_COLOR_PARSE(value, &color)) {
+#ifdef DEBUG_CONTENT
+				fprintf(stderr, "%s:() valid colour found\n", __func__);
+#endif
+				vte_terminal_set_color_highlight_foreground(VTE_TERMINAL(widget), &color);
+			}
+		}
+#endif
 	}
 
 	/* Set width and height if both supplied */

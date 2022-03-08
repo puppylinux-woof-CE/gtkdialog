@@ -2,8 +2,18 @@
 
 [ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
 
-TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
-mkdir -p "$TMPDIR"
+TEMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+mkdir -p "$TEMPDIR"
+
+#----------------------------------------------------------------------------
+# 2022 CAVEAT <input>
+# -------------------
+# if you pass the terminal some commands like this:
+# <input> echo "some commands"</input>
+# you must format "some commands" as a single line (and properly separate
+# commands with semicolons).  This is because gtkdialog passes each line in
+# echo's output as a separate command to the underlying shell.
+#----------------------------------------------------------------------------
 
 # You may notice that the last line of this demo contains "qecho":
 # the "q" is actually quitting "top". I could've just put "q" on
@@ -20,24 +30,40 @@ arch
 uname -a
 /bin/sh --version
 top
-qecho restarting..." > "$TMPDIR"/demo
-echo 0 > "$TMPDIR"/demoindex
-echo 13 > "$TMPDIR"/democount
-sed -n 1p "$TMPDIR"/demo > "$TMPDIR"/feed
+qecho restarting..." > "$TEMPDIR"/demo
+echo 0 > "$TEMPDIR"/demoindex
+echo 13 > "$TEMPDIR"/democount
+sed -n 1p "$TEMPDIR"/demo > "$TEMPDIR"/feed
+
+cat > "$TEMPDIR/rc2" << \EOF
+_info() { printf "\033[48;2;%d;%d;%dm     \033[0m %s\n" "$@"; }
+_init() {
+	PS1="demo# "
+	echo
+	_info   0 255 255 "cursor background color #0ff (aqua)"
+	_info 128 128   0 "text select background color #222 (olive)"
+	_info 255   0   0 "text select foreground color #f00 (red) GTK3 only"
+	_info  68  68 221 "text background color #44d (blue)"
+	_info 221 221 221 "text foreground color #ddd (gray)"
+	echo
+}
+clear
+_init
+EOF
 
 MAIN_DIALOG='
 <window title="Terminal Widget" resizable="true">
 	<vbox>
 		<timer interval="2" visible="false">
-			<action>"read < '"$TMPDIR"'/demoindex; index=$REPLY
-				read < '"$TMPDIR"'/democount; count=$REPLY
+			<action>"read < '"$TEMPDIR"'/demoindex; index=$REPLY
+				read < '"$TEMPDIR"'/democount; count=$REPLY
 				index=$((index + 1))
 				if [ $index -ge $count ]; then
 					index=0
 				fi
 				line=$((index + 1))
-				sed -n ${line}p '"$TMPDIR"'/demo > '"$TMPDIR"'/feed
-				echo $index > '"$TMPDIR"'/demoindex
+				sed -n ${line}p '"$TEMPDIR"'/demo > '"$TEMPDIR"'/feed
+				echo $index > '"$TEMPDIR"'/demoindex
 			"</action>
 			<action>refresh:vte2</action>
 		</timer>
@@ -50,18 +76,24 @@ MAIN_DIALOG='
 				<action signal="child-exited">echo "vte0=$vte0 - New PID"</action>
 				<action signal="show">echo "vte0=$vte0 - show signal"</action>
 			</terminal>
-			<terminal argv0="/bin/sh"
+			<terminal argv0="'${SHELL:-/bin/sh}'"
 				envv0="WELCOME=Welcome to the terminal (VteTerminal) widget :)"
 				pointer-autohide="true"
 				current-directory-uri="'$HOME'"
-				cursor-background-color="#ff0"
-				highlight-background-color="#660"
-				text-background-color="#332"
-				text-foreground-color="#fff"
+
+				cursor-background-color="aqua"
+				highlight-background-color="#808000"
+				highlight-foreground-color="red"
+				text-background-color="#44d"
+				text-foreground-color="#ddd"
+
 				hscrollbar-policy="2"
 				vscrollbar-policy="2">
 				<variable>vte1</variable>
-				<input>echo echo \$WELCOME</input>
+
+<input file>'"$TEMPDIR/rc2"'</input>
+<input>echo "echo \"\$WELCOME\""</input>
+
 				<action>echo "vte1=$vte1 - Default child-exited signal"</action>
 				<action signal="child-exited">echo "vte1=$vte1 - Resetting and re-executing command"</action>
 				<action signal="child-exited">clear:vte1</action>
@@ -69,13 +101,13 @@ MAIN_DIALOG='
 				<action signal="child-exited">refresh:vte1</action>
 				<action signal="show">echo "vte1=$vte1 - show signal"</action>
 			</terminal>
-			<terminal argv0="/bin/sh" sensitive="false"
+			<terminal argv0="'${SHELL:-/bin/sh}'" sensitive="false"
 				cursor-shape="2"
 				background-transparent="true"
 				background-saturation="0.2"
 				text-foreground-color="#fff">
 				<variable>vte2</variable>
-				<input file>'"$TMPDIR"'/feed</input>
+				<input file>'"$TEMPDIR"'/feed</input>
 				<action signal="show">echo "vte2=$vte2 - show signal"</action>
 			</terminal>
 		</notebook>
