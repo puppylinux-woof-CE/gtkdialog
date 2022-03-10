@@ -1,4 +1,4 @@
-project('gtkdialog', 'c', version: '0.8.4', license: 'GPLv2')
+project('gtkdialog', 'c', version: '0.8.5', license: 'GPLv2')
 
 gthread = dependency('gthread-2.0')
 

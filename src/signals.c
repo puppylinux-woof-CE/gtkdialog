@@ -1775,7 +1775,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 				}
 
 			/***********************************************************
-			 * if variable()      since 0.8.4+                         *
+			 * if variable()      since 0.8.5                         *
 			 ***********************************************************/
 			} else if (condfunc == TYPE_CONDFUNC_VARIABLE) {
 

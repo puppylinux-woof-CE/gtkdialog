@@ -1,6 +1,9 @@
 Please see NEWS for a summary of changes since the last release suitable
 for announcements.
 
+* All news and changes will be documented in the gtkdialog wiki -
+- https://github.com/puppylinux-woof-CE/gtkdialog/wiki#development
+
 * Sun Apr 7 2013 Thunor <thunorsif@hotmail.com>
 - Updated a few wiki/reference pages with new info, fixed bad links.
 - Changed GTKDIALOG=gtkdialog in all examples/applications to
