@@ -18,13 +18,17 @@ Downloading the Source Code
 ===========================
 
 Get it from here:
-    http://code.google.com/p/gtkdialog/downloads/list
+    https://github.com/puppylinux-woof-CE/gtkdialog/releases
 
-Get the latest revision from SVN (always stable):
-    svn checkout http://gtkdialog.googlecode.com/svn/trunk/ gtkdialog
+Get the latest revision from git (always stable):
+    https://github.com/puppylinux-woof-CE/gtkdialog.git
 
-Get an older revision from SVN:
-    svn checkout -r432 http://gtkdialog.googlecode.com/svn/trunk/ gtkdialog
+Get an older revision from git:
+    # clone the repo
+    git clone https://github.com/puppylinux-woof-CE/gtkdialog.git
+    
+    # checkout. Use any 7 digit hash in the log
+    git checkout 78f7ab3 # this is from 2022-01-24
 
 Compilation and Installation
 ============================
@@ -43,7 +47,7 @@ From a Source Package Using Autotools
     make
     make install
 
-From SVN Using Autotools
+From git Using Autotools
 ------------------------
 
     ./autogen.sh [configure-options]
@@ -71,6 +75,6 @@ this wrapped in an #ifdef __arm__ preprocessor macro in automaton.c.
 Contacting Us
 =============
 
-http://code.google.com/p/gtkdialog/
+https://github.com/puppylinux-woof-CE/gtkdialog
 
-2013-01-06
+2022-03-20
