@@ -176,6 +176,13 @@ GtkWidget *widget_window_create(
 layer_set:
 #endif
 
+	/* app id and theme window/taskbar icon */
+	value = get_tag_attribute(attr, "icon-name");
+	if (value) {
+		gtk_window_set_icon_name(GTK_WINDOW(widget), value);
+		g_set_prgname(value);
+	}
+
 	/* Set a default window title */
 	attributeset_set_if_unset(Attr, ATTR_LABEL, PACKAGE);
 	gtk_window_set_title(GTK_WINDOW(widget), 
