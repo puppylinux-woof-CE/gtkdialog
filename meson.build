@@ -18,3 +18,4 @@ else
 endif
 
 subdir('src')
+subdir('data')
