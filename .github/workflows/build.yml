@@ -22,14 +22,18 @@ jobs:
       run: |
         meson --buildtype=release -Dgtkver=2 build
         ninja -C build
+        DESTDIR=/tmp/meson-gtk3 ninja -C build install
         cd ../gtk3-meson
         meson --buildtype=release build
         ninja -C build
+        DESTDIR=/tmp/meson-gtk2 ninja -C build install
     - name: Autotools build
       run: |
         cd ../gtk2-autotools
         ./autogen.sh
         make -j`nproc`
+        sudo DESTDIR=/tmp/autotools-gtk2 make install
         cd ../gtk3-autotools
         ./autogen.sh --enable-gtk3
         make -j`nproc`
+        sudo DESTDIR=/tmp/autotools-gtk3 make install
