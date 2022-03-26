@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -84,7 +83,8 @@
 					<tr>
 						<td>
 <h1>button widget</h1>
-<p>A <a href="http://developer-old.gnome.org/gtk2/2.24/GtkButton.html">GtkButton</a> containing either a <a href="http://developer-old.gnome.org/gtk2/2.24/GtkLabel.html">GtkLabel</a>, a <a href="http://developer-old.gnome.org/gtk2/2.24/GtkImage.html">GtkImage</a> or both packed inside a <a href="http://developer-old.gnome.org/gtk2/2.24/GtkHBox.html">GtkHBox</a> or <a href="http://developer-old.gnome.org/gtk2/2.24/GtkVBox.html">GtkVBox</a></p>
+<p>Gtk2: A <a href="https://developer-old.gnome.org/gtk2/2.24/GtkButton.html">GtkButton</a> containing either a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkLabel.html">GtkLabel</a>, a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkImage.html">GtkImage</a> or both packed inside a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkHBox.html">GtkHBox</a> or <a href="https://developer-old.gnome.org/gtk2/2.24/GtkVBox.html">GtkVBox</a></p>
+<p>Gtk3: A <a href="https://docs.gtk.org/gtk3/class.Button.html">GtkButton</a> containing either a <a href="https://docs.gtk.org/gtk3/class.Label.html">GtkLabel</a>, a <a href="https://docs.gtk.org/gtk3/class.Image.html">GtkImage</a> or both packed inside a <a href="https://docs.gtk.org/gtk3/class.Box.html">GtkBox</a></p>
 <hr>
 <h2>Definition</h2>
 <pre><code>&lt;button yes no ok cancel help tag_attr=&quot;value&quot;...&gt;
@@ -102,7 +102,7 @@
 &lt;/button&gt;</code></pre>
 <p>“…” denotes acceptance of multiples of the same thing.</p>
 <h2 id="tag-attributes">Tag Attributes</h2>
-<p>See the <a href="http://developer-old.gnome.org/gtk2/2.24/GtkButton.html#GtkButton.object-hierarchy">GtkButton</a> widget and ancestor class properties.</p>
+<p>See the GtkButton widget and ancestor class properties.</p>
 <p>The following custom tag attributes are available:</p>
 <table class="wiki" border="1" cellpadding="5">
 <tr>
@@ -163,7 +163,7 @@
 <tr>
 <td class="wiki">stock-icon-size</td>
 <td class="wiki">The size of the GTK stock icon</td>
-<td class="wiki">GtkIconSize</a>)</td>
+<td class="wiki"><tt>0</tt> to <tt>6</tt> (see <a href="https://developer-old.gnome.org/gtk2/2.24/gtk2-Themeable-Stock-Images.html#GtkIconSize">GtkIconSize</a> - Gtk2)</td>
 <td class="wiki">0.8.1</td>
 </tr>
 </tbody>
@@ -223,7 +223,7 @@
 <tr>
 <td class="wiki">input file stock=“<em>gtk-image</em>”<sup>[4]</sup></td>
 <td class="wiki">GTK stock icon ID</td>
-<td class="wiki">full list</a>)</td>
+<td class="wiki"><tt>gtk-about</tt>, <tt>gtk-add</tt> ... (<a href="https://developer-old.gnome.org/gtk2/2.24/gtk2-Stock-Items.html#GTK-STOCK-ABOUT:CAPS">full list</a>)</td>
 <td class="wiki"></td>
 </tr>
 <tr>
@@ -295,10 +295,11 @@
 </tbody>
 </table>
 <h2 id="signals">Signals</h2>
-<p>The default signal is “<a href="http://developer-old.gnome.org/gtk2/2.24/GtkButton.html#GtkButton-clicked">clicked</a>”, emitted when the button has been activated (pressed and released).</p>
+<p>The default signal is “clicked” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkButton.html#GtkButton-clicked">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/method.Button.clicked.html">Gtk3</a>), emitted when the button has been activated (pressed and released).</p>
 <p>The “file-changed” signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 <p>The following signals are connected-up for all widgets:</p>
-<p><a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+<p><strong>Gtk2: </strong><a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+<p><strong>Gtk3: </strong><a href="https://docs.gtk.org/gtk3/signal.Widget.button-press-event.html">button-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.button-release-event.html">button-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.configure-event.html">configure-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.enter-notify-event.html">enter-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.leave-notify-event.html">leave-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-in-event.html">focus-in-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-out-event.html">focus-out-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.hide.html">hide</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.show.html">show</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.realize.html">realize</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-press-event.html">key-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-release-event.html">key-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.map-event.html">map-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.unmap-event.html">unmap-event</a></p>
 <h2 id="functions">Functions</h2>
 <p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
 <table class="wiki" border="1" cellpadding="5">
@@ -394,7 +395,7 @@
 </tr>
 <tr>
 <td class="wiki">presentwindow</td>
-<td class="wiki">Present</a> dialog</td>
+<td class="wiki">Present dialog</td>
 <td class="wiki">Variable name</td>
 <td class="wiki">0.8.1</td>
 </tr>
@@ -487,8 +488,8 @@
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
 <ol type="1">
-<li><p>The existing “<a href="http://developer-old.gnome.org/gtk2/2.24/GtkButton.html#GtkButton--image-position">image-position</a>” GTK+ property – normally only applicable to stock buttons – has been extended to apply to all Gtkdialog buttons.</p></li>
-<li><p>The existing “<a href="http://developer-old.gnome.org/gtk2/2.24/GtkBox.html#GtkBox--homogeneous">homogeneous</a>” GTK+ property – applicable to the hbox and vbox – can be used here to effect the box inside the button when including an image and a label.</p></li>
+<li><p>The existing “image-position” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkButton.html#GtkButton--image-position">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.Button.image-position.html">Gtk3</a>) GTK+ property – normally only applicable to stock buttons – has been extended to apply to all Gtkdialog buttons.</p></li>
+<li><p>The existing “homogeneous” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkBox.html#GtkBox--homogeneous">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.Box.homogeneous.html">Gtk3</a>) GTK+ property – applicable to the hbox and vbox – can be used here to affect the box inside the button when including an image and a label.</p></li>
 <li><p>Theme icons default to 20 and do not scale or refresh (the “theme-icon-size” custom tag attribute can be used to request a size).</p></li>
 <li><p>Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the “stock-icon-size” custom tag attribute can be used to request a size).</p></li>
 </ol>
@@ -535,16 +536,14 @@
 </p>
 
 							<p>&nbsp;</p>
-							<p align="center"><strong>For GTK+ 3 reference see <a href="https://docs.gtk.org/gtk3/">the Gtk-3.0 docs</a> page</strong></p>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
-									<td class="footer" width="33%" align="center">2013-04-01 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
-									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
-									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://github.com/puppylinux-woof-CE/gtkdialog">Project Page</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
 							</table>
 						</td>

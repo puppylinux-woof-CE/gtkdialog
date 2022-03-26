@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -84,8 +83,10 @@
 					<tr>
 						<td>
 <h1>chooser widget</h1>
-<p>A <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooserWidget.html">GtkFileChooserWidget</a>
-that uses <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html">GtkFileChooser</a></p>
+<p>Gtk2: A <a href="https://developer-old.gnome.org/gtk2/2.24/GtkFileChooserWidget.html">GtkFileChooserWidget</a>
+that uses <a href="https://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html">GtkFileChooser</a></p>
+<p>Gtk3: A <a href="https://docs.gtk.org/gtk3/class.FileChooserWidget.html">GtkFileChooserWidget</a>
+that uses <a href="https://docs.gtk.org/gtk3/iface.FileChooser.html">GtkFileChooser</a></p>
 <hr>
 <h2>Definition</h2>
 <pre><code>&lt;chooser tag_attr=&quot;value&quot;...&gt;
@@ -101,7 +102,7 @@ that uses <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html"
 &lt;/chooser&gt;</code></pre>
 <p>“…” denotes acceptance of multiples of the same thing.</p>
 <h2 id="tag-attributes">Tag Attributes</h2>
-<p>See the <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooserWidget.html#GtkFileChooserWidget.object-hierarchy">GtkFileChooserWidget</a> widget and ancestor class properties.</p>
+<p>See the GtkFileChooserWidget widget and ancestor class properties.</p>
 <p>The following custom tag attributes are available:</p>
 <table class="wiki" border="1" cellpadding="5">
 <tr>
@@ -132,7 +133,7 @@ that uses <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html"
 <tr>
 <td class="wiki">fs-filters-mime<sup>[2]</sup></td>
 <td class="wiki">fileselect function mime-type file filters</td>
-<td class="wiki">... (<a href="http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types">common types</a>)</td>
+<td class="wiki">... (<a href="https://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types">common types</a>)</td>
 <td class="wiki">0.8.5</td>
 </tr>
 </tbody>
@@ -228,26 +229,14 @@ that uses <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html"
 </tbody>
 </table>
 <h2 id="signals">Signals</h2>
-<p>The default signal is "<a href="https://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html#GtkFileChooser-file-activated">file-activated</a> emitted when the user "activates" a file in the file chooser. This can happen by double-clicking on a file in the file list, or by pressing Enter.</p>
+<p>The default signal is "file-activated" (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html#GtkFileChooser-file-activated">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/signal.FileChooser.file-activated.html">Gtk3</a>) emitted when the user "activates" a file in the file chooser. This can happen by double-clicking on a file in the file list, or by pressing Enter.</p>
 <p>The "selection-changed" signal is emitted when there is a change in the set of selected files in the file list.</p>
 <p>The "update-preview" signal is emitted when the preview in a file chooser should be regenerated. For example, this can happen when the currently selected file changes. This signal is still emitted even though the current implementation does not display a preview of the selected file.</p>
 <p>The "current-folder-changed" signal is emitted when the current folder in a chooser widget changes.</p>
 <p>The "confirm-overwrite" signal is emitted whenever it would be appropriate to present a confirmation dialog when the user has selected a file name that already exists. The current implementation never emits this signal.</p>
 <p>The following signals are connected-up for all widgets:</p>
-<p><a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>,
-<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+<p><strong>Gtk2: </strong><a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+<p><strong>Gtk3: </strong><a href="https://docs.gtk.org/gtk3/signal.Widget.button-press-event.html">button-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.button-release-event.html">button-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.configure-event.html">configure-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.enter-notify-event.html">enter-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.leave-notify-event.html">leave-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-in-event.html">focus-in-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-out-event.html">focus-out-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.hide.html">hide</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.show.html">show</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.realize.html">realize</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-press-event.html">key-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-release-event.html">key-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.map-event.html">map-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.unmap-event.html">unmap-event</a></p>
 <h2 id="functions">Functions</h2>
 <p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
 <table class="wiki" border="1" cellpadding="5">
@@ -355,7 +344,7 @@ that uses <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html"
 </tr>
 <tr>
 <td class="wiki">presentwindow</td>
-<td class="wiki">Present</a> dialog</td>
+<td class="wiki">Present dialog</td>
 <td class="wiki">Variable name</td>
 <td class="wiki">0.8.1</td>
 </tr>
@@ -496,16 +485,14 @@ that uses <a href="http://developer-old.gnome.org/gtk2/2.24/GtkFileChooser.html"
 </p>
 
 							<p>&nbsp;</p>
-							<p align="center"><strong>For GTK+ 3 reference see <a href="https://docs.gtk.org/gtk3/">the Gtk-3.0 docs</a> page</strong></p>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
-									<td class="footer" width="33%" align="center">2022-01-15 <a href="https:github.com/step-">step</a></td>
-									<td class="footer" width="33%" align="center"><a href="https://puppylinux-woof-CE/gtkdialog/">Project Page</a></td>
-									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://github.com/puppylinux-woof-CE/gtkdialog">Project Page</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
 							</table>
 						</td>

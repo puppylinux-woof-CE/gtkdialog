@@ -39,7 +39,7 @@ clrPRE="#e8e8f0"
 # alternative browsers and then the CSS beautifies and tweaks it.
 echo '
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+	"https://www.w3.org/TR/html4/loose.dtd">
 
 <html>
 <head>
@@ -169,8 +169,8 @@ echo '</p>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
 									<td class="footer" width="33%" align="center">'$(date "+%Y-%m-%d")' <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
-									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
-									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
+									<td class="footer" width="33%" align="center"><a href="https://code.google.com/p/gtkdialog/">Project Page</a></td>
+									<td class="footer" width="33%" align="center"><a href="https://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
 							</table>
 						</td>

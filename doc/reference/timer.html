@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -84,7 +83,8 @@
 					<tr>
 						<td>
 <h1>timer widget</h1>
-<p>A <a href="http://developer-old.gnome.org/glib/unstable/glib-The-Main-Event-Loop.html#g-timeout-add">timer</a> attached to a <a href="http://developer-old.gnome.org/gtk2/2.24/GtkLabel.html">GtkLabel</a></p>
+<p>Gtk2: A <a href="https://developer-old.gnome.org/glib/unstable/glib-The-Main-Event-Loop.html#g-timeout-add">timer</a> attached to a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkLabel.html">GtkLabel</a></p>
+<p>Gtk3: A <a href="https://docs.gtk.org/glib/func.timeout_add.html">timer</a> attached to a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkLabel.html">GtkLabel</a></p>
 <hr>
 <h2>Definition</h2>
 <pre><code>&lt;timer tag_attr=&quot;value&quot;...&gt;
@@ -98,7 +98,7 @@
 &lt;/timer&gt;</code></pre>
 <p>“…” denotes acceptance of multiples of the same thing.</p>
 <h2 id="tag-attributes">Tag Attributes</h2>
-<p>See the <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget.properties">GtkWidget</a> widget properties<sup>[1]</sup>.</p>
+<p>See the GtkWidget widget properties<sup>[1]</sup>.</p>
 <p>The following custom tag attributes are available:</p>
 <table class="wiki" border="1" cellpadding="5">
 <tr>
@@ -246,7 +246,8 @@
 <p>The default signal is “tick”, a custom signal emitted when the timer times-out.</p>
 <p>The “file-changed” signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 <p>The following signals are connected-up for all widgets:</p>
-<p><a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+<p><strong>Gtk2: </strong><a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+<p><strong>Gtk3: </strong><a href="https://docs.gtk.org/gtk3/signal.Widget.button-press-event.html">button-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.button-release-event.html">button-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.configure-event.html">configure-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.enter-notify-event.html">enter-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.leave-notify-event.html">leave-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-in-event.html">focus-in-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-out-event.html">focus-out-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.hide.html">hide</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.show.html">show</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.realize.html">realize</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-press-event.html">key-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-release-event.html">key-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.map-event.html">map-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.unmap-event.html">unmap-event</a></p>
 <h2 id="functions">Functions</h2>
 <p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
 <table class="wiki" border="1" cellpadding="5">
@@ -330,7 +331,7 @@
 </tr>
 <tr>
 <td class="wiki">presentwindow</td>
-<td class="wiki">Present</a> dialog</td>
+<td class="wiki">Present dialog</td>
 <td class="wiki">Variable name</td>
 <td class="wiki">0.8.1</td>
 </tr>
@@ -423,7 +424,7 @@
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
 <ol type="1">
-<li><p>The “<a href="http://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget--visible">visible</a>” tag attribute will be required to hide the timer widget as it is visible by default.</p></li>
+<li><p>The “visible” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget--visible">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.Widget.visible.html">Gtk3</a>) tag attribute will be required to hide the timer widget as it is visible by default.</p></li>
 <li><p>The default precision is seconds using a default interval of 1 second.</p></li>
 <li><p>The “sensitive” property i.e. its active state constitutes the data for this widget.</p></li>
 </ol>
@@ -471,16 +472,14 @@
 </p>
 
 							<p>&nbsp;</p>
-							<p align="center"><strong>For GTK+ 3 reference see <a href="https://docs.gtk.org/gtk3/">the Gtk-3.0 docs</a> page</strong></p>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
-									<td class="footer" width="33%" align="center">2013-04-01 <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
-									<td class="footer" width="33%" align="center"><a href="http://code.google.com/p/gtkdialog/">Project Page</a></td>
-									<td class="footer" width="33%" align="center"><a href="http://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://github.com/puppylinux-woof-CE/gtkdialog">Project Page</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
 							</table>
 						</td>
