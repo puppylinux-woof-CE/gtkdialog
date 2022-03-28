@@ -177,10 +177,11 @@ layer_set:
 #endif
 
 	/* app id and theme window/taskbar icon */
-	value = get_tag_attribute(attr, "icon-name");
-	if (value) {
-		gtk_window_set_icon_name(GTK_WINDOW(widget), value);
-		g_set_prgname(value);
+	if (attr) {
+		if (value = get_tag_attribute(attr, "icon-name")) {
+			gtk_window_set_icon_name(GTK_WINDOW(widget), value);
+			g_set_prgname(value);
+		}
 	}
 
 	/* Set a default window title */
