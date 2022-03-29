@@ -17,5 +17,12 @@ else
 	vte = dependency('vte', required: false)
 endif
 
+if get_option('docs')
+	subdir('doc')
+	install_subdir(
+	'examples', install_dir : join_paths(get_option('datadir'), 'doc')
+	)
+endif
+
 subdir('src')
 subdir('data')
