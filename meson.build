@@ -7,11 +7,15 @@ gtkver = get_option('gtkver')
 if gtkver == 3
 	gtk = dependency('gtk+-3.0')
 	vte = dependency('vte-2.91', required: false)
-	gtk_layer_shell = subproject(
-		'gtk-layer-shell',
-		default_options: ['default_library=static', 'introspection=false'],
-		required: false,
-	)
+	gtk_layer_shell = dependency('gtk-layer-shell-0', required: false)
+	if not gtk_layer_shell.found()
+		proj = subproject(
+			'gtk-layer-shell',
+			default_options: ['default_library=static', 'introspection=false'],
+			required: false,
+		)
+		gtk_layer_shell = proj.get_variable('gtk_layer_shell')
+	endif
 else
 	gtk = dependency('gtk+-2.0')
 	vte = dependency('vte', required: false)
