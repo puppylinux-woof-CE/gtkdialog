@@ -14,7 +14,9 @@ if gtkver == 3
 			default_options: ['default_library=static', 'introspection=false'],
 			required: false,
 		)
-		gtk_layer_shell = proj.get_variable('gtk_layer_shell')
+		if proj.found()
+			gtk_layer_shell = proj.get_variable('gtk_layer_shell')
+		endif
 	endif
 else
 	gtk = dependency('gtk+-2.0')

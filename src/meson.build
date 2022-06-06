@@ -73,7 +73,7 @@ if vte.found()
 else
 	cfg.set('HAVE_VTE', 0)
 endif
-if gtkver == 3
+if gtkver == 3 and gtk_layer_shell.found()
 	dep += [gtk_layer_shell]
 	cfg.set('HAVE_GTK_LAYER_SHELL', 1)
 else
