@@ -162,7 +162,7 @@ GtkWidget *widget_window_create(
 		gtk_layer_set_layer(GTK_WINDOW(widget), layer);
 	}
 	if (edge != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER) {
-		gtk_layer_auto_exclusive_zone_enable (GTK_WINDOW(widget));
+		gtk_layer_set_exclusive_zone (GTK_WINDOW(widget), 0);
 		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_LEFT, 20);
 		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_RIGHT, 20);
 		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_TOP, 10);
