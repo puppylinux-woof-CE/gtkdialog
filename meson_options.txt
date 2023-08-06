@@ -1,2 +1,3 @@
 option('gtkver', type: 'integer', value: 3, description: 'GTK+ version')
 option('docs', type: 'boolean', value: false, description: 'add html documentation and examples')
+option('bash', type: 'boolean', value: false, description: 'run commands using bash -c')

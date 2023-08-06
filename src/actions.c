@@ -36,6 +36,7 @@
 #include "attributes.h"
 #include "variables.h"
 #include "tag_attributes.h"
+#include "config.h"
 
 extern gchar *option_include_file;
 
@@ -642,18 +643,37 @@ void action_presentwindow(GtkWidget *widget, char *string)
 /***********************************************************************
  * Action command                                                      *
  ***********************************************************************/
-/* This fuction will export variables and run a shell command */
 
+static void _action_shellcommand(const char *command)
+{
+#if HAVE_BASH
+	char *argv[] = {"bash", "-c", command, NULL};
+
+	g_spawn_sync(NULL,
+	             argv,
+	             NULL,
+	             G_SPAWN_LEAVE_DESCRIPTORS_OPEN | G_SPAWN_SEARCH_PATH,
+	             NULL,
+	             NULL,
+	             NULL,
+	             NULL,
+	             NULL,
+	             NULL);
+#else
+	system(command);
+#endif
+}
+
+/* This fuction will export variables and run a shell command */
 void action_shellcommand(GtkWidget *widget, char *string)
 {
 	char *command;
-	int result;
 
 	variables_export_all();
 
 	if (option_include_file == NULL) {
 
-		result = system(string);
+		_action_shellcommand(string);
 
 	} else {
 
@@ -661,7 +681,7 @@ void action_shellcommand(GtkWidget *widget, char *string)
 		command = g_strdup_printf("source %s; %s", */
 		command = g_strdup_printf(". %s; %s",
 				option_include_file, string);
-		result = system(command);
+		_action_shellcommand(command);
 		g_free(command);
 
 	}
