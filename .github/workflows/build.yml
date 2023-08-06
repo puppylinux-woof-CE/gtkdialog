@@ -26,6 +26,8 @@ jobs:
         cd ../gtk3-meson
         meson --buildtype=release build
         ninja -C build
+        meson configure build -Dbash=true
+        ninja -C build
         DESTDIR=/tmp/meson-gtk2 ninja -C build install
     - name: Autotools build
       run: |
