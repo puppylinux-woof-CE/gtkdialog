@@ -79,6 +79,11 @@ if gtkver == 3 and gtk_layer_shell.found()
 else
 	cfg.set('HAVE_GTK_LAYER_SHELL', 0)
 endif
+if get_option('bash')
+	cfg.set('HAVE_BASH', 1)
+else
+	cfg.set('HAVE_BASH', 0)
+endif
 
 configure_file(
 	output : 'config.h',
