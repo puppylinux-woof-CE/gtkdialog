@@ -1,3 +1,5 @@
 option('gtkver', type: 'integer', value: 3, description: 'GTK+ version')
 option('docs', type: 'boolean', value: false, description: 'add html documentation and examples')
+# consider carefully before enabling this option - see discussion at
+# https://github.com/puppylinux-woof-CE/gtkdialog/pull/154#issuecomment-1666843528
 option('bash', type: 'boolean', value: false, description: 'run commands using bash -c')
