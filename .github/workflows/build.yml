@@ -5,14 +5,20 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ["ubuntu:noble", "ubuntu:jammy", "ubuntu:focal"]
+    container:
+      image: ${{ matrix.image }}
+    env:
+      DEBIAN_FRONTEND: noninteractive
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        sudo apt-get update -qq
-        sudo apt-get install -y --no-install-recommends libgtk2.0-dev libgtk-3-dev libvte-dev libvte-2.91-dev libgtk-layer-shell-dev
-        python3 -m pip install meson ninja
+        apt-get update -qq
+        apt-get install -y --no-install-recommends libgtk2.0-dev libgtk-3-dev libvte-dev libvte-2.91-dev libgtk-layer-shell-dev gcc pkg-config bison flex meson autoconf automake make texinfo
     - name: Copy source
       run: |
         cp -r `pwd` ../gtk3-meson
@@ -32,10 +38,10 @@ jobs:
     - name: Autotools build
       run: |
         cd ../gtk2-autotools
-        ./autogen.sh
+        ./autogen.sh --prefix=/usr
         make -j`nproc`
-        sudo DESTDIR=/tmp/autotools-gtk2 make install
+        DESTDIR=/tmp/autotools-gtk2 make install
         cd ../gtk3-autotools
-        ./autogen.sh --enable-gtk3
+        ./autogen.sh --prefix=/usr --enable-gtk3
         make -j`nproc`
-        sudo DESTDIR=/tmp/autotools-gtk3 make install
+        DESTDIR=/tmp/autotools-gtk3 make install
