@@ -87,6 +87,9 @@
 
 #undef TOOLTIPS
 
+int  instruction_execute(instruction);
+void push_widget(GtkWidget *, int);
+
 extern gboolean option_no_warning;
 
 instruction *program = NULL;

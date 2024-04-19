@@ -61,6 +61,8 @@
 
 extern gboolean option_no_warning;
 
+int yywarning (char *);
+
 /* Local function prototypes */
 #ifdef DEBUG
 void variables_print_one(variable *var);
