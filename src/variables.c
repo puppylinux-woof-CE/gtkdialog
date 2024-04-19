@@ -1121,7 +1121,7 @@ static gint do_variables_count_widgets(variable *actual, gint n)
 		actual = root;
 
 	if (actual == NULL)
-		return;
+		return n;
 
 	if (actual->left != NULL)
 		n = do_variables_count_widgets(actual->left, n);
