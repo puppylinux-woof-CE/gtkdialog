@@ -335,7 +335,7 @@ print_program()
 	
 	for (pc = 0; pc < instruction_counter; ++pc) {
 		command = program[pc];
-		g_printf("%5d  ", pc);
+		printf("%5d  ", pc);
 		print_command(command);
 	}
 }
