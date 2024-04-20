@@ -627,6 +627,7 @@ gtkdialog_initialized:
 	gtk_init(&argc, &argv);
 	
 #if HAVE_GLADE_LIB
+	void run_program_by_glade(const gchar *filename, const gchar *window_name);
 	if (option_glade_file != NULL) {
 		run_program_by_glade(option_glade_file, option_input_variable);
 		exit(EXIT_SUCCESS);

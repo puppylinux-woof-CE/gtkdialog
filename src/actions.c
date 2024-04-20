@@ -38,6 +38,8 @@
 #include "tag_attributes.h"
 #include "config.h"
 
+int gtkdialog_parse(void);
+
 extern gchar *option_include_file;
 
 /* Local function prototypes */

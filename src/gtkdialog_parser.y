@@ -60,6 +60,10 @@ extern gboolean option_print_ir;
 //
 int yywarning(char *c);
 void yyerror_simple(char *c);
+void run_program(void);
+void print_program(void);
+int  gtkdialog_lex(void);
+int  gtkdialog_error(char *);
 
 static inline void
 start_up(void) 

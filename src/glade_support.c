@@ -44,6 +44,7 @@ typedef struct _gtkdialog_signal {
 
 /* function prototypes */
 gint widget_get_type_from_pointer(GtkWidget *widget);
+int execute_action(GtkWidget *widget, const char *command, const char *type);
 
 /*
 ** Signal handler callbascks.

@@ -87,6 +87,9 @@
 
 #undef TOOLTIPS
 
+int  instruction_execute(instruction);
+void push_widget(GtkWidget *, int);
+
 extern gboolean option_no_warning;
 
 instruction *program = NULL;
@@ -332,7 +335,7 @@ print_program()
 	
 	for (pc = 0; pc < instruction_counter; ++pc) {
 		command = program[pc];
-		g_printf("%5d  ", pc);
+		printf("%5d  ", pc);
 		print_command(command);
 	}
 }
