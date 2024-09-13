@@ -1127,7 +1127,7 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
-#if GTK_CHECK_VERSION(3,0,0)
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
 	return TRUE;
 #endif
 }
@@ -1255,13 +1255,17 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 			break;
 		default:
 			fprintf(stderr, "%s(): Unhandled widget type.\n", __func__);
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
 			return FALSE;
+#else
+			return;
+#endif
 	}
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
-#if GTK_CHECK_VERSION(3,0,0)
+#if HAVE_SYS_INOTIFY_H && GTK_CHECK_VERSION(3,0,0)
 	return TRUE;
 #endif
 }
