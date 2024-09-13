@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ["ubuntu:noble", "ubuntu:jammy", "ubuntu:focal"]
+        image: ["debian:trixie-slim", "ubuntu:noble", "ubuntu:jammy", "ubuntu:focal"]
     container:
       image: ${{ matrix.image }}
     env:
